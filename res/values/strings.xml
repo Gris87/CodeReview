@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application name -->
+    <string name="app_name">Code review</string>
+    
+    <!-- Settings -->
+    <string name="action_settings">Settings</string>
+    
+    <!-- Accessibility -->
+    <string name="accessibility_extension_image">Extension image</string>
+    
+    <!-- Accessibility -->
+    <string name="accessibility_file_name">File name</string>
+
+</resources>
