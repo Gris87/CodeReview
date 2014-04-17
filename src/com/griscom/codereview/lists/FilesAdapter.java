@@ -3,8 +3,10 @@ package com.griscom.codereview.lists;
 import java.io.File;
 import java.util.ArrayList;
 
+import junit.framework.Assert;
 import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,56 +14,57 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
 
 public class FilesAdapter extends BaseAdapter
 {
-	private Context              mContext;
-	private String               mCurrentPath;
-	private ArrayList<FileEntry> mFiles;
-	private SortType             mSortType;
+    private Context              mContext;
+    private String               mCurrentPath;
+    private ArrayList<FileEntry> mFiles;
+    private SortType             mSortType;
 
 
 
-	private static class ViewHolder
+    private static class ViewHolder
     {
-	    ImageView mExtenstion;
+        ImageView mExtenstion;
         TextView  mFileName;
     }
 
 
 
-	public FilesAdapter(Context context)
-	{
-		mContext     = context;
-		mCurrentPath = Environment.getExternalStorageDirectory().getPath();
-		mFiles       = new ArrayList<FileEntry>();
-		mSortType    = SortType.Alphabet;
+    public FilesAdapter(Context context)
+    {
+        mContext     = context;
+        mCurrentPath = Environment.getExternalStorageDirectory().getPath();
+        mFiles       = new ArrayList<FileEntry>();
+        mSortType    = SortType.Alphabet;
 
-		rescan();
-	}
+        rescan();
+    }
 
-	@Override
-	public int getCount()
-	{
-		return mFiles.size();
-	}
+    @Override
+    public int getCount()
+    {
+        return mFiles.size();
+    }
 
-	@Override
-	public Object getItem(int position)
-	{
-		return position>=0 && position<mFiles.size() ? mFiles.get(position) : null;
-	}
+    @Override
+    public Object getItem(int position)
+    {
+        return position>=0 && position<mFiles.size() ? mFiles.get(position) : null;
+    }
 
-	@Override
-	public long getItemId(int position)
-	{
-		return position;
-	}
+    @Override
+    public long getItemId(int position)
+    {
+        return position;
+    }
 
-	private View newView(Context context, ViewGroup parent)
+    private View newView(Context context, ViewGroup parent)
     {
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -77,20 +80,20 @@ public class FilesAdapter extends BaseAdapter
         return resView;
     }
 
-	private void bindView(int position, View view)
+    private void bindView(int position, View view)
     {
-		FileEntry file=mFiles.get(position);
+        FileEntry file=mFiles.get(position);
 
-		ViewHolder holder=(ViewHolder)view.getTag();
+        ViewHolder holder=(ViewHolder)view.getTag();
 
-		holder.mExtenstion.setImageResource(file.getImageId());
+        holder.mExtenstion.setImageResource(file.getImageId());
         holder.mFileName.setText(file.getFileName());
     }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent)
-	{
-		View view=null;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+        View view=null;
 
         if (convertView!=null)
         {
@@ -104,38 +107,60 @@ public class FilesAdapter extends BaseAdapter
         bindView(position, view);
 
         return view;
-	}
+    }
 
-	public void rescan()
-	{
-		mFiles.clear();
+    public void goUp()
+    {
+        if (BuildConfig.DEBUG)
+        {
+            Assert.assertTrue(!mCurrentPath.equals("/"));
+        }
 
-		File folder=new File(mCurrentPath);
-		File[] files=folder.listFiles();
+        setCurrentPath(mCurrentPath.substring(0, mCurrentPath.lastIndexOf('/')));
+    }
 
-		for (int i=0; i<files.length; ++i)
-		{
-			FileEntry newEntry=new FileEntry(files[i]);
+    public void rescan()
+    {
+        mFiles.clear();
 
-			mFiles.add(newEntry);
-		}
+        if (!mCurrentPath.equals("/"))
+        {
+            mFiles.add(FileEntry.createParentFolder());
+        }
 
-		sort();
-	}
 
-	public void sort()
-	{
-		sort(SortType.None);
-	}
 
-	public void sort(SortType sortType)
-	{
-	    if (sortType!=SortType.None)
-	    {
-	        mSortType=sortType;
-	    }
+        File folder=new File(mCurrentPath);
+        File[] files=folder.listFiles();
 
-	    for (int e=0; e<mFiles.size()-1; ++e)
+        if (files!=null)
+        {
+            for (int i=0; i<files.length; ++i)
+            {
+                FileEntry newEntry=new FileEntry(files[i]);
+
+                mFiles.add(newEntry);
+            }
+        }
+
+
+
+        sort();
+    }
+
+    public void sort()
+    {
+        sort(SortType.None);
+    }
+
+    public void sort(SortType sortType)
+    {
+        if (sortType!=SortType.None)
+        {
+            mSortType=sortType;
+        }
+
+        for (int e=0; e<mFiles.size()-1; ++e)
         {
             int minIndex=e;
 
@@ -154,10 +179,29 @@ public class FilesAdapter extends BaseAdapter
                 mFiles.set(minIndex, temp);
             }
         }
-	}
 
-	public String getCurrentPath()
-	{
-		return mCurrentPath;
-	}
+        notifyDataSetChanged();
+    }
+
+    public void setCurrentPath(String newPath)
+    {
+        if (TextUtils.isEmpty(newPath))
+        {
+            newPath="/";
+        }
+
+        if (BuildConfig.DEBUG)
+        {
+            Assert.assertTrue(!mCurrentPath.equals(newPath));
+        }
+
+        mCurrentPath=newPath;
+
+        rescan();
+    }
+
+    public String getCurrentPath()
+    {
+        return mCurrentPath;
+    }
 }

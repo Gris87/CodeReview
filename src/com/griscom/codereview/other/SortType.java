@@ -2,7 +2,7 @@ package com.griscom.codereview.other;
 
 public enum SortType
 {
-	None,
+    None,
     Alphabet,
     Type,
     Size

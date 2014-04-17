@@ -2,6 +2,7 @@ package com.griscom.codereview.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +16,8 @@ import com.griscom.codereview.lists.FilesAdapter;
 
 public class MainActivity extends ActionBarActivity
 {
+    private PlaceholderFragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -23,12 +26,13 @@ public class MainActivity extends ActionBarActivity
 
         if (savedInstanceState==null)
         {
+            mFragment=new PlaceholderFragment();
+
             getSupportFragmentManager().beginTransaction()
-                                       .add(R.id.container, new PlaceholderFragment())
+                                       .add(R.id.container, mFragment)
                                        .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -59,17 +63,20 @@ public class MainActivity extends ActionBarActivity
      */
     public static class PlaceholderFragment extends Fragment
     {
-    	private ListView     mFilesListView;
-    	private FilesAdapter mAdapter;
+        private ActionBar    mActionBar;
+        private ListView     mFilesListView;
+        private FilesAdapter mAdapter;
 
-    	public PlaceholderFragment()
-    	{
-    	}
+        public PlaceholderFragment()
+        {
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-        	mAdapter=new FilesAdapter(getActivity());
+            mActionBar=((ActionBarActivity)getActivity()).getSupportActionBar();
+
+            mAdapter=new FilesAdapter(getActivity());
 
 
 
@@ -78,7 +85,32 @@ public class MainActivity extends ActionBarActivity
             mFilesListView=(ListView)rootView.findViewById(R.id.fileslistView);
             mFilesListView.setAdapter(mAdapter);
 
+            mActionBar.setDisplayShowHomeEnabled(false);
+            mActionBar.setTitle(mAdapter.getCurrentPath());
+
             return rootView;
+        }
+
+        public boolean onBackPressed()
+        {
+            if (mAdapter.getCurrentPath().equals("/"))
+            {
+                return false;
+            }
+
+            mAdapter.goUp();
+            mActionBar.setTitle(mAdapter.getCurrentPath());
+
+            return true;
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (!mFragment.onBackPressed())
+        {
+            super.onBackPressed();
         }
     }
 }
