@@ -97,6 +97,11 @@ public class FileEntry
         return mFileName;
     }
 
+    public boolean isDirectory()
+    {
+        return mIsDirectory;
+    }
+
     public String getType()
     {
         return mType;
