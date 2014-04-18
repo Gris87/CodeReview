@@ -1,9 +1,12 @@
 package com.griscom.codereview.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnBackPressedListener;
 import com.griscom.codereview.lists.FilesAdapter;
+import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
 
 public class MainActivity extends ActionBarActivity
@@ -90,6 +94,7 @@ public class MainActivity extends ActionBarActivity
             mActivity=(MainActivity)getActivity();
 
             mAdapter=new FilesAdapter(mActivity);
+            loadPath();
 
 
 
@@ -137,6 +142,8 @@ public class MainActivity extends ActionBarActivity
                         }
                     }
 
+                    savePath();
+
                     mActionBar.setTitle(mAdapter.getCurrentPath());
                 }
                 else
@@ -155,9 +162,31 @@ public class MainActivity extends ActionBarActivity
             }
 
             mAdapter.goUp();
+            savePath();
             mActionBar.setTitle(mAdapter.getCurrentPath());
 
             return true;
+        }
+
+        private void savePath()
+        {
+            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor=prefs.edit();
+            editor.putString(ApplicationPreferences.LAST_PATH, mAdapter.getCurrentPath());
+            editor.commit();
+        }
+
+        private void loadPath()
+        {
+            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+
+            String path=prefs.getString(ApplicationPreferences.LAST_PATH, "");
+
+            if (!TextUtils.isEmpty(path))
+            {
+                mAdapter.setCurrentPath(path);
+            }
         }
     }
 
@@ -170,6 +199,7 @@ public class MainActivity extends ActionBarActivity
 
             if (curTime-mBackPressTime<1000)
             {
+                clearPath();
                 super.onBackPressed();
             }
             else
@@ -178,8 +208,16 @@ public class MainActivity extends ActionBarActivity
 
                 Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
             }
-
         }
+    }
+
+    private void clearPath()
+    {
+        SharedPreferences prefs=getPreferences(Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor=prefs.edit();
+        editor.putString(ApplicationPreferences.LAST_PATH, "");
+        editor.commit();
     }
 
     public OnBackPressedListener getOnBackPressedListener()
