@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application name -->
+    <string name="app_name">Code review</string>
+    
+    <!-- Settings -->
+    <string name="action_settings">Настройки</string>
+    
+    <!-- Press back one more time in file explorer -->
+    <string name="press_again_to_exit">Нажмите снова для выхода</string>
+    
+    <!-- Accessibility -->
+    <string name="accessibility_extension_image">Иконка расширения</string>
+    
+    <!-- Accessibility -->
+    <string name="accessibility_file_name">Имя файла</string>
+
+</resources>

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnBackPressedListener;
@@ -21,6 +22,8 @@ import com.griscom.codereview.other.FileEntry;
 public class MainActivity extends ActionBarActivity
 {
     private OnBackPressedListener mOnBackPressedListener=null;
+
+    private long mBackPressTime=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,6 +68,7 @@ public class MainActivity extends ActionBarActivity
      */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnBackPressedListener
     {
+        private MainActivity mActivity;
         private ActionBar    mActionBar;
         private ListView     mFilesListView;
         private FilesAdapter mAdapter;
@@ -76,9 +80,9 @@ public class MainActivity extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            MainActivity activity=(MainActivity)getActivity();
+            mActivity=(MainActivity)getActivity();
 
-            mAdapter=new FilesAdapter(activity);
+            mAdapter=new FilesAdapter(mActivity);
 
 
 
@@ -88,11 +92,11 @@ public class MainActivity extends ActionBarActivity
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
 
-            mActionBar=activity.getSupportActionBar();
+            mActionBar=mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
             mActionBar.setTitle(mAdapter.getCurrentPath());
 
-            activity.setOnBackPressedListener(this);
+            mActivity.setOnBackPressedListener(this);
 
             return rootView;
         }
@@ -155,7 +159,19 @@ public class MainActivity extends ActionBarActivity
     {
         if (mOnBackPressedListener==null || !mOnBackPressedListener.onBackPressed())
         {
-            super.onBackPressed();
+            long curTime=System.currentTimeMillis();
+
+            if (curTime-mBackPressTime<1000)
+            {
+                super.onBackPressed();
+            }
+            else
+            {
+                mBackPressTime=curTime;
+
+                Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
