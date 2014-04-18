@@ -8,5 +8,12 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
+    
+    <item
+        android:id="@+id/action_close"
+        android:orderInCategory="200"
+        android:title="@string/action_close"
+        android:icon="@drawable/close"
+        app:showAsAction="ifRoom"/>
 
 </menu>

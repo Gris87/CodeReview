@@ -7,13 +7,16 @@
     <!-- Settings -->
     <string name="action_settings">Settings</string>
     
-    <!-- Press back one more time in file explorer -->
-    <string name="press_again_to_exit">Press again to exit</string>
+    <!-- Close -->
+    <string name="action_close">Close</string>
     
     <!-- Accessibility -->
     <string name="accessibility_extension_image">Extension image</string>
     
     <!-- Accessibility -->
     <string name="accessibility_file_name">File name</string>
+    
+    <!-- Press back one more time in file explorer -->
+    <string name="press_again_to_exit">Press again to exit</string>
 
 </resources>
