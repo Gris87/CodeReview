@@ -1,6 +1,7 @@
 package com.griscom.codereview.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,8 +19,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.griscom.codereview.R;
+import com.griscom.codereview.ReviewActivity;
 import com.griscom.codereview.listeners.OnBackPressedListener;
 import com.griscom.codereview.lists.FilesAdapter;
+import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
 
@@ -130,16 +133,7 @@ public class MainActivity extends ActionBarActivity
                     }
                     else
                     {
-                        String curPath=mAdapter.getCurrentPath();
-
-                        if (curPath.endsWith("/"))
-                        {
-                            mAdapter.setCurrentPath(curPath+fileName);
-                        }
-                        else
-                        {
-                            mAdapter.setCurrentPath(curPath+"/"+fileName);
-                        }
+                        mAdapter.setCurrentPath(mAdapter.pathToFile(fileName));
                     }
 
                     savePath();
@@ -148,7 +142,9 @@ public class MainActivity extends ActionBarActivity
                 }
                 else
                 {
-
+                    Intent intent = new Intent(mActivity, ReviewActivity.class);
+                    intent.putExtra(ApplicationExtras.OPEN_FILE, mAdapter.pathToFile(fileName));
+                    startActivity(intent);
                 }
             }
         }

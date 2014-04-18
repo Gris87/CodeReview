@@ -3,20 +3,23 @@
 
     <!-- Application name -->
     <string name="app_name">Code review</string>
-    
+
     <!-- Settings -->
     <string name="action_settings">Settings</string>
-    
+
     <!-- Close -->
     <string name="action_close">Close</string>
-    
+
     <!-- Accessibility -->
     <string name="accessibility_extension_image">Extension image</string>
-    
+
     <!-- Accessibility -->
     <string name="accessibility_file_name">File name</string>
-    
+
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Press again to exit</string>
+    <string name="title_activity_review">Code review</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

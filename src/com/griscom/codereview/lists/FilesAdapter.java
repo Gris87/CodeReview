@@ -183,6 +183,18 @@ public class FilesAdapter extends BaseAdapter
         notifyDataSetChanged();
     }
 
+    public String pathToFile(String fileName)
+    {
+        if (mCurrentPath.endsWith("/"))
+        {
+            return mCurrentPath+fileName;
+        }
+        else
+        {
+            return mCurrentPath+"/"+fileName;
+        }
+    }
+
     public void setCurrentPath(String newPath)
     {
         if (TextUtils.isEmpty(newPath))
