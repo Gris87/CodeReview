@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.griscom.codereview.R;
-import com.griscom.codereview.activities.ReviewActivity;
 import com.griscom.codereview.listeners.OnBackPressedListener;
 import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
@@ -29,7 +28,7 @@ import com.griscom.codereview.other.FileEntry;
 public class MainActivity extends ActionBarActivity
 {
 	private static final int REQUEST_REVIEW=1;
-	
+
     private OnBackPressedListener mOnBackPressedListener=null;
 
     private long mBackPressTime=0;
@@ -146,7 +145,7 @@ public class MainActivity extends ActionBarActivity
                 else
                 {
 					saveLastFile(fileName);
-					
+
                     openFile(fileName);
                 }
             }
@@ -189,17 +188,17 @@ public class MainActivity extends ActionBarActivity
 					}
 				}
 			}
-			
+
 			super.onActivityResult(requestCode, resultCode, data);
 		}
-		
+
 		private void openFile(String fileName)
 		{
 			Intent intent = new Intent(mActivity, ReviewActivity.class);
 			intent.putExtra(ApplicationExtras.OPEN_FILE, mAdapter.pathToFile(fileName));
 			startActivityForResult(intent, REQUEST_REVIEW);
 		}
-		
+
         private void savePath()
         {
             SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -220,7 +219,7 @@ public class MainActivity extends ActionBarActivity
                 mAdapter.setCurrentPath(path);
             }
         }
-		
+
 		private void saveLastFile(String fileName)
 		{
 			SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -229,7 +228,7 @@ public class MainActivity extends ActionBarActivity
             editor.putString(ApplicationPreferences.LAST_FILE, fileName);
             editor.commit();
 		}
-		
+
 		private void loadLastFile()
         {
             SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);

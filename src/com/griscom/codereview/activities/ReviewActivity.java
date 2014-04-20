@@ -1,20 +1,19 @@
 package com.griscom.codereview.activities;
 
-import com.griscom.codereview.R;
-import com.griscom.codereview.util.SystemUiHider;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
-import com.griscom.codereview.other.*;
-import android.content.*;
-import android.view.*;
+
+import com.griscom.codereview.R;
+import com.griscom.codereview.other.ApplicationExtras;
+import com.griscom.codereview.util.SystemUiHider;
 
 public class ReviewActivity extends Activity
 {
@@ -45,11 +44,11 @@ public class ReviewActivity extends Activity
      * The instance of the {@link SystemUiHider} for this activity.
      */
     private SystemUiHider mSystemUiHider;
-	
+
 	// ===========================================
-	
+
 	public static final int RESULT_CLOSE=1;
-	
+
 	private String mFileName;
 
     @Override
@@ -58,10 +57,10 @@ public class ReviewActivity extends Activity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_review);
-		
+
 		Intent intent=getIntent();
 		mFileName=intent.getStringExtra(ApplicationExtras.OPEN_FILE);
-		
+
         setupActionBar();
 
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
@@ -165,7 +164,7 @@ public class ReviewActivity extends Activity
             getActionBar().setTitle(mFileName.substring(mFileName.lastIndexOf('/')+1));
         }
     }
-	
+
 	@Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -187,7 +186,7 @@ public class ReviewActivity extends Activity
             case R.id.action_close:
 				{
 					Intent data=new Intent();
-					
+
 					setResult(RESULT_CLOSE, data);
 					finish();
 					return true;
