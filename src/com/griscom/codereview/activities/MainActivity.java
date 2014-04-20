@@ -100,6 +100,7 @@ public class MainActivity extends ActionBarActivity
 
             mAdapter=new FilesAdapter(mActivity);
             loadPath();
+			loadLastFile();
 
 
 
@@ -144,9 +145,9 @@ public class MainActivity extends ActionBarActivity
                 }
                 else
                 {
-                    Intent intent = new Intent(mActivity, ReviewActivity.class);
-                    intent.putExtra(ApplicationExtras.OPEN_FILE, mAdapter.pathToFile(fileName));
-                    startActivityForResult(intent, REQUEST_REVIEW);
+					saveLastFile(fileName);
+					
+                    openFile(fileName);
                 }
             }
         }
@@ -175,17 +176,30 @@ public class MainActivity extends ActionBarActivity
 				{
 					switch (resultCode)
 					{
+						case ReviewActivity.RESULT_CANCELED:
+						{
+							saveLastFile("");
+						}
+						break;
 						case ReviewActivity.RESULT_CLOSE:
 						{
                             mActivity.finish();
 						}
+						break;
 					}
 				}
 			}
 			
 			super.onActivityResult(requestCode, resultCode, data);
 		}
-
+		
+		private void openFile(String fileName)
+		{
+			Intent intent = new Intent(mActivity, ReviewActivity.class);
+			intent.putExtra(ApplicationExtras.OPEN_FILE, mAdapter.pathToFile(fileName));
+			startActivityForResult(intent, REQUEST_REVIEW);
+		}
+		
         private void savePath()
         {
             SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -204,6 +218,27 @@ public class MainActivity extends ActionBarActivity
             if (!TextUtils.isEmpty(path))
             {
                 mAdapter.setCurrentPath(path);
+            }
+        }
+		
+		private void saveLastFile(String fileName)
+		{
+			SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor=prefs.edit();
+            editor.putString(ApplicationPreferences.LAST_FILE, fileName);
+            editor.commit();
+		}
+		
+		private void loadLastFile()
+        {
+            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+
+            String fileName=prefs.getString(ApplicationPreferences.LAST_FILE, "");
+
+            if (!TextUtils.isEmpty(fileName))
+            {
+                openFile(fileName);
             }
         }
     }
