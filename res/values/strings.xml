@@ -18,8 +18,9 @@
 
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Press again to exit</string>
+	
+	<!-- Review activity title -->
     <string name="title_activity_review">Code review</string>
     <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

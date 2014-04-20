@@ -19,4 +19,7 @@
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Нажмите снова для выхода</string>
 
+	<!-- Review activity title -->
+    <string name="title_activity_review">Code review</string>
+    
 </resources>

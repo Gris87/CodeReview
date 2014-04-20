@@ -1,5 +1,6 @@
-package com.griscom.codereview;
+package com.griscom.codereview.activities;
 
+import com.griscom.codereview.R;
 import com.griscom.codereview.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -11,13 +12,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import com.griscom.codereview.other.*;
+import android.content.*;
+import android.view.*;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- * 
- * @see SystemUiHider
- */
 public class ReviewActivity extends Activity
 {
     /**
@@ -47,6 +45,12 @@ public class ReviewActivity extends Activity
      * The instance of the {@link SystemUiHider} for this activity.
      */
     private SystemUiHider mSystemUiHider;
+	
+	// ===========================================
+	
+	public static final int RESULT_CLOSE=1;
+	
+	private String mFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -54,6 +58,10 @@ public class ReviewActivity extends Activity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_review);
+		
+		Intent intent=getIntent();
+		mFileName=intent.getStringExtra(ApplicationExtras.OPEN_FILE);
+		
         setupActionBar();
 
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
@@ -153,29 +161,39 @@ public class ReviewActivity extends Activity
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
         {
-            // Show the Up button in the action bar.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            getActionBar().setDisplayShowHomeEnabled(false);
+            getActionBar().setTitle(mFileName.substring(mFileName.lastIndexOf('/')+1));
         }
+    }
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.review, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        int id = item.getItemId();
-        if (id == android.R.id.home)
+        switch(item.getItemId())
         {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            // TODO: If Settings has multiple levels, Up should navigate up
-            // that hierarchy.
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
+            case R.id.action_settings:
+				{
+					return true;
+				}
+
+            case R.id.action_close:
+				{
+					Intent data=new Intent();
+					
+					setResult(RESULT_CLOSE, data);
+					finish();
+					return true;
+				}
         }
+
         return super.onOptionsItemSelected(item);
     }
 
