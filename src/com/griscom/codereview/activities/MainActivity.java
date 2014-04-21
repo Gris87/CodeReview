@@ -27,8 +27,9 @@ import com.griscom.codereview.other.FileEntry;
 
 public class MainActivity extends ActionBarActivity
 {
-	private static final int REQUEST_REVIEW=1;
-
+	private static final int REQUEST_REVIEW   = 1;
+    private static final int REQUEST_SETTINGS = 2;
+	
     private OnBackPressedListener mOnBackPressedListener=null;
 
     private long mBackPressTime=0;
@@ -64,7 +65,10 @@ public class MainActivity extends ActionBarActivity
         switch(item.getItemId())
         {
             case R.id.action_settings:
-            {
+			{
+				Intent intent = new Intent(this, SettingsActivity.class);
+				startActivityForResult(intent, REQUEST_SETTINGS);
+			
                 return true;
             }
 

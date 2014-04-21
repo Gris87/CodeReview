@@ -3,13 +3,13 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.griscom.codereview.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.griscom.codereview.activities.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
     <header
-        android:fragment="com.griscom.codereview.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="com.griscom.codereview.activities.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
     <header
-        android:fragment="com.griscom.codereview.SettingsActivity$DataSyncPreferenceFragment"
+        android:fragment="com.griscom.codereview.activities.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync" />
 
 </preference-headers>

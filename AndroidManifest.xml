@@ -34,7 +34,7 @@
         </activity>
 
         <activity
-            android:name="com.griscom.codereview.SettingsActivity"
+            android:name="com.griscom.codereview.activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
 
