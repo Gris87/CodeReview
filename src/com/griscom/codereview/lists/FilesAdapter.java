@@ -1,6 +1,7 @@
 package com.griscom.codereview.lists;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
@@ -116,11 +117,19 @@ public class FilesAdapter extends BaseAdapter
             Assert.assertTrue(!mCurrentPath.equals("/"));
         }
 
-        setCurrentPath(mCurrentPath.substring(0, mCurrentPath.lastIndexOf('/')));
+        setCurrentPathBacktrace(mCurrentPath.substring(0, mCurrentPath.lastIndexOf('/')));
     }
 
     public void rescan()
     {
+        if (!(new File(mCurrentPath).exists()))
+        {
+            setCurrentPathBacktrace(pathToFile("."));
+            return;
+        }
+
+
+
         mFiles.clear();
 
         if (!mCurrentPath.equals("/"))
@@ -195,11 +204,37 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
-    public void setCurrentPath(String newPath)
+    public void setCurrentPathBacktrace(String newPath)
+    {
+        do
+        {
+            try
+            {
+                setCurrentPath(newPath);
+                return;
+            }
+            catch (FileNotFoundException e)
+            {
+                if (BuildConfig.DEBUG)
+                {
+                    Assert.assertTrue(!TextUtils.isEmpty(newPath) && !newPath.equals("/"));
+                }
+
+                newPath=newPath.substring(0, newPath.lastIndexOf('/'));
+            }
+        } while (true);
+    }
+
+    public void setCurrentPath(String newPath) throws FileNotFoundException
     {
         if (TextUtils.isEmpty(newPath))
         {
             newPath="/";
+        }
+
+        if (!(new File(newPath).exists()))
+        {
+            throw new FileNotFoundException();
         }
 
         if (BuildConfig.DEBUG)

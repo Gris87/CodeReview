@@ -45,11 +45,11 @@ public class ReviewActivity extends Activity
      */
     private SystemUiHider mSystemUiHider;
 
-	// ===========================================
+    // ===========================================
 
-	public static final int RESULT_CLOSE=1;
+    public static final int RESULT_CLOSE=1;
 
-	private String mFileName;
+    private String mFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -58,8 +58,8 @@ public class ReviewActivity extends Activity
 
         setContentView(R.layout.activity_review);
 
-		Intent intent=getIntent();
-		mFileName=intent.getStringExtra(ApplicationExtras.OPEN_FILE);
+        Intent intent=getIntent();
+        mFileName=intent.getStringExtra(ApplicationExtras.OPEN_FILE);
 
         setupActionBar();
 
@@ -165,7 +165,7 @@ public class ReviewActivity extends Activity
         }
     }
 
-	@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -179,18 +179,18 @@ public class ReviewActivity extends Activity
         switch(item.getItemId())
         {
             case R.id.action_settings:
-				{
-					return true;
-				}
+                {
+                    return true;
+                }
 
             case R.id.action_close:
-				{
-					Intent data=new Intent();
+                {
+                    Intent data=new Intent();
 
-					setResult(RESULT_CLOSE, data);
-					finish();
-					return true;
-				}
+                    setResult(RESULT_CLOSE, data);
+                    finish();
+                    return true;
+                }
         }
 
         return super.onOptionsItemSelected(item);

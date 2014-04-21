@@ -19,7 +19,7 @@ import android.view.View;
  * For more on system bars, see <a href=
  * "http://developer.android.com/design/get-started/ui-overview.html#system-bars"
  * > System Bars</a>.
- * 
+ *
  * @see android.view.View#setSystemUiVisibility(int)
  * @see android.view.WindowManager.LayoutParams#FLAG_FULLSCREEN
  */
@@ -66,7 +66,7 @@ public abstract class SystemUiHider
 
     /**
      * The current UI hider flags.
-     * 
+     *
      * @see #FLAG_FULLSCREEN
      * @see #FLAG_HIDE_NAVIGATION
      * @see #FLAG_LAYOUT_IN_SCREEN_OLDER_DEVICES
@@ -83,7 +83,7 @@ public abstract class SystemUiHider
      * appropriate for this device. The object will be either a
      * {@link SystemUiHiderBase} or {@link SystemUiHiderHoneycomb} depending on
      * the device.
-     * 
+     *
      * @param activity
      *            The activity whose window's system UI should be controlled by
      *            this class.
@@ -182,7 +182,7 @@ public abstract class SystemUiHider
     {
         /**
          * Called when the system UI visibility has changed.
-         * 
+         *
          * @param visible
          *            True if the system UI is visible.
          */

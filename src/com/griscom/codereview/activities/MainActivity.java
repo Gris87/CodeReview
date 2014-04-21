@@ -1,5 +1,8 @@
 package com.griscom.codereview.activities;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,9 +30,9 @@ import com.griscom.codereview.other.FileEntry;
 
 public class MainActivity extends ActionBarActivity
 {
-	private static final int REQUEST_REVIEW   = 1;
+    private static final int REQUEST_REVIEW   = 1;
     private static final int REQUEST_SETTINGS = 2;
-	
+
     private OnBackPressedListener mOnBackPressedListener=null;
 
     private long mBackPressTime=0;
@@ -65,10 +68,10 @@ public class MainActivity extends ActionBarActivity
         switch(item.getItemId())
         {
             case R.id.action_settings:
-			{
-				Intent intent = new Intent(this, SettingsActivity.class);
-				startActivityForResult(intent, REQUEST_SETTINGS);
-			
+            {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(intent, REQUEST_SETTINGS);
+
                 return true;
             }
 
@@ -102,8 +105,16 @@ public class MainActivity extends ActionBarActivity
             mActivity=(MainActivity)getActivity();
 
             mAdapter=new FilesAdapter(mActivity);
-            loadPath();
-			loadLastFile();
+
+            try
+            {
+                loadPath();
+                loadLastFile();
+            }
+            catch (FileNotFoundException e)
+            {
+                // Nothing
+            }
 
 
 
@@ -123,6 +134,14 @@ public class MainActivity extends ActionBarActivity
         }
 
         @Override
+        public void onResume()
+        {
+            super.onResume();
+
+            mAdapter.rescan();
+        }
+
+        @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
             if (parent==mFilesListView)
@@ -139,7 +158,7 @@ public class MainActivity extends ActionBarActivity
                     }
                     else
                     {
-                        mAdapter.setCurrentPath(mAdapter.pathToFile(fileName));
+                        mAdapter.setCurrentPathBacktrace(mAdapter.pathToFile(fileName));
                     }
 
                     savePath();
@@ -148,9 +167,16 @@ public class MainActivity extends ActionBarActivity
                 }
                 else
                 {
-					saveLastFile(fileName);
+                    saveLastFile(fileName);
 
-                    openFile(fileName);
+                    try
+                    {
+                        openFile(fileName);
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        mAdapter.setCurrentPathBacktrace(mAdapter.pathToFile("."));
+                    }
                 }
             }
         }
@@ -170,38 +196,45 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
 
-		@Override
-		public void onActivityResult(int requestCode, int resultCode, Intent data)
-		{
-			switch (requestCode)
-			{
-				case REQUEST_REVIEW:
-				{
-					switch (resultCode)
-					{
-						case ReviewActivity.RESULT_CANCELED:
-						{
-							saveLastFile("");
-						}
-						break;
-						case ReviewActivity.RESULT_CLOSE:
-						{
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data)
+        {
+            switch (requestCode)
+            {
+                case REQUEST_REVIEW:
+                {
+                    switch (resultCode)
+                    {
+                        case ReviewActivity.RESULT_CANCELED:
+                        {
+                            saveLastFile("");
+                        }
+                        break;
+                        case ReviewActivity.RESULT_CLOSE:
+                        {
                             mActivity.finish();
-						}
-						break;
-					}
-				}
-			}
+                        }
+                        break;
+                    }
+                }
+            }
 
-			super.onActivityResult(requestCode, resultCode, data);
-		}
+            super.onActivityResult(requestCode, resultCode, data);
+        }
 
-		private void openFile(String fileName)
-		{
-			Intent intent = new Intent(mActivity, ReviewActivity.class);
-			intent.putExtra(ApplicationExtras.OPEN_FILE, mAdapter.pathToFile(fileName));
-			startActivityForResult(intent, REQUEST_REVIEW);
-		}
+        private void openFile(String fileName) throws FileNotFoundException
+        {
+            String filePath=mAdapter.pathToFile(fileName);
+
+            if (!(new File(filePath).exists()))
+            {
+                throw new FileNotFoundException();
+            }
+
+            Intent intent = new Intent(mActivity, ReviewActivity.class);
+            intent.putExtra(ApplicationExtras.OPEN_FILE, filePath);
+            startActivityForResult(intent, REQUEST_REVIEW);
+        }
 
         private void savePath()
         {
@@ -212,7 +245,7 @@ public class MainActivity extends ActionBarActivity
             editor.commit();
         }
 
-        private void loadPath()
+        private void loadPath() throws FileNotFoundException
         {
             SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
 
@@ -220,20 +253,25 @@ public class MainActivity extends ActionBarActivity
 
             if (!TextUtils.isEmpty(path))
             {
-                mAdapter.setCurrentPath(path);
+                mAdapter.setCurrentPathBacktrace(path);
+
+                if (!mAdapter.getCurrentPath().equals(path))
+                {
+                    throw new FileNotFoundException();
+                }
             }
         }
 
-		private void saveLastFile(String fileName)
-		{
-			SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+        private void saveLastFile(String fileName)
+        {
+            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
 
             SharedPreferences.Editor editor=prefs.edit();
             editor.putString(ApplicationPreferences.LAST_FILE, fileName);
             editor.commit();
-		}
+        }
 
-		private void loadLastFile()
+        private void loadLastFile() throws FileNotFoundException
         {
             SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
 
