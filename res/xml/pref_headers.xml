@@ -5,11 +5,9 @@
     <header
         android:fragment="com.griscom.codereview.activities.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
+
     <header
-        android:fragment="com.griscom.codereview.activities.SettingsActivity$NotificationPreferenceFragment"
-        android:title="@string/pref_header_notifications" />
-    <header
-        android:fragment="com.griscom.codereview.activities.SettingsActivity$DataSyncPreferenceFragment"
-        android:title="@string/pref_header_data_sync" />
+        android:fragment="com.griscom.codereview.activities.SettingsActivity$FileManagerPreferenceFragment"
+        android:title="@string/pref_header_file_manager" />
 
 </preference-headers>
