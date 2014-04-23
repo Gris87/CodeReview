@@ -70,7 +70,7 @@ public class SettingsActivity extends PreferenceActivity
         // In the simplified UI, fragments are not used at all and we instead
         // use the older PreferenceActivity APIs.
 		
-		// Add 'general' preferences
+        // Add 'general' preferences.
 		addPreferencesFromResource(R.xml.pref_general);
 
         // Add 'file manager' preferences, and a corresponding header.
