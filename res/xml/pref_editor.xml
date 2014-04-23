@@ -1,17 +1,23 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" >
 
     <!-- Font size -->
-    <EditTextPreference
-		android:key="FontSize"
-    	android:title="@string/pref_title_font_size"
-    	android:summary="@string/pref_desc_font_size"
-    	android:defaultValue="14" />
-	
-	<!-- Tab size -->
-    <EditTextPreference
-		android:key="TabSize"
-    	android:title="@string/pref_title_tab_size"
-    	android:summary="@string/pref_desc_tab_size"
-    	android:defaultValue="4" />
+    <com.lukehorvat.NumberPickerDialogPreference
+        android:key="FontSize"
+        android:dialogMessage="@string/pref_title_font_size"
+        android:title="@string/pref_title_font_size"
+        android:summary="@string/pref_desc_font_size"
+        android:defaultValue="14"
+        custom:minimum="5"
+        custom:maximum="72" />
+        
+    <!-- Tab size -->
+    <com.lukehorvat.NumberPickerDialogPreference
+        android:key="TabSize"
+        android:dialogMessage="@string/pref_title_tab_size"
+        android:title="@string/pref_title_tab_size"
+        android:summary="@string/pref_desc_tab_size"
+        android:defaultValue="4"
+        custom:minimum="1"
+        custom:maximum="8" />
 	
 </PreferenceScreen>
