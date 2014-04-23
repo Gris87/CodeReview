@@ -1,8 +1,24 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <!-- Ignore files -->
-    <Preference android:title="@string/pref_title_ignore_files" >
-        <intent android:action="android.settings.SYNC_SETTINGS" />
-    </Preference>
+    
+    <!-- Review color -->
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+    	android:key="ReviewedColor"
+    	android:title="@string/pref_title_reviewed_color"
+    	android:summary="@string/pref_desc_reviewed_color"
+    	android:defaultValue="0xFF5AFF5A" />
+    
+    <!-- Invalid color -->
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+    	android:key="InvalidColor"
+    	android:title="@string/pref_title_invalid_color"
+    	android:summary="@string/pref_desc_invalid_color"
+    	android:defaultValue="0xFFFF5A5A" />
+    
+    <!-- Note color -->
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+    	android:key="NoteColor"
+    	android:title="@string/pref_title_note_color"
+    	android:summary="@string/pref_desc_note_color"
+    	android:defaultValue="0xFFFFC400" />
 
 </PreferenceScreen>
