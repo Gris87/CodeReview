@@ -41,11 +41,11 @@ public class SettingsActivity extends PreferenceActivity
      * shown on tablets.
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
-
-    /**
+	
+	/**
      * Force to use multi pan
-     */
-    private static final boolean ALWAYS_MULTIPAN = false;
+	 */
+	private static final boolean ALWAYS_MULTIPAN = true;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
@@ -69,16 +69,28 @@ public class SettingsActivity extends PreferenceActivity
 
         // In the simplified UI, fragments are not used at all and we instead
         // use the older PreferenceActivity APIs.
-
-        // Add 'general' preferences.
-        addPreferencesFromResource(R.xml.pref_general);
+		
+		// Add 'general' preferences
+		addPreferencesFromResource(R.xml.pref_general);
 
         // Add 'file manager' preferences, and a corresponding header.
         PreferenceCategory fakeHeader = new PreferenceCategory(this);
         fakeHeader.setTitle(R.string.pref_header_file_manager);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_file_manager);
+		
+		// Add 'colors' preferences, and a corresponding header.
+        fakeHeader = new PreferenceCategory(this);
+        fakeHeader.setTitle(R.string.pref_header_colors);
+        getPreferenceScreen().addPreference(fakeHeader);
+        addPreferencesFromResource(R.xml.pref_colors);
 
+		// Add 'editor' preferences, and a corresponding header.
+        fakeHeader = new PreferenceCategory(this);
+        fakeHeader.setTitle(R.string.pref_header_editor);
+        getPreferenceScreen().addPreference(fakeHeader);
+        addPreferencesFromResource(R.xml.pref_editor);
+		
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
@@ -112,13 +124,13 @@ public class SettingsActivity extends PreferenceActivity
     {
         return ALWAYS_SIMPLE_PREFS
                ||
-               Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
+			   Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
                ||
-               (
-                !ALWAYS_MULTIPAN
-                &&
-                !isXLargeTablet(context)
-               );
+			   (
+			    !ALWAYS_MULTIPAN
+			    &&
+				!isXLargeTablet(context)
+			   );
     }
 
     /** {@inheritDoc} */
@@ -156,7 +168,7 @@ public class SettingsActivity extends PreferenceActivity
                                 : null);
 
             }
-            else
+			else
             {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
@@ -210,8 +222,8 @@ public class SettingsActivity extends PreferenceActivity
             //bindPreferenceSummaryToValue(findPreference("example_text"));
         }
     }
-
-    /**
+	
+	/**
      * This fragment shows file manager preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
@@ -223,6 +235,48 @@ public class SettingsActivity extends PreferenceActivity
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_file_manager);
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+            //bindPreferenceSummaryToValue(findPreference("example_text"));
+        }
+    }
+	
+    /**
+     * This fragment shows colors preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class ColorsPreferenceFragment extends PreferenceFragment
+    {
+        @Override
+        public void onCreate(Bundle savedInstanceState)
+        {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_colors);
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+            //bindPreferenceSummaryToValue(findPreference("example_text"));
+        }
+    }
+	
+    /**
+     * This fragment shows editor preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class EditorPreferenceFragment extends PreferenceFragment
+    {
+        @Override
+        public void onCreate(Bundle savedInstanceState)
+        {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_editor);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
