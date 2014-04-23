@@ -1,8 +1,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!-- Ignore files -->
-    <Preference android:title="@string/pref_title_ignore_files" >
-        <intent android:action="android.settings.SYNC_SETTINGS" />
-    </Preference>
-
+    <!-- Font size -->
+    <EditTextPreference
+		android:key="FontSize"
+    	android:title="@string/pref_title_font_size"
+    	android:summary="@string/pref_desc_font_size"
+    	android:defaultValue="14" />
+	
+	<!-- Tab size -->
+    <EditTextPreference
+		android:key="TabSize"
+    	android:title="@string/pref_title_tab_size"
+    	android:summary="@string/pref_desc_tab_size"
+    	android:defaultValue="4" />
+	
 </PreferenceScreen>

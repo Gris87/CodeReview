@@ -26,7 +26,7 @@
     <string name="pref_title_invalid_color">Invalid</string>
     <string name="pref_desc_invalid_color">Color of invalid rows.</string>
     
-    <string name="pref_title_note_color">note</string>
+    <string name="pref_title_note_color">Note</string>
     <string name="pref_desc_note_color">Color of the rows with notes.</string>
     
 	<!-- Editor settings -->
