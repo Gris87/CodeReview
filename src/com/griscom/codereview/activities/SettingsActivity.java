@@ -45,7 +45,7 @@ public class SettingsActivity extends PreferenceActivity
 	/**
      * Force to use multi pan
 	 */
-	private static final boolean ALWAYS_MULTIPAN = true;
+	private static final boolean ALWAYS_MULTIPAN = false;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
