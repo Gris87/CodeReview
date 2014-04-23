@@ -7,10 +7,10 @@ import android.os.Parcelable;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.griscom.codereview.R;
+import com.michaelnovakjr.numberpicker.NumberPicker;
 
 /**
  * A {@link DialogPreference} that provides a user with the means to select an integer from a {@link NumberPicker}, and persist it.
@@ -78,9 +78,9 @@ public class NumberPickerDialogPreference extends DialogPreference
         dialogMessageText.setText(getDialogMessage());
 
         mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        mNumberPicker.setMinValue(mMinValue);
-        mNumberPicker.setMaxValue(mMaxValue);
-        mNumberPicker.setValue(mValue);
+        mNumberPicker.setRange(mMinValue, mMaxValue);
+        mNumberPicker.setCurrent(mValue);
+        mNumberPicker.setWrap(false);
     }
 
     public int getMinValue()
@@ -130,7 +130,7 @@ public class NumberPickerDialogPreference extends DialogPreference
         // when the user selects "OK", persist the new value
         if (positiveResult)
         {
-            int numberPickerValue = mNumberPicker.getValue();
+            int numberPickerValue = mNumberPicker.getCurrent();
             if (callChangeListener(numberPickerValue))
             {
                 setValue(numberPickerValue);
