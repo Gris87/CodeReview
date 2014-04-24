@@ -22,14 +22,14 @@ public class IgnoreFilesActivity extends ActionBarActivity
         if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment()).commit();
+                                       .add(R.id.container, new PlaceholderFragment())
+                                       .commit();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.ignore_files, menu);
         return true;
@@ -41,11 +41,14 @@ public class IgnoreFilesActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings)
+        switch(item.getItemId())
         {
-            return true;
+            case R.id.action_settings:
+            {
+                return true;
+            }
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -60,8 +63,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState)
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             View rootView = inflater.inflate(R.layout.fragment_ignore_files,
                     container, false);
