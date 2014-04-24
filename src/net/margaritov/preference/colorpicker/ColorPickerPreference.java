@@ -147,11 +147,11 @@ public class ColorPickerPreference
 	}
 
 	public boolean onPreferenceClick(Preference preference) {
-		showDialog(null);
+		showDialog(null, preference.getTitle());
 		return false;
 	}
 	
-	protected void showDialog(Bundle state) {
+	protected void showDialog(Bundle state, CharSequence title) {
 		mDialog = new ColorPickerDialog(getContext(), mValue);
 		mDialog.setOnColorChangedListener(this);
 		if (mAlphaSliderEnabled) {
@@ -163,6 +163,12 @@ public class ColorPickerPreference
 		if (state != null) {
 			mDialog.onRestoreInstanceState(state);
 		}
+		
+		if (title!=null)
+		{
+			mDialog.setTitle(title);
+		}
+		
 		mDialog.show();
 	}
 
@@ -276,7 +282,7 @@ public class ColorPickerPreference
 
         SavedState myState = (SavedState) state;
         super.onRestoreInstanceState(myState.getSuperState());
-        showDialog(myState.dialogBundle);
+        showDialog(myState.dialogBundle, null);
     }
 
     private static class SavedState extends BaseSavedState {

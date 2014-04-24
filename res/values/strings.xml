@@ -22,9 +22,6 @@
     <!-- Review activity title -->
     <string name="title_activity_review">Code review</string>
     <string name="dummy_button">Dummy Button</string>
-
-    <!-- ColorPreference title -->
-    <string name="dialog_color_picker">Color Picker</string>
     
     <!-- ColorPreference hint -->
     <string name="press_color_to_apply">Press on color to apply</string>    
