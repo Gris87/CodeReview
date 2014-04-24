@@ -1,25 +1,17 @@
 package com.griscom.codereview.activities;
 
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
 
 import com.griscom.codereview.R;
-
-import java.util.List;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -60,6 +52,7 @@ public class SettingsActivity extends PreferenceActivity
      * device configuration dictates that a simplified, single-pane UI should be
      * shown.
      */
+    @SuppressWarnings("deprecation")
     private void setupSimplePreferencesScreen()
     {
         if (!isSimplePreferences(this))
@@ -101,16 +94,16 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     public boolean onIsMultiPane()
     {
-        return (ALWAYS_MULTIPAN || isXLargeTablet(this)) && !isSimplePreferences(this);
+        return (ALWAYS_MULTIPAN || isLargeTablet(this)) && !isSimplePreferences(this);
     }
 
     /**
      * Helper method to determine if the device has an extra-large screen. For
      * example, 10" tablets are extra-large.
      */
-    private static boolean isXLargeTablet(Context context)
+    private static boolean isLargeTablet(Context context)
     {
-        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     /**
@@ -129,7 +122,7 @@ public class SettingsActivity extends PreferenceActivity
                (
                 !ALWAYS_MULTIPAN
                 &&
-                !isXLargeTablet(context)
+                !isLargeTablet(context)
                );
     }
 
@@ -148,6 +141,7 @@ public class SettingsActivity extends PreferenceActivity
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
+    /*
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener()
     {
         @Override
@@ -177,6 +171,7 @@ public class SettingsActivity extends PreferenceActivity
             return true;
         }
     };
+    */
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -187,6 +182,7 @@ public class SettingsActivity extends PreferenceActivity
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
+    /*
     private static void bindPreferenceSummaryToValue(Preference preference)
     {
         // Set the listener to watch for value changes.
@@ -201,6 +197,7 @@ public class SettingsActivity extends PreferenceActivity
                         preference.getContext()).getString(preference.getKey(),
                         ""));
     }
+    */
 
     /**
      * This fragment shows general preferences only. It is used when the

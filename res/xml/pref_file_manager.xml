@@ -2,7 +2,10 @@
 
     <!-- Ignore files -->
     <Preference android:title="@string/pref_title_ignore_files" >
-        <intent android:action="android.settings.SYNC_SETTINGS" />
+        <intent
+             android:action="android.intent.action.VIEW"
+             android:targetPackage="com.griscom.codereview"
+             android:targetClass="com.griscom.codereview.activities.IgnoreFilesActivity" />
     </Preference>
 
 </PreferenceScreen>

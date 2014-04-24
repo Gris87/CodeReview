@@ -26,4 +26,7 @@
     <!-- ColorPreference hint -->
     <string name="press_color_to_apply">Press on color to apply</string>
 
+    <!-- Ignore files activity title -->
+    <string name="title_activity_ignore_files">Ignore files</string>
+
 </resources>

@@ -89,6 +89,7 @@ public class ColorPickerPreference
         setPreviewColor();
     }
 
+    @SuppressWarnings("deprecation")
     private void setPreviewColor() {
         if (mView == null) return;
         ImageView iView = new ImageView(getContext());
@@ -146,6 +147,7 @@ public class ColorPickerPreference
         }
     }
 
+    @Override
     public boolean onPreferenceClick(Preference preference) {
         showDialog(null, preference.getTitle());
         return false;
@@ -306,10 +308,12 @@ public class ColorPickerPreference
         @SuppressWarnings("unused")
         public static final Parcelable.Creator<SavedState> CREATOR =
                 new Parcelable.Creator<SavedState>() {
+            @Override
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
