@@ -34,7 +34,7 @@
     </style>
 
     <style name="ButtonBarButton" />
-    
+
     <style name="NumberPickerUpButton" parent="@android:style/Widget.ImageButton">
         <item name="android:background">@drawable/numberpicker_up_btn</item>
         <item name="android:paddingTop">22dip</item>

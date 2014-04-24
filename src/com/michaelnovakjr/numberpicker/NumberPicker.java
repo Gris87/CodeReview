@@ -50,7 +50,7 @@ import com.griscom.codereview.R;
 public class NumberPicker extends LinearLayout implements OnClickListener,
         OnEditorActionListener, OnFocusChangeListener, OnLongClickListener {
 
-	private static final int DEFAULT_STEP = 1;
+    private static final int DEFAULT_STEP = 1;
     private static final int DEFAULT_MAX = 200;
     private static final int DEFAULT_MIN = 0;
     private static final int DEFAULT_VALUE = 0;
@@ -165,10 +165,10 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
 
         mText = (EditText) findViewById(R.id.numpicker_input);
         if(1 == mStep){
-	        mText.setOnFocusChangeListener(this);
-	        mText.setOnEditorActionListener(this);
+            mText.setOnFocusChangeListener(this);
+            mText.setOnEditorActionListener(this);
         } else { // Unable to choice a cutom number
-        	mText.setEnabled(false);
+            mText.setEnabled(false);
         }
         mText.setFilters(new InputFilter[] {inputFilter});
 

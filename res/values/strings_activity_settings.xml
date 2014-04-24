@@ -1,41 +1,41 @@
 <resources>
 
-	<!-- Settings title -->
+    <!-- Settings title -->
     <string name="title_activity_settings">Settings</string>
 
-    
-    
-	<!-- General settings -->
+
+
+    <!-- General settings -->
     <string name="pref_header_general">General</string>
-	
-    
-    
+
+
+
     <!-- File manager settings -->
     <string name="pref_header_file_manager">File manager</string>
-    
+
     <string name="pref_title_ignore_files">Ignore files</string>
 
-    
-    
-	<!-- Colors settings -->
+
+
+    <!-- Colors settings -->
     <string name="pref_header_colors">Colors</string>
-    
-	<string name="pref_title_reviewed_color">Reviewed</string>
-	<string name="pref_desc_reviewed_color">Color of reviewed rows.</string>
-    
+
+    <string name="pref_title_reviewed_color">Reviewed</string>
+    <string name="pref_desc_reviewed_color">Color of reviewed rows.</string>
+
     <string name="pref_title_invalid_color">Invalid</string>
     <string name="pref_desc_invalid_color">Color of invalid rows.</string>
-    
+
     <string name="pref_title_note_color">Note</string>
     <string name="pref_desc_note_color">Color of the rows with notes.</string>
-    
-	<!-- Editor settings -->
+
+    <!-- Editor settings -->
     <string name="pref_header_editor">Editor</string>
-    
-	<string name="pref_title_font_size">Font size</string>
-	<string name="pref_desc_font_size">Specify default font size of the editor.</string>
-    
+
+    <string name="pref_title_font_size">Font size</string>
+    <string name="pref_desc_font_size">Specify default font size of the editor.</string>
+
     <string name="pref_title_tab_size">Tab size</string>
     <string name="pref_desc_tab_size">Displayed width of tabs in the editor.</string>
-    
+
 </resources>
