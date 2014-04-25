@@ -7,9 +7,9 @@
     <!-- Settings -->
     <string name="action_settings">Settings</string>
 
-	<!-- Add -->
+    <!-- Add -->
     <string name="action_add">Add</string>
-	
+
     <!-- Close -->
     <string name="action_close">Close</string>
 
@@ -31,5 +31,11 @@
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Ignore files</string>
+
+    <!-- Title for dialog in ignore files activity -->
+    <string name="dialog_add_file_title">Ignore file</string>
+
+    <!-- Message for dialog in ignore files activity -->
+    <string name="dialog_add_file_message">Input name of file or pattern\n(\'*\' and \'?\' is allowed):</string>
 
 </resources>

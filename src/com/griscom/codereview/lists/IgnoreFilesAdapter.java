@@ -1,24 +1,16 @@
 package com.griscom.codereview.lists;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 
-import junit.framework.Assert;
 import android.content.Context;
-import android.os.Environment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
-import com.griscom.codereview.other.FileEntry;
-import com.griscom.codereview.other.SortType;
 
 public class IgnoreFilesAdapter extends BaseAdapter
 {
@@ -78,7 +70,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
         String fileName=mFiles.get(position);
 
         ViewHolder holder=(ViewHolder)view.getTag();
-		
+
         holder.mFileName.setText(fileName);
     }
 
@@ -99,5 +91,34 @@ public class IgnoreFilesAdapter extends BaseAdapter
         bindView(position, view);
 
         return view;
+    }
+
+    public void addFile(String fileName)
+    {
+        if (!mFiles.contains(fileName))
+        {
+            mFiles.add(fileName);
+
+            updateList();
+        }
+    }
+
+    public void renameFile(int index, String fileName)
+    {
+        mFiles.remove(index);
+
+        if (!mFiles.contains(fileName))
+        {
+            mFiles.add(fileName);
+        }
+
+        updateList();
+    }
+
+    private void updateList()
+    {
+        Collections.sort(mFiles);
+
+        notifyDataSetChanged();
     }
 }

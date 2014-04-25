@@ -1,5 +1,7 @@
 package com.griscom.codereview.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -8,14 +10,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.griscom.codereview.R;
-import com.griscom.codereview.lists.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
+import com.griscom.codereview.listeners.OnFileAddedListener;
+import com.griscom.codereview.lists.IgnoreFilesAdapter;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
+    private OnFileAddedListener mOnFileAddedListener=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -48,6 +55,36 @@ public class IgnoreFilesActivity extends ActionBarActivity
         {
             case R.id.action_add:
             {
+                final EditText editText=new EditText(this);
+
+                new AlertDialog.Builder(this)
+                    .setTitle(R.string.dialog_add_file_title)
+                    .setMessage(R.string.dialog_add_file_message)
+                    .setView(editText)
+                    .setPositiveButton(android.R.string.ok,
+                                       new DialogInterface.OnClickListener()
+                                       {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int whichButton)
+                                            {
+                                                if (mOnFileAddedListener!=null)
+                                                {
+                                                    mOnFileAddedListener.onFileAdded(editText.getText().toString());
+                                                }
+
+                                                dialog.dismiss();
+                                            }
+                                       })
+                    .setNegativeButton(android.R.string.cancel,
+                                       new DialogInterface.OnClickListener()
+                                       {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int whichButton)
+                                            {
+                                                dialog.dismiss();
+                                            }
+                                       }).show();
+
                 return true;
             }
         }
@@ -58,9 +95,9 @@ public class IgnoreFilesActivity extends ActionBarActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnItemClickListener
+    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnFileAddedListener
     {
-		private IgnoreFilesActivity mActivity;
+    private IgnoreFilesActivity mActivity;
         private ListView            mIgnoreFilesListView;
         private IgnoreFilesAdapter  mAdapter;
 
@@ -71,25 +108,69 @@ public class IgnoreFilesActivity extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-			mActivity=(IgnoreFilesActivity)getActivity();
+            mActivity=(IgnoreFilesActivity)getActivity();
 
             mAdapter=new IgnoreFilesAdapter(mActivity);
-			
-			
-					
-			View rootView=inflater.inflate(R.layout.fragment_ignore_files, container, false);
+
+
+
+            View rootView=inflater.inflate(R.layout.fragment_ignore_files, container, false);
 
             mIgnoreFilesListView=(ListView)rootView.findViewById(R.id.ignoreFileslistView);
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
-			
+
+            mActivity.setOnFileAddedListener(this);
+
             return rootView;
         }
-		
-		@Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+
+        @Override
+        public void onFileAdded(String fileName)
         {
-			// TODO: Implement it
-		}
+            mAdapter.addFile(fileName);
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
+        {
+            final EditText editText=new EditText(mActivity);
+            editText.setText((String)parent.getItemAtPosition(position));
+
+            new AlertDialog.Builder(mActivity)
+                .setTitle(R.string.dialog_add_file_title)
+                .setMessage(R.string.dialog_add_file_message)
+                .setView(editText)
+                .setPositiveButton(android.R.string.ok,
+                                   new DialogInterface.OnClickListener()
+                                   {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int whichButton)
+                                        {
+                                            mAdapter.renameFile(position, editText.getText().toString());
+
+                                            dialog.dismiss();
+                                        }
+                                   })
+                .setNegativeButton(android.R.string.cancel,
+                                   new DialogInterface.OnClickListener()
+                                   {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int whichButton)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                   }).show();
+        }
+    }
+
+    public OnFileAddedListener getOnFileAddedListener()
+    {
+        return mOnFileAddedListener;
+    }
+
+    public void setOnFileAddedListener(OnFileAddedListener listener)
+    {
+        mOnFileAddedListener=listener;
     }
 }
