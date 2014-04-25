@@ -7,6 +7,9 @@
     <!-- Settings -->
     <string name="action_settings">Settings</string>
 
+	<!-- Add -->
+    <string name="action_add">Add</string>
+	
     <!-- Close -->
     <string name="action_close">Close</string>
 
