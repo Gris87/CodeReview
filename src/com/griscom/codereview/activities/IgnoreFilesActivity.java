@@ -1,6 +1,7 @@
 package com.griscom.codereview.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -85,6 +87,9 @@ public class IgnoreFilesActivity extends ActionBarActivity
                                             }
                                        }).show();
 
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+
                 return true;
             }
         }
@@ -136,6 +141,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
         {
             final EditText editText=new EditText(mActivity);
             editText.setText((String)parent.getItemAtPosition(position));
+            editText.selectAll();
 
             new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.dialog_add_file_title)
@@ -161,6 +167,9 @@ public class IgnoreFilesActivity extends ActionBarActivity
                                             dialog.dismiss();
                                         }
                                    }).show();
+
+            InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         }
     }
 
