@@ -12,6 +12,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 
 import com.griscom.codereview.R;
+import android.preference.*;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -63,8 +64,8 @@ public class SettingsActivity extends PreferenceActivity
         // In the simplified UI, fragments are not used at all and we instead
         // use the older PreferenceActivity APIs.
 
-        // Add 'general' preferences.
-        addPreferencesFromResource(R.xml.pref_general);
+        // Create empty PreferenceScreen
+		setPreferenceScreen(getPreferenceManager().createPreferenceScreen(this));
 
         // Add 'file manager' preferences, and a corresponding header.
         PreferenceCategory fakeHeader = new PreferenceCategory(this);
@@ -198,27 +199,6 @@ public class SettingsActivity extends PreferenceActivity
                         ""));
     }
     */
-
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment
-    {
-        @Override
-        public void onCreate(Bundle savedInstanceState)
-        {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            //bindPreferenceSummaryToValue(findPreference("example_text"));
-        }
-    }
 
     /**
      * This fragment shows file manager preferences only. It is used when the

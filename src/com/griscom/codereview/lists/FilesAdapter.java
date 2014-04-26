@@ -22,6 +22,7 @@ import com.griscom.codereview.other.SortType;
 import android.content.*;
 import com.griscom.codereview.other.*;
 import java.util.regex.*;
+import android.util.*;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -148,7 +149,7 @@ public class FilesAdapter extends BaseAdapter
         if (files!=null)
         {
 			ArrayList<String> ignoreFiles=new ArrayList<String>();
-			
+
 			SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
 			String[] filterFiles=prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
 
@@ -183,9 +184,9 @@ public class FilesAdapter extends BaseAdapter
 	{
 		for (int i=0; i<ignoreFiles.size(); ++i)
 		{
-			if (Pattern.matches())
+			//if (Pattern.matches(ignoreFiles.get(i), fileName))
 			{
-				return false;
+				//return false;
 			}
 		}
 		

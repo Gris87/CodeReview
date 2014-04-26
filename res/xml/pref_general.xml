@@ -1,8 +1,0 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <!-- Ignore files -->
-    <Preference android:title="@string/pref_title_ignore_files" >
-        <intent android:action="android.settings.SYNC_SETTINGS" />
-    </Preference>
-
-</PreferenceScreen>
