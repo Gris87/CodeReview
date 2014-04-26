@@ -37,8 +37,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         // -----------------------------------------------------------------------------------
 
-        SharedPreferences prefs=mContext.getPreferences(Context.MODE_PRIVATE);
-
+        SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
         String[] files=prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
 
         if (files!=null)
@@ -160,7 +159,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
             res.append(mFiles.get(i));
         }
 
-        SharedPreferences prefs=mContext.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor=prefs.edit();
         editor.putString(ApplicationPreferences.IGNORE_FILES, res.toString());

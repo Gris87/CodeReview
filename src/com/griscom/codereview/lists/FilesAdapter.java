@@ -19,6 +19,9 @@ import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
+import android.content.*;
+import com.griscom.codereview.other.*;
+import java.util.regex.*;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -144,11 +147,30 @@ public class FilesAdapter extends BaseAdapter
 
         if (files!=null)
         {
+			ArrayList<String> ignoreFiles=new ArrayList<String>();
+			
+			SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
+			String[] filterFiles=prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
+
+			if (filterFiles!=null)
+			{
+				for (int i=0; i<filterFiles.length; ++i)
+				{
+					if (!TextUtils.isEmpty(filterFiles[i]))
+					{
+						ignoreFiles.add(filterFiles[i]);
+					}
+                }
+			}
+			
             for (int i=0; i<files.length; ++i)
             {
-                FileEntry newEntry=new FileEntry(files[i]);
+				if (filter(files[i].getName(), ignoreFiles))
+				{
+					FileEntry newEntry=new FileEntry(files[i]);
 
-                mFiles.add(newEntry);
+					mFiles.add(newEntry);
+				}
             }
         }
 
@@ -156,6 +178,19 @@ public class FilesAdapter extends BaseAdapter
 
         sort();
     }
+	
+	private boolean filter(String fileName, ArrayList<String> ignoreFiles)
+	{
+		for (int i=0; i<ignoreFiles.size(); ++i)
+		{
+			if (Pattern.matches())
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
 
     public void sort()
     {
