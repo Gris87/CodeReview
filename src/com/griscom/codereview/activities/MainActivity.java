@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -88,7 +89,7 @@ public class MainActivity extends ActionBarActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnBackPressedListener
+    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener, OnBackPressedListener
     {
         private MainActivity mActivity;
         private ActionBar    mActionBar;
@@ -123,6 +124,7 @@ public class MainActivity extends ActionBarActivity
             mFilesListView=(ListView)rootView.findViewById(R.id.fileslistView);
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
+			mFilesListView.setOnItemLongClickListener(this);
 
             mActionBar=mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
@@ -180,6 +182,14 @@ public class MainActivity extends ActionBarActivity
                 }
             }
         }
+		
+		@Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
+        {
+			// TODO: ...
+
+			return true;
+		}
 
         @Override
         public boolean onBackPressed()

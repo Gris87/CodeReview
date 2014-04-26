@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -100,7 +101,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnFileAddedListener
+    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener, OnFileAddedListener
     {
     private IgnoreFilesActivity mActivity;
         private ListView            mIgnoreFilesListView;
@@ -124,16 +125,11 @@ public class IgnoreFilesActivity extends ActionBarActivity
             mIgnoreFilesListView=(ListView)rootView.findViewById(R.id.ignoreFileslistView);
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
+			mIgnoreFilesListView.setOnItemLongClickListener(this);
 
             mActivity.setOnFileAddedListener(this);
 
             return rootView;
-        }
-
-        @Override
-        public void onFileAdded(String fileName)
-        {
-            mAdapter.addFile(fileName);
         }
 
         @Override
@@ -170,6 +166,20 @@ public class IgnoreFilesActivity extends ActionBarActivity
 
             InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        }
+		
+		@Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
+        {
+			// TODO: ...
+			
+			return true;
+		}
+		
+		@Override
+        public void onFileAdded(String fileName)
+        {
+            mAdapter.addFile(fileName);
         }
     }
 
