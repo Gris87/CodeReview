@@ -12,7 +12,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 
 import com.griscom.codereview.R;
-import android.preference.*;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -65,7 +64,7 @@ public class SettingsActivity extends PreferenceActivity
         // use the older PreferenceActivity APIs.
 
         // Create empty PreferenceScreen
-		setPreferenceScreen(getPreferenceManager().createPreferenceScreen(this));
+        setPreferenceScreen(getPreferenceManager().createPreferenceScreen(this));
 
         // Add 'file manager' preferences, and a corresponding header.
         PreferenceCategory fakeHeader = new PreferenceCategory(this);

@@ -3,19 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.griscom.codereview.activities.MainActivity" >
 
-	<item
+    <item
         android:id="@+id/action_open"
         android:orderInCategory="100"
         android:title="@string/action_open"
         app:showAsAction="ifRoom"/>
-	
+
     <item
         android:id="@+id/action_rename"
         android:orderInCategory="200"
         android:title="@string/action_rename"
         app:showAsAction="ifRoom"/>
-	
-	<item
+
+    <item
         android:id="@+id/action_mark_to_rename"
         android:orderInCategory="300"
         android:title="@string/action_mark_to_rename"
@@ -26,8 +26,8 @@
         android:orderInCategory="400"
         android:title="@string/action_delete"
         app:showAsAction="ifRoom"/>
-	
-	<item
+
+    <item
         android:id="@+id/action_mark_to_delete"
         android:orderInCategory="500"
         android:title="@string/action_mark_to_delete"

@@ -46,7 +46,7 @@ public class ColorPickerDialog
 
     private ColorPickerView mColorPicker;
 
-	private CharSequence mTitle="";
+    private CharSequence mTitle="";
     private ColorPickerPanelView mOldColor;
     private ColorPickerPanelView mNewColor;
 
@@ -215,7 +215,7 @@ public class ColorPickerDialog
     @Override
     public Bundle onSaveInstanceState() {
         Bundle state = super.onSaveInstanceState();
-		state.putCharSequence("title", mTitle);
+        state.putCharSequence("title", mTitle);
         state.putInt("old_color", mOldColor.getColor());
         state.putInt("new_color", mNewColor.getColor());
         return state;
@@ -224,24 +224,24 @@ public class ColorPickerDialog
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-		setTitle(savedInstanceState.getCharSequence("title", ""));
+        setTitle(savedInstanceState.getCharSequence("title", ""));
         mOldColor.setColor(savedInstanceState.getInt("old_color"));
         mColorPicker.setColor(savedInstanceState.getInt("new_color"), true);
     }
 
-	@Override
-	public void setTitle(int titleId)
-	{
-		mTitle=getContext().getString(titleId);
+    @Override
+    public void setTitle(int titleId)
+    {
+        mTitle=getContext().getString(titleId);
 
-		super.setTitle(titleId);
-	}
+        super.setTitle(titleId);
+    }
 
-	@Override
-	public void setTitle(CharSequence title)
-	{
-		mTitle=title;
+    @Override
+    public void setTitle(CharSequence title)
+    {
+        mTitle=title;
 
-		super.setTitle(mTitle);
-	}
+        super.setTitle(mTitle);
+    }
 }

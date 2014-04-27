@@ -6,12 +6,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -20,9 +22,6 @@ import android.widget.ListView;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnFileAddedListener;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
-import android.view.ContextMenu.*;
-import android.view.*;
-import android.widget.AbsListView.*;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
@@ -127,8 +126,8 @@ public class IgnoreFilesActivity extends ActionBarActivity
             mIgnoreFilesListView=(ListView)rootView.findViewById(R.id.ignoreFileslistView);
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
-			mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-			mIgnoreFilesListView.setMultiChoiceModeListener(mChoiceListener);
+            mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            mIgnoreFilesListView.setMultiChoiceModeListener(mChoiceListener);
 
             mActivity.setOnFileAddedListener(this);
 
@@ -170,44 +169,44 @@ public class IgnoreFilesActivity extends ActionBarActivity
             InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         }
-		
-		MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
-		{
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
-			{
-				// TODO: Implement this method
-			}
 
-			@Override
-			public boolean onCreateActionMode(ActionMode mode, Menu menu)
-			{
-				mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
-				return true;
-			}
+        MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
+        {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
+            {
+                // TODO: Implement this method
+            }
 
-			@Override
-			public boolean onPrepareActionMode(ActionMode mode, Menu menu)
-			{
-				// TODO: Implement this method
-				return false;
-			}
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu)
+            {
+                mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
+                return true;
+            }
 
-			@Override
-			public boolean onActionItemClicked(ActionMode mode, MenuItem menu)
-			{
-				// TODO: Implement this method
-				return true;
-			}
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu)
+            {
+                // TODO: Implement this method
+                return false;
+            }
 
-			@Override
-			public void onDestroyActionMode(ActionMode mode)
-			{
-				// TODO: Implement this method
-			}
-		};
-		
-		@Override
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem menu)
+            {
+                // TODO: Implement this method
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode)
+            {
+                // TODO: Implement this method
+            }
+        };
+
+        @Override
         public void onFileAdded(String fileName)
         {
             mAdapter.addFile(fileName);

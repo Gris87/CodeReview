@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import junit.framework.Assert;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,12 +18,9 @@ import android.widget.TextView;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
+import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
-import android.content.*;
-import com.griscom.codereview.other.*;
-import java.util.regex.*;
-import android.util.*;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -148,30 +146,30 @@ public class FilesAdapter extends BaseAdapter
 
         if (files!=null)
         {
-			ArrayList<String> ignoreFiles=new ArrayList<String>();
+            ArrayList<String> ignoreFiles=new ArrayList<String>();
 
-			SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
-			String[] filterFiles=prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
+            SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
+            String[] filterFiles=prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
 
-			if (filterFiles!=null)
-			{
-				for (int i=0; i<filterFiles.length; ++i)
-				{
-					if (!TextUtils.isEmpty(filterFiles[i]))
-					{
-						ignoreFiles.add(filterFiles[i]);
-					}
+            if (filterFiles!=null)
+            {
+                for (int i=0; i<filterFiles.length; ++i)
+                {
+                    if (!TextUtils.isEmpty(filterFiles[i]))
+                    {
+                        ignoreFiles.add(filterFiles[i]);
+                    }
                 }
-			}
-			
+            }
+
             for (int i=0; i<files.length; ++i)
             {
-				if (filter(files[i].getName(), ignoreFiles))
-				{
-					FileEntry newEntry=new FileEntry(files[i]);
+                if (filter(files[i].getName(), ignoreFiles))
+                {
+                    FileEntry newEntry=new FileEntry(files[i]);
 
-					mFiles.add(newEntry);
-				}
+                    mFiles.add(newEntry);
+                }
             }
         }
 
@@ -179,19 +177,19 @@ public class FilesAdapter extends BaseAdapter
 
         sort();
     }
-	
-	private boolean filter(String fileName, ArrayList<String> ignoreFiles)
-	{
-		for (int i=0; i<ignoreFiles.size(); ++i)
-		{
-			//if (Pattern.matches(ignoreFiles.get(i), fileName))
-			{
-				//return false;
-			}
-		}
-		
-		return true;
-	}
+
+    private boolean filter(String fileName, ArrayList<String> ignoreFiles)
+    {
+        for (int i=0; i<ignoreFiles.size(); ++i)
+        {
+            //if (Pattern.matches(ignoreFiles.get(i), fileName))
+            {
+                //return false;
+            }
+        }
+
+        return true;
+    }
 
     public void sort()
     {
