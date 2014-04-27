@@ -14,13 +14,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnFileAddedListener;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
+import android.view.ContextMenu.*;
+import android.view.*;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
@@ -101,7 +102,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener, OnFileAddedListener
+    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnFileAddedListener
     {
     private IgnoreFilesActivity mActivity;
         private ListView            mIgnoreFilesListView;
@@ -125,7 +126,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
             mIgnoreFilesListView=(ListView)rootView.findViewById(R.id.ignoreFileslistView);
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
-			mIgnoreFilesListView.setOnItemLongClickListener(this);
+			registerForContextMenu(mIgnoreFilesListView);
 
             mActivity.setOnFileAddedListener(this);
 
@@ -167,13 +168,14 @@ public class IgnoreFilesActivity extends ActionBarActivity
             InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         }
-		
+
 		@Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
-        {
-			// TODO: ...
+		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+		{
+			// TODO: Implement this method
+			super.onCreateContextMenu(menu, v, menuInfo);
 			
-			return true;
+			mActivity.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
 		}
 		
 		@Override

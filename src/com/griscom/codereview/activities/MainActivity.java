@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,6 +27,8 @@ import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
+import android.view.ContextMenu.*;
+import android.view.*;
 
 public class MainActivity extends ActionBarActivity
 {
@@ -89,7 +90,7 @@ public class MainActivity extends ActionBarActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener, OnBackPressedListener
+    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnBackPressedListener
     {
         private MainActivity mActivity;
         private ActionBar    mActionBar;
@@ -124,8 +125,8 @@ public class MainActivity extends ActionBarActivity
             mFilesListView=(ListView)rootView.findViewById(R.id.fileslistView);
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
-			mFilesListView.setOnItemLongClickListener(this);
-
+			registerForContextMenu(mFilesListView);
+			
             mActionBar=mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
             mActionBar.setTitle(mAdapter.getCurrentPath());
@@ -182,13 +183,14 @@ public class MainActivity extends ActionBarActivity
                 }
             }
         }
-		
-		@Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
-        {
-			// TODO: ...
 
-			return true;
+		@Override
+		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+		{
+			// TODO: Implement this method
+			super.onCreateContextMenu(menu, v, menuInfo);
+			
+			mActivity.getMenuInflater().inflate(R.menu.main_context, menu);
 		}
 
         @Override

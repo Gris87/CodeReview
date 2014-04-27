@@ -9,7 +9,22 @@
 
     <!-- Add -->
     <string name="action_add">Add</string>
+	
+	<!-- Edit -->
+    <string name="action_edit">Edit</string>
 
+	<!-- Rename -->
+    <string name="action_rename">Rename</string>
+	
+	<!-- Mark to rename -->
+    <string name="action_mark_to_rename">Mark to rename</string>
+	
+	<!-- Delete -->
+    <string name="action_delete">Delete</string>
+	
+	<!-- Mark to delete -->
+    <string name="action_mark_to_delete">Mark to delete</string>
+	
     <!-- Close -->
     <string name="action_close">Close</string>
 
