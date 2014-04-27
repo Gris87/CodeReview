@@ -6,14 +6,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -127,7 +125,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
             mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            mIgnoreFilesListView.setMultiChoiceModeListener(mChoiceListener);
+            //mIgnoreFilesListView.setMultiChoiceModeListener(mChoiceListener);
 
             mActivity.setOnFileAddedListener(this);
 
@@ -170,12 +168,13 @@ public class IgnoreFilesActivity extends ActionBarActivity
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         }
 
+        /*
         MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
         {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
             {
-                // TODO: Implement this method
+                // TODO Auto-generated method stub
             }
 
             @Override
@@ -188,23 +187,24 @@ public class IgnoreFilesActivity extends ActionBarActivity
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu)
             {
-                // TODO: Implement this method
+                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem menu)
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item)
             {
-                // TODO: Implement this method
+                // TODO Auto-generated method stub
                 return true;
             }
 
             @Override
             public void onDestroyActionMode(ActionMode mode)
             {
-                // TODO: Implement this method
+                // TODO Auto-generated method stub
             }
         };
+        */
 
         @Override
         public void onFileAdded(String fileName)

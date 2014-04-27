@@ -11,13 +11,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -126,7 +124,7 @@ public class MainActivity extends ActionBarActivity
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
             mFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            mFilesListView.setMultiChoiceModeListener(mChoiceListener);
+            //mFilesListView.setMultiChoiceModeListener(mChoiceListener);
 
             mActionBar=mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
@@ -185,6 +183,7 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
+        /*
         MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
         {
             @Override
@@ -208,7 +207,7 @@ public class MainActivity extends ActionBarActivity
             }
 
             @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem menu)
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item)
             {
                 // TODO: Implement this method
                 return true;
@@ -220,6 +219,7 @@ public class MainActivity extends ActionBarActivity
                 // TODO: Implement this method
             }
         };
+        */
 
         @Override
         public boolean onBackPressed()
