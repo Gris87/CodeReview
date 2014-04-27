@@ -22,6 +22,7 @@ import com.griscom.codereview.listeners.OnFileAddedListener;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
 import android.view.ContextMenu.*;
 import android.view.*;
+import android.widget.AbsListView.*;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
@@ -126,7 +127,8 @@ public class IgnoreFilesActivity extends ActionBarActivity
             mIgnoreFilesListView=(ListView)rootView.findViewById(R.id.ignoreFileslistView);
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
-			registerForContextMenu(mIgnoreFilesListView);
+			mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+			mIgnoreFilesListView.setMultiChoiceModeListener(mChoiceListener);
 
             mActivity.setOnFileAddedListener(this);
 
@@ -168,15 +170,42 @@ public class IgnoreFilesActivity extends ActionBarActivity
             InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         }
-
-		@Override
-		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+		
+		MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
 		{
-			// TODO: Implement this method
-			super.onCreateContextMenu(menu, v, menuInfo);
-			
-			mActivity.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
-		}
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
+			{
+				// TODO: Implement this method
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu)
+			{
+				mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
+				return true;
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu)
+			{
+				// TODO: Implement this method
+				return false;
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem menu)
+			{
+				// TODO: Implement this method
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode)
+			{
+				// TODO: Implement this method
+			}
+		};
 		
 		@Override
         public void onFileAdded(String fileName)
