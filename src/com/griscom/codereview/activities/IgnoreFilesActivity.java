@@ -20,6 +20,10 @@ import android.widget.ListView;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnFileAddedListener;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
+import android.os.*;
+import android.view.*;
+import android.annotation.*;
+import android.widget.AbsListView.*;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
@@ -124,9 +128,17 @@ public class IgnoreFilesActivity extends ActionBarActivity
             mIgnoreFilesListView=(ListView)rootView.findViewById(R.id.ignoreFileslistView);
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
-            mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            //mIgnoreFilesListView.setMultiChoiceModeListener(mChoiceListener);
-
+            
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+			{
+				registerForContextMenu(mIgnoreFilesListView);
+			}
+			else
+			{
+				mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+				mIgnoreFilesListView.setMultiChoiceModeListener(mChoiceListener);
+			}
+			
             mActivity.setOnFileAddedListener(this);
 
             return rootView;
@@ -167,8 +179,15 @@ public class IgnoreFilesActivity extends ActionBarActivity
             InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         }
+		
+		@Override
+		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+		{
+			mActivity.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
+			super.onCreateContextMenu(menu, v, menuInfo);
+		}
 
-        /*
+		 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
         {
             @Override
@@ -204,7 +223,6 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 // TODO Auto-generated method stub
             }
         };
-        */
 
         @Override
         public void onFileAdded(String fileName)

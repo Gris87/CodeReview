@@ -27,6 +27,12 @@ import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
+import android.os.*;
+import android.annotation.*;
+import android.widget.AbsListView.*;
+import android.view.*;
+import android.view.ContextMenu.*;
+import android.util.*;
 
 public class MainActivity extends ActionBarActivity
 {
@@ -123,9 +129,17 @@ public class MainActivity extends ActionBarActivity
             mFilesListView=(ListView)rootView.findViewById(R.id.fileslistView);
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
-            mFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            //mFilesListView.setMultiChoiceModeListener(mChoiceListener);
-
+            
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+			{
+				registerForContextMenu(mFilesListView);
+			}
+			else
+			{
+				mFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+				mFilesListView.setMultiChoiceModeListener(mChoiceListener);
+			}
+            
             mActionBar=mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
             mActionBar.setTitle(mAdapter.getCurrentPath());
@@ -183,7 +197,14 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
-        /*
+		@Override
+		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+		{
+			mActivity.getMenuInflater().inflate(R.menu.main_context, menu);
+			super.onCreateContextMenu(menu, v, menuInfo);
+		}
+		
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
         {
             @Override
@@ -219,7 +240,6 @@ public class MainActivity extends ActionBarActivity
                 // TODO: Implement this method
             }
         };
-        */
 
         @Override
         public boolean onBackPressed()
