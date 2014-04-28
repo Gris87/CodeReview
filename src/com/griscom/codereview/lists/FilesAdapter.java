@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
+
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -162,9 +165,11 @@ public class FilesAdapter extends BaseAdapter
                 }
             }
 
+            WildcardFileFilter filter=new WildcardFileFilter(ignoreFiles);
+
             for (int i=0; i<files.length; ++i)
             {
-                if (filter(files[i].getName(), ignoreFiles))
+                if (!filter.accept(files[i]))
                 {
                     FileEntry newEntry=new FileEntry(files[i]);
 
@@ -176,19 +181,6 @@ public class FilesAdapter extends BaseAdapter
 
 
         sort();
-    }
-
-    private boolean filter(String fileName, ArrayList<String> ignoreFiles)
-    {
-        for (int i=0; i<ignoreFiles.size(); ++i)
-        {
-            //if (Pattern.matches(ignoreFiles.get(i), fileName))
-            {
-                //return false;
-            }
-        }
-
-        return true;
     }
 
     public void sort()
