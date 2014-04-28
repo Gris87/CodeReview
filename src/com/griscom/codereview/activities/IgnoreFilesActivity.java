@@ -24,6 +24,7 @@ import android.os.*;
 import android.view.*;
 import android.annotation.*;
 import android.widget.AbsListView.*;
+import java.util.*;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
@@ -190,10 +191,20 @@ public class IgnoreFilesActivity extends ActionBarActivity
 		 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
         {
+			ArrayList<Integer> mSelected=new ArrayList<Integer>();
+			
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
             {
-                // TODO Auto-generated method stub
+				 if (checked)
+				 {
+					 mSelected.add(new Integer(position));
+					 Collections.sort(mSelected);
+				 }
+				 else
+				 {
+					 mSelected.remove(new Integer(position));
+				 }
             }
 
             @Override
@@ -206,21 +217,31 @@ public class IgnoreFilesActivity extends ActionBarActivity
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu)
             {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item)
             {
-                // TODO Auto-generated method stub
+				switch(item.getItemId())
+				{
+					case R.id.action_delete:
+						for (int i=mSelected.size()-1; i>=0; --i)
+						{
+							 mAdapter.removeFile(mSelected.get(i).intValue());
+						}
+						
+						mode.finish();
+					break;
+				}
+				
                 return true;
             }
 
             @Override
             public void onDestroyActionMode(ActionMode mode)
             {
-                // TODO Auto-generated method stub
+				 mSelected.clear();
             }
         };
 

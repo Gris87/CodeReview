@@ -140,6 +140,13 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         updateList();
     }
+	
+	public void removeFile(int index)
+	{
+		mFiles.remove(index);
+
+        updateList();
+	}
 
     private void updateList()
     {
@@ -180,5 +187,4 @@ public class IgnoreFilesAdapter extends BaseAdapter
                  .replace(">",  "_")
                  .replace("|",  "_");
     }
-
 }
