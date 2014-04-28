@@ -111,7 +111,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
      */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnFileAddedListener
     {
-    private IgnoreFilesActivity mActivity;
+        private IgnoreFilesActivity mActivity;
         private ListView            mIgnoreFilesListView;
         private IgnoreFilesAdapter  mAdapter;
         private int                 mLastSelectedItem;
