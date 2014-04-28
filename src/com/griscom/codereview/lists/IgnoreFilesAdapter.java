@@ -140,13 +140,13 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         updateList();
     }
-	
-	public void removeFile(int index)
-	{
-		mFiles.remove(index);
+
+    public void removeFile(int index)
+    {
+        mFiles.remove(index);
 
         updateList();
-	}
+    }
 
     private void updateList()
     {

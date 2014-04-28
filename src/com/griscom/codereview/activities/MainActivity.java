@@ -3,19 +3,24 @@ package com.griscom.codereview.activities;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -27,12 +32,6 @@ import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
-import android.os.*;
-import android.annotation.*;
-import android.widget.AbsListView.*;
-import android.view.*;
-import android.view.ContextMenu.*;
-import android.util.*;
 
 public class MainActivity extends ActionBarActivity
 {
@@ -129,17 +128,16 @@ public class MainActivity extends ActionBarActivity
             mFilesListView=(ListView)rootView.findViewById(R.id.fileslistView);
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
-            
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-			{
-				registerForContextMenu(mFilesListView);
-			}
-			else
-			{
-				mFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-				mFilesListView.setMultiChoiceModeListener(mChoiceListener);
-			}
-            
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+            {
+                registerForContextMenu(mFilesListView);
+            }
+            else
+            {
+                setChoiceListener();
+            }
+
             mActionBar=mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
             mActionBar.setTitle(mAdapter.getCurrentPath());
@@ -197,49 +195,53 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
-		@Override
-		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-		{
-			mActivity.getMenuInflater().inflate(R.menu.main_context, menu);
-			super.onCreateContextMenu(menu, v, menuInfo);
-		}
-		
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-        MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
         {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
-            {
-                // TODO: Implement this method
-            }
+            mActivity.getMenuInflater().inflate(R.menu.main_context, menu);
+            super.onCreateContextMenu(menu, v, menuInfo);
+        }
 
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu)
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        private void setChoiceListener()
+        {
+            mFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+            mFilesListView.setMultiChoiceModeListener(new MultiChoiceModeListener()
             {
-                mode.getMenuInflater().inflate(R.menu.main_context, menu);
-                return true;
-            }
+                @Override
+                public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
+                {
+                    // TODO: Implement this method
+                }
 
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu)
-            {
-                // TODO: Implement this method
-                return false;
-            }
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu)
+                {
+                    mode.getMenuInflater().inflate(R.menu.main_context, menu);
+                    return true;
+                }
 
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item)
-            {
-                // TODO: Implement this method
-                return true;
-            }
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu)
+                {
+                    // TODO: Implement this method
+                    return false;
+                }
 
-            @Override
-            public void onDestroyActionMode(ActionMode mode)
-            {
-                // TODO: Implement this method
-            }
-        };
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item)
+                {
+                    // TODO: Implement this method
+                    return true;
+                }
+
+                @Override
+                public void onDestroyActionMode(ActionMode mode)
+                {
+                    // TODO: Implement this method
+                }
+            });
+        }
 
         @Override
         public boolean onBackPressed()

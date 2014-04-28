@@ -1,18 +1,27 @@
 package com.griscom.codereview.activities;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,11 +29,6 @@ import android.widget.ListView;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnFileAddedListener;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
-import android.os.*;
-import android.view.*;
-import android.annotation.*;
-import android.widget.AbsListView.*;
-import java.util.*;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
@@ -110,6 +114,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
     private IgnoreFilesActivity mActivity;
         private ListView            mIgnoreFilesListView;
         private IgnoreFilesAdapter  mAdapter;
+        private int                 mLastSelectedItem;
 
         public PlaceholderFragment()
         {
@@ -129,17 +134,16 @@ public class IgnoreFilesActivity extends ActionBarActivity
             mIgnoreFilesListView=(ListView)rootView.findViewById(R.id.ignoreFileslistView);
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
-            
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-			{
-				registerForContextMenu(mIgnoreFilesListView);
-			}
-			else
-			{
-				mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-				mIgnoreFilesListView.setMultiChoiceModeListener(mChoiceListener);
-			}
-			
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+            {
+                registerForContextMenu(mIgnoreFilesListView);
+            }
+            else
+            {
+                setChoiceListener();
+            }
+
             mActivity.setOnFileAddedListener(this);
 
             return rootView;
@@ -180,70 +184,89 @@ public class IgnoreFilesActivity extends ActionBarActivity
             InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         }
-		
-		@Override
-		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-		{
-			mActivity.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
-			super.onCreateContextMenu(menu, v, menuInfo);
-		}
 
-		 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-        MultiChoiceModeListener mChoiceListener=new MultiChoiceModeListener()
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
         {
-			ArrayList<Integer> mSelected=new ArrayList<Integer>();
-			
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
-            {
-				 if (checked)
-				 {
-					 mSelected.add(new Integer(position));
-					 Collections.sort(mSelected);
-				 }
-				 else
-				 {
-					 mSelected.remove(new Integer(position));
-				 }
-            }
+            mLastSelectedItem=((AdapterContextMenuInfo)menuInfo).position;
 
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu)
-            {
-                mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
-                return true;
-            }
+            mActivity.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
+            super.onCreateContextMenu(menu, v, menuInfo);
+        }
 
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu)
+        @Override
+        public boolean onContextItemSelected(MenuItem item)
+        {
+            switch (item.getItemId())
             {
-                return false;
-            }
+                case R.id.action_delete:
+                    mAdapter.removeFile(mLastSelectedItem);
+                break;
+            };
 
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item)
-            {
-				switch(item.getItemId())
-				{
-					case R.id.action_delete:
-						for (int i=mSelected.size()-1; i>=0; --i)
-						{
-							 mAdapter.removeFile(mSelected.get(i).intValue());
-						}
-						
-						mode.finish();
-					break;
-				}
-				
-                return true;
-            }
+            return true;
+        }
 
-            @Override
-            public void onDestroyActionMode(ActionMode mode)
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        private void setChoiceListener()
+        {
+            mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+            mIgnoreFilesListView.setMultiChoiceModeListener(new MultiChoiceModeListener()
             {
-				 mSelected.clear();
-            }
-        };
+                ArrayList<Integer> mSelected=new ArrayList<Integer>();
+
+                @Override
+                public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
+                {
+                     if (checked)
+                     {
+                         mSelected.add(Integer.valueOf(position));
+                         Collections.sort(mSelected);
+                     }
+                     else
+                     {
+                         mSelected.remove(Integer.valueOf(position));
+                     }
+                }
+
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu)
+                {
+                    mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
+                    return true;
+                }
+
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu)
+                {
+                    return false;
+                }
+
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item)
+                {
+                    switch(item.getItemId())
+                    {
+                        case R.id.action_delete:
+                            for (int i=mSelected.size()-1; i>=0; --i)
+                            {
+                                 mAdapter.removeFile(mSelected.get(i).intValue());
+                            }
+
+                            mode.finish();
+                        break;
+                    }
+
+                    return true;
+                }
+
+                @Override
+                public void onDestroyActionMode(ActionMode mode)
+                {
+                     mSelected.clear();
+                }
+            });
+        }
 
         @Override
         public void onFileAdded(String fileName)
