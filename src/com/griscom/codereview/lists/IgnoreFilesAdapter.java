@@ -15,25 +15,31 @@ import android.widget.TextView;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
+import android.widget.*;
 
 public class IgnoreFilesAdapter extends BaseAdapter
 {
-    private Activity          mContext;
-    private ArrayList<String> mFiles;
+    private Activity           mContext;
+    private ArrayList<String>  mFiles;
+	private ArrayList<Integer> mSelection;
+	private boolean            mSelectionMode;
 
 
 
     private static class ViewHolder
     {
-        TextView  mFileName;
+		CheckBox mCheckBox;
+        TextView mFileName;
     }
 
 
 
     public IgnoreFilesAdapter(Activity context)
     {
-        mContext = context;
-        mFiles   = new ArrayList<String>();
+        mContext       = context;
+        mFiles         = new ArrayList<String>();
+		mSelection     = new ArrayList<Integer>();
+		mSelectionMode = false;
 
         // -----------------------------------------------------------------------------------
 
@@ -78,11 +84,12 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         View resView=inflater.inflate(R.layout.ignorefiles_list_item, parent, false);
 
-        ViewHolder aHolder=new ViewHolder();
+        ViewHolder holder=new ViewHolder();
 
-        aHolder.mFileName = (TextView)resView.findViewById(R.id.fileNameTextView);
-
-        resView.setTag(aHolder);
+		holder.mCheckBox = (CheckBox)resView.findViewById(R.id.checkbox);
+        holder.mFileName = (TextView)resView.findViewById(R.id.fileNameTextView);
+		
+        resView.setTag(holder);
 
         return resView;
     }
@@ -93,6 +100,18 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         ViewHolder holder=(ViewHolder)view.getTag();
 
+		if (mSelectionMode)
+		{
+			holder.mCheckBox.setVisibility(View.VISIBLE);
+			holder.mCheckBox.setOnCheckedChangeListener(null);
+			holder.mCheckBox.setChecked(mSelection.contains(Integer.valueOf(position)));
+			holder.mCheckBox.setOnCheckedChangeListener(new CheckedChangedListener(position));
+		}
+		else
+		{
+			holder.mCheckBox.setVisibility(View.GONE);
+		}
+		
         holder.mFileName.setText(fileName);
     }
 
@@ -140,10 +159,22 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         updateList();
     }
-
-    public void removeFile(int index)
+	
+	public void removeFile(int index)
     {
         mFiles.remove(index);
+
+        updateList();
+    }
+
+    public void removeSelectedFiles()
+    {
+        Collections.sort(mSelection);
+		
+		for (int i=mSelection.size()-1; i>=0; --i)
+		{
+			mFiles.remove(mSelection.get(i).intValue());
+		}
 
         updateList();
     }
@@ -187,4 +218,55 @@ public class IgnoreFilesAdapter extends BaseAdapter
                  .replace(">",  "_")
                  .replace("|",  "_");
     }
+	
+	public void setSelected(int index, boolean checked)
+	{
+		if (mSelectionMode)
+		{
+			if (checked)
+			{
+				mSelection.add(Integer.valueOf(index));
+			}
+			else
+			{
+				mSelection.remove(Integer.valueOf(index));
+			}
+			
+			notifyDataSetChanged();
+		}
+	}
+	
+	public void setSelectionMode(boolean enable)
+	{
+		if (mSelectionMode!=enable)
+		{
+			mSelectionMode=enable;
+			mSelection.clear();
+			
+			notifyDataSetChanged();
+		}
+	}
+	
+	private class CheckedChangedListener implements CompoundButton.OnCheckedChangeListener
+	{
+		private Integer mPosition;
+		
+		public CheckedChangedListener(int position)
+		{
+			mPosition=Integer.valueOf(position);
+		}
+		
+		@Override
+		public void onCheckedChanged(CompoundButton button, boolean checked)
+		{
+			if (checked)
+			{
+				mSelection.add(mPosition);
+			}
+			else
+			{
+				mSelection.remove(mPosition);
+			}
+		}
+	}
 }

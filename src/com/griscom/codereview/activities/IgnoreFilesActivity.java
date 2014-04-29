@@ -29,6 +29,7 @@ import android.widget.ListView;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnFileAddedListener;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
+import android.view.*;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
@@ -68,7 +69,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
             {
                 final EditText editText=new EditText(this);
 
-                new AlertDialog.Builder(this)
+				AlertDialog dialog=new AlertDialog.Builder(this)
                     .setTitle(R.string.dialog_add_file_title)
                     .setMessage(R.string.dialog_add_file_message)
                     .setView(editText)
@@ -94,10 +95,10 @@ public class IgnoreFilesActivity extends ActionBarActivity
                                             {
                                                 dialog.dismiss();
                                             }
-                                       }).show();
+                                       }).create();
 
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+		        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                dialog.show();
 
                 return true;
             }
@@ -156,7 +157,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
             editText.setText((String)parent.getItemAtPosition(position));
             editText.selectAll();
 
-            new AlertDialog.Builder(mActivity)
+            AlertDialog dialog=new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.dialog_add_file_title)
                 .setMessage(R.string.dialog_add_file_message)
                 .setView(editText)
@@ -179,10 +180,10 @@ public class IgnoreFilesActivity extends ActionBarActivity
                                         {
                                             dialog.dismiss();
                                         }
-                                   }).show();
+                                   }).create();
 
-            InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+			dialog.show();
         }
 
         @Override
@@ -213,25 +214,16 @@ public class IgnoreFilesActivity extends ActionBarActivity
             mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
             mIgnoreFilesListView.setMultiChoiceModeListener(new MultiChoiceModeListener()
             {
-                ArrayList<Integer> mSelected=new ArrayList<Integer>();
-
                 @Override
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
                 {
-                     if (checked)
-                     {
-                         mSelected.add(Integer.valueOf(position));
-                         Collections.sort(mSelected);
-                     }
-                     else
-                     {
-                         mSelected.remove(Integer.valueOf(position));
-                     }
+					mAdapter.setSelected(position, checked);
                 }
 
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
+					mAdapter.setSelectionMode(true);
                     mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
                     return true;
                 }
@@ -248,10 +240,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                     switch(item.getItemId())
                     {
                         case R.id.action_delete:
-                            for (int i=mSelected.size()-1; i>=0; --i)
-                            {
-                                 mAdapter.removeFile(mSelected.get(i).intValue());
-                            }
+							mAdapter.removeSelectedFiles();
 
                             mode.finish();
                         break;
@@ -263,7 +252,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 @Override
                 public void onDestroyActionMode(ActionMode mode)
                 {
-                     mSelected.clear();
+					mAdapter.setSelectionMode(false);
                 }
             });
         }

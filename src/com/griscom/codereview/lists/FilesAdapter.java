@@ -24,6 +24,7 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
+import android.widget.*;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -31,11 +32,14 @@ public class FilesAdapter extends BaseAdapter
     private String               mCurrentPath;
     private ArrayList<FileEntry> mFiles;
     private SortType             mSortType;
+	private ArrayList<Integer>   mSelection;
+	private boolean              mSelectionMode;
 
 
 
     private static class ViewHolder
     {
+		CheckBox  mCheckBox;
         ImageView mExtenstion;
         TextView  mFileName;
     }
@@ -44,10 +48,12 @@ public class FilesAdapter extends BaseAdapter
 
     public FilesAdapter(Context context)
     {
-        mContext     = context;
-        mCurrentPath = Environment.getExternalStorageDirectory().getPath();
-        mFiles       = new ArrayList<FileEntry>();
-        mSortType    = SortType.Alphabet;
+        mContext       = context;
+        mCurrentPath   = Environment.getExternalStorageDirectory().getPath();
+        mFiles         = new ArrayList<FileEntry>();
+        mSortType      = SortType.Alphabet;
+		mSelection     = new ArrayList<Integer>();
+		mSelectionMode = false;
 
         rescan();
     }
@@ -76,12 +82,13 @@ public class FilesAdapter extends BaseAdapter
 
         View resView=inflater.inflate(R.layout.files_list_item, parent, false);
 
-        ViewHolder aHolder=new ViewHolder();
+        ViewHolder holder=new ViewHolder();
 
-        aHolder.mExtenstion = (ImageView) resView.findViewById(R.id.extensionImageView);
-        aHolder.mFileName   = (TextView)  resView.findViewById(R.id.fileNameTextView);
+        holder.mCheckBox   = (CheckBox) resView.findViewById(R.id.checkbox);
+        holder.mExtenstion = (ImageView)resView.findViewById(R.id.extensionImageView);
+        holder.mFileName   = (TextView) resView.findViewById(R.id.fileNameTextView);
 
-        resView.setTag(aHolder);
+        resView.setTag(holder);
 
         return resView;
     }
@@ -91,6 +98,18 @@ public class FilesAdapter extends BaseAdapter
         FileEntry file=mFiles.get(position);
 
         ViewHolder holder=(ViewHolder)view.getTag();
+		
+		if (mSelectionMode)
+		{
+			holder.mCheckBox.setVisibility(View.VISIBLE);
+			holder.mCheckBox.setOnCheckedChangeListener(null);
+			holder.mCheckBox.setChecked(mSelection.contains(Integer.valueOf(position)));
+			holder.mCheckBox.setOnCheckedChangeListener(new CheckedChangedListener(position));
+		}
+		else
+		{
+			holder.mCheckBox.setVisibility(View.GONE);
+		}
 
         holder.mExtenstion.setImageResource(file.getImageId());
         holder.mFileName.setText(file.getFileName());
@@ -229,6 +248,57 @@ public class FilesAdapter extends BaseAdapter
             return mCurrentPath+"/"+fileName;
         }
     }
+	
+	public void setSelected(int index, boolean checked)
+	{
+		if (mSelectionMode)
+		{
+			if (checked)
+			{
+				mSelection.add(Integer.valueOf(index));
+			}
+			else
+			{
+				mSelection.remove(Integer.valueOf(index));
+			}
+
+			notifyDataSetChanged();
+		}
+	}
+
+	public void setSelectionMode(boolean enable)
+	{
+		if (mSelectionMode!=enable)
+		{
+			mSelectionMode=enable;
+			mSelection.clear();
+
+			notifyDataSetChanged();
+		}
+	}
+
+	private class CheckedChangedListener implements CompoundButton.OnCheckedChangeListener
+	{
+		private Integer mPosition;
+
+		public CheckedChangedListener(int position)
+		{
+			mPosition=Integer.valueOf(position);
+		}
+
+		@Override
+		public void onCheckedChanged(CompoundButton button, boolean checked)
+		{
+			if (checked)
+			{
+				mSelection.add(mPosition);
+			}
+			else
+			{
+				mSelection.remove(mPosition);
+			}
+		}
+	}
 
     public void setCurrentPathBacktrace(String newPath)
     {

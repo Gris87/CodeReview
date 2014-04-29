@@ -211,12 +211,13 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
                 {
-                    // TODO: Implement this method
+                    mAdapter.setSelected(position, checked);
                 }
 
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
+					mAdapter.setSelectionMode(true);
                     mode.getMenuInflater().inflate(R.menu.main_context, menu);
                     return true;
                 }
@@ -224,7 +225,6 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public boolean onPrepareActionMode(ActionMode mode, Menu menu)
                 {
-                    // TODO: Implement this method
                     return false;
                 }
 
@@ -238,7 +238,7 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onDestroyActionMode(ActionMode mode)
                 {
-                    // TODO: Implement this method
+					mAdapter.setSelectionMode(false);
                 }
             });
         }
