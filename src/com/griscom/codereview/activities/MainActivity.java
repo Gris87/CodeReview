@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -99,6 +100,7 @@ public class MainActivity extends ActionBarActivity
         private ActionBar    mActionBar;
         private ListView     mFilesListView;
         private FilesAdapter mAdapter;
+        private int          mLastSelectedItem;
 
         public PlaceholderFragment()
         {
@@ -198,6 +200,22 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
         {
+            mLastSelectedItem=((AdapterContextMenuInfo)menuInfo).position;
+
+            if (mLastSelectedItem==0)
+            {
+                FileEntry file=(FileEntry)mAdapter.getItem(mLastSelectedItem);
+
+                if (
+                    file.isDirectory()
+                    &&
+                    file.getFileName().equals("..")
+                   )
+                {
+                    return;
+                }
+            }
+
             mActivity.getMenuInflater().inflate(R.menu.main_context, menu);
             super.onCreateContextMenu(menu, v, menuInfo);
         }
@@ -211,13 +229,28 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
                 {
+                    if (position==0 && checked)
+                    {
+                        FileEntry file=(FileEntry)mAdapter.getItem(position);
+
+                        if (
+                            file.isDirectory()
+                            &&
+                            file.getFileName().equals("..")
+                           )
+                        {
+                            mFilesListView.setItemChecked(position, false);
+                            return;
+                        }
+                    }
+
                     mAdapter.setSelected(position, checked);
                 }
 
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
-					mAdapter.setSelectionMode(true);
+                    mAdapter.setSelectionMode(true);
                     mode.getMenuInflater().inflate(R.menu.main_context, menu);
                     return true;
                 }
@@ -238,7 +271,7 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onDestroyActionMode(ActionMode mode)
                 {
-					mAdapter.setSelectionMode(false);
+                    mAdapter.setSelectionMode(false);
                 }
             });
         }

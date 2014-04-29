@@ -1,11 +1,7 @@
 package com.griscom.codereview.activities;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.view.WindowManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -29,7 +25,6 @@ import android.widget.ListView;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnFileAddedListener;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
-import android.view.*;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
@@ -69,7 +64,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
             {
                 final EditText editText=new EditText(this);
 
-				AlertDialog dialog=new AlertDialog.Builder(this)
+                AlertDialog dialog=new AlertDialog.Builder(this)
                     .setTitle(R.string.dialog_add_file_title)
                     .setMessage(R.string.dialog_add_file_message)
                     .setView(editText)
@@ -97,7 +92,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                                             }
                                        }).create();
 
-		        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 dialog.show();
 
                 return true;
@@ -183,7 +178,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                                    }).create();
 
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-			dialog.show();
+            dialog.show();
         }
 
         @Override
@@ -217,13 +212,13 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 @Override
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
                 {
-					mAdapter.setSelected(position, checked);
+                    mAdapter.setSelected(position, checked);
                 }
 
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
-					mAdapter.setSelectionMode(true);
+                    mAdapter.setSelectionMode(true);
                     mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
                     return true;
                 }
@@ -240,7 +235,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                     switch(item.getItemId())
                     {
                         case R.id.action_delete:
-							mAdapter.removeSelectedFiles();
+                            mAdapter.removeSelectedFiles();
 
                             mode.finish();
                         break;
@@ -252,7 +247,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 @Override
                 public void onDestroyActionMode(ActionMode mode)
                 {
-					mAdapter.setSelectionMode(false);
+                    mAdapter.setSelectionMode(false);
                 }
             });
         }

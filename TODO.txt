@@ -1,0 +1,3 @@
+do not use context menu on parent folder
+save/load dialogs state
+open file

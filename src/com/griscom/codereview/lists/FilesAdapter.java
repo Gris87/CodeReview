@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +26,6 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
-import android.widget.*;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -32,14 +33,14 @@ public class FilesAdapter extends BaseAdapter
     private String               mCurrentPath;
     private ArrayList<FileEntry> mFiles;
     private SortType             mSortType;
-	private ArrayList<Integer>   mSelection;
-	private boolean              mSelectionMode;
+    private ArrayList<Integer>   mSelection;
+    private boolean              mSelectionMode;
 
 
 
     private static class ViewHolder
     {
-		CheckBox  mCheckBox;
+        CheckBox  mCheckBox;
         ImageView mExtenstion;
         TextView  mFileName;
     }
@@ -52,8 +53,8 @@ public class FilesAdapter extends BaseAdapter
         mCurrentPath   = Environment.getExternalStorageDirectory().getPath();
         mFiles         = new ArrayList<FileEntry>();
         mSortType      = SortType.Alphabet;
-		mSelection     = new ArrayList<Integer>();
-		mSelectionMode = false;
+        mSelection     = new ArrayList<Integer>();
+        mSelectionMode = false;
 
         rescan();
     }
@@ -98,18 +99,28 @@ public class FilesAdapter extends BaseAdapter
         FileEntry file=mFiles.get(position);
 
         ViewHolder holder=(ViewHolder)view.getTag();
-		
-		if (mSelectionMode)
-		{
-			holder.mCheckBox.setVisibility(View.VISIBLE);
-			holder.mCheckBox.setOnCheckedChangeListener(null);
-			holder.mCheckBox.setChecked(mSelection.contains(Integer.valueOf(position)));
-			holder.mCheckBox.setOnCheckedChangeListener(new CheckedChangedListener(position));
-		}
-		else
-		{
-			holder.mCheckBox.setVisibility(View.GONE);
-		}
+
+        if (
+            mSelectionMode
+            &&
+            (
+             position>0
+             ||
+             !file.isDirectory()
+             ||
+             !file.getFileName().equals("..")
+            )
+           )
+        {
+            holder.mCheckBox.setVisibility(View.VISIBLE);
+            holder.mCheckBox.setOnCheckedChangeListener(null);
+            holder.mCheckBox.setChecked(mSelection.contains(Integer.valueOf(position)));
+            holder.mCheckBox.setOnCheckedChangeListener(new CheckedChangedListener(position));
+        }
+        else
+        {
+            holder.mCheckBox.setVisibility(View.GONE);
+        }
 
         holder.mExtenstion.setImageResource(file.getImageId());
         holder.mFileName.setText(file.getFileName());
@@ -248,57 +259,57 @@ public class FilesAdapter extends BaseAdapter
             return mCurrentPath+"/"+fileName;
         }
     }
-	
-	public void setSelected(int index, boolean checked)
-	{
-		if (mSelectionMode)
-		{
-			if (checked)
-			{
-				mSelection.add(Integer.valueOf(index));
-			}
-			else
-			{
-				mSelection.remove(Integer.valueOf(index));
-			}
 
-			notifyDataSetChanged();
-		}
-	}
+    public void setSelected(int index, boolean checked)
+    {
+        if (mSelectionMode)
+        {
+            if (checked)
+            {
+                mSelection.add(Integer.valueOf(index));
+            }
+            else
+            {
+                mSelection.remove(Integer.valueOf(index));
+            }
 
-	public void setSelectionMode(boolean enable)
-	{
-		if (mSelectionMode!=enable)
-		{
-			mSelectionMode=enable;
-			mSelection.clear();
+            notifyDataSetChanged();
+        }
+    }
 
-			notifyDataSetChanged();
-		}
-	}
+    public void setSelectionMode(boolean enable)
+    {
+        if (mSelectionMode!=enable)
+        {
+            mSelectionMode=enable;
+            mSelection.clear();
 
-	private class CheckedChangedListener implements CompoundButton.OnCheckedChangeListener
-	{
-		private Integer mPosition;
+            notifyDataSetChanged();
+        }
+    }
 
-		public CheckedChangedListener(int position)
-		{
-			mPosition=Integer.valueOf(position);
-		}
+    private class CheckedChangedListener implements CompoundButton.OnCheckedChangeListener
+    {
+        private Integer mPosition;
 
-		@Override
-		public void onCheckedChanged(CompoundButton button, boolean checked)
-		{
-			if (checked)
-			{
-				mSelection.add(mPosition);
-			}
-			else
-			{
-				mSelection.remove(mPosition);
-			}
-		}
-	}
+        public CheckedChangedListener(int position)
+        {
+            mPosition=Integer.valueOf(position);
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton button, boolean checked)
+        {
+            if (checked)
+            {
+                mSelection.add(mPosition);
+            }
+            else
+            {
+                mSelection.remove(mPosition);
+            }
+        }
+    }
 
     public void setCurrentPathBacktrace(String newPath)
     {
