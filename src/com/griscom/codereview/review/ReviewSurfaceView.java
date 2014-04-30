@@ -1,12 +1,17 @@
 package com.griscom.codereview.review;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class ReviewSurfaceView extends SurfaceView implements SurfaceHolder.Callback
+import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
+
+public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener
 {
-    private DrawThread drawThread;
+    private SurfaceHolder mSurfaceHolder;
+    private DrawThread    mDrawThread;
 
     public ReviewSurfaceView(Context context)
 	{
@@ -31,36 +36,45 @@ public class ReviewSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     private void init()
     {
-        getHolder().addCallback(this);
+        mSurfaceHolder = getHolder();
+        mDrawThread    = null;
+    }
+
+    public void pause()
+    {
+        if (mDrawThread!=null)
+        {
+            mDrawThread.terminate();
+
+            do
+            {
+                try
+                {
+                    mDrawThread.join();
+                    return;
+                }
+                catch (Exception e)
+                {
+                }
+            } while(true);
+        }
+    }
+
+    public void resume()
+    {
+        pause();
+
+        mDrawThread=new DrawThread(mSurfaceHolder, this);
+        mDrawThread.start();
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
-	{
-    }
+    public void onReviewSurfaceDraw(Canvas canvas)
+    {
+        Paint paint=new Paint();
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder)
-	{
-        drawThread=new DrawThread(getHolder());
-        drawThread.start();
-    }
+        paint.setARGB(255, 255, 255, 255);
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder)
-	{
-        drawThread.terminate();
-
-		do
-		{
-            try
-			{
-                drawThread.join();
-                return;
-            }
-			catch (Exception e)
-			{
-            }
-        } while(true);
+        canvas.drawLine(0, 0, 100, 100, paint);
     }
 }

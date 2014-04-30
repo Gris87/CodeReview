@@ -154,6 +154,22 @@ public class ReviewActivity extends Activity
         delayedHide(100);
     }
 
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mContent.pause();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        mContent.resume();
+    }
+
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */

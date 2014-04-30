@@ -1,17 +1,20 @@
 package com.griscom.codereview.review;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.view.SurfaceHolder;
+
+import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 
 class DrawThread extends Thread
 {
-    private boolean mTerminated;
-    private SurfaceHolder mSurfaceHolder;
+    private SurfaceHolder               mSurfaceHolder;
+    private OnReviewSurfaceDrawListener mDrawer;
+    private boolean                     mTerminated;
 
-    public DrawThread(SurfaceHolder surfaceHolder)
+    public DrawThread(SurfaceHolder surfaceHolder, OnReviewSurfaceDrawListener drawer)
 	{
+		mSurfaceHolder = surfaceHolder;
+		mDrawer        = drawer;
 		mTerminated    = false;
-        mSurfaceHolder = surfaceHolder;
     }
 
     public void terminate()
@@ -24,6 +27,11 @@ class DrawThread extends Thread
 	{
         while (!mTerminated)
 		{
+            if (!mSurfaceHolder.getSurface().isValid())
+            {
+                continue;
+            }
+
             Canvas canvas=null;
 
             try
@@ -32,11 +40,7 @@ class DrawThread extends Thread
 
                 synchronized (mSurfaceHolder)
 				{
-                    Paint paint=new Paint();
-
-                    paint.setARGB(255, 255, 255, 255);
-
-                    canvas.drawLine(0, 0, 100, 100, paint);
+                    mDrawer.onReviewSurfaceDraw(canvas);
                 }
             }
             finally
