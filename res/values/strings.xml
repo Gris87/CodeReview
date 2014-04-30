@@ -31,15 +31,24 @@
     <!-- Accessibility -->
     <string name="accessibility_file_name">File name</string>
 
+	<!-- Select files title in ActionMode -->
+    <string name="select_files">Select files</string>
+	
+	<!-- Files selected subtitle in ActionMode -->
+	<plurals name="files_selected">
+		<item quantity="one">%d file selected</item>
+		<item quantity="two">%d files selected</item>
+		<item quantity="few">%d files selected</item>
+		<item quantity="many">%d files selected</item>
+		<item quantity="other">%d files selected</item>
+	</plurals>
+	
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Press again to exit</string>
 
     <!-- Review activity title -->
     <string name="title_activity_review">Code review</string>
     <string name="dummy_button">Dummy Button</string>
-
-    <!-- ColorPreference hint -->
-    <string name="press_color_to_apply">Press on color to apply</string>
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Ignore files</string>
@@ -50,4 +59,16 @@
     <!-- Message for dialog in ignore files activity -->
     <string name="dialog_add_file_message">Input name of file or pattern\n(\'*\' and \'?\' is allowed):</string>
 
+	<!-- Select items title in ActionMode -->
+    <string name="select_items">Select items</string>
+
+	<!-- Items selected subtitle in ActionMode -->
+	<plurals name="items_selected">
+		<item quantity="one">%d item selected</item>
+		<item quantity="two">%d items selected</item>
+		<item quantity="few">%d items selected</item>
+		<item quantity="many">%d items selected</item>
+		<item quantity="other">%d items selected</item>
+	</plurals>
+	
 </resources>

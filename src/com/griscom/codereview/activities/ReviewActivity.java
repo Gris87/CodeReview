@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationExtras;
+import com.griscom.codereview.review.ReviewSurfaceView;
 import com.griscom.codereview.util.SystemUiHider;
 
 public class ReviewActivity extends Activity
@@ -49,7 +50,8 @@ public class ReviewActivity extends Activity
 
     public static final int RESULT_CLOSE=1;
 
-    private String mFileName;
+	private ReviewSurfaceView mContent;
+    private String            mFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,11 +66,11 @@ public class ReviewActivity extends Activity
         setupActionBar();
 
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = findViewById(R.id.fullscreen_content);
+        mContent                = (ReviewSurfaceView)findViewById(R.id.fullscreen_content);
 
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
-        mSystemUiHider = SystemUiHider.getInstance(this, contentView,
+        mSystemUiHider = SystemUiHider.getInstance(this, mContent,
                 HIDER_FLAGS);
         mSystemUiHider.setup();
         mSystemUiHider
@@ -119,7 +121,7 @@ public class ReviewActivity extends Activity
                 });
 
         // Set up the user interaction to manually show or hide the system UI.
-        contentView.setOnClickListener(new View.OnClickListener()
+        mContent.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -180,6 +182,9 @@ public class ReviewActivity extends Activity
         {
             case R.id.action_settings:
                 {
+					Intent intent = new Intent(this, SettingsActivity.class);
+					startActivity(intent);
+
                     return true;
                 }
 

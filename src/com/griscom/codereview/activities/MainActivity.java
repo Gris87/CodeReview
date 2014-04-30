@@ -36,8 +36,8 @@ import com.griscom.codereview.other.FileEntry;
 
 public class MainActivity extends ActionBarActivity
 {
-    private static final int REQUEST_REVIEW   = 1;
-    private static final int REQUEST_SETTINGS = 2;
+    private static final int REQUEST_REVIEW = 1;
+
 
     private OnBackPressedListener mOnBackPressedListener=null;
 
@@ -76,7 +76,7 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
             {
                 Intent intent = new Intent(this, SettingsActivity.class);
-                startActivityForResult(intent, REQUEST_SETTINGS);
+                startActivity(intent);
 
                 return true;
             }
@@ -244,14 +244,20 @@ public class MainActivity extends ActionBarActivity
                         }
                     }
 
+					int selectedCount=mFilesListView.getCheckedItemCount();
+                    mode.setSubtitle(mActivity.getResources().getQuantityString(R.plurals.files_selected, selectedCount, selectedCount));
+
                     mAdapter.setSelected(position, checked);
                 }
 
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
-                    mAdapter.setSelectionMode(true);
+					mode.setTitle(R.string.select_files);
                     mode.getMenuInflater().inflate(R.menu.main_context, menu);
+
+					mAdapter.setSelectionMode(true);
+
                     return true;
                 }
 

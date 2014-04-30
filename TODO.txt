@@ -1,2 +1,4 @@
+Select all in ActionMode
+Hide Done button in ActionMode
 save/load dialogs state
 open file
