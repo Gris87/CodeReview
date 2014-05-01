@@ -21,7 +21,7 @@ public class TextRegion
 
 		Paint.FontMetrics fontMetrics=mPaint.getFontMetrics();
 		mWidth  = mPaint.measureText(mText);
-		mHeight = fontMetrics.top+fontMetrics.bottom;
+		mHeight = fontMetrics.descent - fontMetrics.ascent + fontMetrics.leading;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)

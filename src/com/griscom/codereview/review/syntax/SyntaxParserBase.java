@@ -38,8 +38,10 @@ public abstract class SyntaxParserBase
         return new PlainTextSyntaxParser(context);
     }
 
-    public int getFontSize()
+    public float getFontSize()
     {
-         return PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_font_size), mContext.getResources().getInteger(R.integer.pref_default_font_size));
+        float settingsFontSize=PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_font_size), mContext.getResources().getInteger(R.integer.pref_default_font_size));
+
+        return settingsFontSize*mContext.getResources().getDisplayMetrics().scaledDensity;
     }
 }
