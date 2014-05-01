@@ -4,20 +4,21 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.review.syntax.PlainTextSyntaxParser;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 
-public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnTouchListener
+public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnLongClickListener, OnTouchListener
 {
+    private Context            mContext;
     private SurfaceHolder      mSurfaceHolder;
     private DrawThread         mDrawThread;
     private String             mFileName;
@@ -28,30 +29,32 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 	{
         super(context);
 
-        init();
+        init(context);
     }
 
     public ReviewSurfaceView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
-        init();
+        init(context);
     }
 
     public ReviewSurfaceView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
 
-        init();
+        init(context);
     }
 
-    private void init()
+    private void init(Context context)
     {
+        mContext       = context;
         mSurfaceHolder = getHolder();
         mDrawThread    = null;
-        mSyntaxParser  = new PlainTextSyntaxParser();
+        mSyntaxParser  = new PlainTextSyntaxParser(mContext);
         mRows          = new ArrayList<TextRow>();
 
+        setOnLongClickListener(this);
         setOnTouchListener(this);
     }
 
@@ -88,11 +91,17 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     @Override
     public void onReviewSurfaceDraw(Canvas canvas)
     {
-        Paint paint=new Paint();
+        for (int i=0; i<mRows.size(); ++i)
+        {
+            mRows.get(i).draw(canvas, 0, 0);
+        }
+    }
 
-        paint.setARGB(255, 255, 255, 255);
-
-        canvas.drawLine(0, 0, 100, 100, paint);
+    @Override
+    public boolean onLongClick(View v)
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
@@ -111,7 +120,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     {
         mFileName=fileName;
 
-        mSyntaxParser=SyntaxParserBase.createParserByFileName(mFileName);
+        mSyntaxParser=SyntaxParserBase.createParserByFileName(mFileName, mContext);
 
         // Maybe reload but no
         // reload();

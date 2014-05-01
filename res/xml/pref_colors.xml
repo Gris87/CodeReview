@@ -2,23 +2,23 @@
 
     <!-- Review color -->
     <net.margaritov.preference.colorpicker.ColorPickerPreference
-        android:key="ReviewedColor"
+        android:key="@string/pref_key_reviewed_color"
         android:title="@string/pref_title_reviewed_color"
         android:summary="@string/pref_desc_reviewed_color"
-        android:defaultValue="0xFF5AFF5A" />
+        android:defaultValue="@integer/pref_default_reviewed_color" />
 
     <!-- Invalid color -->
     <net.margaritov.preference.colorpicker.ColorPickerPreference
-        android:key="InvalidColor"
+        android:key="@string/pref_key_invalid_color"
         android:title="@string/pref_title_invalid_color"
         android:summary="@string/pref_desc_invalid_color"
-        android:defaultValue="0xFFFF5A5A" />
+        android:defaultValue="@integer/pref_default_invalid_color" />
 
     <!-- Note color -->
     <net.margaritov.preference.colorpicker.ColorPickerPreference
-        android:key="NoteColor"
+        android:key="@string/pref_key_note_color"
         android:title="@string/pref_title_note_color"
         android:summary="@string/pref_desc_note_color"
-        android:defaultValue="0xFFFFC400" />
+        android:defaultValue="@integer/pref_default_note_color" />
 
 </PreferenceScreen>
