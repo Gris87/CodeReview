@@ -68,6 +68,8 @@ public class ReviewActivity extends Activity
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
         mContent                = (ReviewSurfaceView)findViewById(R.id.fullscreen_content);
 
+        mContent.setFileName(mFileName);
+
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
         mSystemUiHider = SystemUiHider.getInstance(this, mContent,
