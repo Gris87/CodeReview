@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
+import com.griscom.codereview.R;
 import com.griscom.codereview.review.TextRegion;
 import com.griscom.codereview.review.TextRow;
 
@@ -35,14 +36,14 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
 
             // ---------------------------------------------------------------
 
-            float curY=0;
+            float curY=mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin);
 
             BufferedReader reader=new BufferedReader(new FileReader(fileName));
 
             String line;
             while ((line = reader.readLine()) != null)
             {
-                TextRow newRow       = new TextRow();
+                TextRow newRow       = new TextRow(mContext);
                 TextRegion newRegion = new TextRegion(line, basePaint);
 
 

@@ -3,20 +3,25 @@ package com.griscom.codereview.review;
 import java.util.ArrayList;
 
 import android.graphics.Canvas;
+import android.content.*;
+
+import com.griscom.codereview.R;
 
 public class TextRow
 {
     private ArrayList<TextRegion> mRegions;
+	private Context               mContext;
 	private float                 mY;
 	private float                 mWidth;
 	private float                 mHeight;
 
-    public TextRow()
+    public TextRow(Context context)
     {
-        mRegions=new ArrayList<TextRegion>();
+        mRegions = new ArrayList<TextRegion>();
+		mContext = context;
 		
 		mY      = 0;
-		mWidth  = 0;
+		mWidth  = mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin);
 		mHeight = 0;
     }
 	

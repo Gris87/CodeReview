@@ -7,6 +7,7 @@ public class TextRegion
 {
     private String mText;
     private Paint  mPaint;
+	private float  mAscent;
 	private float  mX;
 	private float  mY;
 	private float  mWidth;
@@ -20,13 +21,14 @@ public class TextRegion
 		mY     = 0;
 
 		Paint.FontMetrics fontMetrics=mPaint.getFontMetrics();
+		mAscent = -fontMetrics.ascent;
 		mWidth  = mPaint.measureText(mText);
-		mHeight = fontMetrics.descent - fontMetrics.ascent + fontMetrics.leading;
+		mHeight = fontMetrics.descent + mAscent + fontMetrics.leading;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
     {
-        canvas.drawText(mText, mX+offsetX, mY+offsetY, mPaint);
+        canvas.drawText(mText, mX+offsetX, mY+offsetY+mAscent, mPaint);
     }
 
 	public void setX(float x)
