@@ -213,7 +213,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
                 {
                     int selectedCount=mIgnoreFilesListView.getCheckedItemCount();
-					mode.setSubtitle(mActivity.getResources().getQuantityString(R.plurals.items_selected, selectedCount, selectedCount));
+                    mode.setSubtitle(mActivity.getResources().getQuantityString(R.plurals.items_selected, selectedCount, selectedCount));
 
                     mAdapter.setSelected(position, checked);
                 }
@@ -221,10 +221,10 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
-					mode.setTitle(R.string.select_items);
+                    mode.setTitle(R.string.select_items);
                     mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
 
-					mAdapter.setSelectionMode(true);
+                    mAdapter.setSelectionMode(true);
 
                     return true;
                 }

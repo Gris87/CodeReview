@@ -25,7 +25,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private TextDocument       mDocument;
 
     public ReviewSurfaceView(Context context)
-	{
+    {
         super(context);
 
         init(context);
@@ -91,7 +91,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     {
         canvas.drawColor(Color.WHITE);
 
-		mDocument.draw(canvas, 0, 0);
+        mDocument.draw(canvas, 0, 0);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     {
         mDocument=mSyntaxParser.parseFile(mFileName);
 
-		mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
+        mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
         mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
     }
 

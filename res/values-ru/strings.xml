@@ -31,17 +31,17 @@
     <!-- Accessibility -->
     <string name="accessibility_file_name">Имя файла</string>
 
-	<!-- Select files title in ActionMode -->
+    <!-- Select files title in ActionMode -->
     <string name="select_files">Выберите файлы</string>
-	
-	<!-- Files selected subtitle in ActionMode -->
-	<plurals name="files_selected">
-		<item quantity="one">%d файл выбран</item>
-		<item quantity="few">%d файла выбрано</item>
-		<item quantity="many">%d файлов выбрано</item>
-		<item quantity="other">%d файлов выбрано</item>
-	</plurals>
-	
+
+    <!-- Files selected subtitle in ActionMode -->
+    <plurals name="files_selected">
+        <item quantity="one">%d файл выбран</item>
+        <item quantity="few">%d файла выбрано</item>
+        <item quantity="many">%d файлов выбрано</item>
+        <item quantity="other">%d файлов выбрано</item>
+    </plurals>
+
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Нажмите снова для выхода</string>
 
@@ -58,15 +58,15 @@
     <!-- Message for dialog in ignore files activity -->
     <string name="dialog_add_file_message">Введите имя файла или шаблон\n(разрешены символы \'*\' и \'?\'):</string>
 
-	<!-- Select items title in ActionMode -->
+    <!-- Select items title in ActionMode -->
     <string name="select_items">Выберите элементы</string>
 
-	<!-- Items selected subtitle in ActionMode -->
-	<plurals name="items_selected">
-		<item quantity="one">%d элемент выбран</item>
-		<item quantity="few">%d элемента выбрано</item>
-		<item quantity="many">%d элементов выбрано</item>
-		<item quantity="other">%d элементов выбрано</item>
-	</plurals>
-	
+    <!-- Items selected subtitle in ActionMode -->
+    <plurals name="items_selected">
+        <item quantity="one">%d элемент выбран</item>
+        <item quantity="few">%d элемента выбрано</item>
+        <item quantity="many">%d элементов выбрано</item>
+        <item quantity="other">%d элементов выбрано</item>
+    </plurals>
+
 </resources>

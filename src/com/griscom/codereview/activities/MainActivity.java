@@ -244,7 +244,7 @@ public class MainActivity extends ActionBarActivity
                         }
                     }
 
-					int selectedCount=mFilesListView.getCheckedItemCount();
+                    int selectedCount=mFilesListView.getCheckedItemCount();
                     mode.setSubtitle(mActivity.getResources().getQuantityString(R.plurals.files_selected, selectedCount, selectedCount));
 
                     mAdapter.setSelected(position, checked);
@@ -253,10 +253,10 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
-					mode.setTitle(R.string.select_files);
+                    mode.setTitle(R.string.select_files);
                     mode.getMenuInflater().inflate(R.menu.main_context, menu);
 
-					mAdapter.setSelectionMode(true);
+                    mAdapter.setSelectionMode(true);
 
                     return true;
                 }

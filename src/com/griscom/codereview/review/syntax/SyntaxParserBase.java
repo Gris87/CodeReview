@@ -19,7 +19,7 @@ public abstract class SyntaxParserBase
 
     public abstract TextDocument parseFile(String fileName);
 
-	public static SyntaxParserBase createParserByFileName(String fileName, Context context)
+    public static SyntaxParserBase createParserByFileName(String fileName, Context context)
     {
         int index=fileName.lastIndexOf('.');
 

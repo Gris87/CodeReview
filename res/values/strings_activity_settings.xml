@@ -23,8 +23,8 @@
 
     <string name="pref_title_note_color">Note</string>
     <string name="pref_desc_note_color">Color of the rows with notes.</string>
-    
-    
+
+
 
     <!-- Editor settings -->
     <string name="pref_header_editor">Editor</string>
@@ -34,10 +34,10 @@
 
     <string name="pref_title_tab_size">Tab size</string>
     <string name="pref_desc_tab_size">Displayed width of tabs in the editor.</string>
-    
-    
 
-	<!-- ColorPreference hint -->
+
+
+    <!-- ColorPreference hint -->
     <string name="press_color_to_apply">Press on color to apply</string>
 
 </resources>

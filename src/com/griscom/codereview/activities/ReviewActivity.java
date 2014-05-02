@@ -50,7 +50,7 @@ public class ReviewActivity extends Activity
 
     public static final int RESULT_CLOSE=1;
 
-	private ReviewSurfaceView mContent;
+    private ReviewSurfaceView mContent;
     private String            mFileName;
 
     @Override
@@ -200,8 +200,8 @@ public class ReviewActivity extends Activity
         {
             case R.id.action_settings:
                 {
-					Intent intent = new Intent(this, SettingsActivity.class);
-					startActivity(intent);
+                    Intent intent = new Intent(this, SettingsActivity.class);
+                    startActivity(intent);
 
                     return true;
                 }

@@ -31,18 +31,18 @@
     <!-- Accessibility -->
     <string name="accessibility_file_name">File name</string>
 
-	<!-- Select files title in ActionMode -->
+    <!-- Select files title in ActionMode -->
     <string name="select_files">Select files</string>
-	
-	<!-- Files selected subtitle in ActionMode -->
-	<plurals name="files_selected">
-		<item quantity="one">%d file selected</item>
-		<item quantity="two">%d files selected</item>
-		<item quantity="few">%d files selected</item>
-		<item quantity="many">%d files selected</item>
-		<item quantity="other">%d files selected</item>
-	</plurals>
-	
+
+    <!-- Files selected subtitle in ActionMode -->
+    <plurals name="files_selected">
+        <item quantity="one">%d file selected</item>
+        <item quantity="two">%d files selected</item>
+        <item quantity="few">%d files selected</item>
+        <item quantity="many">%d files selected</item>
+        <item quantity="other">%d files selected</item>
+    </plurals>
+
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Press again to exit</string>
 
@@ -59,16 +59,16 @@
     <!-- Message for dialog in ignore files activity -->
     <string name="dialog_add_file_message">Input name of file or pattern\n(\'*\' and \'?\' is allowed):</string>
 
-	<!-- Select items title in ActionMode -->
+    <!-- Select items title in ActionMode -->
     <string name="select_items">Select items</string>
 
-	<!-- Items selected subtitle in ActionMode -->
-	<plurals name="items_selected">
-		<item quantity="one">%d item selected</item>
-		<item quantity="two">%d items selected</item>
-		<item quantity="few">%d items selected</item>
-		<item quantity="many">%d items selected</item>
-		<item quantity="other">%d items selected</item>
-	</plurals>
-	
+    <!-- Items selected subtitle in ActionMode -->
+    <plurals name="items_selected">
+        <item quantity="one">%d item selected</item>
+        <item quantity="two">%d items selected</item>
+        <item quantity="few">%d items selected</item>
+        <item quantity="many">%d items selected</item>
+        <item quantity="other">%d items selected</item>
+    </plurals>
+
 </resources>

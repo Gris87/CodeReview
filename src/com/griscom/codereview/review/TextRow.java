@@ -7,75 +7,75 @@ import android.graphics.Canvas;
 public class TextRow
 {
     private ArrayList<TextRegion> mRegions;
-	private float                 mY;
-	private float                 mWidth;
-	private float                 mHeight;
+    private float                 mY;
+    private float                 mWidth;
+    private float                 mHeight;
 
     public TextRow()
     {
         mRegions = new ArrayList<TextRegion>();
 
-		mY       = 0;
-		mWidth   = 0;
-		mHeight  = 0;
+        mY       = 0;
+        mWidth   = 0;
+        mHeight  = 0;
     }
 
-	public void draw(Canvas canvas, float offsetX, float offsetY)
+    public void draw(Canvas canvas, float offsetX, float offsetY)
     {
         for (int i=0; i<mRegions.size(); ++i)
-		{
-			mRegions.get(i).draw(canvas, offsetX, mY+offsetY);
-		}
+        {
+            mRegions.get(i).draw(canvas, offsetX, mY+offsetY);
+        }
     }
 
     public void addTextRegion(TextRegion region)
     {
         mRegions.add(region);
 
-		region.setX(mWidth);
+        region.setX(mWidth);
 
-		mWidth+=region.getWidth();
+        mWidth+=region.getWidth();
 
-		if (region.getHeight()>mHeight)
-		{
-			mHeight=region.getHeight();
-		}
+        if (region.getHeight()>mHeight)
+        {
+            mHeight=region.getHeight();
+        }
     }
 
-	public void setY(float y)
-	{
-		mY=y;
-	}
+    public void setY(float y)
+    {
+        mY=y;
+    }
 
-	@Deprecated
-	public float getX() // Do not use it. Always zero
-	{
-		return 0;
-	}
+    @Deprecated
+    public float getX() // Do not use it. Always zero
+    {
+        return 0;
+    }
 
-	public float getY()
-	{
-		return mY;
-	}
+    public float getY()
+    {
+        return mY;
+    }
 
-	public float getWidth()
-	{
-		return mWidth;
-	}
+    public float getWidth()
+    {
+        return mWidth;
+    }
 
-	public float getHeight()
-	{
-		return mHeight;
-	}
+    public float getHeight()
+    {
+        return mHeight;
+    }
 
-	@Deprecated
-	public float getRight() // Do not use it. Use getWidth() instead
-	{
-		return mWidth;
-	}
+    @Deprecated
+    public float getRight() // Do not use it. Use getWidth() instead
+    {
+        return mWidth;
+    }
 
-	public float getBottom()
-	{
-		return mY+mHeight;
-	}
+    public float getBottom()
+    {
+        return mY+mHeight;
+    }
 }
