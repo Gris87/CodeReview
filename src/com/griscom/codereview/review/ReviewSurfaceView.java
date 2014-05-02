@@ -1,7 +1,5 @@
 package com.griscom.codereview.review;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,6 +10,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.review.syntax.PlainTextSyntaxParser;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
@@ -23,7 +22,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private DrawThread         mDrawThread;
     private String             mFileName;
     private SyntaxParserBase   mSyntaxParser;
-    private ArrayList<TextRow> mRows;
+    private TextDocument       mDocument;
 
     public ReviewSurfaceView(Context context)
 	{
@@ -52,7 +51,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mSurfaceHolder = getHolder();
         mDrawThread    = null;
         mSyntaxParser  = new PlainTextSyntaxParser(mContext);
-        mRows          = new ArrayList<TextRow>();
+        mDocument      = new TextDocument();
 
         setOnTouchListener(this);
     }
@@ -92,10 +91,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     {
         canvas.drawColor(Color.WHITE);
 
-        for (int i=0; i<mRows.size(); ++i)
-        {
-            mRows.get(i).draw(canvas, 0, 0);
-        }
+		mDocument.draw(canvas, 0, 0);
     }
 
     @Override
@@ -107,7 +103,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     public void reload()
     {
-        mRows=mSyntaxParser.parseFile(mFileName);
+        mDocument=mSyntaxParser.parseFile(mFileName);
+
+		mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
+        mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
     }
 
     public void setFileName(String fileName)

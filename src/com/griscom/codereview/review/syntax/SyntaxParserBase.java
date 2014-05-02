@@ -1,13 +1,11 @@
 package com.griscom.codereview.review.syntax;
 
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.griscom.codereview.R;
-import com.griscom.codereview.review.TextRow;
+import com.griscom.codereview.review.TextDocument;
 
 @SuppressLint("DefaultLocale")
 public abstract class SyntaxParserBase
@@ -19,7 +17,7 @@ public abstract class SyntaxParserBase
         mContext=context;
     }
 
-    public abstract ArrayList<TextRow> parseFile(String fileName);
+    public abstract TextDocument parseFile(String fileName);
 
 	public static SyntaxParserBase createParserByFileName(String fileName, Context context)
     {

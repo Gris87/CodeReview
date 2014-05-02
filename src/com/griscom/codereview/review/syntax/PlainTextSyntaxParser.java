@@ -2,14 +2,13 @@ package com.griscom.codereview.review.syntax;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.griscom.codereview.R;
+import com.griscom.codereview.review.TextDocument;
 import com.griscom.codereview.review.TextRegion;
 import com.griscom.codereview.review.TextRow;
 
@@ -23,9 +22,9 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
     }
 
     @Override
-    public ArrayList<TextRow> parseFile(String fileName)
+    public TextDocument parseFile(String fileName)
     {
-        ArrayList<TextRow> res=new ArrayList<TextRow>();
+        TextDocument res=new TextDocument();
 
         try
         {
@@ -36,24 +35,18 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
 
             // ---------------------------------------------------------------
 
-            float curY=mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin);
-
             BufferedReader reader=new BufferedReader(new FileReader(fileName));
 
             String line;
             while ((line = reader.readLine()) != null)
             {
-                TextRow newRow       = new TextRow(mContext);
+                TextRow newRow       = new TextRow();
                 TextRegion newRegion = new TextRegion(line, basePaint);
 
 
 
-                newRow.setY(curY);
                 newRow.addTextRegion(newRegion);
-
-                curY+=newRow.getHeight();
-
-                res.add(newRow);
+                res.addTextRow(newRow);
             }
 
             reader.close();

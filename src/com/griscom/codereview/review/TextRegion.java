@@ -9,7 +9,6 @@ public class TextRegion
     private Paint  mPaint;
 	private float  mAscent;
 	private float  mX;
-	private float  mY;
 	private float  mWidth;
 	private float  mHeight;
 
@@ -17,18 +16,17 @@ public class TextRegion
     {
         mText  = text;
         mPaint = paint;
-		mX     = 0;
-		mY     = 0;
-
+		
 		Paint.FontMetrics fontMetrics=mPaint.getFontMetrics();
 		mAscent = -fontMetrics.ascent;
+		mX      = 0;
 		mWidth  = mPaint.measureText(mText);
 		mHeight = fontMetrics.descent + mAscent + fontMetrics.leading;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
     {
-        canvas.drawText(mText, mX+offsetX, mY+offsetY+mAscent, mPaint);
+        canvas.drawText(mText, mX+offsetX, offsetY+mAscent, mPaint);
     }
 
 	public void setX(float x)
@@ -36,19 +34,15 @@ public class TextRegion
 		mX=x;
 	}
 
-	public void setY(float y)
-	{
-		mY=y;
-	}
-
 	public float getX()
 	{
 		return mX;
 	}
 
-	public float getY()
+	@Deprecated
+	public float getY() // Do not use it. Always zero
 	{
-		return mY;
+		return 0;
 	}
 
 	public float getWidth()
@@ -66,8 +60,9 @@ public class TextRegion
 		return mX+mWidth;
 	}
 
-	public float getBottom()
+	@Deprecated
+	public float getBottom()// Do not use it. Use getHeight() instead
 	{
-		return mY+mHeight;
+		return mHeight;
 	}
 }
