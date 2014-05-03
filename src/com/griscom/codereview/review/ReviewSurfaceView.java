@@ -1,8 +1,11 @@
 package com.griscom.codereview.review;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -17,12 +20,40 @@ import com.griscom.codereview.review.syntax.SyntaxParserBase;
 
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnTouchListener
 {
+    private static final int REPAINT_MESSAGE = 1;
+
+
+
     private Context            mContext;
     private SurfaceHolder      mSurfaceHolder;
     private DrawThread         mDrawThread;
     private String             mFileName;
     private SyntaxParserBase   mSyntaxParser;
     private TextDocument       mDocument;
+
+
+
+    @SuppressLint("HandlerLeak")
+	private Handler mHandler=new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case REPAINT_MESSAGE:
+                {
+                    if (mDrawThread!=null)
+                    {
+                        mDrawThread.repaint();
+                    }
+                }
+                break;
+            }
+        }
+    };
+
+
 
     public ReviewSurfaceView(Context context)
     {
@@ -101,12 +132,21 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         return false;
     }
 
+    @Override
+    public void repaint()
+    {
+        mHandler.removeMessages(REPAINT_MESSAGE);
+        mHandler.sendEmptyMessageDelayed(REPAINT_MESSAGE, 80);
+    }
+
     public void reload()
     {
         mDocument=mSyntaxParser.parseFile(mFileName);
 
         mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
         mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
+
+        repaint();
     }
 
     public void setFileName(String fileName)

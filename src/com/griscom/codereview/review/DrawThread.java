@@ -10,14 +10,14 @@ class DrawThread extends Thread
     private SurfaceHolder               mSurfaceHolder;
     private OnReviewSurfaceDrawListener mDrawer;
     private boolean                     mTerminated;
-    private boolean                     mNeedRefresh;
+    private boolean                     mNeedRepaint;
 
     public DrawThread(SurfaceHolder surfaceHolder, OnReviewSurfaceDrawListener drawer)
     {
         mSurfaceHolder = surfaceHolder;
         mDrawer        = drawer;
         mTerminated    = false;
-        mNeedRefresh   = true;
+        mNeedRepaint   = true;
     }
 
     public void terminate()
@@ -25,9 +25,12 @@ class DrawThread extends Thread
         mTerminated=true;
     }
 
-    public void invalidate()
+    public void repaint()
     {
-        mNeedRefresh=true;
+        synchronized (mSurfaceHolder)
+        {
+            mNeedRepaint=true;
+        }
     }
 
     @Override
@@ -40,7 +43,7 @@ class DrawThread extends Thread
             try
             {
                 if (
-                    !mNeedRefresh
+                    !mNeedRepaint
                     ||
                     !mSurfaceHolder.getSurface().isValid()
                    )
@@ -49,11 +52,11 @@ class DrawThread extends Thread
                     continue;
                 }
 
-                canvas=mSurfaceHolder.lockCanvas();
-                mNeedRefresh=false;
-
                 synchronized (mSurfaceHolder)
                 {
+                    mNeedRepaint=false;
+
+                    canvas=mSurfaceHolder.lockCanvas();
                     mDrawer.onReviewSurfaceDraw(canvas);
                 }
             }
@@ -62,7 +65,7 @@ class DrawThread extends Thread
                 // Nothing
             }
 
-            if (canvas != null)
+            if (canvas!=null)
             {
                 mSurfaceHolder.unlockCanvasAndPost(canvas);
             }
