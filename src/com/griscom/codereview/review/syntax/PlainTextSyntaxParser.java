@@ -6,6 +6,7 @@ import java.io.FileReader;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
 
 import com.griscom.codereview.review.TextDocument;
@@ -31,9 +32,12 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
             Paint basePaint=new Paint();
 
             basePaint.setColor(Color.BLACK);
+            basePaint.setTypeface(Typeface.MONOSPACE);
             basePaint.setTextSize(getFontSize());
 
             // ---------------------------------------------------------------
+
+            int tabSize=getTabSize();
 
             BufferedReader reader=new BufferedReader(new FileReader(fileName));
 
@@ -41,7 +45,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
             while ((line = reader.readLine()) != null)
             {
                 TextRow newRow       = new TextRow();
-                TextRegion newRegion = new TextRegion(line, basePaint);
+                TextRegion newRegion = new TextRegion(line, basePaint, 0, tabSize);
 
 
 

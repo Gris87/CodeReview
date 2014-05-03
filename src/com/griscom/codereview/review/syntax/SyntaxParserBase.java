@@ -38,8 +38,13 @@ public abstract class SyntaxParserBase
 
     public float getFontSize()
     {
-        float settingsFontSize=PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_font_size), mContext.getResources().getInteger(R.integer.pref_default_font_size));
+        int settingsFontSize=PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_font_size), mContext.getResources().getInteger(R.integer.pref_default_font_size));
 
         return settingsFontSize*mContext.getResources().getDisplayMetrics().scaledDensity;
+    }
+
+    public int getTabSize()
+    {
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_tab_size), mContext.getResources().getInteger(R.integer.pref_default_tab_size));
     }
 }

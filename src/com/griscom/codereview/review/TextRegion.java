@@ -5,28 +5,80 @@ import android.graphics.Paint;
 
 public class TextRegion
 {
-    private String mText;
+    private String mOriginalText;
+    private String mDisplayedText;
     private Paint  mPaint;
     private float  mAscent;
     private float  mX;
     private float  mWidth;
     private float  mHeight;
 
-    public TextRegion(String text, Paint paint)
+    public TextRegion(String text, Paint paint, int position, int tabSize)
     {
-        mText  = text;
-        mPaint = paint;
+        setupDisplayedText(text, position, tabSize);
+        mPaint  = paint;
 
         Paint.FontMetrics fontMetrics=mPaint.getFontMetrics();
         mAscent = -fontMetrics.ascent;
         mX      = 0;
-        mWidth  = mPaint.measureText(mText);
+        mWidth  = mPaint.measureText(mDisplayedText);
         mHeight = fontMetrics.descent + mAscent + fontMetrics.leading;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
     {
-        canvas.drawText(mText, mX+offsetX, offsetY+mAscent, mPaint);
+        canvas.drawText(mDisplayedText, mX+offsetX, offsetY+mAscent, mPaint);
+    }
+
+    private void setupDisplayedText(String text, int position, int tabSize)
+    {
+        int index=text.indexOf('\t');
+
+        if (index>=0)
+        {
+            mOriginalText  = text;
+
+            StringBuilder sb=new StringBuilder(mOriginalText);
+
+            do
+            {
+                int requiredSpaces=tabSize-((position+index) % tabSize);
+                sb.replace(index, index+1, spaces(requiredSpaces));
+
+                index=sb.indexOf("\t", index);
+            } while (index>=0);
+
+            mDisplayedText = sb.toString();
+        }
+        else
+        {
+            mOriginalText  = null;
+            mDisplayedText = text;
+        }
+    }
+
+    private String spaces(int count)
+    {
+        StringBuilder sb=new StringBuilder();
+
+        for (int i=0; i<count; ++i)
+        {
+            sb.append(' ');
+        }
+
+        return sb.toString();
+    }
+
+    public String getOriginalText()
+    {
+        if (mOriginalText!=null)
+        {
+            return mOriginalText;
+        }
+        else
+        {
+            return mDisplayedText;
+        }
     }
 
     public void setX(float x)
