@@ -225,7 +225,7 @@ public class ReviewActivity extends Activity
     {
         super.onConfigurationChanged(newConfig);
 
-        mContent.repaint();
+        mContent.repaint(80);
     }
 
     /**

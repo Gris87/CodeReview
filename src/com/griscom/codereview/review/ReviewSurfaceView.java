@@ -112,6 +112,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         pause();
 
         reload();
+		repaint(200);
 
         mDrawThread=new DrawThread(mSurfaceHolder, this);
         mDrawThread.start();
@@ -131,12 +132,24 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         // TODO Auto-generated method stub
         return false;
     }
-
-    @Override
-    public void repaint()
+	
+	public void repaint()
+    {
+		repaint(0);
+	}
+	
+    public void repaint(long timeout)
     {
         mHandler.removeMessages(REPAINT_MESSAGE);
-        mHandler.sendEmptyMessageDelayed(REPAINT_MESSAGE, 80);
+		
+		if (timeout>0)
+		{
+			mHandler.sendEmptyMessageDelayed(REPAINT_MESSAGE, timeout);
+		}
+		else
+		{
+			mHandler.sendEmptyMessage(REPAINT_MESSAGE);
+		}
     }
 
     public void reload()
