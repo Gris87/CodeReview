@@ -1,13 +1,21 @@
 package com.griscom.codereview.review;
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
+import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
 public class TextDocument implements OnTouchListener
 {
+    private static final int HIGHLIGHT_MESSAGE = 1;
+
+
+
+    private ReviewSurfaceView  mParent;
     private ArrayList<TextRow> mRows;
     private float              mX;
     private float              mY;
@@ -16,8 +24,29 @@ public class TextDocument implements OnTouchListener
     private float              mOffsetX;
     private float              mOffsetY;
 
+
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler=new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case HIGHLIGHT_MESSAGE:
+                {
+                }
+                break;
+            }
+        }
+    };
+
+
+
     public TextDocument()
     {
+        mParent  = null;
         mRows    = new ArrayList<TextRow>();
 
         mX       = 0;
@@ -54,6 +83,19 @@ public class TextDocument implements OnTouchListener
     {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    private void repaint()
+    {
+        if (mParent!=null)
+        {
+            mParent.repaint();
+        }
+    }
+
+    public void setParent(ReviewSurfaceView parent)
+    {
+        mParent=parent;
     }
 
     public void setX(float x)

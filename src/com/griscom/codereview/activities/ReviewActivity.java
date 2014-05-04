@@ -158,11 +158,19 @@ public class ReviewActivity extends Activity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        mContent.onDestroy();
+    }
+
+    @Override
     protected void onPause()
     {
         super.onPause();
 
-        mContent.pause();
+        mContent.onPause();
     }
 
     @Override
@@ -170,7 +178,7 @@ public class ReviewActivity extends Activity
     {
         super.onResume();
 
-        mContent.resume();
+        mContent.onResume();
     }
 
     /**

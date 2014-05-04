@@ -32,7 +32,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private String             mFileName;
     private SyntaxParserBase   mSyntaxParser;
     private TextDocument       mDocument;
+
+    // USED IN HANDLER [
     private TextDocument       mLastLoadedDocument;
+    // USED IN HANDLER ]
 
 
 
@@ -49,6 +52,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                     mDocument           = mLastLoadedDocument;
                     mLastLoadedDocument = null;
 
+                    mDocument.setParent(ReviewSurfaceView.this);
                     setOnTouchListener(mDocument);
 
                     mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
@@ -102,13 +106,19 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mDocument      = null;
     }
 
-    public void pause()
+    public void onDestroy()
+    {
+        mDocument=null;
+        setOnTouchListener(null);
+    }
+
+    public void onPause()
     {
         stopLoadingThread();
         stopDrawThread();
     }
 
-    public void resume()
+    public void onResume()
     {
         stopDrawThread();
 
