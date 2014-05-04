@@ -55,7 +55,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                     mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
                     mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
 
-                    repaint();
+                    repaint(200);
                 }
                 break;
 
@@ -139,7 +139,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             paint.setTextSize(Utils.spToPixels(36, mContext));
             paint.setTextAlign(Align.CENTER);
 
-            canvas.drawText("Loading...", getWidth()*0.5f, getHeight()*0.5f, paint);
+            canvas.drawText(mContext.getString(R.string.loading), getWidth()*0.5f, getHeight()*0.5f, paint);
         }
     }
 
@@ -209,6 +209,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         if (mDrawThread!=null)
         {
             mDrawThread.terminate();
+            mDrawThread.interrupt();
 
             do
             {

@@ -48,6 +48,7 @@
     <!-- Review activity title -->
     <string name="title_activity_review">Просмотр кода</string>
     <string name="dummy_button">Dummy Button</string>
+    <string name="loading">Загрузка...</string>
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Игнорирование файлов</string>

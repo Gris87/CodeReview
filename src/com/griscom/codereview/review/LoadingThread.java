@@ -1,13 +1,21 @@
 package com.griscom.codereview.review;
 
+import android.util.Log;
+
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 
 public class LoadingThread extends Thread
 {
+    private static final String TAG = "LoadingThread";
+
+
+
     private SyntaxParserBase         mSyntaxParser;
     private OnDocumentLoadedListener mListener;
     private String                   mFileName;
+
+
 
     public LoadingThread(SyntaxParserBase syntaxParser, OnDocumentLoadedListener listener, String fileName)
     {
@@ -19,6 +27,13 @@ public class LoadingThread extends Thread
     @Override
     public void run()
     {
-        mListener.onDocumentLoaded(mSyntaxParser.parseFile(mFileName));
+        try
+        {
+            mListener.onDocumentLoaded(mSyntaxParser.parseFile(mFileName));
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, "Exception occured during parsing", e);
+        }
     }
 }
