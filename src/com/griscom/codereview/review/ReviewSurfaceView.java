@@ -164,8 +164,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     public void repaint(long timeout)
     {
-        mHandler.removeMessages(REPAINT_MESSAGE);
-
 		if (timeout>0)
 		{
 			mHandler.sendEmptyMessageDelayed(REPAINT_MESSAGE, timeout);

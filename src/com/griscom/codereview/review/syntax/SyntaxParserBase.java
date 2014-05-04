@@ -18,7 +18,7 @@ public abstract class SyntaxParserBase
         mContext=context;
     }
 
-    public abstract TextDocument parseFile(String fileName);
+    public abstract TextDocument parseFile(String fileName) throws InterruptedException;
 
     public static SyntaxParserBase createParserByFileName(String fileName, Context context)
     {

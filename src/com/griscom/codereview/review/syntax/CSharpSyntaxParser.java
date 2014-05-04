@@ -23,7 +23,7 @@ public class CSharpSyntaxParser extends SyntaxParserBase
     }
 
     @Override
-    public TextDocument parseFile(String fileName)
+    public TextDocument parseFile(String fileName) throws InterruptedException
     {
         TextDocument res=new TextDocument();
 
@@ -44,6 +44,12 @@ public class CSharpSyntaxParser extends SyntaxParserBase
             String line;
             while ((line = reader.readLine()) != null)
             {
+                if (Thread.interrupted())
+                {
+                    reader.close();
+                    throw new InterruptedException();
+                }
+
                 TextRow newRow       = new TextRow();
                 TextRegion newRegion = new TextRegion(line, basePaint, 0, tabSize);
 
@@ -54,6 +60,10 @@ public class CSharpSyntaxParser extends SyntaxParserBase
             }
 
             reader.close();
+        }
+        catch (InterruptedException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {

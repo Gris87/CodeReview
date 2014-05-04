@@ -31,6 +31,10 @@ public class LoadingThread extends Thread
         {
             mListener.onDocumentLoaded(mSyntaxParser.parseFile(mFileName));
         }
+        catch (InterruptedException e)
+        {
+            // Nothing
+        }
         catch (Exception e)
         {
             Log.e(TAG, "Exception occured during parsing", e);
