@@ -55,7 +55,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                     mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
                     mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
 
-                    repaint(200);
+                    repaint();
                 }
                 break;
 

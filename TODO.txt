@@ -1,7 +1,6 @@
 Select all in ActionMode
 Hide Done button in ActionMode
 Save/load dialogs state
-Load in thread
 Movements
 Zoom
 Highlight syntax
