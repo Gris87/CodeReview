@@ -9,13 +9,23 @@ class DrawThread extends Thread
 {
     private SurfaceHolder               mSurfaceHolder;
     private OnReviewSurfaceDrawListener mDrawer;
+    private boolean                     mTerminated;
     private boolean                     mNeedRepaint;
 
     public DrawThread(SurfaceHolder surfaceHolder, OnReviewSurfaceDrawListener drawer)
     {
         mSurfaceHolder = surfaceHolder;
         mDrawer        = drawer;
+        mTerminated    = false;
         mNeedRepaint   = true;
+    }
+
+    @Override
+    public void interrupt()
+    {
+        mTerminated=true;
+
+        super.interrupt();
     }
 
     public void repaint()
@@ -29,7 +39,7 @@ class DrawThread extends Thread
     @Override
     public void run()
     {
-        while (!Thread.interrupted())
+        while (!mTerminated)
         {
             Canvas canvas=null;
 

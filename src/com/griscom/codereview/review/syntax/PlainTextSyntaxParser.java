@@ -25,7 +25,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
     @Override
     public TextDocument parseFile(String fileName) throws InterruptedException
     {
-        TextDocument res=new TextDocument();
+        TextDocument res=new TextDocument(mContext);
 
         try
         {
