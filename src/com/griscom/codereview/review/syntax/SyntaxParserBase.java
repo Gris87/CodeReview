@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.review.TextDocument;
+import com.griscom.codereview.util.Utils;
 
 @SuppressLint("DefaultLocale")
 public abstract class SyntaxParserBase
@@ -40,7 +41,7 @@ public abstract class SyntaxParserBase
     {
         int settingsFontSize=PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_font_size), mContext.getResources().getInteger(R.integer.pref_default_font_size));
 
-        return settingsFontSize*mContext.getResources().getDisplayMetrics().scaledDensity;
+        return Utils.spToPixels(settingsFontSize, mContext);
     }
 
     public int getTabSize()
