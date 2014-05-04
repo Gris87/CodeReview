@@ -2,29 +2,36 @@ package com.griscom.codereview.review;
 import java.util.ArrayList;
 
 import android.graphics.Canvas;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
-public class TextDocument
+public class TextDocument implements OnTouchListener
 {
     private ArrayList<TextRow> mRows;
     private float              mX;
     private float              mY;
     private float              mWidth;
     private float              mHeight;
+    private float              mOffsetX;
+    private float              mOffsetY;
 
     public TextDocument()
     {
-        mRows   = new ArrayList<TextRow>();
+        mRows    = new ArrayList<TextRow>();
 
-        mX      = 0;
-        mY      = 0;
-        mWidth  = 0;
-        mHeight = 0;
+        mX       = 0;
+        mY       = 0;
+        mWidth   = 0;
+        mHeight  = 0;
+        mOffsetX = 0;
+        mOffsetY = 0;
     }
-    public void draw(Canvas canvas, float offsetX, float offsetY)
+    public void draw(Canvas canvas)
     {
         for (int i=0; i<mRows.size(); ++i)
         {
-            mRows.get(i).draw(canvas, mX+offsetX, mY+offsetY);
+            mRows.get(i).draw(canvas, mX+mOffsetX, mY+mOffsetY);
         }
     }
 
@@ -40,6 +47,13 @@ public class TextDocument
         {
             mWidth=row.getWidth();
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     public void setX(float x)

@@ -9,11 +9,8 @@ import android.graphics.Paint.Align;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.View.OnTouchListener;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
@@ -21,7 +18,7 @@ import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
 
-public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
+public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener
 {
     private static final int LOADED_MESSAGE  = 1;
     private static final int REPAINT_MESSAGE = 2;
@@ -51,6 +48,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                 {
                     mDocument           = mLastLoadedDocument;
                     mLastLoadedDocument = null;
+
+                    setOnTouchListener(mDocument);
 
                     mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
                     mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
@@ -101,8 +100,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mDrawThread    = null;
         mSyntaxParser  = null;
         mDocument      = null;
-
-        setOnTouchListener(this);
     }
 
     public void pause()
@@ -129,7 +126,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         if (mDocument!=null)
         {
-            mDocument.draw(canvas, 0, 0);
+            mDocument.draw(canvas);
         }
         else
         {
@@ -149,13 +146,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 	    mLastLoadedDocument=document;
 	    mHandler.sendEmptyMessage(LOADED_MESSAGE);
 	}
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
 	public void repaint()
     {
@@ -178,6 +168,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     {
         stopLoadingThread();
 
+        mDocument=null;
+        setOnTouchListener(null);
+        repaint();
+
         mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName);
         mLoadingThread.start();
     }
@@ -193,6 +187,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                 try
                 {
                     mLoadingThread.join();
+                    mLoadingThread=null;
                     return;
                 }
                 catch (Exception e)
@@ -206,7 +201,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     {
         if (mDrawThread!=null)
         {
-            mDrawThread.terminate();
             mDrawThread.interrupt();
 
             do
@@ -214,6 +208,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                 try
                 {
                     mDrawThread.join();
+                    mDrawThread=null;
                     return;
                 }
                 catch (Exception e)
@@ -229,7 +224,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         mSyntaxParser=SyntaxParserBase.createParserByFileName(mFileName, mContext);
 
-        // Maybe reload but no
+        // Maybe reload but no. Calls once and reload will come at the next step
         // reload();
     }
 }
