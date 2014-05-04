@@ -2,6 +2,7 @@ package com.griscom.codereview.review;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -99,11 +100,13 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     private void init(Context context)
     {
-        mContext       = context;
-        mSurfaceHolder = getHolder();
-        mDrawThread    = null;
-        mSyntaxParser  = null;
-        mDocument      = null;
+        mContext            = context;
+        mSurfaceHolder      = getHolder();
+        mLoadingThread      = null;
+        mDrawThread         = null;
+        mSyntaxParser       = null;
+        mDocument           = null;
+        mLastLoadedDocument = null;
     }
 
     public void onDestroy()
@@ -127,6 +130,17 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         mDrawThread=new DrawThread(mSurfaceHolder, this);
         mDrawThread.start();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        if (mDocument!=null)
+        {
+            mDocument.onConfigurationChanged(newConfig);
+        }
+
+        repaint(80);
     }
 
     @Override

@@ -233,7 +233,7 @@ public class ReviewActivity extends Activity
     {
         super.onConfigurationChanged(newConfig);
 
-        mContent.repaint(80);
+        mContent.onConfigurationChanged(newConfig);
     }
 
     /**

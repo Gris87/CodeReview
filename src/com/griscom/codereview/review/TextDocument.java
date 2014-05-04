@@ -2,18 +2,25 @@ package com.griscom.codereview.review;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 
 public class TextDocument implements OnTouchListener
 {
-    private static final int HIGHLIGHT_MESSAGE = 1;
+    private static final int HIDE_BARS_MESSAGE = 1;
+    private static final int HIGHLIGHT_MESSAGE = 2;
 
 
 
@@ -30,6 +37,9 @@ public class TextDocument implements OnTouchListener
     private float              mViewWidth;
     private float              mViewHeight;
 
+    // USED IN HANDLER [
+    private int                mBarsAlpha;
+    // USED IN HANDLER ]
 
 
     public TextDocument(Context context)
@@ -47,6 +57,8 @@ public class TextDocument implements OnTouchListener
         mOffsetY    = 0;
         mViewWidth  = 0;
         mViewHeight = 0;
+
+        mBarsAlpha  = 0;
     }
     public void draw(Canvas canvas)
     {
@@ -62,25 +74,35 @@ public class TextDocument implements OnTouchListener
            )
         {
             float density=mContext.getResources().getDisplayMetrics().scaledDensity;
-            float margin=4*density;
+            float margin=6*density;
 
             Paint barPaint=new Paint();
+            Paint barBackgroundPaint=new Paint();
 
-            barPaint.setARGB(255, 140, 140, 140);
+            barPaint.setARGB(mBarsAlpha, 180, 180, 180);
             barPaint.setStrokeWidth(4*density);
+
+            barBackgroundPaint.setARGB(mBarsAlpha, 140, 140, 140);
+            barBackgroundPaint.setStrokeWidth(8*density);
 
             if (mViewWidth>0 && mWidth>mViewWidth)
             {
                 float barLength=mViewWidth/mWidth;
+                float barWidth=mViewWidth-margin*3;
+                float barPosition=0;
 
-                canvas.drawLine(mViewWidth-margin, mY+margin, mViewWidth-margin, mViewHeight-margin, barPaint);
+                canvas.drawLine(margin,             mViewHeight-margin, barWidth+margin,           mViewHeight-margin, barBackgroundPaint);
+                canvas.drawLine(barPosition+margin, mViewHeight-margin, barWidth*barLength+margin, mViewHeight-margin, barPaint);
             }
 
             if (mViewHeight>0 && mHeight>mViewHeight)
             {
-                float barLength=mViewWidth/mWidth;
+                float barLength=mViewHeight/mHeight;
+                float barHeight=mViewHeight-margin*3;
+                float barPosition=0;
 
-                canvas.drawLine(mViewWidth-margin, mY+margin, mViewWidth-margin, mViewHeight-margin, barPaint);
+                canvas.drawLine(mViewWidth-margin, margin,             mViewWidth-margin, barHeight+margin,           barBackgroundPaint);
+                canvas.drawLine(mViewWidth-margin, barPosition+margin, mViewWidth-margin, barHeight*barLength+margin, barPaint);
             }
         }
     }
@@ -99,9 +121,33 @@ public class TextDocument implements OnTouchListener
         }
     }
 
+	@SuppressWarnings("deprecation")
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+        {
+            Point size = new Point();
+            display.getSize(size);
+
+            mViewWidth  = size.x;
+            mViewHeight = size.y;
+        }
+        else
+        {
+            mViewWidth  = display.getWidth();
+            mViewHeight = display.getHeight();
+        }
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event)
     {
+        showBars();
+
         // TODO Auto-generated method stub
         return false;
     }
@@ -114,14 +160,23 @@ public class TextDocument implements OnTouchListener
         }
     }
 
+    private void showBars()
+    {
+        mBarsAlpha=255;
+
+        mHandler.removeMessages(HIDE_BARS_MESSAGE);
+        mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 1000);
+
+        repaint();
+    }
+
     public void setParent(ReviewSurfaceView parent)
     {
         mParent=parent;
-
-        mViewWidth  = mParent.getWidth();
-        mViewHeight = mParent.getHeight();
-
         mHandler=new DocumentHandler();
+
+        onConfigurationChanged(mContext.getResources().getConfiguration());
+        showBars();
     }
 
     public void setX(float x)
@@ -174,6 +229,23 @@ public class TextDocument implements OnTouchListener
         {
             switch (msg.what)
             {
+                case HIDE_BARS_MESSAGE:
+                {
+                    mBarsAlpha-=20;
+
+                    if (mBarsAlpha>0)
+                    {
+                        sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 40);
+                    }
+                    else
+                    {
+                        mBarsAlpha=0;
+                    }
+
+                    repaint();
+                }
+                break;
+
                 case HIGHLIGHT_MESSAGE:
                 {
                 }
