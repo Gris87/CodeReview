@@ -42,6 +42,7 @@ public class TextDocument implements OnTouchListener
     // USED IN HANDLER ]
 
 
+	
     public TextDocument(Context context)
     {
         mContext    = context;
@@ -60,6 +61,16 @@ public class TextDocument implements OnTouchListener
 
         mBarsAlpha  = 0;
     }
+	
+	public void init(ReviewSurfaceView parent)
+    {
+        mParent=parent;
+        mHandler=new DocumentHandler();
+
+        onConfigurationChanged(mContext.getResources().getConfiguration());
+        showBars();
+    }
+	
     public void draw(Canvas canvas)
     {
         for (int i=0; i<mRows.size(); ++i)
@@ -162,21 +173,20 @@ public class TextDocument implements OnTouchListener
 
     private void showBars()
     {
-        mBarsAlpha=255;
 
-        mHandler.removeMessages(HIDE_BARS_MESSAGE);
-        mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 1000);
+        if (
+            (mViewWidth>0 && mWidth>mViewWidth)
+            ||
+            (mViewHeight>0 && mHeight>mViewHeight)
+			)
+        {
+        	mBarsAlpha=255;
 
-        repaint();
-    }
+        	mHandler.removeMessages(HIDE_BARS_MESSAGE);
+        	mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 1000);
 
-    public void setParent(ReviewSurfaceView parent)
-    {
-        mParent=parent;
-        mHandler=new DocumentHandler();
-
-        onConfigurationChanged(mContext.getResources().getConfiguration());
-        showBars();
+        	repaint();
+		}
     }
 
     public void setX(float x)
@@ -230,27 +240,34 @@ public class TextDocument implements OnTouchListener
             switch (msg.what)
             {
                 case HIDE_BARS_MESSAGE:
-                {
-                    mBarsAlpha-=20;
-
-                    if (mBarsAlpha>0)
-                    {
-                        sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 40);
-                    }
-                    else
-                    {
-                        mBarsAlpha=0;
-                    }
-
-                    repaint();
-                }
+                    hideBars();
                 break;
 
                 case HIGHLIGHT_MESSAGE:
-                {
-                }
+                    highlight();
                 break;
             }
         }
+		
+		private void hideBars()
+		{
+			mBarsAlpha-=20;
+
+			if (mBarsAlpha>0)
+			{
+				sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 40);
+			}
+			else
+			{
+				mBarsAlpha=0;
+			}
+
+			repaint();
+		}
+		
+		private void highlight()
+		{
+			
+		}
     }
 }

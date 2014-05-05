@@ -49,30 +49,36 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             switch (msg.what)
             {
                 case LOADED_MESSAGE:
-                {
-                    mDocument           = mLastLoadedDocument;
-                    mLastLoadedDocument = null;
-
-                    mDocument.setParent(ReviewSurfaceView.this);
-                    setOnTouchListener(mDocument);
-
-                    mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
-                    mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
-
-                    repaint();
-                }
+                    loaded();
                 break;
 
                 case REPAINT_MESSAGE:
-                {
-                    if (mDrawThread!=null)
-                    {
-                        mDrawThread.repaint();
-                    }
-                }
+                    repaint();
                 break;
             }
         }
+		
+		private void loaded()
+		{
+			mDocument           = mLastLoadedDocument;
+			mLastLoadedDocument = null;
+
+			mDocument.init(ReviewSurfaceView.this);
+			setOnTouchListener(mDocument);
+
+			mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
+			mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
+
+			repaint();
+		}
+		
+		private void repaint()
+		{
+			if (mDrawThread!=null)
+			{
+				mDrawThread.repaint();
+			}
+		}
     };
 
 

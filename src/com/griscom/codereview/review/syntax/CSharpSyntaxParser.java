@@ -44,6 +44,7 @@ public class CSharpSyntaxParser extends SyntaxParserBase
             String line;
             while ((line = reader.readLine()) != null)
             {
+				// TODO: Interruptible channel
                 if (Thread.interrupted())
                 {
                     reader.close();
