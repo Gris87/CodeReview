@@ -3,5 +3,5 @@ import com.griscom.codereview.review.*;
 
 public interface OnDocumentLoadedListener
 {
-	public void onDocumentLoaded(TextDocument document);
+    public void onDocumentLoaded(TextDocument document);
 }

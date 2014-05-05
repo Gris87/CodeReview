@@ -25,15 +25,26 @@ public class LoadingThread extends Thread
     }
 
     @Override
+    public void interrupt()
+    {
+        super.interrupt();
+
+        try
+        {
+            mSyntaxParser.closeReader();
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, "Impossible to close parser", e);
+        }
+    }
+
+    @Override
     public void run()
     {
         try
         {
             mListener.onDocumentLoaded(mSyntaxParser.parseFile(mFileName));
-        }
-        catch (InterruptedException e)
-        {
-            // Nothing
         }
         catch (Exception e)
         {

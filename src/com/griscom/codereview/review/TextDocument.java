@@ -42,7 +42,7 @@ public class TextDocument implements OnTouchListener
     // USED IN HANDLER ]
 
 
-	
+
     public TextDocument(Context context)
     {
         mContext    = context;
@@ -61,8 +61,8 @@ public class TextDocument implements OnTouchListener
 
         mBarsAlpha  = 0;
     }
-	
-	public void init(ReviewSurfaceView parent)
+
+    public void init(ReviewSurfaceView parent)
     {
         mParent=parent;
         mHandler=new DocumentHandler();
@@ -70,7 +70,7 @@ public class TextDocument implements OnTouchListener
         onConfigurationChanged(mContext.getResources().getConfiguration());
         showBars();
     }
-	
+
     public void draw(Canvas canvas)
     {
         for (int i=0; i<mRows.size(); ++i)
@@ -132,8 +132,8 @@ public class TextDocument implements OnTouchListener
         }
     }
 
-	@SuppressWarnings("deprecation")
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void onConfigurationChanged(Configuration newConfig)
     {
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -178,15 +178,15 @@ public class TextDocument implements OnTouchListener
             (mViewWidth>0 && mWidth>mViewWidth)
             ||
             (mViewHeight>0 && mHeight>mViewHeight)
-			)
+            )
         {
-        	mBarsAlpha=255;
+            mBarsAlpha=255;
 
-        	mHandler.removeMessages(HIDE_BARS_MESSAGE);
-        	mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 1000);
+            mHandler.removeMessages(HIDE_BARS_MESSAGE);
+            mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 1000);
 
-        	repaint();
-		}
+            repaint();
+        }
     }
 
     public void setX(float x)
@@ -232,7 +232,7 @@ public class TextDocument implements OnTouchListener
 
 
     @SuppressLint("HandlerLeak")
-	private class DocumentHandler extends Handler
+    private class DocumentHandler extends Handler
     {
         @Override
         public void handleMessage(Message msg)
@@ -248,26 +248,26 @@ public class TextDocument implements OnTouchListener
                 break;
             }
         }
-		
-		private void hideBars()
-		{
-			mBarsAlpha-=20;
 
-			if (mBarsAlpha>0)
-			{
-				sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 40);
-			}
-			else
-			{
-				mBarsAlpha=0;
-			}
+        private void hideBars()
+        {
+            mBarsAlpha-=20;
 
-			repaint();
-		}
-		
-		private void highlight()
-		{
-			
-		}
+            if (mBarsAlpha>0)
+            {
+                sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 40);
+            }
+            else
+            {
+                mBarsAlpha=0;
+            }
+
+            repaint();
+        }
+
+        private void highlight()
+        {
+
+        }
     }
 }

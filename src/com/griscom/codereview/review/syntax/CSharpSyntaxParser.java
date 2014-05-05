@@ -1,8 +1,5 @@
 package com.griscom.codereview.review.syntax;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,12 +20,14 @@ public class CSharpSyntaxParser extends SyntaxParserBase
     }
 
     @Override
-    public TextDocument parseFile(String fileName) throws InterruptedException
+    public TextDocument parseFile(String fileName)
     {
         TextDocument res=new TextDocument(mContext);
 
         try
         {
+            int tabSize=getTabSize();
+
             Paint basePaint=new Paint();
 
             basePaint.setColor(Color.BLACK);
@@ -37,21 +36,12 @@ public class CSharpSyntaxParser extends SyntaxParserBase
 
             // ---------------------------------------------------------------
 
-            int tabSize=getTabSize();
-
-            BufferedReader reader=new BufferedReader(new FileReader(fileName));
+            createReader(fileName);
 
             String line;
-            while ((line = reader.readLine()) != null)
+            while ((line = readLine()) != null)
             {
-				// TODO: Interruptible channel
-                if (Thread.interrupted())
-                {
-                    reader.close();
-                    throw new InterruptedException();
-                }
-
-                TextRow newRow       = new TextRow();
+                TextRow    newRow    = new TextRow();
                 TextRegion newRegion = new TextRegion(line, basePaint, 0, tabSize);
 
 
@@ -60,11 +50,7 @@ public class CSharpSyntaxParser extends SyntaxParserBase
                 res.addTextRow(newRow);
             }
 
-            reader.close();
-        }
-        catch (InterruptedException e)
-        {
-            throw e;
+            closeReader();
         }
         catch (Exception e)
         {

@@ -41,7 +41,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
 
     @SuppressLint("HandlerLeak")
-	private Handler mHandler=new Handler()
+    private Handler mHandler=new Handler()
     {
         @Override
         public void handleMessage(Message msg)
@@ -57,28 +57,28 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                 break;
             }
         }
-		
-		private void loaded()
-		{
-			mDocument           = mLastLoadedDocument;
-			mLastLoadedDocument = null;
 
-			mDocument.init(ReviewSurfaceView.this);
-			setOnTouchListener(mDocument);
+        private void loaded()
+        {
+            mDocument           = mLastLoadedDocument;
+            mLastLoadedDocument = null;
 
-			mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
-			mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
+            mDocument.init(ReviewSurfaceView.this);
+            setOnTouchListener(mDocument);
 
-			repaint();
-		}
-		
-		private void repaint()
-		{
-			if (mDrawThread!=null)
-			{
-				mDrawThread.repaint();
-			}
-		}
+            mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
+            mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
+
+            repaint();
+        }
+
+        private void repaint()
+        {
+            if (mDrawThread!=null)
+            {
+                mDrawThread.repaint();
+            }
+        }
     };
 
 
@@ -132,7 +132,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         stopDrawThread();
 
         reload();
-		repaint(200);
+        repaint(200);
 
         mDrawThread=new DrawThread(mSurfaceHolder, this);
         mDrawThread.start();
@@ -170,28 +170,28 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
-	@Override
-	public void onDocumentLoaded(TextDocument document)
-	{
-	    mLastLoadedDocument=document;
-	    mHandler.sendEmptyMessage(LOADED_MESSAGE);
-	}
-
-	public void repaint()
+    @Override
+    public void onDocumentLoaded(TextDocument document)
     {
-		repaint(0);
-	}
+        mLastLoadedDocument=document;
+        mHandler.sendEmptyMessage(LOADED_MESSAGE);
+    }
+
+    public void repaint()
+    {
+        repaint(0);
+    }
 
     public void repaint(long timeout)
     {
-		if (timeout>0)
-		{
-			mHandler.sendEmptyMessageDelayed(REPAINT_MESSAGE, timeout);
-		}
-		else
-		{
-			mHandler.sendEmptyMessage(REPAINT_MESSAGE);
-		}
+        if (timeout>0)
+        {
+            mHandler.sendEmptyMessageDelayed(REPAINT_MESSAGE, timeout);
+        }
+        else
+        {
+            mHandler.sendEmptyMessage(REPAINT_MESSAGE);
+        }
     }
 
     public void reload()
