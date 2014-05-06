@@ -35,9 +35,4 @@
     <string name="pref_title_tab_size">Размер табуляции</string>
     <string name="pref_desc_tab_size">Отображаемая ширина табуляции в пробелах.</string>
 
-
-
-    <!-- ColorPreference hint -->
-    <string name="press_color_to_apply">Нажмите на цвет для выбора</string>
-
 </resources>
