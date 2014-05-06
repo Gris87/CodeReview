@@ -28,6 +28,7 @@
 
         <activity
             android:name="com.griscom.codereview.activities.ReviewActivity"
+			android:immersive="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_review"
             android:theme="@style/FullscreenTheme" >

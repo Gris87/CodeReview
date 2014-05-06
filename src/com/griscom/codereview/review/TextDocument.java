@@ -160,7 +160,7 @@ public class TextDocument implements OnTouchListener
         showBars();
 
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     private void repaint()

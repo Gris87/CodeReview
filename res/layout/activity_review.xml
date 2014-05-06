@@ -7,8 +7,7 @@
     <com.griscom.codereview.review.ReviewSurfaceView
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:keepScreenOn="true" />
+        android:layout_height="match_parent" />
 
     <!--
          This FrameLayout insets its children based on system windows using

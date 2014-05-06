@@ -16,36 +16,37 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.review.ReviewSurfaceView;
 import com.griscom.codereview.util.SystemUiHider;
+import android.view.View.*;
 
-public class ReviewActivity extends Activity
+public class ReviewActivity extends Activity implements OnTouchListener
 {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
-    private static final boolean AUTO_HIDE = true;
+    //private static final boolean AUTO_HIDE = true;
 
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    //private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
 
     /**
      * If set, will toggle the system UI visibility upon interaction. Otherwise,
      * will show the system UI visibility upon interaction.
      */
-    private static final boolean TOGGLE_ON_CLICK = true;
+    //private static final boolean TOGGLE_ON_CLICK = true;
 
     /**
      * The flags to pass to {@link SystemUiHider#getInstance}.
      */
-    private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
+    //private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
 
     /**
      * The instance of the {@link SystemUiHider} for this activity.
      */
-    private SystemUiHider mSystemUiHider;
+    //private SystemUiHider mSystemUiHider;
 
     // ===========================================
 
@@ -59,6 +60,7 @@ public class ReviewActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
+		setImmersive(true);
         setContentView(R.layout.activity_review);
 
         Intent intent=getIntent();
@@ -66,11 +68,12 @@ public class ReviewActivity extends Activity
 
         setupActionBar();
 
-        final View controlsView = findViewById(R.id.fullscreen_content_controls);
+      //  final View controlsView = findViewById(R.id.fullscreen_content_controls);
         mContent                = (ReviewSurfaceView)findViewById(R.id.fullscreen_content);
 
         mContent.setFileName(mFileName);
-
+		mContent.setOnTouchListener(this);
+/*
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
         mSystemUiHider = SystemUiHider.getInstance(this, mContent,
@@ -144,6 +147,7 @@ public class ReviewActivity extends Activity
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(
                 mDelayHideTouchListener);
+				*/
     }
 
     @Override
@@ -154,7 +158,7 @@ public class ReviewActivity extends Activity
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+        //delayedHide(100);
     }
 
     @Override
@@ -179,19 +183,6 @@ public class ReviewActivity extends Activity
         super.onResume();
 
         mContent.onResume();
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-        {
-            getActionBar().setDisplayShowHomeEnabled(false);
-            getActionBar().setTitle(mFileName.substring(mFileName.lastIndexOf('/')+1));
-        }
     }
 
     @Override
@@ -235,13 +226,32 @@ public class ReviewActivity extends Activity
 
         mContent.onConfigurationChanged(newConfig);
     }
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event)
+	{
+		return mContent.onTouch(v, event);
+	}
+	
+	/**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setupActionBar()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        {
+            getActionBar().setDisplayShowHomeEnabled(false);
+            getActionBar().setTitle(mFileName.substring(mFileName.lastIndexOf('/')+1));
+        }
+    }
 
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
      * while interacting with activity UI.
      */
-    View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener()
+  /*  View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener()
     {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent)
@@ -268,9 +278,9 @@ public class ReviewActivity extends Activity
      * Schedules a call to hide() in [delay] milliseconds, canceling any
      * previously scheduled calls.
      */
-    private void delayedHide(int delayMillis)
+  /*  private void delayedHide(int delayMillis)
     {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
+    }*/
 }

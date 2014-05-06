@@ -18,8 +18,10 @@ import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
+import android.view.View.*;
+import android.view.*;
 
-public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener
+public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
     private static final int LOADED_MESSAGE  = 1;
     private static final int REPAINT_MESSAGE = 2;
@@ -64,7 +66,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             mLastLoadedDocument = null;
 
             mDocument.init(ReviewSurfaceView.this);
-            setOnTouchListener(mDocument);
 
             mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
             mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
@@ -118,7 +119,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     public void onDestroy()
     {
         mDocument=null;
-        setOnTouchListener(null);
     }
 
     public void onPause()
@@ -148,6 +148,17 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         repaint(80);
     }
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event)
+	{
+		if (mDocument!=null)
+        {
+            return mDocument.onTouch(v, event);
+        }
+
+		return true;
+	}
 
     @Override
     public void onReviewSurfaceDraw(Canvas canvas)
@@ -199,7 +210,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         stopLoadingThread();
 
         mDocument=null;
-        setOnTouchListener(null);
         repaint();
 
         mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName);
