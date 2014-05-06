@@ -6,17 +6,16 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.review.ReviewSurfaceView;
 import com.griscom.codereview.util.SystemUiHider;
-import android.view.View.*;
 
 public class ReviewActivity extends Activity implements OnTouchListener
 {
@@ -60,7 +59,6 @@ public class ReviewActivity extends Activity implements OnTouchListener
     {
         super.onCreate(savedInstanceState);
 
-		setImmersive(true);
         setContentView(R.layout.activity_review);
 
         Intent intent=getIntent();
@@ -226,13 +224,13 @@ public class ReviewActivity extends Activity implements OnTouchListener
 
         mContent.onConfigurationChanged(newConfig);
     }
-	
+
 	@Override
 	public boolean onTouch(View v, MotionEvent event)
 	{
 		return mContent.onTouch(v, event);
 	}
-	
+
 	/**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */

@@ -10,16 +10,17 @@ import android.graphics.Paint.Align;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
-import android.view.View.*;
-import android.view.*;
 
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
