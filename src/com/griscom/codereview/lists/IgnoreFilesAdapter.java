@@ -83,7 +83,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
     {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View resView=inflater.inflate(R.layout.ignorefiles_list_item, parent, false);
+        View resView=inflater.inflate(R.layout.list_item_ignorefiles, parent, false);
 
         ViewHolder holder=new ViewHolder();
 

@@ -81,7 +81,7 @@ public class FilesAdapter extends BaseAdapter
     {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View resView=inflater.inflate(R.layout.files_list_item, parent, false);
+        View resView=inflater.inflate(R.layout.list_item_files, parent, false);
 
         ViewHolder holder=new ViewHolder();
 
