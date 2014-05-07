@@ -1,76 +1,15 @@
 package com.griscom.codereview.activities;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
 
-import com.griscom.codereview.R;
-import com.griscom.codereview.other.ApplicationExtras;
-import com.griscom.codereview.review.ReviewSurfaceView;
-import com.griscom.codereview.util.SystemUiHider;
-
-public class ReviewActivityOld extends Activity implements OnTouchListener
+public class ReviewActivityOld extends Activity
 {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    //private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    //private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * If set, will toggle the system UI visibility upon interaction. Otherwise,
-     * will show the system UI visibility upon interaction.
-     */
-    //private static final boolean TOGGLE_ON_CLICK = true;
-
-    /**
-     * The flags to pass to {@link SystemUiHider#getInstance}.
-     */
-    //private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
-
-    /**
-     * The instance of the {@link SystemUiHider} for this activity.
-     */
-    //private SystemUiHider mSystemUiHider;
-
-    // ===========================================
-
-    public static final int RESULT_CLOSE=1;
-
-    private ReviewSurfaceView mContent;
-    private String            mFileName;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_review);
-
-        Intent intent=getIntent();
-        mFileName=intent.getStringExtra(ApplicationExtras.OPEN_FILE);
-
-        setupActionBar();
-
-      //  final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        mContent                = (ReviewSurfaceView)findViewById(R.id.fullscreen_content);
-
-        mContent.setFileName(mFileName);
-        mContent.setOnTouchListener(this);
 /*
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
@@ -157,91 +96,6 @@ public class ReviewActivityOld extends Activity implements OnTouchListener
         // created, to briefly hint to the user that UI controls
         // are available.
         //delayedHide(100);
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-
-        mContent.onDestroy();
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        mContent.onPause();
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        mContent.onResume();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_review, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case R.id.action_settings:
-                {
-                    Intent intent = new Intent(this, SettingsActivity.class);
-                    startActivity(intent);
-
-                    return true;
-                }
-
-            case R.id.action_close:
-                {
-                    Intent data=new Intent();
-
-                    setResult(RESULT_CLOSE, data);
-                    finish();
-                    return true;
-                }
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        super.onConfigurationChanged(newConfig);
-
-        mContent.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        return mContent.onTouch(v, event);
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-        {
-            getActionBar().setDisplayShowHomeEnabled(false);
-            getActionBar().setTitle(mFileName.substring(mFileName.lastIndexOf('/')+1));
-        }
     }
 
     /**
