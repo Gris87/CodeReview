@@ -34,7 +34,7 @@ import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
 
-public class MainActivity extends ActionBarActivity
+public class FilesActivity extends ActionBarActivity
 {
     private static final int REQUEST_REVIEW = 1;
 
@@ -47,7 +47,7 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_files);
 
         if (savedInstanceState==null)
         {
@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.files, menu);
         return true;
     }
 
@@ -96,7 +96,7 @@ public class MainActivity extends ActionBarActivity
      */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnBackPressedListener
     {
-        private MainActivity mActivity;
+        private FilesActivity mActivity;
         private ActionBar    mActionBar;
         private ListView     mFilesListView;
         private FilesAdapter mAdapter;
@@ -109,7 +109,7 @@ public class MainActivity extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            mActivity=(MainActivity)getActivity();
+            mActivity=(FilesActivity)getActivity();
 
             mAdapter=new FilesAdapter(mActivity);
 
@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity
 
 
 
-            View rootView=inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView=inflater.inflate(R.layout.fragment_files, container, false);
 
             mFilesListView=(ListView)rootView.findViewById(R.id.fileslistView);
             mFilesListView.setAdapter(mAdapter);
@@ -216,7 +216,7 @@ public class MainActivity extends ActionBarActivity
                 }
             }
 
-            mActivity.getMenuInflater().inflate(R.menu.main_context, menu);
+            mActivity.getMenuInflater().inflate(R.menu.files_context, menu);
             super.onCreateContextMenu(menu, v, menuInfo);
         }
 
@@ -254,7 +254,7 @@ public class MainActivity extends ActionBarActivity
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
                     mode.setTitle(R.string.select_files);
-                    mode.getMenuInflater().inflate(R.menu.main_context, menu);
+                    mode.getMenuInflater().inflate(R.menu.files_context, menu);
 
                     mAdapter.setSelectionMode(true);
 
