@@ -18,10 +18,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
-        <item name="android:windowContentOverlay">@null</item>
+    <style name="FullscreenTheme" parent="android:Theme.NoTitleBar.Fullscreen">
         <item name="android:windowBackground">@null</item>
-        <item name="android:windowFullscreen">true</item>
         <item name="metaButtonBarStyle">@style/ButtonBar</item>
         <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
     </style>
