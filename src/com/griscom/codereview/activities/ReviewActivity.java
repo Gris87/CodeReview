@@ -1,284 +1,87 @@
 package com.griscom.codereview.activities;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 
 import com.griscom.codereview.R;
-import com.griscom.codereview.other.ApplicationExtras;
-import com.griscom.codereview.review.ReviewSurfaceView;
-import com.griscom.codereview.util.SystemUiHider;
 
-public class ReviewActivity extends Activity implements OnTouchListener
+public class ReviewActivity extends ActionBarActivity
 {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    //private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    //private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * If set, will toggle the system UI visibility upon interaction. Otherwise,
-     * will show the system UI visibility upon interaction.
-     */
-    //private static final boolean TOGGLE_ON_CLICK = true;
-
-    /**
-     * The flags to pass to {@link SystemUiHider#getInstance}.
-     */
-    //private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
-
-    /**
-     * The instance of the {@link SystemUiHider} for this activity.
-     */
-    //private SystemUiHider mSystemUiHider;
-
-    // ===========================================
-
     public static final int RESULT_CLOSE=1;
-
-    private ReviewSurfaceView mContent;
-    private String            mFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_review);
 
-        Intent intent=getIntent();
-        mFileName=intent.getStringExtra(ApplicationExtras.OPEN_FILE);
-
-        setupActionBar();
-
-      //  final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        mContent                = (ReviewSurfaceView)findViewById(R.id.fullscreen_content);
-
-        mContent.setFileName(mFileName);
-		mContent.setOnTouchListener(this);
-/*
-        // Set up an instance of SystemUiHider to control the system UI for
-        // this activity.
-        mSystemUiHider = SystemUiHider.getInstance(this, mContent,
-                HIDER_FLAGS);
-        mSystemUiHider.setup();
-        mSystemUiHider
-                .setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener()
-                {
-                    // Cached values.
-                    int mControlsHeight;
-                    int mShortAnimTime;
-
-                    @Override
-                    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-                    public void onVisibilityChange(boolean visible)
-                    {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
-                        {
-                            // If the ViewPropertyAnimator API is available
-                            // (Honeycomb MR2 and later), use it to animate the
-                            // in-layout UI controls at the bottom of the
-                            // screen.
-                            if (mControlsHeight == 0)
-                            {
-                                mControlsHeight = controlsView.getHeight();
-                            }
-                            if (mShortAnimTime == 0)
-                            {
-                                mShortAnimTime = getResources().getInteger(
-                                        android.R.integer.config_shortAnimTime);
-                            }
-                            controlsView
-                                    .animate()
-                                    .translationY(visible ? 0 : mControlsHeight)
-                                    .setDuration(mShortAnimTime);
-                        } else
-                        {
-                            // If the ViewPropertyAnimator APIs aren't
-                            // available, simply show or hide the in-layout UI
-                            // controls.
-                            controlsView.setVisibility(visible ? View.VISIBLE
-                                    : View.GONE);
-                        }
-
-                        if (visible && AUTO_HIDE)
-                        {
-                            // Schedule a hide().
-                            delayedHide(AUTO_HIDE_DELAY_MILLIS);
-                        }
-                    }
-                });
-
-        // Set up the user interaction to manually show or hide the system UI.
-        mContent.setOnClickListener(new View.OnClickListener()
+        if (savedInstanceState==null)
         {
-            @Override
-            public void onClick(View view)
-            {
-                if (TOGGLE_ON_CLICK)
-                {
-                    mSystemUiHider.toggle();
-                } else
-                {
-                    mSystemUiHider.show();
-                }
-            }
-        });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(
-                mDelayHideTouchListener);
-				*/
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState)
-    {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        //delayedHide(100);
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-
-        mContent.onDestroy();
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        mContent.onPause();
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        mContent.onResume();
+            getSupportFragmentManager().beginTransaction()
+                                       .add(R.id.container, new PlaceholderFragment())
+                                       .commit();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.review, menu);
+        getMenuInflater().inflate(R.menu.menu_review, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId())
         {
             case R.id.action_settings:
-                {
-                    Intent intent = new Intent(this, SettingsActivity.class);
-                    startActivity(intent);
+            {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
 
-                    return true;
-                }
+                return true;
+            }
 
             case R.id.action_close:
-                {
-                    Intent data=new Intent();
-
-                    setResult(RESULT_CLOSE, data);
-                    finish();
-                    return true;
-                }
+            {
+                finish();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        super.onConfigurationChanged(newConfig);
-
-        mContent.onConfigurationChanged(newConfig);
-    }
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event)
-	{
-		return mContent.onTouch(v, event);
-	}
-
-	/**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
+    /**
+     * A placeholder fragment containing a simple view.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar()
+    public static class PlaceholderFragment extends Fragment
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        private ReviewActivity mActivity;
+
+        public PlaceholderFragment()
         {
-            getActionBar().setDisplayShowHomeEnabled(false);
-            getActionBar().setTitle(mFileName.substring(mFileName.lastIndexOf('/')+1));
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            mActivity=(ReviewActivity)getActivity();
+
+            View rootView=inflater.inflate(R.layout.fragment_review, container, false);
+            return rootView;
         }
     }
-
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-  /*  View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener()
-    {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent)
-        {
-            if (AUTO_HIDE)
-            {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
-
-    Handler mHideHandler = new Handler();
-    Runnable mHideRunnable = new Runnable()
-    {
-        @Override
-        public void run()
-        {
-            mSystemUiHider.hide();
-        }
-    };
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-  /*  private void delayedHide(int delayMillis)
-    {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }*/
 }

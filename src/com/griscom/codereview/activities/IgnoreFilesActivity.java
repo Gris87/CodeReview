@@ -48,7 +48,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.ignore_files, menu);
+        getMenuInflater().inflate(R.menu.menu_ignore_files, menu);
         return true;
     }
 
@@ -186,7 +186,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
         {
             mLastSelectedItem=((AdapterContextMenuInfo)menuInfo).position;
 
-            mActivity.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
+            mActivity.getMenuInflater().inflate(R.menu.context_menu_ignore_files, menu);
             super.onCreateContextMenu(menu, v, menuInfo);
         }
 
@@ -222,7 +222,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
                     mode.setTitle(R.string.select_items);
-                    mode.getMenuInflater().inflate(R.menu.ignore_files_context, menu);
+                    mode.getMenuInflater().inflate(R.menu.context_menu_ignore_files, menu);
 
                     mAdapter.setSelectionMode(true);
 

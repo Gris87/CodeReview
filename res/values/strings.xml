@@ -47,7 +47,6 @@
     <string name="press_again_to_exit">Press again to exit</string>
 
     <!-- Review activity title -->
-    <string name="title_activity_review">Code review</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="loading">Loading&#8230;</string>
 

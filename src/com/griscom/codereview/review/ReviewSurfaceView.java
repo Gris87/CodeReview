@@ -149,17 +149,17 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         repaint(80);
     }
-	
-	@Override
-	public boolean onTouch(View v, MotionEvent event)
-	{
-		if (mDocument!=null)
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        if (mDocument!=null)
         {
             return mDocument.onTouch(v, event);
         }
 
-		return true;
-	}
+        return true;
+    }
 
     @Override
     public void onReviewSurfaceDraw(Canvas canvas)

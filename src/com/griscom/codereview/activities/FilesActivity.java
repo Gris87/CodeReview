@@ -61,7 +61,7 @@ public class FilesActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.files, menu);
+        getMenuInflater().inflate(R.menu.menu_files, menu);
         return true;
     }
 
@@ -216,7 +216,7 @@ public class FilesActivity extends ActionBarActivity
                 }
             }
 
-            mActivity.getMenuInflater().inflate(R.menu.files_context, menu);
+            mActivity.getMenuInflater().inflate(R.menu.context_menu_files, menu);
             super.onCreateContextMenu(menu, v, menuInfo);
         }
 
@@ -254,7 +254,7 @@ public class FilesActivity extends ActionBarActivity
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
                     mode.setTitle(R.string.select_files);
-                    mode.getMenuInflater().inflate(R.menu.files_context, menu);
+                    mode.getMenuInflater().inflate(R.menu.context_menu_files, menu);
 
                     mAdapter.setSelectionMode(true);
 
