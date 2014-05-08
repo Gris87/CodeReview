@@ -22,6 +22,8 @@ public class TextDocument implements OnTouchListener
     private static final int HIDE_BARS_MESSAGE = 1;
     private static final int HIGHLIGHT_MESSAGE = 2;
 
+	private static final int AUTO_HIDE_DELAY   = 3000;
+	
 
 
     private Context            mContext;
@@ -183,7 +185,7 @@ public class TextDocument implements OnTouchListener
             mBarsAlpha=255;
 
             mHandler.removeMessages(HIDE_BARS_MESSAGE);
-            mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, 1000);
+            mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, AUTO_HIDE_DELAY);
 
             repaint();
         }
@@ -267,7 +269,7 @@ public class TextDocument implements OnTouchListener
 
         private void highlight()
         {
-
+            // TODO: Implement it
         }
     }
 }

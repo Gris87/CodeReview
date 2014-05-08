@@ -16,10 +16,15 @@ import android.view.ViewGroup;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.review.ReviewSurfaceView;
+import android.os.*;
 
 public class ReviewActivity extends FragmentActivity
 {
     public static final int RESULT_CLOSE=1;
+	
+	private static final int AUTO_HIDE_DELAY_MILLIS=3000;
+	
+	
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -75,7 +80,9 @@ public class ReviewActivity extends FragmentActivity
     {
         private ReviewActivity    mActivity;
         private ReviewSurfaceView mContent;
+		private View              mControls;
         private String            mFileName;
+		private boolean           mControlsVisible;
 
         public PlaceholderFragment()
         {
@@ -91,10 +98,17 @@ public class ReviewActivity extends FragmentActivity
 
             View rootView=inflater.inflate(R.layout.fragment_review, container, false);
 
-            mContent = (ReviewSurfaceView)rootView.findViewById(R.id.fullscreen_content);
+            mContent  = (ReviewSurfaceView)rootView.findViewById(R.id.fullscreen_content);
+			mControls = rootView.findViewById(R.id.fullscreen_content_controls);
 
             mContent.setFileName(mFileName);
             mContent.setOnTouchListener(this);
+			
+			// TODO; Looks bad
+			rootView.findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+			
+			mControlsVisible=true;
+			delayedHide(1000);
 
             return rootView;
         }
@@ -134,7 +148,72 @@ public class ReviewActivity extends FragmentActivity
         @Override
         public boolean onTouch(View v, MotionEvent event)
         {
+			if (event.getAction()==MotionEvent.ACTION_DOWN)
+			{
+				if (mControlsVisible)
+				{
+					hideControls();
+				}
+				else
+				{
+					showControls();
+				}
+			}
+			
             return mContent.onTouch(v, event);
         }
+		
+		View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener()
+		{
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent)
+			{
+				delayedHide(AUTO_HIDE_DELAY_MILLIS);
+				
+				return false;
+			}
+		};
+
+		Handler mHideHandler   = new Handler();
+		Runnable mHideRunnable = new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				hideControls();
+			}
+		};
+	
+        /**
+         * Schedules a call to hide() in [delay] milliseconds, canceling any
+         * previously scheduled calls.
+         */
+        private void delayedHide(int delayMillis)
+		{
+			mHideHandler.removeCallbacks(mHideRunnable);
+			mHideHandler.postDelayed(mHideRunnable, delayMillis);
+		}
+		
+		private void hideControls()
+		{
+			if (mControlsVisible)
+			{
+				mControlsVisible=false;
+				
+				mControls.setVisibility(View.GONE);
+			}
+		}
+		
+		private void showControls()
+		{
+			if (!mControlsVisible)
+			{
+				mControlsVisible=true;
+				
+				mControls.setVisibility(View.VISIBLE);
+				
+				delayedHide(AUTO_HIDE_DELAY_MILLIS);
+			}
+		}
     }
 }
