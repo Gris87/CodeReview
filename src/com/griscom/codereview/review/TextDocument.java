@@ -30,6 +30,7 @@ public class TextDocument implements OnTouchListener
     private ReviewSurfaceView  mParent;
     private DocumentHandler    mHandler;
     private ArrayList<TextRow> mRows;
+	
     private float              mX;
     private float              mY;
     private float              mWidth;
@@ -38,6 +39,10 @@ public class TextDocument implements OnTouchListener
     private float              mOffsetY;
     private float              mViewWidth;
     private float              mViewHeight;
+	
+	private boolean            mTouchScroll;
+	private float              mTouchX;
+	private float              mTouchY;
 
     // USED IN HANDLER [
     private int                mBarsAlpha;
@@ -47,21 +52,25 @@ public class TextDocument implements OnTouchListener
 
     public TextDocument(Context context)
     {
-        mContext    = context;
-        mParent     = null;
-        mHandler    = null;
-        mRows       = new ArrayList<TextRow>();
+        mContext     = context;
+        mParent      = null;
+        mHandler     = null;
+        mRows        = new ArrayList<TextRow>();
 
-        mX          = 0;
-        mY          = 0;
-        mWidth      = 0;
-        mHeight     = 0;
-        mOffsetX    = 0;
-        mOffsetY    = 0;
-        mViewWidth  = 0;
-        mViewHeight = 0;
-
-        mBarsAlpha  = 0;
+        mX           = 0;
+        mY           = 0;
+        mWidth       = 0;
+        mHeight      = 0;
+        mOffsetX     = 0;
+        mOffsetY     = 0;
+        mViewWidth   = 0;
+        mViewHeight  = 0;
+		
+		mTouchScroll = false;
+		mTouchX      = 0;
+		mTouchY      = 0;
+		
+        mBarsAlpha   = 0;
     }
 
     public void init(ReviewSurfaceView parent)
@@ -160,8 +169,38 @@ public class TextDocument implements OnTouchListener
     public boolean onTouch(View v, MotionEvent event)
     {
         showBars();
-
-        // TODO Auto-generated method stub
+		
+		if (event.getAction()==MotionEvent.ACTION_DOWN)
+		{
+			mTouchScroll = false;
+			
+			mTouchX      = event.getX();
+			mTouchY      = event.getY();
+		}
+		else
+		if (event.getAction()==MotionEvent.ACTION_MOVE)
+		{
+			if (!mTouchScroll)
+			{
+				mTouchScroll=true;
+			}
+			
+			if (mTouchScroll)
+			{
+				mOffsetX += mTouchX - event.getX();
+				mOffsetY += mTouchY - event.getY();
+				
+				mTouchX = event.getX();
+				mTouchY = event.getY();
+				
+				repaint();
+			}
+		}
+		else
+		{
+			// TODO: Implement it
+		}
+		
         return true;
     }
 

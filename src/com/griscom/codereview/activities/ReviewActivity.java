@@ -150,14 +150,7 @@ public class ReviewActivity extends FragmentActivity
         {
 			if (event.getAction()==MotionEvent.ACTION_DOWN)
 			{
-				if (mControlsVisible)
-				{
-					hideControls();
-				}
-				else
-				{
-					showControls();
-				}
+				showControls();
 			}
 			
             return mContent.onTouch(v, event);
@@ -211,9 +204,9 @@ public class ReviewActivity extends FragmentActivity
 				mControlsVisible=true;
 				
 				mControls.setVisibility(View.VISIBLE);
-				
-				delayedHide(AUTO_HIDE_DELAY_MILLIS);
 			}
+			
+			delayedHide(AUTO_HIDE_DELAY_MILLIS);
 		}
     }
 }
