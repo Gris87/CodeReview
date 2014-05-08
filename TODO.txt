@@ -2,7 +2,6 @@ Select all in ActionMode
 Hide Done button in ActionMode
 Save/load dialogs state
 Row number
-Movements
 Zoom
 Highlight syntax
 Separate text to TextRegions

@@ -19,18 +19,21 @@ import android.view.WindowManager;
 
 public class TextDocument implements OnTouchListener
 {
-    private static final int HIDE_BARS_MESSAGE = 1;
-    private static final int HIGHLIGHT_MESSAGE = 2;
+    private static final int HIDE_BARS_MESSAGE  = 1;
+    private static final int HIGHLIGHT_MESSAGE  = 2;
 
-	private static final int AUTO_HIDE_DELAY   = 3000;
-	
+	private static final int AUTO_HIDE_DELAY    = 3000;
+
+	private static final int SCROLL_THRESHOLD   = 25;
+	private static final int BOTTOM_RIGHT_SPACE = 100;
+
 
 
     private Context            mContext;
     private ReviewSurfaceView  mParent;
     private DocumentHandler    mHandler;
     private ArrayList<TextRow> mRows;
-	
+
     private float              mX;
     private float              mY;
     private float              mWidth;
@@ -39,7 +42,8 @@ public class TextDocument implements OnTouchListener
     private float              mOffsetY;
     private float              mViewWidth;
     private float              mViewHeight;
-	
+
+    private boolean            mTouchSelection;
 	private boolean            mTouchScroll;
 	private float              mTouchX;
 	private float              mTouchY;
@@ -52,25 +56,26 @@ public class TextDocument implements OnTouchListener
 
     public TextDocument(Context context)
     {
-        mContext     = context;
-        mParent      = null;
-        mHandler     = null;
-        mRows        = new ArrayList<TextRow>();
+        mContext        = context;
+        mParent         = null;
+        mHandler        = null;
+        mRows           = new ArrayList<TextRow>();
 
-        mX           = 0;
-        mY           = 0;
-        mWidth       = 0;
-        mHeight      = 0;
-        mOffsetX     = 0;
-        mOffsetY     = 0;
-        mViewWidth   = 0;
-        mViewHeight  = 0;
-		
-		mTouchScroll = false;
-		mTouchX      = 0;
-		mTouchY      = 0;
-		
-        mBarsAlpha   = 0;
+        mX              = 0;
+        mY              = 0;
+        mWidth          = 0;
+        mHeight         = 0;
+        mOffsetX        = 0;
+        mOffsetY        = 0;
+        mViewWidth      = 0;
+        mViewHeight     = 0;
+
+        mTouchSelection = false;
+		mTouchScroll    = false;
+		mTouchX         = 0;
+		mTouchY         = 0;
+
+        mBarsAlpha      = 0;
     }
 
     public void init(ReviewSurfaceView parent)
@@ -99,32 +104,40 @@ public class TextDocument implements OnTouchListener
             float margin=6*density;
 
             Paint barPaint=new Paint();
-            Paint barBackgroundPaint=new Paint();
 
             barPaint.setARGB(mBarsAlpha, 180, 180, 180);
             barPaint.setStrokeWidth(4*density);
 
-            barBackgroundPaint.setARGB(mBarsAlpha, 140, 140, 140);
-            barBackgroundPaint.setStrokeWidth(8*density);
-
             if (mViewWidth>0 && mWidth>mViewWidth)
             {
-                float barLength=mViewWidth/mWidth;
-                float barWidth=mViewWidth-margin*3;
-                float barPosition=0;
+                float offsetX=mOffsetX;
 
-                canvas.drawLine(margin,             mViewHeight-margin, barWidth+margin,           mViewHeight-margin, barBackgroundPaint);
-                canvas.drawLine(barPosition+margin, mViewHeight-margin, barWidth*barLength+margin, mViewHeight-margin, barPaint);
+                if (offsetX>mWidth-mViewWidth)
+                {
+                    offsetX=mWidth-mViewWidth;
+                }
+
+                float barLength   = mViewWidth/mWidth;
+                float barWidth    = mViewWidth-margin*3;
+                float barPosition = barWidth*offsetX/mWidth;
+
+                canvas.drawLine(barPosition+margin, mViewHeight-margin, barWidth*barLength+barPosition+margin, mViewHeight-margin, barPaint);
             }
 
             if (mViewHeight>0 && mHeight>mViewHeight)
             {
-                float barLength=mViewHeight/mHeight;
-                float barHeight=mViewHeight-margin*3;
-                float barPosition=0;
+                float offsetY=mOffsetY;
 
-                canvas.drawLine(mViewWidth-margin, margin,             mViewWidth-margin, barHeight+margin,           barBackgroundPaint);
-                canvas.drawLine(mViewWidth-margin, barPosition+margin, mViewWidth-margin, barHeight*barLength+margin, barPaint);
+                if (offsetY>mHeight-mViewHeight)
+                {
+                    offsetY=mHeight-mViewHeight;
+                }
+
+                float barLength   = mViewHeight/mHeight;
+                float barHeight   = mViewHeight-margin*3;
+                float barPosition = barHeight*offsetY/mHeight;
+
+                canvas.drawLine(mViewWidth-margin, barPosition+margin, mViewWidth-margin, barHeight*barLength+barPosition+margin, barPaint);
             }
         }
     }
@@ -169,38 +182,91 @@ public class TextDocument implements OnTouchListener
     public boolean onTouch(View v, MotionEvent event)
     {
         showBars();
-		
+
 		if (event.getAction()==MotionEvent.ACTION_DOWN)
 		{
-			mTouchScroll = false;
-			
-			mTouchX      = event.getX();
-			mTouchY      = event.getY();
+		    mTouchSelection = false;
+			mTouchScroll    = false;
+
+			mTouchX         = event.getX();
+			mTouchY         = event.getY();
 		}
 		else
 		if (event.getAction()==MotionEvent.ACTION_MOVE)
 		{
-			if (!mTouchScroll)
-			{
-				mTouchScroll=true;
-			}
-			
-			if (mTouchScroll)
-			{
-				mOffsetX += mTouchX - event.getX();
-				mOffsetY += mTouchY - event.getY();
-				
-				mTouchX = event.getX();
-				mTouchY = event.getY();
-				
-				repaint();
-			}
+		    if (mTouchSelection)
+		    {
+
+		    }
+		    else
+		    {
+		        if (
+		            !mTouchScroll
+		            &&
+		            (
+		             Math.abs(mTouchX-event.getX())>SCROLL_THRESHOLD
+		             ||
+		             Math.abs(mTouchY-event.getY())>SCROLL_THRESHOLD
+		            )
+		           )
+	            {
+	                mTouchScroll=true;
+	            }
+
+	            if (mTouchScroll)
+	            {
+	                float newOffsetX=mOffsetX+(mTouchX-event.getX());
+	                float newOffsetY=mOffsetY+(mTouchY-event.getY());
+
+	                if (newOffsetX<0)
+	                {
+	                    newOffsetX=0;
+	                }
+
+	                if (newOffsetX>mWidth-mViewWidth+BOTTOM_RIGHT_SPACE)
+                    {
+                        newOffsetX=mWidth-mViewWidth+BOTTOM_RIGHT_SPACE;
+                    }
+
+	                if (newOffsetY<0)
+                    {
+                        newOffsetY=0;
+                    }
+
+                    if (newOffsetY>mHeight-mViewHeight+BOTTOM_RIGHT_SPACE)
+                    {
+                        newOffsetY=mHeight-mViewHeight+BOTTOM_RIGHT_SPACE;
+                    }
+
+
+
+	                if (
+	                    mOffsetX != newOffsetX
+	                    ||
+	                    mOffsetY != newOffsetY
+	                   )
+	                {
+	                    mOffsetX = newOffsetX;
+	                    mOffsetY = newOffsetY;
+
+	                    repaint();
+	                }
+
+
+
+	                mTouchX = event.getX();
+	                mTouchY = event.getY();
+	            }
+		    }
 		}
 		else
 		{
-			// TODO: Implement it
+		    if (mTouchSelection)
+		    {
+		        // TODO: Implement it
+		    }
 		}
-		
+
         return true;
     }
 
