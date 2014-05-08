@@ -1,6 +1,7 @@
 package com.griscom.codereview.review;
 import java.util.ArrayList;
 
+import junit.framework.Assert;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
+import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 
 public class TextDocument implements OnTouchListener
@@ -25,6 +27,7 @@ public class TextDocument implements OnTouchListener
     private static final int HIGHLIGHT_MESSAGE  = 2;
 
     private static final int AUTO_HIDE_DELAY    = 3000;
+	private static final int HIGHLIGHT_DELAY    = 250;
 
     private static final int SCROLL_THRESHOLD   = 25;
     private static final int BOTTOM_RIGHT_SPACE = 250;
@@ -40,10 +43,12 @@ public class TextDocument implements OnTouchListener
     private float              mY;
     private float              mWidth;
     private float              mHeight;
-    private float              mOffsetX;
-    private float              mOffsetY;
     private float              mViewWidth;
     private float              mViewHeight;
+	private float              mOffsetX;
+    private float              mOffsetY;
+	private int                mVisibleBegin;
+	private int                mVisibleEnd;
 
     private boolean            mTouchSelection;
     private boolean            mTouchScroll;
@@ -70,10 +75,12 @@ public class TextDocument implements OnTouchListener
         mY              = 0;
         mWidth          = 0;
         mHeight         = 0;
-        mOffsetX        = 0;
-        mOffsetY        = 0;
         mViewWidth      = 0;
         mViewHeight     = 0;
+		mOffsetX        = 0;
+        mOffsetY        = 0;
+		mVisibleBegin   = -1;
+		mVisibleEnd     = -1;
 
         mTouchSelection = false;
         mTouchScroll    = false;
@@ -97,8 +104,7 @@ public class TextDocument implements OnTouchListener
 
     public void draw(Canvas canvas)
     {
-        // TODO: Only visible
-        for (int i=0; i<mRows.size(); ++i)
+        for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
         {
             if (mHighlightAlpha>0 && i==mHighlightedRow)
             {
@@ -181,6 +187,8 @@ public class TextDocument implements OnTouchListener
             mViewWidth  = display.getWidth();
             mViewHeight = display.getHeight();
         }
+
+		updateVisibleRanges();
     }
 
     @Override
@@ -199,14 +207,13 @@ public class TextDocument implements OnTouchListener
             mHighlightedRow = -1;
             mHighlightAlpha = 0;
 
-            // TODO: Only visible
-            for (int i=0; i<mRows.size(); ++i)
+            for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
             {
                 if (mTouchY>=mY-mOffsetY+mRows.get(i).getY() && mTouchY<=mY-mOffsetY+mRows.get(i).getBottom())
                 {
                     mHighlightedRow=i;
 
-                    mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, 1000);
+                    mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, HIGHLIGHT_DELAY);
 
                     break;
                 }
@@ -278,6 +285,8 @@ public class TextDocument implements OnTouchListener
                         mOffsetX = newOffsetX;
                         mOffsetY = newOffsetY;
 
+						updateVisibleRanges();
+
                         repaint();
                     }
 
@@ -334,6 +343,82 @@ public class TextDocument implements OnTouchListener
             repaint();
         }
     }
+
+	private void updateVisibleRanges()
+	{
+		if (mRows.size()==0)
+		{
+			if (BuildConfig.DEBUG)
+			{
+				Assert.assertEquals(mVisibleBegin, -1);
+				Assert.assertEquals(mVisibleEnd, -1);
+			}
+
+			return;
+		}
+
+		if (mVisibleBegin<0)
+		{
+			mVisibleBegin=0;
+		}
+
+		while (mVisibleBegin>0)
+		{
+			if (mY-mOffsetY+mRows.get(mVisibleBegin-1).getBottom()>=0)
+			{
+				mVisibleBegin--;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		while (mVisibleBegin<mRows.size())
+		{
+			if (mY-mOffsetY+mRows.get(mVisibleBegin).getBottom()<0)
+			{
+			    mVisibleBegin++;
+			}
+			else
+			{
+			    break;
+			}
+		}
+
+		mVisibleEnd--;
+
+		if (mVisibleEnd<mVisibleBegin)
+		{
+			mVisibleEnd=mVisibleBegin;
+		}
+
+		while (mVisibleEnd>mVisibleBegin)
+		{
+			if (mY-mOffsetY+mRows.get(mVisibleEnd).getY()>=mViewHeight)
+			{
+				mVisibleEnd--;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		while (mVisibleEnd<mRows.size()-1)
+		{
+			if (mY-mOffsetY+mRows.get(mVisibleEnd+1).getY()<mViewHeight)
+			{
+				mVisibleEnd++;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		mVisibleEnd++;
+	}
 
     public void setX(float x)
     {
