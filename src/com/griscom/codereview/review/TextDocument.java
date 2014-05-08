@@ -218,24 +218,24 @@ public class TextDocument implements OnTouchListener
                     float newOffsetX=mOffsetX+(mTouchX-event.getX());
                     float newOffsetY=mOffsetY+(mTouchY-event.getY());
 
-                    if (newOffsetX<0)
-                    {
-                        newOffsetX=0;
-                    }
-
                     if (newOffsetX>mWidth-mViewWidth+BOTTOM_RIGHT_SPACE)
                     {
                         newOffsetX=mWidth-mViewWidth+BOTTOM_RIGHT_SPACE;
                     }
 
-                    if (newOffsetY<0)
+                    if (newOffsetX<0)
                     {
-                        newOffsetY=0;
+                        newOffsetX=0;
                     }
 
                     if (newOffsetY>mHeight-mViewHeight+BOTTOM_RIGHT_SPACE)
                     {
                         newOffsetY=mHeight-mViewHeight+BOTTOM_RIGHT_SPACE;
+                    }
+
+                    if (newOffsetY<0)
+                    {
+                        newOffsetY=0;
                     }
 
 
