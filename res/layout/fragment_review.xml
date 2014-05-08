@@ -23,6 +23,33 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true" >
 
+        <RelativeLayout
+            android:id="@+id/fullscreen_content_title"
+            style="?metaTitleBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:background="@color/black_overlay"
+            tools:ignore="UselessParent" >
+
+            <TextView
+                android:id="@+id/titleTextView"
+                style="?metaTitleBarTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/progressTextView"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/progressTextView"
+                style="?metaTitleBarTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:singleLine="true" />
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/fullscreen_content_controls"
             style="?metaButtonBarStyle"

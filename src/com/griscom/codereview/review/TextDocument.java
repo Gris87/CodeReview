@@ -22,10 +22,10 @@ public class TextDocument implements OnTouchListener
     private static final int HIDE_BARS_MESSAGE  = 1;
     private static final int HIGHLIGHT_MESSAGE  = 2;
 
-	private static final int AUTO_HIDE_DELAY    = 3000;
+    private static final int AUTO_HIDE_DELAY    = 3000;
 
-	private static final int SCROLL_THRESHOLD   = 25;
-	private static final int BOTTOM_RIGHT_SPACE = 100;
+    private static final int SCROLL_THRESHOLD   = 25;
+    private static final int BOTTOM_RIGHT_SPACE = 100;
 
 
 
@@ -44,9 +44,9 @@ public class TextDocument implements OnTouchListener
     private float              mViewHeight;
 
     private boolean            mTouchSelection;
-	private boolean            mTouchScroll;
-	private float              mTouchX;
-	private float              mTouchY;
+    private boolean            mTouchScroll;
+    private float              mTouchX;
+    private float              mTouchY;
 
     // USED IN HANDLER [
     private int                mBarsAlpha;
@@ -71,9 +71,9 @@ public class TextDocument implements OnTouchListener
         mViewHeight     = 0;
 
         mTouchSelection = false;
-		mTouchScroll    = false;
-		mTouchX         = 0;
-		mTouchY         = 0;
+        mTouchScroll    = false;
+        mTouchX         = 0;
+        mTouchY         = 0;
 
         mBarsAlpha      = 0;
     }
@@ -183,52 +183,52 @@ public class TextDocument implements OnTouchListener
     {
         showBars();
 
-		if (event.getAction()==MotionEvent.ACTION_DOWN)
-		{
-		    mTouchSelection = false;
-			mTouchScroll    = false;
+        if (event.getAction()==MotionEvent.ACTION_DOWN)
+        {
+            mTouchSelection = false;
+            mTouchScroll    = false;
 
-			mTouchX         = event.getX();
-			mTouchY         = event.getY();
-		}
-		else
-		if (event.getAction()==MotionEvent.ACTION_MOVE)
-		{
-		    if (mTouchSelection)
-		    {
+            mTouchX         = event.getX();
+            mTouchY         = event.getY();
+        }
+        else
+        if (event.getAction()==MotionEvent.ACTION_MOVE)
+        {
+            if (mTouchSelection)
+            {
 
-		    }
-		    else
-		    {
-		        if (
-		            !mTouchScroll
-		            &&
-		            (
-		             Math.abs(mTouchX-event.getX())>SCROLL_THRESHOLD
-		             ||
-		             Math.abs(mTouchY-event.getY())>SCROLL_THRESHOLD
-		            )
-		           )
-	            {
-	                mTouchScroll=true;
-	            }
+            }
+            else
+            {
+                if (
+                    !mTouchScroll
+                    &&
+                    (
+                     Math.abs(mTouchX-event.getX())>SCROLL_THRESHOLD
+                     ||
+                     Math.abs(mTouchY-event.getY())>SCROLL_THRESHOLD
+                    )
+                   )
+                {
+                    mTouchScroll=true;
+                }
 
-	            if (mTouchScroll)
-	            {
-	                float newOffsetX=mOffsetX+(mTouchX-event.getX());
-	                float newOffsetY=mOffsetY+(mTouchY-event.getY());
+                if (mTouchScroll)
+                {
+                    float newOffsetX=mOffsetX+(mTouchX-event.getX());
+                    float newOffsetY=mOffsetY+(mTouchY-event.getY());
 
-	                if (newOffsetX<0)
-	                {
-	                    newOffsetX=0;
-	                }
+                    if (newOffsetX<0)
+                    {
+                        newOffsetX=0;
+                    }
 
-	                if (newOffsetX>mWidth-mViewWidth+BOTTOM_RIGHT_SPACE)
+                    if (newOffsetX>mWidth-mViewWidth+BOTTOM_RIGHT_SPACE)
                     {
                         newOffsetX=mWidth-mViewWidth+BOTTOM_RIGHT_SPACE;
                     }
 
-	                if (newOffsetY<0)
+                    if (newOffsetY<0)
                     {
                         newOffsetY=0;
                     }
@@ -240,32 +240,32 @@ public class TextDocument implements OnTouchListener
 
 
 
-	                if (
-	                    mOffsetX != newOffsetX
-	                    ||
-	                    mOffsetY != newOffsetY
-	                   )
-	                {
-	                    mOffsetX = newOffsetX;
-	                    mOffsetY = newOffsetY;
+                    if (
+                        mOffsetX != newOffsetX
+                        ||
+                        mOffsetY != newOffsetY
+                       )
+                    {
+                        mOffsetX = newOffsetX;
+                        mOffsetY = newOffsetY;
 
-	                    repaint();
-	                }
+                        repaint();
+                    }
 
 
 
-	                mTouchX = event.getX();
-	                mTouchY = event.getY();
-	            }
-		    }
-		}
-		else
-		{
-		    if (mTouchSelection)
-		    {
-		        // TODO: Implement it
-		    }
-		}
+                    mTouchX = event.getX();
+                    mTouchY = event.getY();
+                }
+            }
+        }
+        else
+        {
+            if (mTouchSelection)
+            {
+                // TODO: Implement it
+            }
+        }
 
         return true;
     }
