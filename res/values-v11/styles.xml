@@ -11,8 +11,8 @@
 
     <style name="FullscreenTheme" parent="android:Theme.Holo.NoActionBar.Fullscreen">
         <item name="android:windowBackground">@null</item>
-        <item name="metaTitleBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaTitleBarTextStyle">?android:attr/buttonBarButtonStyle</item>
+        <item name="metaTitleBarStyle">@style/TitleBar</item>
+        <item name="metaTitleBarTextStyle">@style/TitleBarText</item>
         <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>

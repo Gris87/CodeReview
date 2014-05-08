@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
+import com.griscom.codereview.R;
+
 public class TextDocument implements OnTouchListener
 {
     private static final int HIDE_BARS_MESSAGE  = 1;
@@ -25,7 +27,7 @@ public class TextDocument implements OnTouchListener
     private static final int AUTO_HIDE_DELAY    = 3000;
 
     private static final int SCROLL_THRESHOLD   = 25;
-    private static final int BOTTOM_RIGHT_SPACE = 100;
+    private static final int BOTTOM_RIGHT_SPACE = 250;
 
 
 
@@ -50,6 +52,9 @@ public class TextDocument implements OnTouchListener
 
     // USED IN HANDLER [
     private int                mBarsAlpha;
+    private int                mHighlightedRow;
+    private int                mHighlightAlpha;
+    private int                mHighlightColor;
     // USED IN HANDLER ]
 
 
@@ -76,6 +81,9 @@ public class TextDocument implements OnTouchListener
         mTouchY         = 0;
 
         mBarsAlpha      = 0;
+        mHighlightedRow = -1;
+        mHighlightAlpha = 0;
+        mHighlightColor = mContext.getResources().getColor(R.color.highlight);
     }
 
     public void init(ReviewSurfaceView parent)
@@ -89,15 +97,26 @@ public class TextDocument implements OnTouchListener
 
     public void draw(Canvas canvas)
     {
+        // TODO: Only visible
         for (int i=0; i<mRows.size(); ++i)
         {
+            if (mHighlightAlpha>0 && i==mHighlightedRow)
+            {
+                Paint highlightPaint=new Paint();
+
+                highlightPaint.setColor(mHighlightColor);
+                highlightPaint.setAlpha(mHighlightAlpha);
+
+                canvas.drawRect(0, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), highlightPaint);
+            }
+
             mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
         }
 
         if (
-            (mViewWidth>0 && mWidth>mViewWidth)
+            (mViewWidth>0  && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth)
             ||
-            (mViewHeight>0 && mHeight>mViewHeight)
+            (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight)
            )
         {
             float density=mContext.getResources().getDisplayMetrics().scaledDensity;
@@ -108,34 +127,20 @@ public class TextDocument implements OnTouchListener
             barPaint.setARGB(mBarsAlpha, 180, 180, 180);
             barPaint.setStrokeWidth(4*density);
 
-            if (mViewWidth>0 && mWidth>mViewWidth)
+            if (mViewWidth>0 && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth)
             {
-                float offsetX=mOffsetX;
-
-                if (offsetX>mWidth-mViewWidth)
-                {
-                    offsetX=mWidth-mViewWidth;
-                }
-
-                float barLength   = mViewWidth/mWidth;
+                float barLength   = mViewWidth/(mWidth+BOTTOM_RIGHT_SPACE);
                 float barWidth    = mViewWidth-margin*3;
-                float barPosition = barWidth*offsetX/mWidth;
+                float barPosition = barWidth*mOffsetX/(mWidth+BOTTOM_RIGHT_SPACE);
 
                 canvas.drawLine(barPosition+margin, mViewHeight-margin, barWidth*barLength+barPosition+margin, mViewHeight-margin, barPaint);
             }
 
-            if (mViewHeight>0 && mHeight>mViewHeight)
+            if (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight)
             {
-                float offsetY=mOffsetY;
-
-                if (offsetY>mHeight-mViewHeight)
-                {
-                    offsetY=mHeight-mViewHeight;
-                }
-
-                float barLength   = mViewHeight/mHeight;
+                float barLength   = mViewHeight/(mHeight+BOTTOM_RIGHT_SPACE);
                 float barHeight   = mViewHeight-margin*3;
-                float barPosition = barHeight*offsetY/mHeight;
+                float barPosition = barHeight*mOffsetY/(mHeight+BOTTOM_RIGHT_SPACE);
 
                 canvas.drawLine(mViewWidth-margin, barPosition+margin, mViewWidth-margin, barHeight*barLength+barPosition+margin, barPaint);
             }
@@ -190,6 +195,22 @@ public class TextDocument implements OnTouchListener
 
             mTouchX         = event.getX();
             mTouchY         = event.getY();
+
+            mHighlightedRow = -1;
+            mHighlightAlpha = 0;
+
+            // TODO: Only visible
+            for (int i=0; i<mRows.size(); ++i)
+            {
+                if (mTouchY>=mY-mOffsetY+mRows.get(i).getY() && mTouchY<=mY-mOffsetY+mRows.get(i).getBottom())
+                {
+                    mHighlightedRow=i;
+
+                    mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, 1000);
+
+                    break;
+                }
+            }
         }
         else
         if (event.getAction()==MotionEvent.ACTION_MOVE)
@@ -211,6 +232,14 @@ public class TextDocument implements OnTouchListener
                    )
                 {
                     mTouchScroll=true;
+
+                    if (mHighlightedRow>=0)
+                    {
+                        mHighlightedRow = -1;
+                        mHighlightAlpha = 0;
+
+                        mHandler.removeMessages(HIGHLIGHT_MESSAGE);
+                    }
                 }
 
                 if (mTouchScroll)
@@ -265,6 +294,16 @@ public class TextDocument implements OnTouchListener
             {
                 // TODO: Implement it
             }
+            else
+            {
+                if (mHighlightedRow>=0)
+                {
+                    mHighlightedRow = -1;
+                    mHighlightAlpha = 0;
+
+                    mHandler.removeMessages(HIGHLIGHT_MESSAGE);
+                }
+            }
         }
 
         return true;
@@ -282,10 +321,10 @@ public class TextDocument implements OnTouchListener
     {
 
         if (
-            (mViewWidth>0 && mWidth>mViewWidth)
+            (mViewWidth>0  && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth)
             ||
-            (mViewHeight>0 && mHeight>mViewHeight)
-            )
+            (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight)
+           )
         {
             mBarsAlpha=255;
 
@@ -374,7 +413,19 @@ public class TextDocument implements OnTouchListener
 
         private void highlight()
         {
-            // TODO: Implement it
+            mHighlightAlpha+=20;
+
+            if (mHighlightAlpha<255)
+            {
+                sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, 40);
+            }
+            else
+            {
+                mHighlightAlpha=0;
+                mTouchSelection=true;
+            }
+
+            repaint();
         }
     }
 }
