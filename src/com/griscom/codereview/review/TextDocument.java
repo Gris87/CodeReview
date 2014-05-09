@@ -30,15 +30,18 @@ public class TextDocument implements OnTouchListener
 {
     private static final String TAG = "TextDocument";
 
-    private static final int HIDE_BARS_MESSAGE   = 1;
-    private static final int HIGHLIGHT_MESSAGE   = 2;
+    private static final int   HIDE_BARS_MESSAGE   = 1;
+    private static final int   HIGHLIGHT_MESSAGE   = 2;
+    private static final int   SELECTION_MESSAGE   = 3;
 
-    private static final int AUTO_HIDE_DELAY     = 3000;
-    private static final int HIGHLIGHT_DELAY     = 250;
-    private static final int VIBRATOR_LONG_CLICK = 50;
+    private static final int   AUTO_HIDE_DELAY     = 3000;
+    private static final int   HIGHLIGHT_DELAY     = 250;
+    private static final int   VIBRATOR_LONG_CLICK = 50;
+    private static final float SELECTION_SPEED     = 0.01f;
+    private static final float SELECTION_LOW_LIGHT = 0.6f;
 
-    private static final int SCROLL_THRESHOLD    = 25;
-    private static final int BOTTOM_RIGHT_SPACE  = 250;
+    private static final int   SCROLL_THRESHOLD    = 25;
+    private static final int   BOTTOM_RIGHT_SPACE  = 250;
 
 
 
@@ -74,43 +77,47 @@ public class TextDocument implements OnTouchListener
     private int                mHighlightedRow;
     private int                mHighlightAlpha;
     private int                mHighlightColor;
+    private float              mSelectionBrighness;
+    private boolean            mSelectionMakeLight;
     // USED IN HANDLER ]
 
 
 
     public TextDocument(Context context)
     {
-        mContext        = context;
-        mVibrator       = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
-        mParent         = null;
-        mHandler        = null;
-        mRows           = new ArrayList<TextRow>();
+        mContext            = context;
+        mVibrator           = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
+        mParent             = null;
+        mHandler            = null;
+        mRows               = new ArrayList<TextRow>();
 
-        mX              = 0;
-        mY              = 0;
-        mWidth          = 0;
-        mHeight         = 0;
-        mViewWidth      = 0;
-        mViewHeight     = 0;
-        mOffsetX        = 0;
-        mOffsetY        = 0;
-        mVisibleBegin   = -1;
-        mVisibleEnd     = -1;
+        mX                  = 0;
+        mY                  = 0;
+        mWidth              = 0;
+        mHeight             = 0;
+        mViewWidth          = 0;
+        mViewHeight         = 0;
+        mOffsetX            = 0;
+        mOffsetY            = 0;
+        mVisibleBegin       = -1;
+        mVisibleEnd         = -1;
 
-        mTouchSelection = false;
-        mTouchScroll    = false;
-        mTouchX         = 0;
-        mTouchY         = 0;
-        mSelectionEnd   = -1;
-        mSelectionColor = 0;
-        mReviewedColor  = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_reviewed_color), mContext.getResources().getInteger(R.integer.pref_default_reviewed_color));
-        mInvalidColor   = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_invalid_color),  mContext.getResources().getInteger(R.integer.pref_default_invalid_color));
-        mNoteColor      = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_note_color),     mContext.getResources().getInteger(R.integer.pref_default_note_color));
+        mTouchSelection     = false;
+        mTouchScroll        = false;
+        mTouchX             = 0;
+        mTouchY             = 0;
+        mSelectionEnd       = -1;
+        mSelectionColor     = 0;
+        mReviewedColor      = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_reviewed_color), mContext.getResources().getInteger(R.integer.pref_default_reviewed_color));
+        mInvalidColor       = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_invalid_color),  mContext.getResources().getInteger(R.integer.pref_default_invalid_color));
+        mNoteColor          = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_note_color),     mContext.getResources().getInteger(R.integer.pref_default_note_color));
 
-        mBarsAlpha      = 0;
-        mHighlightedRow = -1;
-        mHighlightAlpha = 0;
-        mHighlightColor = mContext.getResources().getColor(R.color.highlight);
+        mBarsAlpha          = 0;
+        mHighlightedRow     = -1;
+        mHighlightAlpha     = 0;
+        mHighlightColor     = mContext.getResources().getColor(R.color.highlight);
+        mSelectionBrighness = 1;
+        mSelectionMakeLight = false;
     }
 
     public void init(ReviewSurfaceView parent)
@@ -148,6 +155,7 @@ public class TextDocument implements OnTouchListener
 
                     float selectionHSV[]=new float[3];
                     Color.colorToHSV(mSelectionColor, selectionHSV);
+                    selectionHSV[2]=mSelectionBrighness;
                     selectionPaint.setColor(Color.HSVToColor(selectionHSV));
 
                     canvas.drawRect(0, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), selectionPaint);
@@ -346,6 +354,8 @@ public class TextDocument implements OnTouchListener
                 // TODO: Implement it
                 mHighlightedRow = -1;
                 mSelectionEnd   = -1;
+
+                mHandler.removeMessages(SELECTION_MESSAGE);
             }
             else
             {
@@ -565,6 +575,10 @@ public class TextDocument implements OnTouchListener
                 case HIGHLIGHT_MESSAGE:
                     highlight();
                 break;
+
+                case SELECTION_MESSAGE:
+                    selection();
+                break;
             }
         }
 
@@ -594,13 +608,44 @@ public class TextDocument implements OnTouchListener
             }
             else
             {
-                mHighlightAlpha = 0;
-                mTouchSelection = true;
+                mHighlightAlpha     = 0;
+                mTouchSelection     = true;
+                mSelectionBrighness = 1;
+                mSelectionMakeLight = false;
 
                 mVibrator.vibrate(VIBRATOR_LONG_CLICK);
 
                 updateSelection();
+                sendEmptyMessageDelayed(SELECTION_MESSAGE, 40);
             }
+
+            repaint();
+        }
+
+        private void selection()
+        {
+            if (mSelectionMakeLight)
+            {
+                mSelectionBrighness += SELECTION_SPEED;
+
+                if (mSelectionBrighness>=1)
+                {
+                    mSelectionMakeLight = false;
+                    mSelectionBrighness = 1;
+                }
+            }
+            else
+            {
+                mSelectionBrighness -= SELECTION_SPEED;
+
+                if (mSelectionBrighness<=SELECTION_LOW_LIGHT)
+                {
+                    mSelectionMakeLight = true;
+                    mSelectionBrighness = SELECTION_LOW_LIGHT;
+                }
+            }
+
+            sendEmptyMessageDelayed(SELECTION_MESSAGE, 40);
 
             repaint();
         }
