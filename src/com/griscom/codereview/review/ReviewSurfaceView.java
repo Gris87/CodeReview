@@ -19,6 +19,7 @@ import android.view.View.OnTouchListener;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
+import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
 
@@ -36,6 +37,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private String             mFileName;
     private SyntaxParserBase   mSyntaxParser;
     private TextDocument       mDocument;
+    private SelectionColor     mSelectionColor;
 
     // USED IN HANDLER [
     private TextDocument       mLastLoadedDocument;
@@ -70,6 +72,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
             mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
+            mDocument.setSelectionColor(mSelectionColor);
 
             repaint();
         }
@@ -114,6 +117,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mDrawThread         = null;
         mSyntaxParser       = null;
         mDocument           = null;
+        mSelectionColor     = SelectionColor.REVIEWED_COLOR;
         mLastLoadedDocument = null;
     }
 
@@ -267,5 +271,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         // Maybe reload but no. Calls once and reload will come at the next step
         // reload();
+    }
+
+    public void setSelectionColor(SelectionColor colorType)
+    {
+        if (mSelectionColor!=colorType)
+        {
+            mSelectionColor=colorType;
+
+            if (mDocument!=null)
+            {
+                mDocument.setSelectionColor(mSelectionColor);
+            }
+        }
     }
 }

@@ -7,11 +7,15 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,21 +24,26 @@ import android.view.WindowManager;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
+import com.griscom.codereview.other.SelectionColor;
 
 public class TextDocument implements OnTouchListener
 {
-    private static final int HIDE_BARS_MESSAGE  = 1;
-    private static final int HIGHLIGHT_MESSAGE  = 2;
+    private static final String TAG = "TextDocument";
 
-    private static final int AUTO_HIDE_DELAY    = 3000;
-	private static final int HIGHLIGHT_DELAY    = 250;
+    private static final int HIDE_BARS_MESSAGE   = 1;
+    private static final int HIGHLIGHT_MESSAGE   = 2;
 
-    private static final int SCROLL_THRESHOLD   = 25;
-    private static final int BOTTOM_RIGHT_SPACE = 250;
+    private static final int AUTO_HIDE_DELAY     = 3000;
+    private static final int HIGHLIGHT_DELAY     = 250;
+    private static final int VIBRATOR_LONG_CLICK = 50;
+
+    private static final int SCROLL_THRESHOLD    = 25;
+    private static final int BOTTOM_RIGHT_SPACE  = 250;
 
 
 
     private Context            mContext;
+    private Vibrator           mVibrator;
     private ReviewSurfaceView  mParent;
     private DocumentHandler    mHandler;
     private ArrayList<TextRow> mRows;
@@ -45,15 +54,20 @@ public class TextDocument implements OnTouchListener
     private float              mHeight;
     private float              mViewWidth;
     private float              mViewHeight;
-	private float              mOffsetX;
+    private float              mOffsetX;
     private float              mOffsetY;
-	private int                mVisibleBegin;
-	private int                mVisibleEnd;
+    private int                mVisibleBegin;
+    private int                mVisibleEnd;
 
     private boolean            mTouchSelection;
     private boolean            mTouchScroll;
     private float              mTouchX;
     private float              mTouchY;
+    private int                mSelectionEnd;
+    private int                mSelectionColor;
+    private int                mReviewedColor;
+    private int                mInvalidColor;
+    private int                mNoteColor;
 
     // USED IN HANDLER [
     private int                mBarsAlpha;
@@ -67,6 +81,7 @@ public class TextDocument implements OnTouchListener
     public TextDocument(Context context)
     {
         mContext        = context;
+        mVibrator       = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
         mParent         = null;
         mHandler        = null;
         mRows           = new ArrayList<TextRow>();
@@ -77,15 +92,20 @@ public class TextDocument implements OnTouchListener
         mHeight         = 0;
         mViewWidth      = 0;
         mViewHeight     = 0;
-		mOffsetX        = 0;
+        mOffsetX        = 0;
         mOffsetY        = 0;
-		mVisibleBegin   = -1;
-		mVisibleEnd     = -1;
+        mVisibleBegin   = -1;
+        mVisibleEnd     = -1;
 
         mTouchSelection = false;
         mTouchScroll    = false;
         mTouchX         = 0;
         mTouchY         = 0;
+        mSelectionEnd   = -1;
+        mSelectionColor = 0;
+        mReviewedColor  = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_reviewed_color), mContext.getResources().getInteger(R.integer.pref_default_reviewed_color));
+        mInvalidColor   = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_invalid_color),  mContext.getResources().getInteger(R.integer.pref_default_invalid_color));
+        mNoteColor      = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_note_color),     mContext.getResources().getInteger(R.integer.pref_default_note_color));
 
         mBarsAlpha      = 0;
         mHighlightedRow = -1;
@@ -114,6 +134,24 @@ public class TextDocument implements OnTouchListener
                 highlightPaint.setAlpha(mHighlightAlpha);
 
                 canvas.drawRect(0, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), highlightPaint);
+            }
+            else
+            if (mSelectionEnd>=0)
+            {
+                if (
+                    (i>=mHighlightedRow && i<=mSelectionEnd)
+                    ||
+                    (i>=mSelectionEnd   && i<=mHighlightedRow)
+                   )
+                {
+                    Paint selectionPaint=new Paint();
+
+                    float selectionHSV[]=new float[3];
+                    Color.colorToHSV(mSelectionColor, selectionHSV);
+                    selectionPaint.setColor(Color.HSVToColor(selectionHSV));
+
+                    canvas.drawRect(0, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), selectionPaint);
+                }
             }
 
             mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
@@ -188,7 +226,7 @@ public class TextDocument implements OnTouchListener
             mViewHeight = display.getHeight();
         }
 
-		updateVisibleRanges();
+        updateVisibleRanges();
     }
 
     @Override
@@ -206,6 +244,7 @@ public class TextDocument implements OnTouchListener
 
             mHighlightedRow = -1;
             mHighlightAlpha = 0;
+            mSelectionEnd   = -1;
 
             for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
             {
@@ -224,7 +263,10 @@ public class TextDocument implements OnTouchListener
         {
             if (mTouchSelection)
             {
+                mTouchX = event.getX();
+                mTouchY = event.getY();
 
+                updateSelection();
             }
             else
             {
@@ -285,7 +327,7 @@ public class TextDocument implements OnTouchListener
                         mOffsetX = newOffsetX;
                         mOffsetY = newOffsetY;
 
-						updateVisibleRanges();
+                        updateVisibleRanges();
 
                         repaint();
                     }
@@ -302,6 +344,8 @@ public class TextDocument implements OnTouchListener
             if (mTouchSelection)
             {
                 // TODO: Implement it
+                mHighlightedRow = -1;
+                mSelectionEnd   = -1;
             }
             else
             {
@@ -344,81 +388,125 @@ public class TextDocument implements OnTouchListener
         }
     }
 
-	private void updateVisibleRanges()
-	{
-		if (mRows.size()==0)
-		{
-			if (BuildConfig.DEBUG)
-			{
-				Assert.assertEquals(mVisibleBegin, -1);
-				Assert.assertEquals(mVisibleEnd, -1);
-			}
+    public void updateSelection()
+    {
+        int selectionEnd=mSelectionEnd;
 
-			return;
-		}
+        if (selectionEnd<0)
+        {
+            selectionEnd=mHighlightedRow;
+        }
 
-		if (mVisibleBegin<0)
-		{
-			mVisibleBegin=0;
-		}
+        if (mSelectionEnd!=selectionEnd)
+        {
+            mSelectionEnd=selectionEnd;
 
-		while (mVisibleBegin>0)
-		{
-			if (mY-mOffsetY+mRows.get(mVisibleBegin-1).getBottom()>=0)
-			{
-				mVisibleBegin--;
-			}
-			else
-			{
-				break;
-			}
-		}
+            repaint();
+        }
+    }
 
-		while (mVisibleBegin<mRows.size())
-		{
-			if (mY-mOffsetY+mRows.get(mVisibleBegin).getBottom()<0)
-			{
-			    mVisibleBegin++;
-			}
-			else
-			{
-			    break;
-			}
-		}
+    private void updateVisibleRanges()
+    {
+        if (mRows.size()==0)
+        {
+            if (BuildConfig.DEBUG)
+            {
+                Assert.assertEquals(mVisibleBegin, -1);
+                Assert.assertEquals(mVisibleEnd,   -1);
+            }
 
-		mVisibleEnd--;
+            return;
+        }
 
-		if (mVisibleEnd<mVisibleBegin)
-		{
-			mVisibleEnd=mVisibleBegin;
-		}
+        if (mVisibleBegin<0)
+        {
+            mVisibleBegin=0;
+        }
 
-		while (mVisibleEnd>mVisibleBegin)
-		{
-			if (mY-mOffsetY+mRows.get(mVisibleEnd).getY()>=mViewHeight)
-			{
-				mVisibleEnd--;
-			}
-			else
-			{
-				break;
-			}
-		}
+        while (mVisibleBegin>0)
+        {
+            if (mY-mOffsetY+mRows.get(mVisibleBegin-1).getBottom()>=0)
+            {
+                mVisibleBegin--;
+            }
+            else
+            {
+                break;
+            }
+        }
 
-		while (mVisibleEnd<mRows.size()-1)
-		{
-			if (mY-mOffsetY+mRows.get(mVisibleEnd+1).getY()<mViewHeight)
-			{
-				mVisibleEnd++;
-			}
-			else
-			{
-				break;
-			}
-		}
+        while (mVisibleBegin<mRows.size())
+        {
+            if (mY-mOffsetY+mRows.get(mVisibleBegin).getBottom()<0)
+            {
+                mVisibleBegin++;
+            }
+            else
+            {
+                break;
+            }
+        }
 
-		mVisibleEnd++;
-	}
+        mVisibleEnd--;
+
+        if (mVisibleEnd<mVisibleBegin)
+        {
+            mVisibleEnd=mVisibleBegin;
+        }
+
+        while (mVisibleEnd>mVisibleBegin)
+        {
+            if (mY-mOffsetY+mRows.get(mVisibleEnd).getY()>=mViewHeight)
+            {
+                mVisibleEnd--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        while (mVisibleEnd<mRows.size()-1)
+        {
+            if (mY-mOffsetY+mRows.get(mVisibleEnd+1).getY()<mViewHeight)
+            {
+                mVisibleEnd++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        mVisibleEnd++;
+    }
+
+    public void setSelectionColor(SelectionColor colorType)
+    {
+        if (colorType==SelectionColor.REVIEWED_COLOR)
+        {
+            mSelectionColor=mReviewedColor;
+        }
+        else
+        if (colorType==SelectionColor.INVALID_COLOR)
+        {
+            mSelectionColor=mInvalidColor;
+        }
+        else
+        if (colorType==SelectionColor.NOTE_COLOR)
+        {
+            mSelectionColor=mNoteColor;
+        }
+        else
+        {
+            Log.e(TAG, "Unknown selection color: "+String.valueOf(colorType));
+
+            if (BuildConfig.DEBUG)
+            {
+                Assert.fail();
+            }
+        }
+    }
 
     public void setX(float x)
     {
@@ -506,8 +594,12 @@ public class TextDocument implements OnTouchListener
             }
             else
             {
-                mHighlightAlpha=0;
-                mTouchSelection=true;
+                mHighlightAlpha = 0;
+                mTouchSelection = true;
+
+                mVibrator.vibrate(VIBRATOR_LONG_CLICK);
+
+                updateSelection();
             }
 
             repaint();
