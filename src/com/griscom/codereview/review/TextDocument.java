@@ -108,14 +108,14 @@ public class TextDocument implements OnTouchListener
         mTouchY             = 0;
         mSelectionEnd       = -1;
         mSelectionColor     = 0;
-        mReviewedColor      = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_reviewed_color), mContext.getResources().getInteger(R.integer.pref_default_reviewed_color));
-        mInvalidColor       = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_invalid_color),  mContext.getResources().getInteger(R.integer.pref_default_invalid_color));
-        mNoteColor          = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_note_color),     mContext.getResources().getInteger(R.integer.pref_default_note_color));
+        mReviewedColor      = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_reviewed_color),  mContext.getResources().getInteger(R.integer.pref_default_reviewed_color));
+        mInvalidColor       = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_invalid_color),   mContext.getResources().getInteger(R.integer.pref_default_invalid_color));
+        mNoteColor          = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_note_color),      mContext.getResources().getInteger(R.integer.pref_default_note_color));
 
         mBarsAlpha          = 0;
         mHighlightedRow     = -1;
         mHighlightAlpha     = 0;
-        mHighlightColor     = mContext.getResources().getColor(R.color.highlight);
+        mHighlightColor     = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_selection_color), mContext.getResources().getInteger(R.integer.pref_default_selection_color));
         mSelectionBrighness = 1;
         mSelectionMakeLight = false;
     }

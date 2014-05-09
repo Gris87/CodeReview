@@ -24,6 +24,8 @@
     <string name="pref_title_note_color">Заметка</string>
     <string name="pref_desc_note_color">Цвет строк с заметками.</string>
 
+    <string name="pref_title_selection_color">Выделение</string>
+    <string name="pref_desc_selection_color">Цвет выделения.</string>
 
 
     <!-- Editor settings -->

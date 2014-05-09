@@ -46,7 +46,6 @@
     <string name="press_again_to_exit">Нажмите снова для выхода</string>
 
     <!-- Review activity title -->
-    <string name="dummy_button">Dummy Button</string>
     <string name="loading">Загрузка&#8230;</string>
 
     <!-- Ignore files activity title -->

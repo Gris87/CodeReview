@@ -10,6 +10,7 @@
     <string name="pref_key_reviewed_color">ReviewedColor</string>
     <string name="pref_key_invalid_color">InvalidColor</string>
     <string name="pref_key_note_color">NoteColor</string>
+    <string name="pref_key_selection_color">SelectionColor</string>
 
     <string name="pref_key_font_size">FontSize</string>
     <string name="pref_key_tab_size">TabSize</string>
@@ -20,6 +21,7 @@
     <integer name="pref_default_reviewed_color">0xFF5AFF5A</integer>
     <integer name="pref_default_invalid_color">0xFFFF5A5A</integer>
     <integer name="pref_default_note_color">0xFFFFC400</integer>
+    <integer name="pref_default_selection_color">0xFFFFA0FF</integer>
 
     <integer name="pref_default_font_size">14</integer>
     <integer name="pref_default_tab_size">4</integer>
