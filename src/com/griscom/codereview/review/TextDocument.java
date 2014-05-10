@@ -40,6 +40,7 @@ public class TextDocument implements OnTouchListener
     private static final int   VIBRATOR_LONG_CLICK = 50;
     private static final float SELECTION_SPEED     = 0.01f;
     private static final float SELECTION_LOW_LIGHT = 0.6f;
+    private static final float SCROLL_SPEED        = 10;
 
     private static final int   SCROLL_THRESHOLD    = 25;
     private static final int   BOTTOM_RIGHT_SPACE  = 250;
@@ -500,11 +501,11 @@ public class TextDocument implements OnTouchListener
 
         if (mTouchY<mViewHeight/8)
         {
-            newOffsetY=mOffsetY-10;
+            newOffsetY=mOffsetY-SCROLL_SPEED;
         }
         else
         {
-            newOffsetY=mOffsetY+10;
+            newOffsetY=mOffsetY+SCROLL_SPEED;
         }
 
         if (newOffsetY>mHeight-mViewHeight+BOTTOM_RIGHT_SPACE)
