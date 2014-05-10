@@ -33,6 +33,7 @@ public class TextDocument implements OnTouchListener
     private static final int   HIDE_BARS_MESSAGE   = 1;
     private static final int   HIGHLIGHT_MESSAGE   = 2;
     private static final int   SELECTION_MESSAGE   = 3;
+    private static final int   SCROLL_MESSAGE      = 4;
 
     private static final int   AUTO_HIDE_DELAY     = 3000;
     private static final int   HIGHLIGHT_DELAY     = 250;
@@ -131,36 +132,58 @@ public class TextDocument implements OnTouchListener
 
     public void draw(Canvas canvas)
     {
+        if (
+            mY-mOffsetY>=0
+            ||
+            mY-mOffsetY+mHeight<=mViewHeight
+           )
+        {
+            Paint backgroundPaint=new Paint();
+            backgroundPaint.setColor(Color.WHITE);
+
+            if (mY-mOffsetY>=0)
+            {
+                canvas.drawRect(0, 0, mViewWidth, mY-mOffsetY, backgroundPaint);
+            }
+
+            if (mY-mOffsetY+mHeight<=mViewHeight)
+            {
+                canvas.drawRect(0, mY-mOffsetY+mHeight, mViewWidth, mViewHeight, backgroundPaint);
+            }
+        }
+
         for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
         {
+            int color;
+
             if (mHighlightAlpha>0 && i==mHighlightedRow)
             {
-                Paint highlightPaint=new Paint();
-
-                highlightPaint.setColor(mHighlightColor);
-                highlightPaint.setAlpha(mHighlightAlpha);
-
-                canvas.drawRect(0, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), highlightPaint);
+                color=Color.argb(mHighlightAlpha, Color.red(mHighlightColor), Color.green(mHighlightColor), Color.blue(mHighlightColor));
             }
             else
-            if (mSelectionEnd>=0)
+            if (
+                mSelectionEnd>=0
+                &&
+                (
+                 (i>=mHighlightedRow && i<=mSelectionEnd)
+                 ||
+                 (i>=mSelectionEnd   && i<=mHighlightedRow)
+                )
+               )
             {
-                if (
-                    (i>=mHighlightedRow && i<=mSelectionEnd)
-                    ||
-                    (i>=mSelectionEnd   && i<=mHighlightedRow)
-                   )
-                {
-                    Paint selectionPaint=new Paint();
-
-                    float selectionHSV[]=new float[3];
-                    Color.colorToHSV(mSelectionColor, selectionHSV);
-                    selectionHSV[2]=mSelectionBrighness;
-                    selectionPaint.setColor(Color.HSVToColor(selectionHSV));
-
-                    canvas.drawRect(0, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), selectionPaint);
-                }
+                float selectionHSV[]=new float[3];
+                Color.colorToHSV(mSelectionColor, selectionHSV);
+                selectionHSV[2]=mSelectionBrighness;
+                color=Color.HSVToColor(selectionHSV);
             }
+            else
+            {
+                color=mRows.get(i).getColor();
+            }
+
+            Paint backgroundPaint=new Paint();
+            backgroundPaint.setColor(color);
+            canvas.drawRect(0, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), backgroundPaint);
 
             mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
         }
@@ -275,6 +298,17 @@ public class TextDocument implements OnTouchListener
                 mTouchY = event.getY();
 
                 updateSelection();
+
+                mHandler.removeMessages(SCROLL_MESSAGE);
+
+                if (
+                    mTouchY<mViewHeight/8
+                    ||
+                    mTouchY>mViewHeight*7/8
+                   )
+                {
+                    touchScroll();
+                }
             }
             else
             {
@@ -351,11 +385,32 @@ public class TextDocument implements OnTouchListener
         {
             if (mTouchSelection)
             {
-                // TODO: Implement it
+                int firstRow;
+                int lastRow;
+
+                if (mSelectionEnd>mHighlightedRow)
+                {
+                    firstRow = mHighlightedRow;
+                    lastRow  = mSelectionEnd;
+                }
+                else
+                {
+                    firstRow = mSelectionEnd;
+                    lastRow  = mHighlightedRow;
+                }
+
+                for (int i=firstRow; i<=lastRow; ++i)
+                {
+                    mRows.get(i).setColor(mSelectionColor);
+                }
+
                 mHighlightedRow = -1;
                 mSelectionEnd   = -1;
 
                 mHandler.removeMessages(SELECTION_MESSAGE);
+                mHandler.removeMessages(SCROLL_MESSAGE);
+
+                repaint();
             }
             else
             {
@@ -407,10 +462,71 @@ public class TextDocument implements OnTouchListener
             selectionEnd=mHighlightedRow;
         }
 
+        while (selectionEnd>mVisibleBegin)
+        {
+            if (mTouchY<=mY-mOffsetY+mRows.get(selectionEnd-1).getBottom())
+            {
+                selectionEnd--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        while (selectionEnd<mVisibleEnd-1)
+        {
+            if (mTouchY>=mY-mOffsetY+mRows.get(selectionEnd+1).getY())
+            {
+                selectionEnd++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
         if (mSelectionEnd!=selectionEnd)
         {
             mSelectionEnd=selectionEnd;
 
+            repaint();
+        }
+    }
+
+    private void touchScroll()
+    {
+        float newOffsetY;
+
+        if (mTouchY<mViewHeight/8)
+        {
+            newOffsetY=mOffsetY-10;
+        }
+        else
+        {
+            newOffsetY=mOffsetY+10;
+        }
+
+        if (newOffsetY>mHeight-mViewHeight+BOTTOM_RIGHT_SPACE)
+        {
+            newOffsetY=mHeight-mViewHeight+BOTTOM_RIGHT_SPACE;
+        }
+
+        if (newOffsetY<0)
+        {
+            newOffsetY=0;
+        }
+
+
+
+        if (mOffsetY != newOffsetY)
+        {
+            mOffsetY = newOffsetY;
+
+            mHandler.sendEmptyMessageDelayed(SCROLL_MESSAGE, 40);
+
+            updateVisibleRanges();
+            updateSelection();
             repaint();
         }
     }
@@ -579,6 +695,10 @@ public class TextDocument implements OnTouchListener
                 case SELECTION_MESSAGE:
                     selection();
                 break;
+
+                case SCROLL_MESSAGE:
+                    scroll();
+                break;
             }
         }
 
@@ -648,6 +768,11 @@ public class TextDocument implements OnTouchListener
             sendEmptyMessageDelayed(SELECTION_MESSAGE, 40);
 
             repaint();
+        }
+
+        private void scroll()
+        {
+            touchScroll();
         }
     }
 }

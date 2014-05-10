@@ -168,14 +168,14 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     @Override
     public void onReviewSurfaceDraw(Canvas canvas)
     {
-        canvas.drawColor(Color.WHITE);
-
         if (mDocument!=null)
         {
             mDocument.draw(canvas);
         }
         else
         {
+            canvas.drawColor(Color.WHITE);
+
             Paint paint=new Paint();
 
             paint.setColor(Color.GRAY);

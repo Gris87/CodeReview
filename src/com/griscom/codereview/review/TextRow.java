@@ -3,10 +3,12 @@ package com.griscom.codereview.review;
 import java.util.ArrayList;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 
 public class TextRow
 {
     private ArrayList<TextRegion> mRegions;
+    private int                   mColor;
     private float                 mY;
     private float                 mWidth;
     private float                 mHeight;
@@ -15,6 +17,7 @@ public class TextRow
     {
         mRegions = new ArrayList<TextRegion>();
 
+        mColor   = Color.WHITE;
         mY       = 0;
         mWidth   = 0;
         mHeight  = 0;
@@ -40,6 +43,16 @@ public class TextRow
         {
             mHeight=region.getHeight();
         }
+    }
+
+    public void setColor(int color)
+    {
+        mColor=color;
+    }
+
+    public int getColor()
+    {
+        return mColor;
     }
 
     public void setY(float y)
