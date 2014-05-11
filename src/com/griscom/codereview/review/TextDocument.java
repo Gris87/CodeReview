@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.SelectionColor;
+import com.griscom.codereview.listeners.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -47,79 +48,81 @@ public class TextDocument implements OnTouchListener
 
 
 
-    private Context            mContext;
-    private Vibrator           mVibrator;
-    private ReviewSurfaceView  mParent;
-    private DocumentHandler    mHandler;
-    private ArrayList<TextRow> mRows;
+    private Context                   mContext;
+    private Vibrator                  mVibrator;
+    private ReviewSurfaceView         mParent;
+    private DocumentHandler           mHandler;
+    private ArrayList<TextRow>        mRows;
+	private OnProgressChangedListener mProgressChangedListener;
 
-    private float              mX;
-    private float              mY;
-    private float              mWidth;
-    private float              mHeight;
-    private float              mViewWidth;
-    private float              mViewHeight;
-    private float              mOffsetX;
-    private float              mOffsetY;
-    private int                mVisibleBegin;
-    private int                mVisibleEnd;
+    private float                     mX;
+    private float                     mY;
+    private float                     mWidth;
+    private float                     mHeight;
+    private float                     mViewWidth;
+    private float                     mViewHeight;
+    private float                     mOffsetX;
+    private float                     mOffsetY;
+    private int                       mVisibleBegin;
+    private int                       mVisibleEnd;
 
-    private boolean            mTouchSelection;
-    private boolean            mTouchScroll;
-    private float              mTouchX;
-    private float              mTouchY;
-    private int                mSelectionEnd;
-    private int                mSelectionColor;
-    private int                mReviewedColor;
-    private int                mInvalidColor;
-    private int                mNoteColor;
+    private boolean                   mTouchSelection;
+    private boolean                   mTouchScroll;
+    private float                     mTouchX;
+    private float                     mTouchY;
+    private int                       mSelectionEnd;
+    private int                       mSelectionColor;
+    private int                       mReviewedColor;
+    private int                       mInvalidColor;
+    private int                       mNoteColor;
 
     // USED IN HANDLER [
-    private int                mBarsAlpha;
-    private int                mHighlightedRow;
-    private int                mHighlightAlpha;
-    private int                mHighlightColor;
-    private float              mSelectionBrighness;
-    private boolean            mSelectionMakeLight;
+    private int                       mBarsAlpha;
+    private int                       mHighlightedRow;
+    private int                       mHighlightAlpha;
+    private int                       mHighlightColor;
+    private float                     mSelectionBrighness;
+    private boolean                   mSelectionMakeLight;
     // USED IN HANDLER ]
 
 
 
     public TextDocument(Context context)
     {
-        mContext            = context;
-        mVibrator           = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
-        mParent             = null;
-        mHandler            = null;
-        mRows               = new ArrayList<TextRow>();
+        mContext                 = context;
+        mVibrator                = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
+        mParent                  = null;
+        mHandler                 = null;
+        mRows                    = new ArrayList<TextRow>();
+		mProgressChangedListener = null;
 
-        mX                  = 0;
-        mY                  = 0;
-        mWidth              = 0;
-        mHeight             = 0;
-        mViewWidth          = 0;
-        mViewHeight         = 0;
-        mOffsetX            = 0;
-        mOffsetY            = 0;
-        mVisibleBegin       = -1;
-        mVisibleEnd         = -1;
+        mX                       = 0;
+        mY                       = 0;
+        mWidth                   = 0;
+        mHeight                  = 0;
+        mViewWidth               = 0;
+        mViewHeight              = 0;
+        mOffsetX                 = 0;
+        mOffsetY                 = 0;
+        mVisibleBegin            = -1;
+        mVisibleEnd              = -1;
 
-        mTouchSelection     = false;
-        mTouchScroll        = false;
-        mTouchX             = 0;
-        mTouchY             = 0;
-        mSelectionEnd       = -1;
-        mSelectionColor     = 0;
-        mReviewedColor      = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_reviewed_color),  mContext.getResources().getInteger(R.integer.pref_default_reviewed_color));
-        mInvalidColor       = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_invalid_color),   mContext.getResources().getInteger(R.integer.pref_default_invalid_color));
-        mNoteColor          = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_note_color),      mContext.getResources().getInteger(R.integer.pref_default_note_color));
+        mTouchSelection          = false;
+        mTouchScroll             = false;
+        mTouchX                  = 0;
+        mTouchY                  = 0;
+        mSelectionEnd            = -1;
+        mSelectionColor          = 0;
+        mReviewedColor           = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_reviewed_color),  mContext.getResources().getInteger(R.integer.pref_default_reviewed_color));
+        mInvalidColor            = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_invalid_color),   mContext.getResources().getInteger(R.integer.pref_default_invalid_color));
+        mNoteColor               = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_note_color),      mContext.getResources().getInteger(R.integer.pref_default_note_color));
 
-        mBarsAlpha          = 0;
-        mHighlightedRow     = -1;
-        mHighlightAlpha     = 0;
-        mHighlightColor     = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_selection_color), mContext.getResources().getInteger(R.integer.pref_default_selection_color));
-        mSelectionBrighness = 1;
-        mSelectionMakeLight = false;
+        mBarsAlpha               = 0;
+        mHighlightedRow          = -1;
+        mHighlightAlpha          = 0;
+        mHighlightColor          = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_selection_color), mContext.getResources().getInteger(R.integer.pref_default_selection_color));
+        mSelectionBrighness      = 1;
+        mSelectionMakeLight      = false;
     }
 
     public void init(ReviewSurfaceView parent)
@@ -639,6 +642,11 @@ public class TextDocument implements OnTouchListener
             }
         }
     }
+	
+	public void setOnProgressChangedListener(OnProgressChangedListener listener)
+	{
+		mProgressChangedListener=listener;
+	}
 
     public void setX(float x)
     {

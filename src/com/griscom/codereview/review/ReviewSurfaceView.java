@@ -22,6 +22,7 @@ import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
+import com.griscom.codereview.listeners.*;
 
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
@@ -30,17 +31,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
 
 
-    private Context            mContext;
-    private SurfaceHolder      mSurfaceHolder;
-    private LoadingThread      mLoadingThread;
-    private DrawThread         mDrawThread;
-    private String             mFileName;
-    private SyntaxParserBase   mSyntaxParser;
-    private TextDocument       mDocument;
-    private SelectionColor     mSelectionColor;
+    private Context                   mContext;
+    private SurfaceHolder             mSurfaceHolder;
+    private LoadingThread             mLoadingThread;
+    private DrawThread                mDrawThread;
+    private String                    mFileName;
+    private SyntaxParserBase          mSyntaxParser;
+    private TextDocument              mDocument;
+    private SelectionColor            mSelectionColor;
+	private OnProgressChangedListener mProgressChangedListener;
 
     // USED IN HANDLER [
-    private TextDocument       mLastLoadedDocument;
+    private TextDocument              mLastLoadedDocument;
     // USED IN HANDLER ]
 
 
@@ -73,6 +75,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
             mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
             mDocument.setSelectionColor(mSelectionColor);
+			mDocument.setOnProgressChangedListener(mProgressChangedListener);
 
             repaint();
         }
@@ -111,14 +114,15 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     private void init(Context context)
     {
-        mContext            = context;
-        mSurfaceHolder      = getHolder();
-        mLoadingThread      = null;
-        mDrawThread         = null;
-        mSyntaxParser       = null;
-        mDocument           = null;
-        mSelectionColor     = SelectionColor.REVIEWED_COLOR;
-        mLastLoadedDocument = null;
+        mContext                 = context;
+        mSurfaceHolder           = getHolder();
+        mLoadingThread           = null;
+        mDrawThread              = null;
+        mSyntaxParser            = null;
+        mDocument                = null;
+        mSelectionColor          = SelectionColor.REVIEWED_COLOR;
+		mProgressChangedListener = null;
+        mLastLoadedDocument      = null;
     }
 
     public void onDestroy()
@@ -285,4 +289,14 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             }
         }
     }
+	
+	public void setOnProgressChangedListener(OnProgressChangedListener listener)
+	{
+		mProgressChangedListener=listener;
+		
+		if (mDocument!=null)
+		{
+			mDocument.setOnProgressChangedListener(mProgressChangedListener);
+		}
+	}
 }

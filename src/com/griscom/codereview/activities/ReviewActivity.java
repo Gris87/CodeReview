@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
+import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.ReviewSurfaceView;
@@ -88,7 +89,7 @@ public class ReviewActivity extends FragmentActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener
+    public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnProgressChangedListener
     {
         private ReviewActivity    mActivity;
         private ReviewSurfaceView mContent;
@@ -143,6 +144,7 @@ public class ReviewActivity extends FragmentActivity
 
             mContent.setFileName(mFileName);
             mContent.setOnTouchListener(this);
+			mContent.setOnProgressChangedListener(this);
 
             mTitleTextView.setText(mFileName.substring(mFileName.lastIndexOf('/')+1));
             mProgressTextView.setText("0 %");
@@ -281,6 +283,17 @@ public class ReviewActivity extends FragmentActivity
                 }
             }
         }
+		
+		@Override
+		public void onProgressChanged(int progress)
+		{
+			if (BuildConfig.DEBUG)
+			{
+				Assert.assertTrue(progress>=0 && progress<=100);
+			}
+			
+			mProgressTextView.setText(String.valueOf(progress)+" %");
+		}
 
         View.OnTouchListener mHoverTouchListener = new View.OnTouchListener()
         {

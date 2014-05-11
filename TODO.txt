@@ -2,10 +2,12 @@ Select all in ActionMode
 Hide Done button in ActionMode
 Save/load dialogs state
 Do not reload if same
+Progress
 Row number
 Zoom
 Highlight syntax
 Separate text to TextRegions
+Row note region index
 Add notes
 Remove notes
 Save state to database
