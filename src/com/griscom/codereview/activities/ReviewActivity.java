@@ -99,6 +99,7 @@ public class ReviewActivity extends FragmentActivity
         private Button            mReviewedButton;
         private Button            mInvalidButton;
         private Button            mNoteButton;
+		private Button            mClearButton;
         private String            mFileName;
         private boolean           mControlsVisible;
         private Button            mLastSelectedButton;
@@ -136,6 +137,7 @@ public class ReviewActivity extends FragmentActivity
             mReviewedButton   = (Button)rootView.findViewById(R.id.reviewed_button);
             mInvalidButton    = (Button)rootView.findViewById(R.id.invalid_button);
             mNoteButton       = (Button)rootView.findViewById(R.id.note_button);
+			mClearButton      = (Button)rootView.findViewById(R.id.clear_button);
 
             // ---------------------------------------------------------------------------------------
 
@@ -150,18 +152,22 @@ public class ReviewActivity extends FragmentActivity
             Spannable reviewedIcon = new SpannableString(" ");
             Spannable invalidIcon  = new SpannableString(" ");
             Spannable noteIcon     = new SpannableString(" ");
+			Spannable clearIcon    = new SpannableString(" ");
 
             reviewedIcon.setSpan(new ImageSpan(mActivity.getApplicationContext(), R.drawable.reviewed, ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             invalidIcon.setSpan (new ImageSpan(mActivity.getApplicationContext(), R.drawable.invalid,  ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             noteIcon.setSpan    (new ImageSpan(mActivity.getApplicationContext(), R.drawable.note,     ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+            clearIcon.setSpan   (new ImageSpan(mActivity.getApplicationContext(), R.drawable.clear,    ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			
             mReviewedButton.setText(reviewedIcon);
             mInvalidButton.setText (invalidIcon);
             mNoteButton.setText    (noteIcon);
+			mClearButton.setText   (clearIcon);
 
             mReviewedButton.setBackgroundColor(mDefaultColor);
             mInvalidButton.setBackgroundColor (mDefaultColor);
             mNoteButton.setBackgroundColor    (mDefaultColor);
+			mClearButton.setBackgroundColor   (mDefaultColor);
 
             mLastSelectedButton=mReviewedButton;
             mLastSelectedButton.setBackgroundColor(mSelectedColor);
@@ -169,10 +175,12 @@ public class ReviewActivity extends FragmentActivity
             mReviewedButton.setOnTouchListener(mHoverTouchListener);
             mInvalidButton.setOnTouchListener (mHoverTouchListener);
             mNoteButton.setOnTouchListener    (mHoverTouchListener);
+			mClearButton.setOnTouchListener   (mHoverTouchListener);
 
             mReviewedButton.setOnClickListener(this);
             mInvalidButton.setOnClickListener (this);
             mNoteButton.setOnClickListener    (this);
+			mClearButton.setOnClickListener   (this);
 
             // ---------------------------------------------------------------------------------------
 
@@ -252,6 +260,15 @@ public class ReviewActivity extends FragmentActivity
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton=mNoteButton;
+                mLastSelectedButton.setBackgroundColor(mSelectedColor);
+            }
+			else
+            if (v==mClearButton)
+            {
+                mContent.setSelectionColor(SelectionColor.CLEAR_COLOR);
+
+                mLastSelectedButton.setBackgroundColor(mDefaultColor);
+                mLastSelectedButton=mClearButton;
                 mLastSelectedButton.setBackgroundColor(mSelectedColor);
             }
             else

@@ -624,6 +624,11 @@ public class TextDocument implements OnTouchListener
         {
             mSelectionColor=mNoteColor;
         }
+		else
+        if (colorType==SelectionColor.CLEAR_COLOR)
+        {
+            mSelectionColor=Color.WHITE;
+        }
         else
         {
             Log.e(TAG, "Unknown selection color: "+String.valueOf(colorType));
