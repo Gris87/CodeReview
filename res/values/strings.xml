@@ -25,12 +25,6 @@
     <!-- Close -->
     <string name="action_close">Close</string>
 
-    <!-- Accessibility -->
-    <string name="accessibility_extension_image">Extension image</string>
-
-    <!-- Accessibility -->
-    <string name="accessibility_file_name">File name</string>
-
     <!-- Select files title in ActionMode -->
     <string name="select_files">Select files</string>
 
@@ -46,8 +40,11 @@
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Press again to exit</string>
 
-    <!-- Review activity title -->
+    <!-- Review loading message -->
     <string name="loading">Loading&#8230;</string>
+	
+	<!-- Review file not found message -->
+    <string name="file_not_found">File not found</string>
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Ignore files</string>

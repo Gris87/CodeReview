@@ -22,8 +22,7 @@
         android:layout_marginLeft="8dp"
         android:singleLine="true"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:contentDescription="@string/accessibility_file_name"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
 

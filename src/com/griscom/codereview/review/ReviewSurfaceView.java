@@ -23,6 +23,7 @@ import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
 import com.griscom.codereview.listeners.*;
+import java.io.*;
 
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
@@ -36,6 +37,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private LoadingThread             mLoadingThread;
     private DrawThread                mDrawThread;
     private String                    mFileName;
+	private long                      mModifiedTime;
     private SyntaxParserBase          mSyntaxParser;
     private TextDocument              mDocument;
     private SelectionColor            mSelectionColor;
@@ -67,6 +69,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         private void loaded()
         {
+			mModifiedTime       = new File(mFileName).lastModified();
+			
             mDocument           = mLastLoadedDocument;
             mLastLoadedDocument = null;
 
@@ -116,6 +120,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mSurfaceHolder           = getHolder();
         mLoadingThread           = null;
         mDrawThread              = null;
+		mModifiedTime            = 0;
         mSyntaxParser            = null;
         mDocument                = null;
         mSelectionColor          = SelectionColor.REVIEWED_COLOR;
@@ -184,7 +189,14 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             paint.setTextSize(Utils.spToPixels(36, mContext));
             paint.setTextAlign(Align.CENTER);
 
-            canvas.drawText(mContext.getString(R.string.loading), getWidth()*0.5f, getHeight()*0.5f, paint);
+			if (mModifiedTime==-1)
+			{
+				canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f, paint);
+			}
+			else
+			{
+				canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f, paint);
+			}
         }
     }
 
@@ -214,13 +226,26 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     public void reload()
     {
-        stopLoadingThread();
+		File file=new File(mFileName);
+		
+		if (!file.exists() || mModifiedTime!=file.lastModified())
+		{
+			stopLoadingThread();
+			
+			if (!file.exists())
+			{
+				mModifiedTime=-1;
+			}
 
-        mDocument=null;
-        repaint();
+			mDocument=null;
+			repaint();
 
-        mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName);
-        mLoadingThread.start();
+			if (file.exists())
+			{
+				mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName);
+				mLoadingThread.start();
+			}
+		}
     }
 
     private void stopLoadingThread()
