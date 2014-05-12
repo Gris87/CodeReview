@@ -5,5 +5,5 @@ public enum SelectionColor
     REVIEWED_COLOR,
     INVALID_COLOR,
     NOTE_COLOR,
-	CLEAR_COLOR
+    CLEAR_COLOR
 }

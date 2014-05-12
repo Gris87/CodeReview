@@ -8,12 +8,10 @@ import java.io.InputStreamReader;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.preference.PreferenceManager;
 
-import com.griscom.codereview.R;
+import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.review.TextDocument;
 import com.griscom.codereview.util.Utils;
-import com.griscom.codereview.other.*;
 
 @SuppressLint("DefaultLocale")
 public abstract class SyntaxParserBase

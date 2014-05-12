@@ -83,8 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center" />
-			
-			<Button
+
+            <Button
                 android:id="@+id/clear_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"

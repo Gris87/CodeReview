@@ -10,11 +10,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -24,11 +24,10 @@ import android.view.WindowManager;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
+import com.griscom.codereview.listeners.OnProgressChangedListener;
+import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.SelectionColor;
-import com.griscom.codereview.listeners.*;
-import android.graphics.*;
-import com.griscom.codereview.util.*;
-import com.griscom.codereview.other.*;
+import com.griscom.codereview.util.Utils;
 
 public class TextDocument implements OnTouchListener
 {
@@ -56,11 +55,11 @@ public class TextDocument implements OnTouchListener
     private ReviewSurfaceView         mParent;
     private DocumentHandler           mHandler;
     private ArrayList<TextRow>        mRows;
-	private OnProgressChangedListener mProgressChangedListener;
-	private int                       mProgress;
-	private Paint                     mRowPaint;
+    private OnProgressChangedListener mProgressChangedListener;
+    private int                       mProgress;
+    private Paint                     mRowPaint;
 
-	private float                     mIndexWidth;
+    private float                     mIndexWidth;
     private float                     mX;
     private float                     mY;
     private float                     mWidth;
@@ -100,14 +99,14 @@ public class TextDocument implements OnTouchListener
         mParent                  = null;
         mHandler                 = null;
         mRows                    = new ArrayList<TextRow>();
-		mProgressChangedListener = null;
-		mProgress                = 0;
-		mRowPaint                = new Paint();
-		mRowPaint.setColor(Color.LTGRAY);
-		mRowPaint.setTypeface(Typeface.MONOSPACE);
-		mRowPaint.setTextSize(Utils.spToPixels(ApplicationSettings.fontSize(mContext), mContext));
+        mProgressChangedListener = null;
+        mProgress                = 0;
+        mRowPaint                = new Paint();
+        mRowPaint.setColor(Color.LTGRAY);
+        mRowPaint.setTypeface(Typeface.MONOSPACE);
+        mRowPaint.setTextSize(Utils.spToPixels(ApplicationSettings.fontSize(mContext), mContext));
 
-		mIndexWidth              = 0;
+        mIndexWidth              = 0;
         mX                       = 0;
         mY                       = 0;
         mWidth                   = 0;
@@ -141,12 +140,12 @@ public class TextDocument implements OnTouchListener
     {
         mParent=parent;
         mHandler=new DocumentHandler();
-		
-		mX=mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin);
-		mY=mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin);
-		
-		mIndexWidth=mRowPaint.measureText(String.valueOf(mRows.size()+1));
-		mX+=mIndexWidth;
+
+        mX=mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin);
+        mY=mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin);
+
+        mIndexWidth=mRowPaint.measureText(String.valueOf(mRows.size()+1));
+        mX+=mIndexWidth;
 
         onConfigurationChanged(mContext.getResources().getConfiguration());
         showBars();
@@ -158,8 +157,8 @@ public class TextDocument implements OnTouchListener
             mY-mOffsetY>=0
             ||
             mY-mOffsetY+mHeight<=mViewHeight
-			||
-			mX-mOffsetX>=0
+            ||
+            mX-mOffsetX>=0
            )
         {
             Paint backgroundPaint=new Paint();
@@ -174,8 +173,8 @@ public class TextDocument implements OnTouchListener
             {
                 canvas.drawRect(0, mY-mOffsetY+mHeight, mViewWidth, mViewHeight, backgroundPaint);
             }
-			
-			if (mX-mOffsetX>=0)
+
+            if (mX-mOffsetX>=0)
             {
                 canvas.drawRect(0, 0, mX-mOffsetX, mViewHeight, backgroundPaint);
             }
@@ -214,8 +213,8 @@ public class TextDocument implements OnTouchListener
             backgroundPaint.setColor(color);
             canvas.drawRect(mX-mOffsetX, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), backgroundPaint);
 
-			canvas.drawText(String.valueOf(i+1), -mOffsetX, mY-mOffsetY+mRows.get(i).getY()-mRowPaint.ascent(), mRowPaint);
-			
+            canvas.drawText(String.valueOf(i+1), -mOffsetX, mY-mOffsetY+mRows.get(i).getY()-mRowPaint.ascent(), mRowPaint);
+
             mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
         }
 
@@ -429,34 +428,34 @@ public class TextDocument implements OnTouchListener
                     firstRow = mSelectionEnd;
                     lastRow  = mHighlightedRow;
                 }
-				
-				int coloredRows=0;
-				
-				for (int i=firstRow; i<=lastRow; ++i)
+
+                int coloredRows=0;
+
+                for (int i=firstRow; i<=lastRow; ++i)
                 {
-					if (mRows.get(i).getColor()!=Color.WHITE)
-					{
-						coloredRows++;
-					}
+                    if (mRows.get(i).getColor()!=Color.WHITE)
+                    {
+                        coloredRows++;
+                    }
                 }
 
                 for (int i=firstRow; i<=lastRow; ++i)
                 {
                     mRows.get(i).setColor(mSelectionColor);
-					
-					if (mRows.get(i).getColor()!=Color.WHITE)
-					{
-						coloredRows--;
-					}
-                }
-				
-				if (coloredRows!=0)
-				{
-					// Decrease because coloredRows will be negative if new colors added
-					mProgress-=coloredRows;
 
-					progressChanged();
-				}
+                    if (mRows.get(i).getColor()!=Color.WHITE)
+                    {
+                        coloredRows--;
+                    }
+                }
+
+                if (coloredRows!=0)
+                {
+                    // Decrease because coloredRows will be negative if new colors added
+                    mProgress-=coloredRows;
+
+                    progressChanged();
+                }
 
                 mHighlightedRow = -1;
                 mSelectionEnd   = -1;
@@ -488,8 +487,8 @@ public class TextDocument implements OnTouchListener
             mParent.repaint();
         }
     }
-	
-	private void progressChanged()
+
+    private void progressChanged()
     {
         if (mProgressChangedListener!=null)
         {
@@ -685,7 +684,7 @@ public class TextDocument implements OnTouchListener
         {
             mSelectionColor=mNoteColor;
         }
-		else
+        else
         if (colorType==SelectionColor.CLEAR_COLOR)
         {
             mSelectionColor=Color.WHITE;
@@ -700,11 +699,11 @@ public class TextDocument implements OnTouchListener
             }
         }
     }
-	
-	public void setOnProgressChangedListener(OnProgressChangedListener listener)
-	{
-		mProgressChangedListener=listener;
-	}
+
+    public void setOnProgressChangedListener(OnProgressChangedListener listener)
+    {
+        mProgressChangedListener=listener;
+    }
 
     public void setX(float x)
     {

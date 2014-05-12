@@ -22,6 +22,9 @@
     <!-- Mark to delete -->
     <string name="action_mark_to_delete">Отметить удаление</string>
 
+    <!-- Reload -->
+    <string name="action_reload">Переоткрыть</string>
+
     <!-- Close -->
     <string name="action_close">Закрыть</string>
 
@@ -41,8 +44,8 @@
 
     <!-- Review loading message -->
     <string name="loading">Загрузка&#8230;</string>
-	
-	<!-- Review file not found message -->
+
+    <!-- Review file not found message -->
     <string name="file_not_found">Файл не найден</string>
 
     <!-- Ignore files activity title -->

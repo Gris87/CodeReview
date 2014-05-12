@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
+import com.griscom.codereview.listeners.OnReloadRequestListener;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.ReviewSurfaceView;
@@ -36,6 +37,8 @@ public class ReviewActivity extends FragmentActivity
     public static final int RESULT_CLOSE=1;
 
     private static final int AUTO_HIDE_DELAY_MILLIS=3000;
+
+    private OnReloadRequestListener mOnReloadRequestListener=null;
 
 
 
@@ -65,6 +68,16 @@ public class ReviewActivity extends FragmentActivity
     {
         switch(item.getItemId())
         {
+            case R.id.action_reload:
+            {
+                if (mOnReloadRequestListener!=null)
+                {
+                    mOnReloadRequestListener.onReloadRequest();
+                }
+
+                return true;
+            }
+
             case R.id.action_settings:
             {
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -89,7 +102,7 @@ public class ReviewActivity extends FragmentActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnProgressChangedListener
+    public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnProgressChangedListener, OnReloadRequestListener
     {
         private ReviewActivity    mActivity;
         private ReviewSurfaceView mContent;
@@ -100,7 +113,7 @@ public class ReviewActivity extends FragmentActivity
         private Button            mReviewedButton;
         private Button            mInvalidButton;
         private Button            mNoteButton;
-		private Button            mClearButton;
+        private Button            mClearButton;
         private String            mFileName;
         private boolean           mControlsVisible;
         private Button            mLastSelectedButton;
@@ -138,13 +151,13 @@ public class ReviewActivity extends FragmentActivity
             mReviewedButton   = (Button)rootView.findViewById(R.id.reviewed_button);
             mInvalidButton    = (Button)rootView.findViewById(R.id.invalid_button);
             mNoteButton       = (Button)rootView.findViewById(R.id.note_button);
-			mClearButton      = (Button)rootView.findViewById(R.id.clear_button);
+            mClearButton      = (Button)rootView.findViewById(R.id.clear_button);
 
             // ---------------------------------------------------------------------------------------
 
             mContent.setFileName(mFileName);
             mContent.setOnTouchListener(this);
-			mContent.setOnProgressChangedListener(this);
+            mContent.setOnProgressChangedListener(this);
 
             mTitleTextView.setText(mFileName.substring(mFileName.lastIndexOf('/')+1));
             mProgressTextView.setText("0 %");
@@ -154,22 +167,22 @@ public class ReviewActivity extends FragmentActivity
             Spannable reviewedIcon = new SpannableString(" ");
             Spannable invalidIcon  = new SpannableString(" ");
             Spannable noteIcon     = new SpannableString(" ");
-			Spannable clearIcon    = new SpannableString(" ");
+            Spannable clearIcon    = new SpannableString(" ");
 
             reviewedIcon.setSpan(new ImageSpan(mActivity.getApplicationContext(), R.drawable.reviewed, ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             invalidIcon.setSpan (new ImageSpan(mActivity.getApplicationContext(), R.drawable.invalid,  ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             noteIcon.setSpan    (new ImageSpan(mActivity.getApplicationContext(), R.drawable.note,     ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             clearIcon.setSpan   (new ImageSpan(mActivity.getApplicationContext(), R.drawable.clear,    ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			
+
             mReviewedButton.setText(reviewedIcon);
             mInvalidButton.setText (invalidIcon);
             mNoteButton.setText    (noteIcon);
-			mClearButton.setText   (clearIcon);
+            mClearButton.setText   (clearIcon);
 
             mReviewedButton.setBackgroundColor(mDefaultColor);
             mInvalidButton.setBackgroundColor (mDefaultColor);
             mNoteButton.setBackgroundColor    (mDefaultColor);
-			mClearButton.setBackgroundColor   (mDefaultColor);
+            mClearButton.setBackgroundColor   (mDefaultColor);
 
             mLastSelectedButton=mReviewedButton;
             mLastSelectedButton.setBackgroundColor(mSelectedColor);
@@ -177,17 +190,19 @@ public class ReviewActivity extends FragmentActivity
             mReviewedButton.setOnTouchListener(mHoverTouchListener);
             mInvalidButton.setOnTouchListener (mHoverTouchListener);
             mNoteButton.setOnTouchListener    (mHoverTouchListener);
-			mClearButton.setOnTouchListener   (mHoverTouchListener);
+            mClearButton.setOnTouchListener   (mHoverTouchListener);
 
             mReviewedButton.setOnClickListener(this);
             mInvalidButton.setOnClickListener (this);
             mNoteButton.setOnClickListener    (this);
-			mClearButton.setOnClickListener   (this);
+            mClearButton.setOnClickListener   (this);
 
             // ---------------------------------------------------------------------------------------
 
             mControlsVisible=true;
             delayedHide(1000);
+
+            mActivity.setOnBackPressedListener(this);
 
             return rootView;
         }
@@ -264,7 +279,7 @@ public class ReviewActivity extends FragmentActivity
                 mLastSelectedButton=mNoteButton;
                 mLastSelectedButton.setBackgroundColor(mSelectedColor);
             }
-			else
+            else
             if (v==mClearButton)
             {
                 mContent.setSelectionColor(SelectionColor.CLEAR_COLOR);
@@ -283,17 +298,23 @@ public class ReviewActivity extends FragmentActivity
                 }
             }
         }
-		
-		@Override
-		public void onProgressChanged(int progress)
-		{
-			if (BuildConfig.DEBUG)
-			{
-				Assert.assertTrue(progress>=0 && progress<=100);
-			}
-			
-			mProgressTextView.setText(String.valueOf(progress)+" %");
-		}
+
+        @Override
+        public void onReloadRequest()
+        {
+            mContent.reload();
+        }
+
+        @Override
+        public void onProgressChanged(int progress)
+        {
+            if (BuildConfig.DEBUG)
+            {
+                Assert.assertTrue(progress>=0 && progress<=100);
+            }
+
+            mProgressTextView.setText(String.valueOf(progress)+" %");
+        }
 
         View.OnTouchListener mHoverTouchListener = new View.OnTouchListener()
         {
@@ -372,5 +393,15 @@ public class ReviewActivity extends FragmentActivity
 
             delayedHide(AUTO_HIDE_DELAY_MILLIS);
         }
+    }
+
+    public OnReloadRequestListener getOnReloadRequestListener()
+    {
+        return mOnReloadRequestListener;
+    }
+
+    public void setOnBackPressedListener(OnReloadRequestListener listener)
+    {
+        mOnReloadRequestListener=listener;
     }
 }

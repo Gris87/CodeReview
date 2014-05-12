@@ -4,14 +4,20 @@
     tools:context="com.griscom.codereview.activities.ReviewActivity" >
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_reload"
         android:orderInCategory="100"
+        android:title="@string/action_reload"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="200"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_close"
-        android:orderInCategory="200"
+        android:orderInCategory="300"
         android:title="@string/action_close"
         android:icon="@drawable/close"
         app:showAsAction="never"/>

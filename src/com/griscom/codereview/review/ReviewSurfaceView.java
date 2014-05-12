@@ -1,5 +1,7 @@
 package com.griscom.codereview.review;
 
+import java.io.File;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -18,12 +20,11 @@ import android.view.View.OnTouchListener;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
+import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
-import com.griscom.codereview.listeners.*;
-import java.io.*;
 
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
@@ -37,11 +38,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private LoadingThread             mLoadingThread;
     private DrawThread                mDrawThread;
     private String                    mFileName;
-	private long                      mModifiedTime;
+    private long                      mModifiedTime;
     private SyntaxParserBase          mSyntaxParser;
     private TextDocument              mDocument;
     private SelectionColor            mSelectionColor;
-	private OnProgressChangedListener mProgressChangedListener;
+    private OnProgressChangedListener mProgressChangedListener;
 
     // USED IN HANDLER [
     private TextDocument              mLastLoadedDocument;
@@ -69,15 +70,15 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         private void loaded()
         {
-			mModifiedTime       = new File(mFileName).lastModified();
-			
+            mModifiedTime       = new File(mFileName).lastModified();
+
             mDocument           = mLastLoadedDocument;
             mLastLoadedDocument = null;
 
             mDocument.init(ReviewSurfaceView.this);
 
             mDocument.setSelectionColor(mSelectionColor);
-			mDocument.setOnProgressChangedListener(mProgressChangedListener);
+            mDocument.setOnProgressChangedListener(mProgressChangedListener);
 
             repaint();
         }
@@ -120,11 +121,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mSurfaceHolder           = getHolder();
         mLoadingThread           = null;
         mDrawThread              = null;
-		mModifiedTime            = 0;
+        mModifiedTime            = 0;
         mSyntaxParser            = null;
         mDocument                = null;
         mSelectionColor          = SelectionColor.REVIEWED_COLOR;
-		mProgressChangedListener = null;
+        mProgressChangedListener = null;
         mLastLoadedDocument      = null;
     }
 
@@ -189,14 +190,14 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             paint.setTextSize(Utils.spToPixels(36, mContext));
             paint.setTextAlign(Align.CENTER);
 
-			if (mModifiedTime==-1)
-			{
-				canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f, paint);
-			}
-			else
-			{
-				canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f, paint);
-			}
+            if (mModifiedTime==-1)
+            {
+                canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f, paint);
+            }
+            else
+            {
+                canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f, paint);
+            }
         }
     }
 
@@ -226,26 +227,26 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     public void reload()
     {
-		File file=new File(mFileName);
-		
-		if (!file.exists() || mModifiedTime!=file.lastModified())
-		{
-			stopLoadingThread();
-			
-			if (!file.exists())
-			{
-				mModifiedTime=-1;
-			}
+        File file=new File(mFileName);
 
-			mDocument=null;
-			repaint();
+        if (!file.exists() || mModifiedTime!=file.lastModified())
+        {
+            stopLoadingThread();
 
-			if (file.exists())
-			{
-				mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName);
-				mLoadingThread.start();
-			}
-		}
+            if (!file.exists())
+            {
+                mModifiedTime=-1;
+            }
+
+            mDocument=null;
+            repaint();
+
+            if (file.exists())
+            {
+                mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName);
+                mLoadingThread.start();
+            }
+        }
     }
 
     private void stopLoadingThread()
@@ -312,14 +313,14 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             }
         }
     }
-	
-	public void setOnProgressChangedListener(OnProgressChangedListener listener)
-	{
-		mProgressChangedListener=listener;
-		
-		if (mDocument!=null)
-		{
-			mDocument.setOnProgressChangedListener(mProgressChangedListener);
-		}
-	}
+
+    public void setOnProgressChangedListener(OnProgressChangedListener listener)
+    {
+        mProgressChangedListener=listener;
+
+        if (mDocument!=null)
+        {
+            mDocument.setOnProgressChangedListener(mProgressChangedListener);
+        }
+    }
 }

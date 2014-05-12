@@ -22,6 +22,9 @@
     <!-- Mark to delete -->
     <string name="action_mark_to_delete">Mark to delete</string>
 
+    <!-- Reload -->
+    <string name="action_reload">Reload</string>
+
     <!-- Close -->
     <string name="action_close">Close</string>
 
@@ -42,8 +45,8 @@
 
     <!-- Review loading message -->
     <string name="loading">Loading&#8230;</string>
-	
-	<!-- Review file not found message -->
+
+    <!-- Review file not found message -->
     <string name="file_not_found">File not found</string>
 
     <!-- Ignore files activity title -->
