@@ -28,6 +28,7 @@ import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.listeners.*;
 import android.graphics.*;
 import com.griscom.codereview.util.*;
+import com.griscom.codereview.other.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -104,7 +105,7 @@ public class TextDocument implements OnTouchListener
 		mRowPaint                = new Paint();
 		mRowPaint.setColor(Color.LTGRAY);
 		mRowPaint.setTypeface(Typeface.MONOSPACE);
-		mRowPaint.setTextSize(Utils.spToPixels(PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_font_size), mContext.getResources().getInteger(R.integer.pref_default_font_size)), mContext));
+		mRowPaint.setTextSize(Utils.spToPixels(ApplicationSettings.fontSize(mContext), mContext));
 
 		mIndexWidth              = 0;
         mX                       = 0;
@@ -124,14 +125,14 @@ public class TextDocument implements OnTouchListener
         mTouchY                  = 0;
         mSelectionEnd            = -1;
         mSelectionColor          = 0;
-        mReviewedColor           = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_reviewed_color),  mContext.getResources().getInteger(R.integer.pref_default_reviewed_color));
-        mInvalidColor            = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_invalid_color),   mContext.getResources().getInteger(R.integer.pref_default_invalid_color));
-        mNoteColor               = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_note_color),      mContext.getResources().getInteger(R.integer.pref_default_note_color));
+        mReviewedColor           = ApplicationSettings.reviewedColor(mContext);
+        mInvalidColor            = ApplicationSettings.invalidColor(mContext);
+        mNoteColor               = ApplicationSettings.noteColor(mContext);
 
         mBarsAlpha               = 0;
         mHighlightedRow          = -1;
         mHighlightAlpha          = 0;
-        mHighlightColor          = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_selection_color), mContext.getResources().getInteger(R.integer.pref_default_selection_color));
+        mHighlightColor          = ApplicationSettings.selectionColor(mContext);
         mSelectionBrighness      = 1;
         mSelectionMakeLight      = false;
     }
