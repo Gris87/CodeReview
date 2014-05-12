@@ -54,6 +54,7 @@ public class TextDocument implements OnTouchListener
     private DocumentHandler           mHandler;
     private ArrayList<TextRow>        mRows;
 	private OnProgressChangedListener mProgressChangedListener;
+	private int                       mProgress;
 
     private float                     mX;
     private float                     mY;
@@ -95,6 +96,7 @@ public class TextDocument implements OnTouchListener
         mHandler                 = null;
         mRows                    = new ArrayList<TextRow>();
 		mProgressChangedListener = null;
+		mProgress                = 0;
 
         mX                       = 0;
         mY                       = 0;
@@ -402,11 +404,34 @@ public class TextDocument implements OnTouchListener
                     firstRow = mSelectionEnd;
                     lastRow  = mHighlightedRow;
                 }
+				
+				int coloredRows=0;
+				
+				for (int i=firstRow; i<=lastRow; ++i)
+                {
+					if (mRows.get(i).getColor()!=Color.WHITE)
+					{
+						coloredRows++;
+					}
+                }
 
                 for (int i=firstRow; i<=lastRow; ++i)
                 {
                     mRows.get(i).setColor(mSelectionColor);
+					
+					if (mRows.get(i).getColor()!=Color.WHITE)
+					{
+						coloredRows--;
+					}
                 }
+				
+				if (coloredRows!=0)
+				{
+					// Decrease because coloredRows will be negative if new colors added
+					mProgress-=coloredRows;
+
+					progressChanged();
+				}
 
                 mHighlightedRow = -1;
                 mSelectionEnd   = -1;
@@ -436,6 +461,14 @@ public class TextDocument implements OnTouchListener
         if (mParent!=null)
         {
             mParent.repaint();
+        }
+    }
+	
+	private void progressChanged()
+    {
+        if (mProgressChangedListener!=null)
+        {
+            mProgressChangedListener.onProgressChanged(mProgress*100/mRows.size());
         }
     }
 
