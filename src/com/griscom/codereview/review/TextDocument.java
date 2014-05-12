@@ -26,6 +26,8 @@ import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.listeners.*;
+import android.graphics.*;
+import com.griscom.codereview.util.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -55,7 +57,9 @@ public class TextDocument implements OnTouchListener
     private ArrayList<TextRow>        mRows;
 	private OnProgressChangedListener mProgressChangedListener;
 	private int                       mProgress;
+	private Paint                     mRowPaint;
 
+	private float                     mIndexWidth;
     private float                     mX;
     private float                     mY;
     private float                     mWidth;
@@ -97,7 +101,12 @@ public class TextDocument implements OnTouchListener
         mRows                    = new ArrayList<TextRow>();
 		mProgressChangedListener = null;
 		mProgress                = 0;
+		mRowPaint                = new Paint();
+		mRowPaint.setColor(Color.LTGRAY);
+		mRowPaint.setTypeface(Typeface.MONOSPACE);
+		mRowPaint.setTextSize(Utils.spToPixels(PreferenceManager.getDefaultSharedPreferences(mContext).getInt(mContext.getString(R.string.pref_key_font_size), mContext.getResources().getInteger(R.integer.pref_default_font_size)), mContext));
 
+		mIndexWidth              = 0;
         mX                       = 0;
         mY                       = 0;
         mWidth                   = 0;
@@ -131,6 +140,12 @@ public class TextDocument implements OnTouchListener
     {
         mParent=parent;
         mHandler=new DocumentHandler();
+		
+		mX=mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin);
+		mY=mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin);
+		
+		mIndexWidth=mRowPaint.measureText(String.valueOf(mRows.size()+1));
+		mX+=mIndexWidth;
 
         onConfigurationChanged(mContext.getResources().getConfiguration());
         showBars();
@@ -142,6 +157,8 @@ public class TextDocument implements OnTouchListener
             mY-mOffsetY>=0
             ||
             mY-mOffsetY+mHeight<=mViewHeight
+			||
+			mX-mOffsetX>=0
            )
         {
             Paint backgroundPaint=new Paint();
@@ -155,6 +172,11 @@ public class TextDocument implements OnTouchListener
             if (mY-mOffsetY+mHeight<=mViewHeight)
             {
                 canvas.drawRect(0, mY-mOffsetY+mHeight, mViewWidth, mViewHeight, backgroundPaint);
+            }
+			
+			if (mX-mOffsetX>=0)
+            {
+                canvas.drawRect(0, 0, mX-mOffsetX, mViewHeight, backgroundPaint);
             }
         }
 
@@ -189,8 +211,10 @@ public class TextDocument implements OnTouchListener
 
             Paint backgroundPaint=new Paint();
             backgroundPaint.setColor(color);
-            canvas.drawRect(0, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), backgroundPaint);
+            canvas.drawRect(mX-mOffsetX, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), backgroundPaint);
 
+			canvas.drawText(String.valueOf(i+1), -mOffsetX, mY-mOffsetY+mRows.get(i).getY()-mRowPaint.ascent(), mRowPaint);
+			
             mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
         }
 

@@ -72,8 +72,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             mDocument.init(ReviewSurfaceView.this);
 
-            mDocument.setX(mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin));
-            mDocument.setY(mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin));
             mDocument.setSelectionColor(mSelectionColor);
 			mDocument.setOnProgressChangedListener(mProgressChangedListener);
 
