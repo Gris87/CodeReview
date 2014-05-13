@@ -27,6 +27,7 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.listeners.OnReloadRequestListener;
 import com.griscom.codereview.other.ApplicationExtras;
+import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.ReviewSurfaceView;
 
@@ -104,6 +105,20 @@ public class ReviewActivity extends FragmentActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch (requestCode)
+        {
+            case REQUEST_SETTINGS:
+            {
+                ColorCache.update(this);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     public OnReloadRequestListener getOnReloadRequestListener()
     {
         return mOnReloadRequestListener;
@@ -144,6 +159,8 @@ public class ReviewActivity extends FragmentActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             mActivity=(ReviewActivity)getActivity();
+
+            ColorCache.update(mActivity);
 
             mDefaultColor  = mActivity.getResources().getColor(R.color.black_overlay);
             mSelectedColor = mActivity.getResources().getColor(R.color.selected);

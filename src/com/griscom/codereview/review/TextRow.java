@@ -3,12 +3,13 @@ package com.griscom.codereview.review;
 import java.util.ArrayList;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
+
+import com.griscom.codereview.other.SelectionColor;
 
 public class TextRow
 {
     private ArrayList<TextRegion> mRegions;
-    private int                   mColor;
+    private SelectionColor        mSelectionColor;
     private float                 mY;
     private float                 mWidth;
     private float                 mHeight;
@@ -17,10 +18,10 @@ public class TextRow
     {
         mRegions = new ArrayList<TextRegion>();
 
-        mColor   = Color.WHITE;
-        mY       = 0;
-        mWidth   = 0;
-        mHeight  = 0;
+        mSelectionColor = SelectionColor.CLEAR_COLOR;
+        mY              = 0;
+        mWidth          = 0;
+        mHeight         = 0;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
@@ -45,14 +46,14 @@ public class TextRow
         }
     }
 
-    public void setColor(int color)
+    public void setSelectionColor(SelectionColor selectionColor)
     {
-        mColor=color;
+        mSelectionColor=selectionColor;
     }
 
-    public int getColor()
+    public SelectionColor getSelectionColor()
     {
-        return mColor;
+        return mSelectionColor;
     }
 
     public void setY(float y)

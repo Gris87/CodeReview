@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,13 +25,12 @@ import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationSettings;
+import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.util.Utils;
 
 public class TextDocument implements OnTouchListener
 {
-    private static final String TAG = "TextDocument";
-
     private static final int   HIDE_BARS_MESSAGE   = 1;
     private static final int   HIGHLIGHT_MESSAGE   = 2;
     private static final int   SELECTION_MESSAGE   = 3;
@@ -76,10 +74,7 @@ public class TextDocument implements OnTouchListener
     private float                     mTouchX;
     private float                     mTouchY;
     private int                       mSelectionEnd;
-    private int                       mSelectionColor;
-    private int                       mReviewedColor;
-    private int                       mInvalidColor;
-    private int                       mNoteColor;
+    private SelectionColor            mSelectionColor;
 
     // USED IN HANDLER [
     private int                       mBarsAlpha;
@@ -123,10 +118,7 @@ public class TextDocument implements OnTouchListener
         mTouchX                  = 0;
         mTouchY                  = 0;
         mSelectionEnd            = -1;
-        mSelectionColor          = 0;
-        mReviewedColor           = ApplicationSettings.reviewedColor(mContext);
-        mInvalidColor            = ApplicationSettings.invalidColor(mContext);
-        mNoteColor               = ApplicationSettings.noteColor(mContext);
+        mSelectionColor          = SelectionColor.REVIEWED_COLOR;
 
         mBarsAlpha               = 0;
         mHighlightedRow          = -1;
@@ -200,13 +192,13 @@ public class TextDocument implements OnTouchListener
                )
             {
                 float selectionHSV[]=new float[3];
-                Color.colorToHSV(mSelectionColor, selectionHSV);
+                Color.colorToHSV(ColorCache.get(mSelectionColor), selectionHSV);
                 selectionHSV[2]=mSelectionBrighness;
                 color=Color.HSVToColor(selectionHSV);
             }
             else
             {
-                color=mRows.get(i).getColor();
+                color=ColorCache.get(mRows.get(i).getSelectionColor());
             }
 
             Paint backgroundPaint=new Paint();
@@ -433,7 +425,7 @@ public class TextDocument implements OnTouchListener
 
                 for (int i=firstRow; i<=lastRow; ++i)
                 {
-                    if (mRows.get(i).getColor()!=Color.WHITE)
+                    if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
                     {
                         coloredRows++;
                     }
@@ -441,9 +433,9 @@ public class TextDocument implements OnTouchListener
 
                 for (int i=firstRow; i<=lastRow; ++i)
                 {
-                    mRows.get(i).setColor(mSelectionColor);
+                    mRows.get(i).setSelectionColor(mSelectionColor);
 
-                    if (mRows.get(i).getColor()!=Color.WHITE)
+                    if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
                     {
                         coloredRows--;
                     }
@@ -668,36 +660,9 @@ public class TextDocument implements OnTouchListener
         mVisibleEnd++;
     }
 
-    public void setSelectionColor(SelectionColor colorType)
+    public void setSelectionColor(SelectionColor selectionColor)
     {
-        if (colorType==SelectionColor.REVIEWED_COLOR)
-        {
-            mSelectionColor=mReviewedColor;
-        }
-        else
-        if (colorType==SelectionColor.INVALID_COLOR)
-        {
-            mSelectionColor=mInvalidColor;
-        }
-        else
-        if (colorType==SelectionColor.NOTE_COLOR)
-        {
-            mSelectionColor=mNoteColor;
-        }
-        else
-        if (colorType==SelectionColor.CLEAR_COLOR)
-        {
-            mSelectionColor=Color.WHITE;
-        }
-        else
-        {
-            Log.e(TAG, "Unknown selection color: "+String.valueOf(colorType));
-
-            if (BuildConfig.DEBUG)
-            {
-                Assert.fail();
-            }
-        }
+        mSelectionColor=selectionColor;
     }
 
     public void setOnProgressChangedListener(OnProgressChangedListener listener)

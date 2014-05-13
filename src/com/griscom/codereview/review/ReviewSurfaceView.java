@@ -301,11 +301,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         // reload();
     }
 
-    public void setSelectionColor(SelectionColor colorType)
+    public void setSelectionColor(SelectionColor selectionColor)
     {
-        if (mSelectionColor!=colorType)
+        if (mSelectionColor!=selectionColor)
         {
-            mSelectionColor=colorType;
+            mSelectionColor=selectionColor;
 
             if (mDocument!=null)
             {
