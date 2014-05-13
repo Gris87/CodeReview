@@ -87,8 +87,6 @@ public class ReviewActivity extends FragmentActivity
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivityForResult(intent, REQUEST_SETTINGS);
 
-                // TODO: color change
-
                 return true;
             }
 

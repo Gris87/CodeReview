@@ -80,7 +80,6 @@ public class TextDocument implements OnTouchListener
     private int                       mBarsAlpha;
     private int                       mHighlightedRow;
     private int                       mHighlightAlpha;
-    private int                       mHighlightColor;
     private float                     mSelectionBrighness;
     private boolean                   mSelectionMakeLight;
     // USED IN HANDLER ]
@@ -122,7 +121,6 @@ public class TextDocument implements OnTouchListener
         mBarsAlpha               = 0;
         mHighlightedRow          = -1;
         mHighlightAlpha          = 0;
-        mHighlightColor          = ApplicationSettings.selectionColor(mContext);
         mSelectionBrighness      = 1;
         mSelectionMakeLight      = false;
     }
@@ -177,7 +175,8 @@ public class TextDocument implements OnTouchListener
 
             if (mHighlightAlpha>0 && i==mHighlightedRow)
             {
-                color=Color.argb(mHighlightAlpha, Color.red(mHighlightColor), Color.green(mHighlightColor), Color.blue(mHighlightColor));
+				color=ColorCache.getSelectionColor();
+                color=Color.argb(mHighlightAlpha, Color.red(color), Color.green(color), Color.blue(color));
             }
             else
             if (
@@ -313,6 +312,21 @@ public class TextDocument implements OnTouchListener
 			}
 			break;
 			
+			case MotionEvent.ACTION_POINTER_DOWN:
+			{
+				if (
+				    mTouchMode == TouchMode.NONE
+					||
+					mTouchMode == TouchMode.ZOOM
+				   )
+				{
+					mTouchMode = TouchMode.ZOOM;
+					
+					stopHighlight();
+				}
+			}
+			break;
+			
 			case MotionEvent.ACTION_MOVE:
 		    {
 				if (mTouchMode==TouchMode.SELECT)
@@ -334,6 +348,10 @@ public class TextDocument implements OnTouchListener
 					}
 				}
 				else
+				if (mTouchMode==TouchMode.ZOOM)
+				{
+				}
+				else
 				{
 					if (
 						mTouchMode==TouchMode.NONE
@@ -343,17 +361,11 @@ public class TextDocument implements OnTouchListener
 						||
 						Math.abs(mTouchY-event.getY())>SCROLL_THRESHOLD
 						)
-						)
+					   )
 					{
 						mTouchMode=TouchMode.DRAG;
-
-						if (mHighlightedRow>=0)
-						{
-							mHighlightedRow = -1;
-							mHighlightAlpha = 0;
-
-							mHandler.removeMessages(HIGHLIGHT_MESSAGE);
-						}
+						
+						stopHighlight();
 					}
 
 					if (mTouchMode==TouchMode.DRAG)
@@ -462,13 +474,7 @@ public class TextDocument implements OnTouchListener
 				}
 				else
 				{
-					if (mHighlightedRow>=0)
-					{
-						mHighlightedRow = -1;
-						mHighlightAlpha = 0;
-
-						mHandler.removeMessages(HIGHLIGHT_MESSAGE);
-					}
+					stopHighlight();
 				}
 			}
 			break;
@@ -476,6 +482,17 @@ public class TextDocument implements OnTouchListener
 
         return true;
     }
+	
+	private void stopHighlight()
+	{
+		if (mHighlightedRow>=0)
+		{
+			mHighlightedRow = -1;
+			mHighlightAlpha = 0;
+
+			mHandler.removeMessages(HIGHLIGHT_MESSAGE);
+		}
+	}
 
     private void repaint()
     {
@@ -769,8 +786,9 @@ public class TextDocument implements OnTouchListener
             }
             else
             {
+				mTouchMode          = TouchMode.SELECT;
+				
                 mHighlightAlpha     = 0;
-                mTouchMode          = TouchMode.SELECT;
                 mSelectionBrighness = 1;
                 mSelectionMakeLight = false;
 

@@ -5,7 +5,11 @@ import android.graphics.Color;
 
 public class ColorCache
 {
-    private static int mCache[]=new int[4];
+	private static final int SELECTION_COLOR=4;
+	
+    private static int mCache[]=new int[5];
+	
+	
 
     public static void update(Context context)
     {
@@ -13,10 +17,17 @@ public class ColorCache
         mCache[SelectionColor.INVALID_COLOR.ordinal()]  = ApplicationSettings.invalidColor(context);
         mCache[SelectionColor.NOTE_COLOR.ordinal()]     = ApplicationSettings.noteColor(context);
         mCache[SelectionColor.CLEAR_COLOR.ordinal()]    = Color.WHITE;
+		
+		mCache[SELECTION_COLOR]                         = ApplicationSettings.selectionColor(context);
     }
 
     public static int get(SelectionColor selectionColor)
     {
         return mCache[selectionColor.ordinal()];
+    }
+	
+	public static int getSelectionColor()
+    {
+        return mCache[SELECTION_COLOR];
     }
 }
