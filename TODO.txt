@@ -1,7 +1,7 @@
 Select all in ActionMode
 Hide Done button in ActionMode
 Save/load dialogs state
-Color change. Color buffers
+go up. restore scroll
 Zoom
 Highlight syntax
 Separate text to TextRegions
