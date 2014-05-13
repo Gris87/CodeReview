@@ -28,6 +28,7 @@ import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.util.Utils;
+import com.griscom.codereview.other.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -69,8 +70,7 @@ public class TextDocument implements OnTouchListener
     private int                       mVisibleBegin;
     private int                       mVisibleEnd;
 
-    private boolean                   mTouchSelection;
-    private boolean                   mTouchScroll;
+    private TouchMode                 mTouchMode;
     private float                     mTouchX;
     private float                     mTouchY;
     private int                       mSelectionEnd;
@@ -113,8 +113,7 @@ public class TextDocument implements OnTouchListener
         mVisibleBegin            = -1;
         mVisibleEnd              = -1;
 
-        mTouchSelection          = false;
-        mTouchScroll             = false;
+        mTouchMode               = TouchMode.NONE;
         mTouchX                  = 0;
         mTouchY                  = 0;
         mSelectionEnd            = -1;
@@ -291,8 +290,7 @@ public class TextDocument implements OnTouchListener
 		{
 			case MotionEvent.ACTION_DOWN:
 	        {
-				mTouchSelection = false;
-				mTouchScroll    = false;
+				mTouchMode      = TouchMode.NONE;
 
 				mTouchX         = event.getX();
 				mTouchY         = event.getY();
@@ -317,7 +315,7 @@ public class TextDocument implements OnTouchListener
 			
 			case MotionEvent.ACTION_MOVE:
 		    {
-				if (mTouchSelection)
+				if (mTouchMode==TouchMode.SELECT)
 				{
 					mTouchX = event.getX();
 					mTouchY = event.getY();
@@ -338,7 +336,7 @@ public class TextDocument implements OnTouchListener
 				else
 				{
 					if (
-						!mTouchScroll
+						mTouchMode==TouchMode.NONE
 						&&
 						(
 						Math.abs(mTouchX-event.getX())>SCROLL_THRESHOLD
@@ -347,7 +345,7 @@ public class TextDocument implements OnTouchListener
 						)
 						)
 					{
-						mTouchScroll=true;
+						mTouchMode=TouchMode.DRAG;
 
 						if (mHighlightedRow>=0)
 						{
@@ -358,7 +356,7 @@ public class TextDocument implements OnTouchListener
 						}
 					}
 
-					if (mTouchScroll)
+					if (mTouchMode==TouchMode.DRAG)
 					{
 						float newOffsetX=mOffsetX+(mTouchX-event.getX());
 						float newOffsetY=mOffsetY+(mTouchY-event.getY());
@@ -410,7 +408,7 @@ public class TextDocument implements OnTouchListener
 			
 			default:
 			{
-				if (mTouchSelection)
+				if (mTouchMode==TouchMode.SELECT)
 				{
 					int firstRow;
 					int lastRow;
@@ -772,7 +770,7 @@ public class TextDocument implements OnTouchListener
             else
             {
                 mHighlightAlpha     = 0;
-                mTouchSelection     = true;
+                mTouchMode          = TouchMode.SELECT;
                 mSelectionBrighness = 1;
                 mSelectionMakeLight = false;
 
