@@ -40,7 +40,7 @@ public class TextDocument implements OnTouchListener
     private static final int   HIGHLIGHT_DELAY     = 250;
     private static final int   VIBRATOR_LONG_CLICK = 50;
     private static final float SELECTION_SPEED     = 0.01f;
-    private static final float SELECTION_LOW_LIGHT = 0.6f;
+    private static final float SELECTION_LOW_LIGHT = 0.75f;
     private static final float SCROLL_SPEED        = 10;
 
     private static final int   SCROLL_THRESHOLD    = 25;
@@ -286,188 +286,195 @@ public class TextDocument implements OnTouchListener
     public boolean onTouch(View v, MotionEvent event)
     {
         showBars();
+		
+		switch (event.getAction())
+		{
+			case MotionEvent.ACTION_DOWN:
+	        {
+				mTouchSelection = false;
+				mTouchScroll    = false;
 
-        if (event.getAction()==MotionEvent.ACTION_DOWN)
-        {
-            mTouchSelection = false;
-            mTouchScroll    = false;
+				mTouchX         = event.getX();
+				mTouchY         = event.getY();
 
-            mTouchX         = event.getX();
-            mTouchY         = event.getY();
+				mHighlightedRow = -1;
+				mHighlightAlpha = 0;
+				mSelectionEnd   = -1;
 
-            mHighlightedRow = -1;
-            mHighlightAlpha = 0;
-            mSelectionEnd   = -1;
+				for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
+				{
+					if (mTouchY>=mY-mOffsetY+mRows.get(i).getY() && mTouchY<=mY-mOffsetY+mRows.get(i).getBottom())
+					{
+						mHighlightedRow=i;
 
-            for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
-            {
-                if (mTouchY>=mY-mOffsetY+mRows.get(i).getY() && mTouchY<=mY-mOffsetY+mRows.get(i).getBottom())
-                {
-                    mHighlightedRow=i;
+						mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, HIGHLIGHT_DELAY);
 
-                    mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, HIGHLIGHT_DELAY);
+						break;
+					}
+				}
+			}
+			break;
+			
+			case MotionEvent.ACTION_MOVE:
+		    {
+				if (mTouchSelection)
+				{
+					mTouchX = event.getX();
+					mTouchY = event.getY();
 
-                    break;
-                }
-            }
-        }
-        else
-        if (event.getAction()==MotionEvent.ACTION_MOVE)
-        {
-            if (mTouchSelection)
-            {
-                mTouchX = event.getX();
-                mTouchY = event.getY();
+					updateSelection();
 
-                updateSelection();
+					mHandler.removeMessages(SCROLL_MESSAGE);
 
-                mHandler.removeMessages(SCROLL_MESSAGE);
+					if (
+						mTouchY<mViewHeight/8
+						||
+						mTouchY>mViewHeight*7/8
+						)
+					{
+						touchScroll();
+					}
+				}
+				else
+				{
+					if (
+						!mTouchScroll
+						&&
+						(
+						Math.abs(mTouchX-event.getX())>SCROLL_THRESHOLD
+						||
+						Math.abs(mTouchY-event.getY())>SCROLL_THRESHOLD
+						)
+						)
+					{
+						mTouchScroll=true;
 
-                if (
-                    mTouchY<mViewHeight/8
-                    ||
-                    mTouchY>mViewHeight*7/8
-                   )
-                {
-                    touchScroll();
-                }
-            }
-            else
-            {
-                if (
-                    !mTouchScroll
-                    &&
-                    (
-                     Math.abs(mTouchX-event.getX())>SCROLL_THRESHOLD
-                     ||
-                     Math.abs(mTouchY-event.getY())>SCROLL_THRESHOLD
-                    )
-                   )
-                {
-                    mTouchScroll=true;
+						if (mHighlightedRow>=0)
+						{
+							mHighlightedRow = -1;
+							mHighlightAlpha = 0;
 
-                    if (mHighlightedRow>=0)
-                    {
-                        mHighlightedRow = -1;
-                        mHighlightAlpha = 0;
+							mHandler.removeMessages(HIGHLIGHT_MESSAGE);
+						}
+					}
 
-                        mHandler.removeMessages(HIGHLIGHT_MESSAGE);
-                    }
-                }
+					if (mTouchScroll)
+					{
+						float newOffsetX=mOffsetX+(mTouchX-event.getX());
+						float newOffsetY=mOffsetY+(mTouchY-event.getY());
 
-                if (mTouchScroll)
-                {
-                    float newOffsetX=mOffsetX+(mTouchX-event.getX());
-                    float newOffsetY=mOffsetY+(mTouchY-event.getY());
+						if (newOffsetX>mWidth-mViewWidth+BOTTOM_RIGHT_SPACE)
+						{
+							newOffsetX=mWidth-mViewWidth+BOTTOM_RIGHT_SPACE;
+						}
 
-                    if (newOffsetX>mWidth-mViewWidth+BOTTOM_RIGHT_SPACE)
-                    {
-                        newOffsetX=mWidth-mViewWidth+BOTTOM_RIGHT_SPACE;
-                    }
+						if (newOffsetX<0)
+						{
+							newOffsetX=0;
+						}
 
-                    if (newOffsetX<0)
-                    {
-                        newOffsetX=0;
-                    }
+						if (newOffsetY>mHeight-mViewHeight+BOTTOM_RIGHT_SPACE)
+						{
+							newOffsetY=mHeight-mViewHeight+BOTTOM_RIGHT_SPACE;
+						}
 
-                    if (newOffsetY>mHeight-mViewHeight+BOTTOM_RIGHT_SPACE)
-                    {
-                        newOffsetY=mHeight-mViewHeight+BOTTOM_RIGHT_SPACE;
-                    }
-
-                    if (newOffsetY<0)
-                    {
-                        newOffsetY=0;
-                    }
-
-
-
-                    if (
-                        mOffsetX != newOffsetX
-                        ||
-                        mOffsetY != newOffsetY
-                       )
-                    {
-                        mOffsetX = newOffsetX;
-                        mOffsetY = newOffsetY;
-
-                        updateVisibleRanges();
-
-                        repaint();
-                    }
+						if (newOffsetY<0)
+						{
+							newOffsetY=0;
+						}
 
 
 
-                    mTouchX = event.getX();
-                    mTouchY = event.getY();
-                }
-            }
-        }
-        else
-        {
-            if (mTouchSelection)
-            {
-                int firstRow;
-                int lastRow;
+						if (
+							mOffsetX != newOffsetX
+							||
+							mOffsetY != newOffsetY
+							)
+						{
+							mOffsetX = newOffsetX;
+							mOffsetY = newOffsetY;
 
-                if (mSelectionEnd>mHighlightedRow)
-                {
-                    firstRow = mHighlightedRow;
-                    lastRow  = mSelectionEnd;
-                }
-                else
-                {
-                    firstRow = mSelectionEnd;
-                    lastRow  = mHighlightedRow;
-                }
+							updateVisibleRanges();
 
-                int coloredRows=0;
+							repaint();
+						}
 
-                for (int i=firstRow; i<=lastRow; ++i)
-                {
-                    if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
-                    {
-                        coloredRows++;
-                    }
-                }
 
-                for (int i=firstRow; i<=lastRow; ++i)
-                {
-                    mRows.get(i).setSelectionColor(mSelectionColor);
 
-                    if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
-                    {
-                        coloredRows--;
-                    }
-                }
+						mTouchX = event.getX();
+						mTouchY = event.getY();
+					}
+				}
+			}
+			break;
+			
+			default:
+			{
+				if (mTouchSelection)
+				{
+					int firstRow;
+					int lastRow;
 
-                if (coloredRows!=0)
-                {
-                    // Decrease because coloredRows will be negative if new colors added
-                    mProgress-=coloredRows;
+					if (mSelectionEnd>mHighlightedRow)
+					{
+						firstRow = mHighlightedRow;
+						lastRow  = mSelectionEnd;
+					}
+					else
+					{
+						firstRow = mSelectionEnd;
+						lastRow  = mHighlightedRow;
+					}
 
-                    progressChanged();
-                }
+					int coloredRows=0;
 
-                mHighlightedRow = -1;
-                mSelectionEnd   = -1;
+					for (int i=firstRow; i<=lastRow; ++i)
+					{
+						if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
+						{
+							coloredRows++;
+						}
+					}
 
-                mHandler.removeMessages(SELECTION_MESSAGE);
-                mHandler.removeMessages(SCROLL_MESSAGE);
+					for (int i=firstRow; i<=lastRow; ++i)
+					{
+						mRows.get(i).setSelectionColor(mSelectionColor);
 
-                repaint();
-            }
-            else
-            {
-                if (mHighlightedRow>=0)
-                {
-                    mHighlightedRow = -1;
-                    mHighlightAlpha = 0;
+						if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
+						{
+							coloredRows--;
+						}
+					}
 
-                    mHandler.removeMessages(HIGHLIGHT_MESSAGE);
-                }
-            }
-        }
+					if (coloredRows!=0)
+					{
+						// Decrease because coloredRows will be negative if new colors added
+						mProgress-=coloredRows;
+
+						progressChanged();
+					}
+
+					mHighlightedRow = -1;
+					mSelectionEnd   = -1;
+
+					mHandler.removeMessages(SELECTION_MESSAGE);
+					mHandler.removeMessages(SCROLL_MESSAGE);
+
+					repaint();
+				}
+				else
+				{
+					if (mHighlightedRow>=0)
+					{
+						mHighlightedRow = -1;
+						mHighlightAlpha = 0;
+
+						mHandler.removeMessages(HIGHLIGHT_MESSAGE);
+					}
+				}
+			}
+			break;
+		}
 
         return true;
     }
