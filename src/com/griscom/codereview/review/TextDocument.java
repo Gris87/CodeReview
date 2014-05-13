@@ -27,8 +27,8 @@ import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
+import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.util.Utils;
-import com.griscom.codereview.other.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -67,12 +67,14 @@ public class TextDocument implements OnTouchListener
     private float                     mViewHeight;
     private float                     mOffsetX;
     private float                     mOffsetY;
+    private float                     mScale;
     private int                       mVisibleBegin;
     private int                       mVisibleEnd;
 
     private TouchMode                 mTouchMode;
     private float                     mTouchX;
     private float                     mTouchY;
+    private float                     mFingerDistance;
     private int                       mSelectionEnd;
     private SelectionColor            mSelectionColor;
 
@@ -109,12 +111,14 @@ public class TextDocument implements OnTouchListener
         mViewHeight              = 0;
         mOffsetX                 = 0;
         mOffsetY                 = 0;
+        mScale                   = 1;
         mVisibleBegin            = -1;
         mVisibleEnd              = -1;
 
         mTouchMode               = TouchMode.NONE;
         mTouchX                  = 0;
         mTouchY                  = 0;
+        mFingerDistance          = 0;
         mSelectionEnd            = -1;
         mSelectionColor          = SelectionColor.REVIEWED_COLOR;
 
@@ -142,6 +146,8 @@ public class TextDocument implements OnTouchListener
 
     public void draw(Canvas canvas)
     {
+        canvas.scale(mScale, mScale);
+
         if (
             mY-mOffsetY>=0
             ||
@@ -284,8 +290,8 @@ public class TextDocument implements OnTouchListener
     public boolean onTouch(View v, MotionEvent event)
     {
         showBars();
-		
-		switch (event.getAction())
+
+		switch (event.getAction() & MotionEvent.ACTION_MASK)
 		{
 			case MotionEvent.ACTION_DOWN:
 	        {
@@ -311,7 +317,7 @@ public class TextDocument implements OnTouchListener
 				}
 			}
 			break;
-			
+
 			case MotionEvent.ACTION_POINTER_DOWN:
 			{
 				if (
@@ -321,12 +327,14 @@ public class TextDocument implements OnTouchListener
 				   )
 				{
 					mTouchMode = TouchMode.ZOOM;
-					
+
 					stopHighlight();
+
+					mFingerDistance = fingerDistance(event);
 				}
 			}
 			break;
-			
+
 			case MotionEvent.ACTION_MOVE:
 		    {
 				if (mTouchMode==TouchMode.SELECT)
@@ -350,6 +358,26 @@ public class TextDocument implements OnTouchListener
 				else
 				if (mTouchMode==TouchMode.ZOOM)
 				{
+				    if (mFingerDistance!=0 && event.getPointerCount()>=2)
+				    {
+				        float newDistance=fingerDistance(event);
+
+				        mScale          = mScale * newDistance/mFingerDistance;
+				        mFingerDistance = newDistance;
+
+				        if (mScale<0.001f)
+				        {
+				            mScale=0.001f;
+				        }
+				        else
+				        if (mScale>10f)
+                        {
+                            mScale=10f;
+                        }
+
+				        updateVisibleRanges();
+				        repaint();
+				    }
 				}
 				else
 				{
@@ -364,7 +392,7 @@ public class TextDocument implements OnTouchListener
 					   )
 					{
 						mTouchMode=TouchMode.DRAG;
-						
+
 						stopHighlight();
 					}
 
@@ -417,7 +445,13 @@ public class TextDocument implements OnTouchListener
 				}
 			}
 			break;
-			
+
+			case MotionEvent.ACTION_POINTER_UP:
+            {
+                // Nothing
+            }
+            break;
+
 			default:
 			{
 				if (mTouchMode==TouchMode.SELECT)
@@ -482,7 +516,12 @@ public class TextDocument implements OnTouchListener
 
         return true;
     }
-	
+
+    private float fingerDistance(MotionEvent event)
+    {
+        return (float) Math.sqrt(Math.pow(event.getX(0)-event.getX(1), 2)+Math.pow(event.getY(0)-event.getY(1), 2));
+    }
+
 	private void stopHighlight()
 	{
 		if (mHighlightedRow>=0)
@@ -787,7 +826,7 @@ public class TextDocument implements OnTouchListener
             else
             {
 				mTouchMode          = TouchMode.SELECT;
-				
+
                 mHighlightAlpha     = 0;
                 mSelectionBrighness = 1;
                 mSelectionMakeLight = false;
