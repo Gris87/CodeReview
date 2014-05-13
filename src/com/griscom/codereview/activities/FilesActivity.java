@@ -39,9 +39,11 @@ public class FilesActivity extends ActionBarActivity
     private static final int REQUEST_REVIEW = 1;
 
 
-    private OnBackPressedListener mOnBackPressedListener=null;
 
-    private long mBackPressTime=0;
+    private OnBackPressedListener mOnBackPressedListener=null;
+    private long                  mBackPressTime=0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -91,16 +93,56 @@ public class FilesActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if (mOnBackPressedListener==null || !mOnBackPressedListener.onBackPressed())
+        {
+            long curTime=System.currentTimeMillis();
+
+            if (curTime-mBackPressTime<1000)
+            {
+                clearPath();
+                super.onBackPressed();
+            }
+            else
+            {
+                mBackPressTime=curTime;
+
+                Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void clearPath()
+    {
+        SharedPreferences prefs=getPreferences(Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor=prefs.edit();
+        editor.putString(ApplicationPreferences.LAST_PATH, "");
+        editor.commit();
+    }
+
+    public OnBackPressedListener getOnBackPressedListener()
+    {
+        return mOnBackPressedListener;
+    }
+
+    public void setOnBackPressedListener(OnBackPressedListener listener)
+    {
+        mOnBackPressedListener=listener;
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnBackPressedListener
     {
         private FilesActivity mActivity;
-        private ActionBar    mActionBar;
-        private ListView     mFilesListView;
-        private FilesAdapter mAdapter;
-        private int          mLastSelectedItem;
+        private ActionBar     mActionBar;
+        private ListView      mFilesListView;
+        private FilesAdapter  mAdapter;
+        private int           mLastSelectedItem;
 
         public PlaceholderFragment()
         {
@@ -383,45 +425,5 @@ public class FilesActivity extends ActionBarActivity
                 openFile(fileName);
             }
         }
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        if (mOnBackPressedListener==null || !mOnBackPressedListener.onBackPressed())
-        {
-            long curTime=System.currentTimeMillis();
-
-            if (curTime-mBackPressTime<1000)
-            {
-                clearPath();
-                super.onBackPressed();
-            }
-            else
-            {
-                mBackPressTime=curTime;
-
-                Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void clearPath()
-    {
-        SharedPreferences prefs=getPreferences(Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor=prefs.edit();
-        editor.putString(ApplicationPreferences.LAST_PATH, "");
-        editor.commit();
-    }
-
-    public OnBackPressedListener getOnBackPressedListener()
-    {
-        return mOnBackPressedListener;
-    }
-
-    public void setOnBackPressedListener(OnBackPressedListener listener)
-    {
-        mOnBackPressedListener=listener;
     }
 }

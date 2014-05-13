@@ -36,7 +36,10 @@ public class ReviewActivity extends FragmentActivity
 
     public static final int RESULT_CLOSE=1;
 
+    private static final int REQUEST_SETTINGS = 1;
     private static final int AUTO_HIDE_DELAY_MILLIS=3000;
+
+
 
     private OnReloadRequestListener mOnReloadRequestListener=null;
 
@@ -81,7 +84,9 @@ public class ReviewActivity extends FragmentActivity
             case R.id.action_settings:
             {
                 Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_SETTINGS);
+
+                // TODO: color change
 
                 return true;
             }
@@ -97,6 +102,16 @@ public class ReviewActivity extends FragmentActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public OnReloadRequestListener getOnReloadRequestListener()
+    {
+        return mOnReloadRequestListener;
+    }
+
+    public void setOnBackPressedListener(OnReloadRequestListener listener)
+    {
+        mOnReloadRequestListener=listener;
     }
 
     /**
@@ -393,15 +408,5 @@ public class ReviewActivity extends FragmentActivity
 
             delayedHide(AUTO_HIDE_DELAY_MILLIS);
         }
-    }
-
-    public OnReloadRequestListener getOnReloadRequestListener()
-    {
-        return mOnReloadRequestListener;
-    }
-
-    public void setOnBackPressedListener(OnReloadRequestListener listener)
-    {
-        mOnReloadRequestListener=listener;
     }
 }

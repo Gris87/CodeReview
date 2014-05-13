@@ -39,6 +39,8 @@ public class SettingsActivity extends PreferenceActivity
      */
     private static final boolean ALWAYS_MULTIPAN = false;
 
+
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {

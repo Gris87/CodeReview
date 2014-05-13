@@ -1,6 +1,7 @@
 Select all in ActionMode
 Hide Done button in ActionMode
 Save/load dialogs state
+Color change. Color buffers
 Zoom
 Highlight syntax
 Separate text to TextRegions

@@ -30,6 +30,8 @@ public class IgnoreFilesActivity extends ActionBarActivity
 {
     private OnFileAddedListener mOnFileAddedListener=null;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -100,6 +102,16 @@ public class IgnoreFilesActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public OnFileAddedListener getOnFileAddedListener()
+    {
+        return mOnFileAddedListener;
+    }
+
+    public void setOnFileAddedListener(OnFileAddedListener listener)
+    {
+        mOnFileAddedListener=listener;
     }
 
     /**
@@ -198,7 +210,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 case R.id.action_delete:
                     mAdapter.removeFile(mLastSelectedItem);
                 break;
-            };
+            }
 
             return true;
         }
@@ -263,15 +275,5 @@ public class IgnoreFilesActivity extends ActionBarActivity
         {
             mAdapter.addFile(fileName);
         }
-    }
-
-    public OnFileAddedListener getOnFileAddedListener()
-    {
-        return mOnFileAddedListener;
-    }
-
-    public void setOnFileAddedListener(OnFileAddedListener listener)
-    {
-        mOnFileAddedListener=listener;
     }
 }
