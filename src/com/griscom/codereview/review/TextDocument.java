@@ -146,104 +146,107 @@ public class TextDocument implements OnTouchListener
 
     public void draw(Canvas canvas)
     {
-        canvas.scale(mScale, mScale);
-
-        if (
-            mY-mOffsetY>=0
-            ||
-            mY-mOffsetY+mHeight<=mViewHeight
-            ||
-            mX-mOffsetX>=0
-           )
+        synchronized(this)
         {
-            Paint backgroundPaint=new Paint();
-            backgroundPaint.setColor(Color.WHITE);
+            canvas.scale(mScale, mScale);
 
-            if (mY-mOffsetY>=0)
-            {
-                canvas.drawRect(0, 0, mViewWidth, mY-mOffsetY, backgroundPaint);
-            }
-
-            if (mY-mOffsetY+mHeight<=mViewHeight)
-            {
-                canvas.drawRect(0, mY-mOffsetY+mHeight, mViewWidth, mViewHeight, backgroundPaint);
-            }
-
-            if (mX-mOffsetX>=0)
-            {
-                canvas.drawRect(0, 0, mX-mOffsetX, mViewHeight, backgroundPaint);
-            }
-        }
-
-        for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
-        {
-            int color;
-
-            if (mHighlightAlpha>0 && i==mHighlightedRow)
-            {
-				color=ColorCache.getSelectionColor();
-                color=Color.argb(mHighlightAlpha, Color.red(color), Color.green(color), Color.blue(color));
-            }
-            else
             if (
-                mSelectionEnd>=0
-                &&
-                (
-                 (i>=mHighlightedRow && i<=mSelectionEnd)
-                 ||
-                 (i>=mSelectionEnd   && i<=mHighlightedRow)
+                mY-mOffsetY>=0
+                ||
+                mY-mOffsetY+mHeight<=mViewHeight/mScale
+                ||
+                mX-mOffsetX>=0
                 )
-               )
             {
-                float selectionHSV[]=new float[3];
-                Color.colorToHSV(ColorCache.get(mSelectionColor), selectionHSV);
-                selectionHSV[2]=mSelectionBrighness;
-                color=Color.HSVToColor(selectionHSV);
-            }
-            else
-            {
-                color=ColorCache.get(mRows.get(i).getSelectionColor());
-            }
+                Paint backgroundPaint=new Paint();
+                backgroundPaint.setColor(Color.WHITE);
 
-            Paint backgroundPaint=new Paint();
-            backgroundPaint.setColor(color);
-            canvas.drawRect(mX-mOffsetX, mY-mOffsetY+mRows.get(i).getY(), mViewWidth, mY-mOffsetY+mRows.get(i).getBottom(), backgroundPaint);
+                if (mY-mOffsetY>=0)
+                {
+                    canvas.drawRect(0, 0, mViewWidth/mScale, mY-mOffsetY, backgroundPaint);
+                }
 
-            canvas.drawText(String.valueOf(i+1), -mOffsetX, mY-mOffsetY+mRows.get(i).getY()-mRowPaint.ascent(), mRowPaint);
+                if (mY-mOffsetY+mHeight<=mViewHeight/mScale)
+                {
+                    canvas.drawRect(0, mY-mOffsetY+mHeight, mViewWidth/mScale, mViewHeight/mScale, backgroundPaint);
+                }
 
-            mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
-        }
-
-        if (
-            (mViewWidth>0  && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth)
-            ||
-            (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight)
-           )
-        {
-            float density=mContext.getResources().getDisplayMetrics().scaledDensity;
-            float margin=6*density;
-
-            Paint barPaint=new Paint();
-
-            barPaint.setARGB(mBarsAlpha, 180, 180, 180);
-            barPaint.setStrokeWidth(4*density);
-
-            if (mViewWidth>0 && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth)
-            {
-                float barLength   = mViewWidth/(mWidth+BOTTOM_RIGHT_SPACE);
-                float barWidth    = mViewWidth-margin*3;
-                float barPosition = barWidth*mOffsetX/(mWidth+BOTTOM_RIGHT_SPACE);
-
-                canvas.drawLine(barPosition+margin, mViewHeight-margin, barWidth*barLength+barPosition+margin, mViewHeight-margin, barPaint);
+                if (mX-mOffsetX>=0)
+                {
+                    canvas.drawRect(0, 0, mX-mOffsetX, mViewHeight/mScale, backgroundPaint);
+                }
             }
 
-            if (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight)
+            for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
             {
-                float barLength   = mViewHeight/(mHeight+BOTTOM_RIGHT_SPACE);
-                float barHeight   = mViewHeight-margin*3;
-                float barPosition = barHeight*mOffsetY/(mHeight+BOTTOM_RIGHT_SPACE);
+                int color;
 
-                canvas.drawLine(mViewWidth-margin, barPosition+margin, mViewWidth-margin, barHeight*barLength+barPosition+margin, barPaint);
+                if (mHighlightAlpha>0 && i==mHighlightedRow)
+                {
+                    color=ColorCache.getSelectionColor();
+                    color=Color.argb(mHighlightAlpha, Color.red(color), Color.green(color), Color.blue(color));
+                }
+                else
+                if (
+                    mSelectionEnd>=0
+                    &&
+                    (
+                    (i>=mHighlightedRow && i<=mSelectionEnd)
+                    ||
+                    (i>=mSelectionEnd   && i<=mHighlightedRow)
+                    )
+                    )
+                {
+                    float selectionHSV[]=new float[3];
+                    Color.colorToHSV(ColorCache.get(mSelectionColor), selectionHSV);
+                    selectionHSV[2]=mSelectionBrighness;
+                    color=Color.HSVToColor(selectionHSV);
+                }
+                else
+                {
+                    color=ColorCache.get(mRows.get(i).getSelectionColor());
+                }
+
+                Paint backgroundPaint=new Paint();
+                backgroundPaint.setColor(color);
+                canvas.drawRect(mX-mOffsetX, mY-mOffsetY+mRows.get(i).getY(), mViewWidth/mScale, mY-mOffsetY+mRows.get(i).getBottom(), backgroundPaint);
+
+                canvas.drawText(String.valueOf(i+1), -mOffsetX, mY-mOffsetY+mRows.get(i).getY()-mRowPaint.ascent(), mRowPaint);
+
+                mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
+            }
+
+            if (
+                (mViewWidth>0  && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth/mScale)
+                ||
+                (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight/mScale)
+                )
+            {
+                float density=mContext.getResources().getDisplayMetrics().scaledDensity;
+                float margin=6*density/mScale;
+
+                Paint barPaint=new Paint();
+
+                barPaint.setARGB(mBarsAlpha, 180, 180, 180);
+                barPaint.setStrokeWidth(4*density/mScale);
+
+                if (mViewWidth>0 && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth/mScale)
+                {
+                    float barLength   = (mViewWidth/mScale)/(mWidth+BOTTOM_RIGHT_SPACE);
+                    float barWidth    = (mViewWidth/mScale)-margin*3;
+                    float barPosition = barWidth*mOffsetX/(mWidth+BOTTOM_RIGHT_SPACE);
+
+                    canvas.drawLine(barPosition+margin, (mViewHeight/mScale)-margin, barWidth*barLength+barPosition+margin, (mViewHeight/mScale)-margin, barPaint);
+                }
+
+                if (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight/mScale)
+                {
+                    float barLength   = (mViewHeight/mScale)/(mHeight+BOTTOM_RIGHT_SPACE);
+                    float barHeight   = (mViewHeight/mScale)-margin*3;
+                    float barPosition = barHeight*mOffsetY/(mHeight+BOTTOM_RIGHT_SPACE);
+
+                    canvas.drawLine((mViewWidth/mScale)-margin, barPosition+margin, (mViewWidth/mScale)-margin, barHeight*barLength+barPosition+margin, barPaint);
+                }
             }
         }
     }
@@ -269,21 +272,24 @@ public class TextDocument implements OnTouchListener
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+        synchronized(this)
         {
-            Point size = new Point();
-            display.getSize(size);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            {
+                Point size = new Point();
+                display.getSize(size);
 
-            mViewWidth  = size.x;
-            mViewHeight = size.y;
-        }
-        else
-        {
-            mViewWidth  = display.getWidth();
-            mViewHeight = display.getHeight();
-        }
+                mViewWidth  = size.x;
+                mViewHeight = size.y;
+            }
+            else
+            {
+                mViewWidth  = display.getWidth();
+                mViewHeight = display.getHeight();
+            }
 
-        updateVisibleRanges();
+            updateVisibleRanges();
+        }
     }
 
     @Override
@@ -291,228 +297,231 @@ public class TextDocument implements OnTouchListener
     {
         showBars();
 
-		switch (event.getAction() & MotionEvent.ACTION_MASK)
-		{
-			case MotionEvent.ACTION_DOWN:
-	        {
-				mTouchMode      = TouchMode.NONE;
+        switch (event.getAction() & MotionEvent.ACTION_MASK)
+        {
+            case MotionEvent.ACTION_DOWN:
+            {
+                mTouchMode      = TouchMode.NONE;
 
-				mTouchX         = event.getX();
-				mTouchY         = event.getY();
+                mTouchX         = event.getX();
+                mTouchY         = event.getY();
 
-				mHighlightedRow = -1;
-				mHighlightAlpha = 0;
-				mSelectionEnd   = -1;
+                mHighlightedRow = -1;
+                mHighlightAlpha = 0;
+                mSelectionEnd   = -1;
 
-				for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
-				{
-					if (mTouchY>=mY-mOffsetY+mRows.get(i).getY() && mTouchY<=mY-mOffsetY+mRows.get(i).getBottom())
-					{
-						mHighlightedRow=i;
+                for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
+                {
+                    if (mTouchY>=mY-mOffsetY+mRows.get(i).getY() && mTouchY<=mY-mOffsetY+mRows.get(i).getBottom())
+                    {
+                        mHighlightedRow=i;
 
-						mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, HIGHLIGHT_DELAY);
+                        mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, HIGHLIGHT_DELAY);
 
-						break;
-					}
-				}
-			}
-			break;
+                        break;
+                    }
+                }
+            }
+            break;
 
-			case MotionEvent.ACTION_POINTER_DOWN:
-			{
-				if (
-				    mTouchMode == TouchMode.NONE
-					||
-					mTouchMode == TouchMode.ZOOM
-				   )
-				{
-					mTouchMode = TouchMode.ZOOM;
+            case MotionEvent.ACTION_POINTER_DOWN:
+            {
+                if (
+                    mTouchMode == TouchMode.NONE
+                    ||
+                    mTouchMode == TouchMode.ZOOM
+                   )
+                {
+                    mTouchMode = TouchMode.ZOOM;
 
-					stopHighlight();
+                    stopHighlight();
 
-					mFingerDistance = fingerDistance(event);
-				}
-			}
-			break;
+                    mFingerDistance = fingerDistance(event);
+                }
+            }
+            break;
 
-			case MotionEvent.ACTION_MOVE:
-		    {
-				if (mTouchMode==TouchMode.SELECT)
-				{
-					mTouchX = event.getX();
-					mTouchY = event.getY();
+            case MotionEvent.ACTION_MOVE:
+            {
+                if (mTouchMode==TouchMode.SELECT)
+                {
+                    mTouchX = event.getX();
+                    mTouchY = event.getY();
 
-					updateSelection();
+                    updateSelection();
 
-					mHandler.removeMessages(SCROLL_MESSAGE);
+                    mHandler.removeMessages(SCROLL_MESSAGE);
 
-					if (
-						mTouchY<mViewHeight/8
-						||
-						mTouchY>mViewHeight*7/8
-						)
-					{
-						touchScroll();
-					}
-				}
-				else
-				if (mTouchMode==TouchMode.ZOOM)
-				{
-				    if (mFingerDistance!=0 && event.getPointerCount()>=2)
-				    {
-				        float newDistance=fingerDistance(event);
-
-				        mScale          = mScale * newDistance/mFingerDistance;
-				        mFingerDistance = newDistance;
-
-				        if (mScale<0.001f)
-				        {
-				            mScale=0.001f;
-				        }
-				        else
-				        if (mScale>10f)
+                    if (
+                        mTouchY<mViewHeight/8
+                        ||
+                        mTouchY>mViewHeight*7/8
+                        )
+                    {
+                        touchScroll();
+                    }
+                }
+                else
+                if (mTouchMode==TouchMode.ZOOM)
+                {
+                    if (mFingerDistance!=0 && event.getPointerCount()>=2)
+                    {
+                        synchronized(this)
                         {
-                            mScale=10f;
+                            float newDistance=fingerDistance(event);
+
+                            mScale          = mScale * newDistance/mFingerDistance;
+                            mFingerDistance = newDistance;
+
+                            if (mScale<0.001f)
+                            {
+                                mScale=0.001f;
+                            }
+                            else
+                            if (mScale>10f)
+                            {
+                                mScale=10f;
+                            }
+
+                            updateVisibleRanges();
+                            repaint();
+                        }
+                    }
+                }
+                else
+                {
+                    if (
+                        mTouchMode==TouchMode.NONE
+                        &&
+                        (
+                        Math.abs(mTouchX-event.getX())>SCROLL_THRESHOLD
+                        ||
+                        Math.abs(mTouchY-event.getY())>SCROLL_THRESHOLD
+                        )
+                       )
+                    {
+                        mTouchMode=TouchMode.DRAG;
+
+                        stopHighlight();
+                    }
+
+                    if (mTouchMode==TouchMode.DRAG)
+                    {
+                        float newOffsetX=mOffsetX+(mTouchX-event.getX());
+                        float newOffsetY=mOffsetY+(mTouchY-event.getY());
+
+                        if (newOffsetX>mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE)
+                        {
+                            newOffsetX=mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE;
                         }
 
-				        updateVisibleRanges();
-				        repaint();
-				    }
-				}
-				else
-				{
-					if (
-						mTouchMode==TouchMode.NONE
-						&&
-						(
-						Math.abs(mTouchX-event.getX())>SCROLL_THRESHOLD
-						||
-						Math.abs(mTouchY-event.getY())>SCROLL_THRESHOLD
-						)
-					   )
-					{
-						mTouchMode=TouchMode.DRAG;
+                        if (newOffsetX<0)
+                        {
+                            newOffsetX=0;
+                        }
 
-						stopHighlight();
-					}
+                        if (newOffsetY>mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE)
+                        {
+                            newOffsetY=mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE;
+                        }
 
-					if (mTouchMode==TouchMode.DRAG)
-					{
-						float newOffsetX=mOffsetX+(mTouchX-event.getX());
-						float newOffsetY=mOffsetY+(mTouchY-event.getY());
-
-						if (newOffsetX>mWidth-mViewWidth+BOTTOM_RIGHT_SPACE)
-						{
-							newOffsetX=mWidth-mViewWidth+BOTTOM_RIGHT_SPACE;
-						}
-
-						if (newOffsetX<0)
-						{
-							newOffsetX=0;
-						}
-
-						if (newOffsetY>mHeight-mViewHeight+BOTTOM_RIGHT_SPACE)
-						{
-							newOffsetY=mHeight-mViewHeight+BOTTOM_RIGHT_SPACE;
-						}
-
-						if (newOffsetY<0)
-						{
-							newOffsetY=0;
-						}
+                        if (newOffsetY<0)
+                        {
+                            newOffsetY=0;
+                        }
 
 
 
-						if (
-							mOffsetX != newOffsetX
-							||
-							mOffsetY != newOffsetY
-							)
-						{
-							mOffsetX = newOffsetX;
-							mOffsetY = newOffsetY;
+                        if (
+                            mOffsetX != newOffsetX
+                            ||
+                            mOffsetY != newOffsetY
+                            )
+                        {
+                            mOffsetX = newOffsetX;
+                            mOffsetY = newOffsetY;
 
-							updateVisibleRanges();
+                            updateVisibleRanges();
 
-							repaint();
-						}
+                            repaint();
+                        }
 
 
 
-						mTouchX = event.getX();
-						mTouchY = event.getY();
-					}
-				}
-			}
-			break;
+                        mTouchX = event.getX();
+                        mTouchY = event.getY();
+                    }
+                }
+            }
+            break;
 
-			case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_POINTER_UP:
             {
                 // Nothing
             }
             break;
 
-			default:
-			{
-				if (mTouchMode==TouchMode.SELECT)
-				{
-					int firstRow;
-					int lastRow;
+            default:
+            {
+                if (mTouchMode==TouchMode.SELECT)
+                {
+                    int firstRow;
+                    int lastRow;
 
-					if (mSelectionEnd>mHighlightedRow)
-					{
-						firstRow = mHighlightedRow;
-						lastRow  = mSelectionEnd;
-					}
-					else
-					{
-						firstRow = mSelectionEnd;
-						lastRow  = mHighlightedRow;
-					}
+                    if (mSelectionEnd>mHighlightedRow)
+                    {
+                        firstRow = mHighlightedRow;
+                        lastRow  = mSelectionEnd;
+                    }
+                    else
+                    {
+                        firstRow = mSelectionEnd;
+                        lastRow  = mHighlightedRow;
+                    }
 
-					int coloredRows=0;
+                    int coloredRows=0;
 
-					for (int i=firstRow; i<=lastRow; ++i)
-					{
-						if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
-						{
-							coloredRows++;
-						}
-					}
+                    for (int i=firstRow; i<=lastRow; ++i)
+                    {
+                        if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
+                        {
+                            coloredRows++;
+                        }
+                    }
 
-					for (int i=firstRow; i<=lastRow; ++i)
-					{
-						mRows.get(i).setSelectionColor(mSelectionColor);
+                    for (int i=firstRow; i<=lastRow; ++i)
+                    {
+                        mRows.get(i).setSelectionColor(mSelectionColor);
 
-						if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
-						{
-							coloredRows--;
-						}
-					}
+                        if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
+                        {
+                            coloredRows--;
+                        }
+                    }
 
-					if (coloredRows!=0)
-					{
-						// Decrease because coloredRows will be negative if new colors added
-						mProgress-=coloredRows;
+                    if (coloredRows!=0)
+                    {
+                        // Decrease because coloredRows will be negative if new colors added
+                        mProgress-=coloredRows;
 
-						progressChanged();
-					}
+                        progressChanged();
+                    }
 
-					mHighlightedRow = -1;
-					mSelectionEnd   = -1;
+                    mHighlightedRow = -1;
+                    mSelectionEnd   = -1;
 
-					mHandler.removeMessages(SELECTION_MESSAGE);
-					mHandler.removeMessages(SCROLL_MESSAGE);
+                    mHandler.removeMessages(SELECTION_MESSAGE);
+                    mHandler.removeMessages(SCROLL_MESSAGE);
 
-					repaint();
-				}
-				else
-				{
-					stopHighlight();
-				}
-			}
-			break;
-		}
+                    repaint();
+                }
+                else
+                {
+                    stopHighlight();
+                }
+            }
+            break;
+        }
 
         return true;
     }
@@ -522,16 +531,16 @@ public class TextDocument implements OnTouchListener
         return (float) Math.sqrt(Math.pow(event.getX(0)-event.getX(1), 2)+Math.pow(event.getY(0)-event.getY(1), 2));
     }
 
-	private void stopHighlight()
-	{
-		if (mHighlightedRow>=0)
-		{
-			mHighlightedRow = -1;
-			mHighlightAlpha = 0;
+    private void stopHighlight()
+    {
+        if (mHighlightedRow>=0)
+        {
+            mHighlightedRow = -1;
+            mHighlightAlpha = 0;
 
-			mHandler.removeMessages(HIGHLIGHT_MESSAGE);
-		}
-	}
+            mHandler.removeMessages(HIGHLIGHT_MESSAGE);
+        }
+    }
 
     private void repaint()
     {
@@ -553,9 +562,9 @@ public class TextDocument implements OnTouchListener
     {
 
         if (
-            (mViewWidth>0  && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth)
+            (mViewWidth>0  && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth/mScale)
             ||
-            (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight)
+            (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight/mScale)
            )
         {
             mBarsAlpha=255;
@@ -621,9 +630,9 @@ public class TextDocument implements OnTouchListener
             newOffsetY=mOffsetY+SCROLL_SPEED;
         }
 
-        if (newOffsetY>mHeight-mViewHeight+BOTTOM_RIGHT_SPACE)
+        if (newOffsetY>mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE)
         {
-            newOffsetY=mHeight-mViewHeight+BOTTOM_RIGHT_SPACE;
+            newOffsetY=mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE;
         }
 
         if (newOffsetY<0)
@@ -696,7 +705,7 @@ public class TextDocument implements OnTouchListener
 
         while (mVisibleEnd>mVisibleBegin)
         {
-            if (mY-mOffsetY+mRows.get(mVisibleEnd).getY()>=mViewHeight)
+            if (mY-mOffsetY+mRows.get(mVisibleEnd).getY()>=mViewHeight/mScale)
             {
                 mVisibleEnd--;
             }
@@ -708,7 +717,7 @@ public class TextDocument implements OnTouchListener
 
         while (mVisibleEnd<mRows.size()-1)
         {
-            if (mY-mOffsetY+mRows.get(mVisibleEnd+1).getY()<mViewHeight)
+            if (mY-mOffsetY+mRows.get(mVisibleEnd+1).getY()<mViewHeight/mScale)
             {
                 mVisibleEnd++;
             }
@@ -825,7 +834,7 @@ public class TextDocument implements OnTouchListener
             }
             else
             {
-				mTouchMode          = TouchMode.SELECT;
+                mTouchMode          = TouchMode.SELECT;
 
                 mHighlightAlpha     = 0;
                 mSelectionBrighness = 1;

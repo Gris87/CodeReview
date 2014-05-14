@@ -72,13 +72,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         {
             mModifiedTime       = new File(mFileName).lastModified();
 
-            mDocument           = mLastLoadedDocument;
-            mLastLoadedDocument = null;
+            mLastLoadedDocument.init(ReviewSurfaceView.this);
 
-            mDocument.init(ReviewSurfaceView.this);
+            mLastLoadedDocument.setSelectionColor(mSelectionColor);
+            mLastLoadedDocument.setOnProgressChangedListener(mProgressChangedListener);
 
-            mDocument.setSelectionColor(mSelectionColor);
-            mDocument.setOnProgressChangedListener(mProgressChangedListener);
+            synchronized(this)
+            {
+                mDocument           = mLastLoadedDocument;
+                mLastLoadedDocument = null;
+            }
 
             repaint();
         }
@@ -131,7 +134,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     public void onDestroy()
     {
-        mDocument=null;
+        synchronized(this)
+        {
+            mDocument=null;
+        }
     }
 
     public void onPause()
@@ -176,27 +182,30 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     @Override
     public void onReviewSurfaceDraw(Canvas canvas)
     {
-        if (mDocument!=null)
+        synchronized(this)
         {
-            mDocument.draw(canvas);
-        }
-        else
-        {
-            canvas.drawColor(Color.WHITE);
-
-            Paint paint=new Paint();
-
-            paint.setColor(Color.GRAY);
-            paint.setTextSize(Utils.spToPixels(36, mContext));
-            paint.setTextAlign(Align.CENTER);
-
-            if (mModifiedTime==-1)
+            if (mDocument!=null)
             {
-                canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f, paint);
+                mDocument.draw(canvas);
             }
             else
             {
-                canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f, paint);
+                canvas.drawColor(Color.WHITE);
+
+                Paint paint=new Paint();
+
+                paint.setColor(Color.GRAY);
+                paint.setTextSize(Utils.spToPixels(36, mContext));
+                paint.setTextAlign(Align.CENTER);
+
+                if (mModifiedTime==-1)
+                {
+                    canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f, paint);
+                }
+                else
+                {
+                    canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f, paint);
+                }
             }
         }
     }
