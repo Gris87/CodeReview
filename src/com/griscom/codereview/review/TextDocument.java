@@ -209,14 +209,14 @@ public class TextDocument implements OnTouchListener
 
                 Paint backgroundPaint=new Paint();
                 backgroundPaint.setColor(color);
-				
-				// Draw row background
+
+                // Draw row background
                 canvas.drawRect(mX-mOffsetX, mY-mOffsetY+mRows.get(i).getY(), mViewWidth/mScale, mY-mOffsetY+mRows.get(i).getBottom(), backgroundPaint);
-				
-				// Draw row number
+
+                // Draw row number
                 canvas.drawText(String.valueOf(i+1), -mOffsetX, mY-mOffsetY+mRows.get(i).getY()-mRowPaint.ascent(), mRowPaint);
 
-				// Draw row
+                // Draw row
                 mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
             }
 
@@ -309,27 +309,27 @@ public class TextDocument implements OnTouchListener
 
                 mTouchX         = event.getX();
                 mTouchY         = event.getY();
-				
-				int highlightedRow=-1;
-				
-				for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
+
+                int highlightedRow=-1;
+
+                for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
                 {
                     if (mTouchY>=mY-mOffsetY+mRows.get(i).getY() && mTouchY<=mY-mOffsetY+mRows.get(i).getBottom())
                     {
                         highlightedRow=i;
-						
-						mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, HIGHLIGHT_DELAY);
+
+                        mHandler.sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, HIGHLIGHT_DELAY);
 
                         break;
                     }
                 }
 
-				synchronized(this)
-				{
-					mHighlightedRow = highlightedRow;
-					mHighlightAlpha = 0;
-					mSelectionEnd   = -1;
-				}
+                synchronized(this)
+                {
+                    mHighlightedRow = highlightedRow;
+                    mHighlightAlpha = 0;
+                    mSelectionEnd   = -1;
+                }
             }
             break;
 
@@ -375,8 +375,8 @@ public class TextDocument implements OnTouchListener
                 {
                     if (mFingerDistance!=0 && event.getPointerCount()>=2)
                     {
-						float newDistance=fingerDistance(event);
-						
+                        float newDistance=fingerDistance(event);
+
                         synchronized(this)
                         {
                             mScale = mScale * newDistance/mFingerDistance;
@@ -391,11 +391,11 @@ public class TextDocument implements OnTouchListener
                                 mScale=10f;
                             }
                         }
-						
-						mFingerDistance=newDistance;
-						
-						updateVisibleRanges();
-						repaint();
+
+                        mFingerDistance=newDistance;
+
+                        updateVisibleRanges();
+                        repaint();
                     }
                 }
                 else
@@ -417,8 +417,8 @@ public class TextDocument implements OnTouchListener
 
                     if (mTouchMode==TouchMode.DRAG)
                     {
-                        float newOffsetX=mOffsetX+(mTouchX-event.getX());
-                        float newOffsetY=mOffsetY+(mTouchY-event.getY());
+                        float newOffsetX=mOffsetX+(mTouchX-event.getX())/mScale;
+                        float newOffsetY=mOffsetY+(mTouchY-event.getY())/mScale;
 
                         if (newOffsetX>mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE)
                         {
@@ -448,14 +448,14 @@ public class TextDocument implements OnTouchListener
                             mOffsetY != newOffsetY
                             )
                         {
-							synchronized(this)
-							{
-								mOffsetX = newOffsetX;
-								mOffsetY = newOffsetY;
-							}
-							
-							updateVisibleRanges();
-							repaint();
+                            synchronized(this)
+                            {
+                                mOffsetX = newOffsetX;
+                                mOffsetY = newOffsetY;
+                            }
+
+                            updateVisibleRanges();
+                            repaint();
                         }
 
 
@@ -501,18 +501,18 @@ public class TextDocument implements OnTouchListener
                         }
                     }
 
-					synchronized(this)
-					{
-						for (int i=firstRow; i<=lastRow; ++i)
-						{
-							mRows.get(i).setSelectionColor(mSelectionColor);
+                    synchronized(this)
+                    {
+                        for (int i=firstRow; i<=lastRow; ++i)
+                        {
+                            mRows.get(i).setSelectionColor(mSelectionColor);
 
-							if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
-							{
-								coloredRows--;
-							}
-						}
-					}
+                            if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
+                            {
+                                coloredRows--;
+                            }
+                        }
+                    }
 
                     if (coloredRows!=0)
                     {
@@ -550,11 +550,11 @@ public class TextDocument implements OnTouchListener
     {
         if (mHighlightedRow>=0)
         {
-			synchronized(this)
-			{
-				mHighlightedRow = -1;
-				mHighlightAlpha = 0;
-			}
+            synchronized(this)
+            {
+                mHighlightedRow = -1;
+                mHighlightAlpha = 0;
+            }
 
             mHandler.removeMessages(HIGHLIGHT_MESSAGE);
         }
@@ -585,10 +585,10 @@ public class TextDocument implements OnTouchListener
             (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight/mScale)
            )
         {
-			synchronized(this)
-			{
-				mBarsAlpha=255;
-			}
+            synchronized(this)
+            {
+                mBarsAlpha=255;
+            }
 
             mHandler.removeMessages(HIDE_BARS_MESSAGE);
             mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, AUTO_HIDE_DELAY);
@@ -632,10 +632,10 @@ public class TextDocument implements OnTouchListener
 
         if (mSelectionEnd!=selectionEnd)
         {
-			synchronized(this)
-			{
-				mSelectionEnd=selectionEnd;
-			}
+            synchronized(this)
+            {
+                mSelectionEnd=selectionEnd;
+            }
 
             repaint();
         }
@@ -647,11 +647,11 @@ public class TextDocument implements OnTouchListener
 
         if (mTouchY<mViewHeight/8)
         {
-            newOffsetY=mOffsetY-SCROLL_SPEED;
+            newOffsetY=mOffsetY-SCROLL_SPEED/mScale;
         }
         else
         {
-            newOffsetY=mOffsetY+SCROLL_SPEED;
+            newOffsetY=mOffsetY+SCROLL_SPEED/mScale;
         }
 
         if (newOffsetY>mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE)
@@ -668,10 +668,10 @@ public class TextDocument implements OnTouchListener
 
         if (mOffsetY != newOffsetY)
         {
-			synchronized(this)
-			{
-				mOffsetY = newOffsetY;
-			}
+            synchronized(this)
+            {
+                mOffsetY = newOffsetY;
+            }
 
             mHandler.sendEmptyMessageDelayed(SCROLL_MESSAGE, 40);
 
@@ -693,9 +693,9 @@ public class TextDocument implements OnTouchListener
 
             return;
         }
-		
-		int visibleBegin = mVisibleBegin;
-		int visibleEnd   = mVisibleEnd;
+
+        int visibleBegin = mVisibleBegin;
+        int visibleEnd   = mVisibleEnd;
 
         if (visibleBegin<0)
         {
@@ -757,20 +757,27 @@ public class TextDocument implements OnTouchListener
             }
         }
 
-        visibleEnd++;
-		
-		if (
-		    mVisibleBegin!=visibleBegin
-		    ||
-			mVisibleEnd!=visibleEnd
-		   )
-	    {
-		    synchronized(this)
-			{
-				mVisibleBegin = visibleBegin;
-				mVisibleEnd   = visibleEnd;
-			}
-		}
+        if (visibleEnd<mRows.size())
+        {
+            visibleEnd++;
+        }
+        else
+        {
+            visibleEnd=mRows.size();
+        }
+
+        if (
+            mVisibleBegin!=visibleBegin
+            ||
+            mVisibleEnd!=visibleEnd
+           )
+        {
+            synchronized(this)
+            {
+                mVisibleBegin = visibleBegin;
+                mVisibleEnd   = visibleEnd;
+            }
+        }
     }
 
     public void setSelectionColor(SelectionColor selectionColor)
@@ -853,7 +860,7 @@ public class TextDocument implements OnTouchListener
 
         private void hideBars()
         {
-			int barsAlpha=mBarsAlpha-20;
+            int barsAlpha=mBarsAlpha-20;
 
             if (barsAlpha>0)
             {
@@ -863,46 +870,46 @@ public class TextDocument implements OnTouchListener
             {
                 barsAlpha=0;
             }
-			
-			if (mBarsAlpha!=barsAlpha)
-			{
-				synchronized(TextDocument.this)
-				{
-					mBarsAlpha=barsAlpha;
-				}
-				
-				repaint();
-			}
+
+            if (mBarsAlpha!=barsAlpha)
+            {
+                synchronized(TextDocument.this)
+                {
+                    mBarsAlpha=barsAlpha;
+                }
+
+                repaint();
+            }
         }
 
         private void highlight()
         {
-			int highlightAlpha=mHighlightAlpha+20;
+            int highlightAlpha=mHighlightAlpha+20;
 
             if (highlightAlpha<255)
             {
-				synchronized(TextDocument.this)
-				{
-					mHighlightAlpha=highlightAlpha;
-			    }
-				
+                synchronized(TextDocument.this)
+                {
+                    mHighlightAlpha=highlightAlpha;
+                }
+
                 sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, 40);
             }
             else
             {
-				mVibrator.vibrate(VIBRATOR_LONG_CLICK);
-				
+                mVibrator.vibrate(VIBRATOR_LONG_CLICK);
+
                 mTouchMode=TouchMode.SELECT;
-				
-				synchronized(TextDocument.this)
-				{
-					mHighlightAlpha     = 0;
-					mSelectionBrighness = 1;
-					mSelectionMakeLight = false;
-			    }
+
+                synchronized(TextDocument.this)
+                {
+                    mHighlightAlpha     = 0;
+                    mSelectionBrighness = 1;
+                    mSelectionMakeLight = false;
+                }
 
                 updateSelection();
-				
+
                 sendEmptyMessageDelayed(SELECTION_MESSAGE, 40);
             }
 
@@ -911,9 +918,9 @@ public class TextDocument implements OnTouchListener
 
         private void selection()
         {
-			boolean selectionMakeLight  = mSelectionMakeLight;
-			float   selectionBrighness = mSelectionBrighness;
-			
+            boolean selectionMakeLight  = mSelectionMakeLight;
+            float   selectionBrighness = mSelectionBrighness;
+
             if (selectionMakeLight)
             {
                 selectionBrighness += SELECTION_SPEED;
@@ -936,21 +943,21 @@ public class TextDocument implements OnTouchListener
             }
 
             sendEmptyMessageDelayed(SELECTION_MESSAGE, 40);
-			
-			if (
-			    mSelectionMakeLight!=selectionMakeLight
-				||
-				mSelectionBrighness!=selectionBrighness
-			   )
-			{
-				synchronized(TextDocument.this)
-				{
-					mSelectionMakeLight=selectionMakeLight;
-					mSelectionBrighness=selectionBrighness;
-			    }
-				
-				repaint();
-			}
+
+            if (
+                mSelectionMakeLight!=selectionMakeLight
+                ||
+                mSelectionBrighness!=selectionBrighness
+               )
+            {
+                synchronized(TextDocument.this)
+                {
+                    mSelectionMakeLight=selectionMakeLight;
+                    mSelectionBrighness=selectionBrighness;
+                }
+
+                repaint();
+            }
         }
 
         private void scroll()
