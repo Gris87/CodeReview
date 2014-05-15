@@ -314,7 +314,7 @@ public class TextDocument implements OnTouchListener
 
                 for (int i=mVisibleBegin; i<mVisibleEnd; ++i)
                 {
-                    if (mTouchY>=mY-mOffsetY+mRows.get(i).getY() && mTouchY<=mY-mOffsetY+mRows.get(i).getBottom())
+                    if (mTouchY/mScale>=mY-mOffsetY+mRows.get(i).getY() && mTouchY/mScale<=mY-mOffsetY+mRows.get(i).getBottom())
                     {
                         highlightedRow=i;
 
@@ -608,7 +608,7 @@ public class TextDocument implements OnTouchListener
 
         while (selectionEnd>mVisibleBegin)
         {
-            if (mTouchY<=mY-mOffsetY+mRows.get(selectionEnd-1).getBottom())
+            if (mTouchY/mScale<=mY-mOffsetY+mRows.get(selectionEnd-1).getBottom())
             {
                 selectionEnd--;
             }
@@ -620,7 +620,7 @@ public class TextDocument implements OnTouchListener
 
         while (selectionEnd<mVisibleEnd-1)
         {
-            if (mTouchY>=mY-mOffsetY+mRows.get(selectionEnd+1).getY())
+            if (mTouchY/mScale>=mY-mOffsetY+mRows.get(selectionEnd+1).getY())
             {
                 selectionEnd++;
             }
