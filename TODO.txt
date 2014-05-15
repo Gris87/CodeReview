@@ -2,7 +2,7 @@ Select all in ActionMode
 Hide Done button in ActionMode
 Save/load dialogs state
 go up. restore scroll
-Zoom
+Google analytics
 Highlight syntax
 Separate text to TextRegions
 Row note region index
@@ -13,3 +13,9 @@ Restore state from database
 Mark to rename/delete
 Rename
 Delete
+
+-----------------------------------
+
+App icon (+ic_launcher-web.png)
+Readme
+Publish
