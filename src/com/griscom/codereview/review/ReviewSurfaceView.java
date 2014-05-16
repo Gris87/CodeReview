@@ -70,8 +70,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         private void loaded()
         {
-            mModifiedTime       = new File(mFileName).lastModified();
-
             mLastLoadedDocument.init(ReviewSurfaceView.this);
 
             mLastLoadedDocument.setSelectionColor(mSelectionColor);
@@ -79,6 +77,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             synchronized(this)
             {
+                mModifiedTime       = new File(mFileName).lastModified();
+
                 mDocument           = mLastLoadedDocument;
                 mLastLoadedDocument = null;
             }
@@ -182,30 +182,36 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     @Override
     public void onReviewSurfaceDraw(Canvas canvas)
     {
+        TextDocument document;
+        long modifiedTime;
+
         synchronized(this)
         {
-            if (mDocument!=null)
+            document     = mDocument;
+            modifiedTime = mModifiedTime;
+        }
+
+        if (document!=null)
+        {
+            document.draw(canvas);
+        }
+        else
+        {
+            canvas.drawColor(Color.WHITE);
+
+            Paint paint=new Paint();
+
+            paint.setColor(Color.GRAY);
+            paint.setTextSize(Utils.spToPixels(36, mContext));
+            paint.setTextAlign(Align.CENTER);
+
+            if (modifiedTime==-1)
             {
-                mDocument.draw(canvas);
+                canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f+paint.ascent(), paint);
             }
             else
             {
-                canvas.drawColor(Color.WHITE);
-
-                Paint paint=new Paint();
-
-                paint.setColor(Color.GRAY);
-                paint.setTextSize(Utils.spToPixels(36, mContext));
-                paint.setTextAlign(Align.CENTER);
-
-                if (mModifiedTime==-1)
-                {
-                    canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f, paint);
-                }
-                else
-                {
-                    canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f, paint);
-                }
+                canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f+paint.ascent(), paint);
             }
         }
     }
@@ -242,12 +248,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         {
             stopLoadingThread();
 
-            if (!file.exists())
+            synchronized(this)
             {
-                mModifiedTime=-1;
+                if (!file.exists())
+                {
+                    mModifiedTime=-1;
+                }
+
+                mDocument=null;
             }
 
-            mDocument=null;
             repaint();
 
             if (file.exists())
