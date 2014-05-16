@@ -29,6 +29,7 @@
         android:layout_toRightOf="@+id/extensionImageView"
 		android:layout_toLeftOf="@+id/fileSizeTextView"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:singleLine="true"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -38,10 +39,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-		android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
         android:singleLine="true"
         android:gravity="bottom"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp" />
 
 </RelativeLayout>
