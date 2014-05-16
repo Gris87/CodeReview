@@ -13,6 +13,8 @@ public class TextRegion
     private float  mWidth;
     private float  mHeight;
 
+
+
     public TextRegion(String text, Paint paint, int position, int tabSize)
     {
         setupDisplayedText(text, position, tabSize);

@@ -14,6 +14,8 @@ public class TextRow
     private float                 mWidth;
     private float                 mHeight;
 
+
+
     public TextRow()
     {
         mRegions = new ArrayList<TextRegion>();
@@ -28,7 +30,7 @@ public class TextRow
     {
         for (int i=0; i<mRegions.size(); ++i)
         {
-            mRegions.get(i).draw(canvas, offsetX, mY+offsetY);
+            mRegions.get(i).draw(canvas, offsetX, mY+offsetY+mHeight-mRegions.get(i).getHeight());
         }
     }
 

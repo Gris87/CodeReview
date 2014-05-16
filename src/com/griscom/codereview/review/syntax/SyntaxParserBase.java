@@ -19,6 +19,8 @@ public abstract class SyntaxParserBase
     protected Context        mContext;
     protected BufferedReader mReader;
 
+
+
     protected SyntaxParserBase(Context context)
     {
         mContext = context;
