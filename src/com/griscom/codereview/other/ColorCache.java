@@ -13,12 +13,12 @@ public class ColorCache
 
     public static void update(Context context)
     {
-        mCache[SelectionColor.REVIEWED_COLOR.ordinal()] = ApplicationSettings.reviewedColor(context);
-        mCache[SelectionColor.INVALID_COLOR.ordinal()]  = ApplicationSettings.invalidColor(context);
-        mCache[SelectionColor.NOTE_COLOR.ordinal()]     = ApplicationSettings.noteColor(context);
-        mCache[SelectionColor.CLEAR_COLOR.ordinal()]    = Color.WHITE;
+        mCache[SelectionColor.REVIEWED.ordinal()] = ApplicationSettings.reviewedColor(context);
+        mCache[SelectionColor.INVALID.ordinal()]  = ApplicationSettings.invalidColor(context);
+        mCache[SelectionColor.NOTE.ordinal()]     = ApplicationSettings.noteColor(context);
+        mCache[SelectionColor.CLEAR.ordinal()]    = Color.WHITE;
 
-        mCache[SELECTION_COLOR]                         = ApplicationSettings.selectionColor(context);
+        mCache[SELECTION_COLOR]                   = ApplicationSettings.selectionColor(context);
     }
 
     public static int get(SelectionColor selectionColor)

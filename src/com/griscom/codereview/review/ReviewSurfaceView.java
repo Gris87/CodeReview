@@ -127,7 +127,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mModifiedTime            = 0;
         mSyntaxParser            = null;
         mDocument                = null;
-        mSelectionColor          = SelectionColor.REVIEWED_COLOR;
+        mSelectionColor          = SelectionColor.REVIEWED;
         mProgressChangedListener = null;
         mLastLoadedDocument      = null;
     }

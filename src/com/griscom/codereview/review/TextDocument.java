@@ -120,7 +120,7 @@ public class TextDocument implements OnTouchListener
         mTouchY                  = 0;
         mFingerDistance          = 0;
         mSelectionEnd            = -1;
-        mSelectionColor          = SelectionColor.REVIEWED_COLOR;
+        mSelectionColor          = SelectionColor.REVIEWED;
 
         mBarsAlpha               = 0;
         mHighlightedRow          = -1;
@@ -495,7 +495,7 @@ public class TextDocument implements OnTouchListener
 
                     for (int i=firstRow; i<=lastRow; ++i)
                     {
-                        if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
+                        if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
                         {
                             coloredRows++;
                         }
@@ -507,7 +507,7 @@ public class TextDocument implements OnTouchListener
                         {
                             mRows.get(i).setSelectionColor(mSelectionColor);
 
-                            if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR_COLOR)
+                            if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
                             {
                                 coloredRows--;
                             }

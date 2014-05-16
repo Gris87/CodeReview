@@ -285,7 +285,7 @@ public class ReviewActivity extends FragmentActivity
         {
             if (v==mReviewedButton)
             {
-                mContent.setSelectionColor(SelectionColor.REVIEWED_COLOR);
+                mContent.setSelectionColor(SelectionColor.REVIEWED);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton=mReviewedButton;
@@ -294,7 +294,7 @@ public class ReviewActivity extends FragmentActivity
             else
             if (v==mInvalidButton)
             {
-                mContent.setSelectionColor(SelectionColor.INVALID_COLOR);
+                mContent.setSelectionColor(SelectionColor.INVALID);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton=mInvalidButton;
@@ -303,7 +303,7 @@ public class ReviewActivity extends FragmentActivity
             else
             if (v==mNoteButton)
             {
-                mContent.setSelectionColor(SelectionColor.NOTE_COLOR);
+                mContent.setSelectionColor(SelectionColor.NOTE);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton=mNoteButton;
@@ -312,7 +312,7 @@ public class ReviewActivity extends FragmentActivity
             else
             if (v==mClearButton)
             {
-                mContent.setSelectionColor(SelectionColor.CLEAR_COLOR);
+                mContent.setSelectionColor(SelectionColor.CLEAR);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton=mClearButton;

@@ -18,7 +18,7 @@ public class TextRow
     {
         mRegions = new ArrayList<TextRegion>();
 
-        mSelectionColor = SelectionColor.CLEAR_COLOR;
+        mSelectionColor = SelectionColor.CLEAR;
         mY              = 0;
         mWidth          = 0;
         mHeight         = 0;
