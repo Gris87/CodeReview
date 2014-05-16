@@ -1,7 +1,8 @@
 Select all in ActionMode
 Hide Done button in ActionMode
 Save/load dialogs state
-go up. restore scroll
+Sort in explorer
+Display file size in explorer
 Google analytics
 Highlight syntax
 Separate text to TextRegions

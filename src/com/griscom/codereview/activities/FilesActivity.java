@@ -33,6 +33,10 @@ import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
+import android.os.*;
+import junit.framework.*;
+import com.griscom.codereview.*;
+import android.util.*;
 
 public class FilesActivity extends ActionBarActivity
 {
@@ -196,7 +200,11 @@ public class FilesActivity extends ActionBarActivity
         {
             super.onResume();
 
-            mAdapter.rescan();
+            if (!mAdapter.rescan())
+            {
+                savePath();
+                updateCurrentPath();
+            }
         }
 
         @Override
@@ -220,8 +228,7 @@ public class FilesActivity extends ActionBarActivity
                     }
 
                     savePath();
-
-                    mActionBar.setTitle(mAdapter.getCurrentPath());
+                    updateCurrentPath();
                 }
                 else
                 {
@@ -234,6 +241,9 @@ public class FilesActivity extends ActionBarActivity
                     catch (FileNotFoundException e)
                     {
                         mAdapter.setCurrentPathBacktrace(mAdapter.pathToFile("."));
+
+                        savePath();
+                        updateCurrentPath();
                     }
                 }
             }
@@ -334,7 +344,7 @@ public class FilesActivity extends ActionBarActivity
 
             mAdapter.goUp();
             savePath();
-            mActionBar.setTitle(mAdapter.getCurrentPath());
+            updateCurrentPath();
 
             return true;
         }
@@ -363,6 +373,51 @@ public class FilesActivity extends ActionBarActivity
             }
 
             super.onActivityResult(requestCode, resultCode, data);
+        }
+
+        private void updateCurrentPath()
+        {
+            String oldPath=(String)mActionBar.getTitle();
+            String newPath=mAdapter.getCurrentPath();
+
+            if (newPath.length()<oldPath.length())
+            {
+                if (BuildConfig.DEBUG)
+                {
+                    Assert.assertTrue(oldPath.startsWith(newPath));
+                }
+
+                String tail=oldPath.substring(newPath.length());
+
+                if (tail.startsWith("/"))
+                {
+                    if (BuildConfig.DEBUG)
+                    {
+                        Assert.assertTrue(tail.length()>1);
+                    }
+
+                    tail=tail.substring(1);
+                }
+
+                String prevFolder=tail.substring(tail.lastIndexOf("/")+1);
+
+                int index=mAdapter.indexOf(prevFolder);
+
+                if (index>=0)
+                {
+                    mFilesListView.setSelection(index);
+                }
+                else
+                {
+                    mFilesListView.setSelection(0);
+                }
+            }
+            else
+            {
+                mFilesListView.setSelection(0);
+            }
+
+            mActionBar.setTitle(newPath);
         }
 
         private void openFile(String fileName) throws FileNotFoundException

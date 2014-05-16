@@ -3,9 +3,16 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.griscom.codereview.R;
+import android.content.*;
 
 public class ApplicationSettings
 {
+    public static String[] ignoreFiles(Context context)
+    {
+        SharedPreferences prefs=context.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
+    }
+
     public static int reviewedColor(Context context)
     {
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.pref_key_reviewed_color),  context.getResources().getInteger(R.integer.pref_default_reviewed_color));

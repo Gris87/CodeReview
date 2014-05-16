@@ -26,6 +26,7 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
+import com.griscom.codereview.other.*;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -33,8 +34,8 @@ public class FilesAdapter extends BaseAdapter
     private String               mCurrentPath;
     private ArrayList<FileEntry> mFiles;
     private SortType             mSortType;
-    private ArrayList<Integer>   mSelection;
     private boolean              mSelectionMode;
+    private ArrayList<Integer>   mSelection;
 
 
 
@@ -52,9 +53,9 @@ public class FilesAdapter extends BaseAdapter
         mContext       = context;
         mCurrentPath   = Environment.getExternalStorageDirectory().getPath();
         mFiles         = new ArrayList<FileEntry>();
-        mSortType      = SortType.Alphabet;
-        mSelection     = new ArrayList<Integer>();
+        mSortType      = SortType.ALPHABET;
         mSelectionMode = false;
+        mSelection     = new ArrayList<Integer>();
 
         rescan();
     }
@@ -155,12 +156,12 @@ public class FilesAdapter extends BaseAdapter
         setCurrentPathBacktrace(mCurrentPath.substring(0, mCurrentPath.lastIndexOf('/')));
     }
 
-    public void rescan()
+    public boolean rescan()
     {
         if (!(new File(mCurrentPath).exists()))
         {
             setCurrentPathBacktrace(pathToFile("."));
-            return;
+            return false;
         }
 
 
@@ -181,8 +182,7 @@ public class FilesAdapter extends BaseAdapter
         {
             ArrayList<String> ignoreFiles=new ArrayList<String>();
 
-            SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
-            String[] filterFiles=prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
+            String[] filterFiles=ApplicationSettings.ignoreFiles(mContext);
 
             if (filterFiles!=null)
             {
@@ -211,16 +211,18 @@ public class FilesAdapter extends BaseAdapter
 
 
         sort();
+
+        return true;
     }
 
     public void sort()
     {
-        sort(SortType.None);
+        sort(SortType.NONE);
     }
 
     public void sort(SortType sortType)
     {
-        if (sortType!=SortType.None)
+        if (sortType!=SortType.NONE)
         {
             mSortType=sortType;
         }
@@ -258,6 +260,67 @@ public class FilesAdapter extends BaseAdapter
         {
             return mCurrentPath+"/"+fileName;
         }
+    }
+
+    public int indexOf(String fileName)
+    {
+        for (int i=0; i<mFiles.size(); ++i)
+        {
+            if (mFiles.get(i).getFileName().equals(fileName))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public void setCurrentPathBacktrace(String newPath)
+    {
+        do
+        {
+            try
+            {
+                setCurrentPath(newPath);
+                return;
+            }
+            catch (FileNotFoundException e)
+            {
+                if (BuildConfig.DEBUG)
+                {
+                    Assert.assertTrue(!TextUtils.isEmpty(newPath) && !newPath.equals("/"));
+                }
+
+                newPath=newPath.substring(0, newPath.lastIndexOf('/'));
+            }
+        } while (true);
+    }
+
+    public void setCurrentPath(String newPath) throws FileNotFoundException
+    {
+        if (TextUtils.isEmpty(newPath))
+        {
+            newPath="/";
+        }
+
+        if (!(new File(newPath).exists()))
+        {
+            throw new FileNotFoundException();
+        }
+
+        if (BuildConfig.DEBUG)
+        {
+            Assert.assertTrue(!mCurrentPath.equals(newPath));
+        }
+
+        mCurrentPath=newPath;
+
+        rescan();
+    }
+
+    public String getCurrentPath()
+    {
+        return mCurrentPath;
     }
 
     public void setSelected(int index, boolean checked)
@@ -309,53 +372,5 @@ public class FilesAdapter extends BaseAdapter
                 mSelection.remove(mPosition);
             }
         }
-    }
-
-    public void setCurrentPathBacktrace(String newPath)
-    {
-        do
-        {
-            try
-            {
-                setCurrentPath(newPath);
-                return;
-            }
-            catch (FileNotFoundException e)
-            {
-                if (BuildConfig.DEBUG)
-                {
-                    Assert.assertTrue(!TextUtils.isEmpty(newPath) && !newPath.equals("/"));
-                }
-
-                newPath=newPath.substring(0, newPath.lastIndexOf('/'));
-            }
-        } while (true);
-    }
-
-    public void setCurrentPath(String newPath) throws FileNotFoundException
-    {
-        if (TextUtils.isEmpty(newPath))
-        {
-            newPath="/";
-        }
-
-        if (!(new File(newPath).exists()))
-        {
-            throw new FileNotFoundException();
-        }
-
-        if (BuildConfig.DEBUG)
-        {
-            Assert.assertTrue(!mCurrentPath.equals(newPath));
-        }
-
-        mCurrentPath=newPath;
-
-        rescan();
-    }
-
-    public String getCurrentPath()
-    {
-        return mCurrentPath;
     }
 }

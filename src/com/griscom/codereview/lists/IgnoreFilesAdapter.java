@@ -17,13 +17,14 @@ import android.widget.TextView;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
+import com.griscom.codereview.other.*;
 
 public class IgnoreFilesAdapter extends BaseAdapter
 {
     private Activity           mContext;
     private ArrayList<String>  mFiles;
-    private ArrayList<Integer> mSelection;
     private boolean            mSelectionMode;
+    private ArrayList<Integer> mSelection;
 
 
 
@@ -39,13 +40,12 @@ public class IgnoreFilesAdapter extends BaseAdapter
     {
         mContext       = context;
         mFiles         = new ArrayList<String>();
-        mSelection     = new ArrayList<Integer>();
         mSelectionMode = false;
+        mSelection     = new ArrayList<Integer>();
 
         // -----------------------------------------------------------------------------------
 
-        SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
-        String[] files=prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
+        String[] files=ApplicationSettings.ignoreFiles(mContext);
 
         if (files!=null)
         {
