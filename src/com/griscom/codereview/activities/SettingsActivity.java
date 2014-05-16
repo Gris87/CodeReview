@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 
 import com.griscom.codereview.R;
+import com.griscom.codereview.other.ApplicationPreferences;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -65,8 +67,13 @@ public class SettingsActivity extends PreferenceActivity
         // In the simplified UI, fragments are not used at all and we instead
         // use the older PreferenceActivity APIs.
 
+        // Change preference file name
+        PreferenceManager prefManager=getPreferenceManager();
+        prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
+        prefManager.setSharedPreferencesMode(MODE_PRIVATE);
+
         // Create empty PreferenceScreen
-        setPreferenceScreen(getPreferenceManager().createPreferenceScreen(this));
+        setPreferenceScreen(prefManager.createPreferenceScreen(this));
 
         // Add 'file manager' preferences, and a corresponding header.
         PreferenceCategory fakeHeader = new PreferenceCategory(this);
@@ -85,11 +92,6 @@ public class SettingsActivity extends PreferenceActivity
         fakeHeader.setTitle(R.string.pref_header_editor);
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_editor);
-
-        // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
-        // their values. When their values change, their summaries are updated
-        // to reflect the new value, per the Android Design guidelines.
-        //bindPreferenceSummaryToValue(findPreference("example_text"));
     }
 
     /** {@inheritDoc} */
@@ -140,68 +142,6 @@ public class SettingsActivity extends PreferenceActivity
     }
 
     /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
-    /*
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener()
-    {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value)
-        {
-            String stringValue = value.toString();
-
-            if (preference instanceof ListPreference)
-            {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
-
-                // Set the summary to reflect the new value.
-                preference
-                        .setSummary(index >= 0 ? listPreference.getEntries()[index]
-                                : null);
-
-            }
-            else
-            {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
-    */
-
-    /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
-    /*
-    private static void bindPreferenceSummaryToValue(Preference preference)
-    {
-        // Set the listener to watch for value changes.
-        preference
-                .setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(
-                preference,
-                PreferenceManager.getDefaultSharedPreferences(
-                        preference.getContext()).getString(preference.getKey(),
-                        ""));
-    }
-    */
-
-    /**
      * This fragment shows file manager preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
@@ -212,13 +152,13 @@ public class SettingsActivity extends PreferenceActivity
         public void onCreate(Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_file_manager);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            //bindPreferenceSummaryToValue(findPreference("example_text"));
+            // Change preference file name
+            PreferenceManager prefManager=getPreferenceManager();
+            prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
+            prefManager.setSharedPreferencesMode(MODE_PRIVATE);
+
+            addPreferencesFromResource(R.xml.pref_file_manager);
         }
     }
 
@@ -233,13 +173,13 @@ public class SettingsActivity extends PreferenceActivity
         public void onCreate(Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_colors);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            //bindPreferenceSummaryToValue(findPreference("example_text"));
+            // Change preference file name
+            PreferenceManager prefManager=getPreferenceManager();
+            prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
+            prefManager.setSharedPreferencesMode(MODE_PRIVATE);
+
+            addPreferencesFromResource(R.xml.pref_colors);
         }
     }
 
@@ -254,13 +194,13 @@ public class SettingsActivity extends PreferenceActivity
         public void onCreate(Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_editor);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            //bindPreferenceSummaryToValue(findPreference("example_text"));
+            // Change preference file name
+            PreferenceManager prefManager=getPreferenceManager();
+            prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
+            prefManager.setSharedPreferencesMode(MODE_PRIVATE);
+
+            addPreferencesFromResource(R.xml.pref_editor);
         }
     }
 }
