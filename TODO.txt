@@ -7,6 +7,7 @@ Fix issue with changing font size and tab size
 Google analytics
 Highlight syntax
 Separate text to TextRegions
+Different font sizes, check that align bottom
 Row note region index
 Add notes
 Remove notes
