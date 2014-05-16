@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
-import com.griscom.codereview.other.*;
+import com.griscom.codereview.other.ApplicationSettings;
 
 public class IgnoreFilesAdapter extends BaseAdapter
 {

@@ -9,7 +9,6 @@ import junit.framework.Assert;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,10 +22,9 @@ import android.widget.TextView;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
-import com.griscom.codereview.other.ApplicationPreferences;
+import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
-import com.griscom.codereview.other.*;
 
 public class FilesAdapter extends BaseAdapter
 {

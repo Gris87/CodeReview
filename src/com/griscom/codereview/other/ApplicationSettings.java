@@ -1,9 +1,9 @@
 package com.griscom.codereview.other;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.griscom.codereview.R;
-import android.content.*;
 
 public class ApplicationSettings
 {

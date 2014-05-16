@@ -3,6 +3,7 @@ package com.griscom.codereview.activities;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import junit.framework.Assert;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -27,16 +28,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnBackPressedListener;
 import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
-import android.os.*;
-import junit.framework.*;
-import com.griscom.codereview.*;
-import android.util.*;
 
 public class FilesActivity extends ActionBarActivity
 {
@@ -399,9 +397,24 @@ public class FilesActivity extends ActionBarActivity
                     tail=tail.substring(1);
                 }
 
-                String prevFolder=tail.substring(tail.lastIndexOf("/")+1);
 
-                int index=mAdapter.indexOf(prevFolder);
+
+                String prevFolder;
+
+                int index=tail.lastIndexOf("/");
+
+                if (index>=0)
+                {
+                    prevFolder=tail.substring(0, index);
+                }
+                else
+                {
+                    prevFolder=tail;
+                }
+
+
+
+                index=mAdapter.indexOf(prevFolder);
 
                 if (index>=0)
                 {
