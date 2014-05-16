@@ -381,9 +381,9 @@ public class TextDocument implements OnTouchListener
                         {
                             mScale = mScale * newDistance/mFingerDistance;
 
-                            if (mScale<0.001f)
+                            if (mScale<0.25f)
                             {
-                                mScale=0.001f;
+                                mScale=0.25f;
                             }
                             else
                             if (mScale>10f)
