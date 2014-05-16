@@ -207,11 +207,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             if (modifiedTime==-1)
             {
-                canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f+paint.ascent(), paint);
+                canvas.drawText(mContext.getString(R.string.file_not_found), getWidth()*0.5f, getHeight()*0.5f, paint);
             }
             else
             {
-                canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f+paint.ascent(), paint);
+                canvas.drawText(mContext.getString(R.string.loading),        getWidth()*0.5f, getHeight()*0.5f, paint);
             }
         }
     }
