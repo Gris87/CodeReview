@@ -34,11 +34,16 @@ import com.griscom.codereview.review.ReviewSurfaceView;
 public class ReviewActivity extends FragmentActivity
 {
     private static final String TAG = "ReviewActivity";
+    
+    
 
-    public static final int RESULT_CLOSE=1;
+    public static final int RESULT_CLOSE = 1;
+    
+    
 
-    private static final int REQUEST_SETTINGS = 1;
-    private static final int AUTO_HIDE_DELAY_MILLIS=3000;
+    private static final int REQUEST_SETTINGS       = 1;
+    
+    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
 
 
 
@@ -96,6 +101,7 @@ public class ReviewActivity extends FragmentActivity
 
                 setResult(RESULT_CLOSE, data);
                 finish();
+
                 return true;
             }
         }
