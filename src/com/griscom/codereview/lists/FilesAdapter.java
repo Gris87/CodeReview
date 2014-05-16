@@ -25,6 +25,7 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
+import com.griscom.codereview.util.*;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -42,6 +43,7 @@ public class FilesAdapter extends BaseAdapter
         CheckBox  mCheckBox;
         ImageView mExtenstion;
         TextView  mFileName;
+		TextView  mFileSize;
     }
 
 
@@ -87,7 +89,8 @@ public class FilesAdapter extends BaseAdapter
         holder.mCheckBox   = (CheckBox) resView.findViewById(R.id.checkbox);
         holder.mExtenstion = (ImageView)resView.findViewById(R.id.extensionImageView);
         holder.mFileName   = (TextView) resView.findViewById(R.id.fileNameTextView);
-
+        holder.mFileSize   = (TextView) resView.findViewById(R.id.fileSizeTextView);
+		
         resView.setTag(holder);
 
         return resView;
@@ -123,6 +126,16 @@ public class FilesAdapter extends BaseAdapter
 
         holder.mExtenstion.setImageResource(file.getImageId());
         holder.mFileName.setText(file.getFileName());
+		
+		if (!mSelectionMode && !file.isDirectory())
+		{
+			holder.mFileSize.setVisibility(View.VISIBLE);
+			holder.mFileSize.setText(Utils.bytesToString(file.getSize()));
+		}
+		else
+        {
+            holder.mFileSize.setVisibility(View.GONE);
+        }
     }
 
     @Override
