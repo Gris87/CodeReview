@@ -82,8 +82,8 @@ public class FileEntry
         switch (sortType)
         {
             case NAME: return mFileName.compareToIgnoreCase(another.mFileName)<0;
-            case SIZE: return mType.compareToIgnoreCase(another.mType)<0;
-            case TYPE: return mSize<another.mSize;
+            case TYPE: return mType.compareTo(another.mType)<0;
+            case SIZE: return mSize<another.mSize;
             default:
                 Log.e(TAG, "Unknown sort type: "+String.valueOf(sortType));
             break;

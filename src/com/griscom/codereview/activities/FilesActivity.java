@@ -94,6 +94,7 @@ public class FilesActivity extends ActionBarActivity
                                                   public void onClick(DialogInterface dialog, int which)
                                                   {
                                                       mPlaceholderFragment.getAdapter().sort(SortType.values()[which+1]);
+                                                      saveSortType();
 
                                                       dialog.dismiss();
                                                   }
@@ -153,6 +154,15 @@ public class FilesActivity extends ActionBarActivity
         editor.commit();
     }
 
+    private void saveSortType()
+    {
+        SharedPreferences prefs=getPreferences(Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor=prefs.edit();
+        editor.putInt(ApplicationPreferences.SORT_TYPE, mPlaceholderFragment.getAdapter().getSortType().ordinal());
+        editor.commit();
+    }
+
     public PlaceholderFragment getPlaceholderFragment()
     {
         return mPlaceholderFragment;
@@ -194,6 +204,8 @@ public class FilesActivity extends ActionBarActivity
             {
                 // Nothing
             }
+
+            loadSortType();
 
 
 
@@ -518,6 +530,19 @@ public class FilesActivity extends ActionBarActivity
             if (!TextUtils.isEmpty(fileName))
             {
                 openFile(fileName);
+            }
+        }
+
+        private void loadSortType()
+        {
+            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+
+            int sortType=prefs.getInt(ApplicationPreferences.SORT_TYPE, SortType.NAME.ordinal());
+            SortType sortTypes[]=SortType.values();
+
+            if (sortType>=1 && sortType<sortTypes.length && mAdapter.getSortType().ordinal()!=sortType)
+            {
+                mAdapter.sort(sortTypes[sortType]);
             }
         }
 
