@@ -46,7 +46,6 @@ public class TextDocument implements OnTouchListener
     private static final float SCROLL_SPEED        = 10;
 
     private static final int   SCROLL_THRESHOLD    = 25;
-    private static final int   BOTTOM_RIGHT_SPACE  = 250;
 
 
 
@@ -227,11 +226,7 @@ public class TextDocument implements OnTouchListener
                 mRows.get(i).draw(canvas, mX-mOffsetX, mY-mOffsetY);
             }
 
-            if (
-                (mViewWidth>0  && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth/mScale)
-                ||
-                (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight/mScale)
-                )
+            // Draw scroll bars
             {
                 float margin=6*density/mScale;
 
@@ -240,20 +235,20 @@ public class TextDocument implements OnTouchListener
                 barPaint.setARGB(mBarsAlpha, 180, 180, 180);
                 barPaint.setStrokeWidth(4*density/mScale);
 
-                if (mViewWidth>0 && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth/mScale)
+                // Draw horizontal bar
                 {
-                    float barLength   = (mViewWidth/mScale)/(mWidth+BOTTOM_RIGHT_SPACE);
+                    float barLength   = (mViewWidth/mScale)/(getRight()+mViewWidth/mScale);
                     float barWidth    = (mViewWidth/mScale)-margin*3;
-                    float barPosition = barWidth*mOffsetX/(mWidth+BOTTOM_RIGHT_SPACE);
+                    float barPosition = barWidth*mOffsetX/(getRight()+mViewWidth/mScale);
 
                     canvas.drawLine(barPosition+margin, (mViewHeight/mScale)-margin, barWidth*barLength+barPosition+margin, (mViewHeight/mScale)-margin, barPaint);
                 }
 
-                if (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight/mScale)
+                // Draw vertical bar
                 {
-                    float barLength   = (mViewHeight/mScale)/(mHeight+BOTTOM_RIGHT_SPACE);
+                    float barLength   = (mViewHeight/mScale)/(getBottom()+mViewHeight/mScale);
                     float barHeight   = (mViewHeight/mScale)-margin*3;
-                    float barPosition = barHeight*mOffsetY/(mHeight+BOTTOM_RIGHT_SPACE);
+                    float barPosition = barHeight*mOffsetY/(getBottom()+mViewHeight/mScale);
 
                     canvas.drawLine((mViewWidth/mScale)-margin, barPosition+margin, (mViewWidth/mScale)-margin, barHeight*barLength+barPosition+margin, barPaint);
                 }
@@ -602,23 +597,15 @@ public class TextDocument implements OnTouchListener
 
     private void showBars()
     {
-
-        if (
-            (mViewWidth>0  && (mWidth+BOTTOM_RIGHT_SPACE)>mViewWidth/mScale)
-            ||
-            (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight/mScale)
-           )
+        synchronized(this)
         {
-            synchronized(this)
-            {
-                mBarsAlpha=255;
-            }
-
-            mHandler.removeMessages(HIDE_BARS_MESSAGE);
-            mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, AUTO_HIDE_DELAY);
-
-            repaint();
+            mBarsAlpha=255;
         }
+
+        mHandler.removeMessages(HIDE_BARS_MESSAGE);
+        mHandler.sendEmptyMessageDelayed(HIDE_BARS_MESSAGE, AUTO_HIDE_DELAY);
+
+        repaint();
     }
 
     public void updateSelection()
@@ -699,9 +686,9 @@ public class TextDocument implements OnTouchListener
 
     private void fitOffsets(PointF offsets)
     {
-        if (offsets.x>mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE)
+        if (offsets.x>getRight())
         {
-            offsets.x=mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE;
+            offsets.x=getRight();
         }
 
         if (offsets.x<0)
@@ -709,9 +696,9 @@ public class TextDocument implements OnTouchListener
             offsets.x=0;
         }
 
-        if (offsets.y>mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE)
+        if (offsets.y>getBottom())
         {
-            offsets.y=mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE;
+            offsets.y=getBottom();
         }
 
         if (offsets.y<0)
