@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
@@ -62,6 +63,22 @@ public class ReviewActivity extends FragmentActivity
                                        .add(R.id.container, new PlaceholderFragment())
                                        .commit();
         }
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     @Override

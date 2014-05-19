@@ -12,6 +12,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
 
@@ -49,6 +50,22 @@ public class SettingsActivity extends PreferenceActivity
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     /**
