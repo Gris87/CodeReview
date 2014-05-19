@@ -127,9 +127,9 @@ public class ReviewActivity extends FragmentActivity
         return mPlaceholderFragment;
     }
 
-    public void setOnBackPressedListener(PlaceholderFragment listener)
+    public void setPlaceholderFragment(PlaceholderFragment fragment)
     {
-        mPlaceholderFragment=listener;
+        mPlaceholderFragment=fragment;
     }
 
     /**
@@ -237,7 +237,7 @@ public class ReviewActivity extends FragmentActivity
             mControlsVisible=true;
             delayedHide(1000);
 
-            mActivity.setOnBackPressedListener(this);
+            mActivity.setPlaceholderFragment(this);
 
             return rootView;
         }

@@ -158,9 +158,9 @@ public class FilesActivity extends ActionBarActivity
         return mPlaceholderFragment;
     }
 
-    public void setPlaceholderFragment(PlaceholderFragment listener)
+    public void setPlaceholderFragment(PlaceholderFragment fragment)
     {
-        mPlaceholderFragment=listener;
+        mPlaceholderFragment=fragment;
     }
 
     /**

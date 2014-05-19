@@ -75,8 +75,8 @@ public class TextDocument implements OnTouchListener
     private float                     mTouchX;
     private float                     mTouchY;
     private float                     mFingerDistance;
-	private float                     mTouchMiddleX;
-	private float                     mTouchMiddleY;
+    private float                     mTouchMiddleX;
+    private float                     mTouchMiddleY;
     private int                       mSelectionEnd;
     private SelectionColor            mSelectionColor;
 
@@ -121,7 +121,7 @@ public class TextDocument implements OnTouchListener
         mTouchX                  = 0;
         mTouchY                  = 0;
         mFingerDistance          = 0;
-		mTouchMiddleX            = -1;
+        mTouchMiddleX            = -1;
         mTouchMiddleY            = -1;
         mSelectionEnd            = -1;
         mSelectionColor          = SelectionColor.REVIEWED;
@@ -363,8 +363,8 @@ public class TextDocument implements OnTouchListener
                     stopHighlight();
 
                     mFingerDistance = fingerDistance(event);
-					mTouchMiddleX   = (event.getX(0)+event.getX(1))*0.5f;
-					mTouchMiddleY   = (event.getY(0)+event.getY(1))*0.5f;
+                    mTouchMiddleX   = (event.getX(0)+event.getX(1))*0.5f;
+                    mTouchMiddleY   = (event.getY(0)+event.getY(1))*0.5f;
                 }
             }
             break;
@@ -395,39 +395,39 @@ public class TextDocument implements OnTouchListener
                     if (mFingerDistance!=0 && event.getPointerCount()>=2)
                     {
                         float newDistance = fingerDistance(event);
-						float scale       = mScale * newDistance/mFingerDistance;
+                        float scale       = mScale * newDistance/mFingerDistance;
 
-						if (scale<0.25f)
-						{
-							scale=0.25f;
-						}
-						else
-						if (scale>10f)
-						{
-							scale=10f;
-						}
+                        if (scale<0.25f)
+                        {
+                            scale=0.25f;
+                        }
+                        else
+                        if (scale>10f)
+                        {
+                            scale=10f;
+                        }
 
-						mFingerDistance=newDistance;
+                        mFingerDistance=newDistance;
 
-						if (mScale!=scale)
-						{
-						    PointF newOffsets=new PointF(mOffsetX+mTouchMiddleX/mScale*(1-mScale/scale), mOffsetY+mTouchMiddleY/mScale*(1-mScale/scale));
+                        if (mScale!=scale)
+                        {
+                            PointF newOffsets=new PointF(mOffsetX+mTouchMiddleX/mScale*(1-mScale/scale), mOffsetY+mTouchMiddleY/mScale*(1-mScale/scale));
 
-						    fitOffsets(newOffsets);
+                            fitOffsets(newOffsets);
 
 
 
-							synchronized(this)
-							{
-								mScale=scale;
+                            synchronized(this)
+                            {
+                                mScale=scale;
 
-								mOffsetX=newOffsets.x;
-								mOffsetY=newOffsets.y;
-							}
+                                mOffsetX=newOffsets.x;
+                                mOffsetY=newOffsets.y;
+                            }
 
-							updateVisibleRanges();
-							repaint();
-						}
+                            updateVisibleRanges();
+                            repaint();
+                        }
                     }
                 }
                 else

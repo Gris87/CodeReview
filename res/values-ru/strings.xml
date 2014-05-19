@@ -3,15 +3,15 @@
 
     <!-- Application name -->
     <string name="app_name">Code review</string>
-    
+
     <!-- Sort -->
     <string name="action_sort">Сортировка</string>
-    
+
     <!-- Sort types -->
     <string-array name="sort_types">
         <item>По имени</item>
         <item>По типу</item>
-        <item>По размеру</item>        
+        <item>По размеру</item>
     </string-array>
 
     <!-- Settings -->

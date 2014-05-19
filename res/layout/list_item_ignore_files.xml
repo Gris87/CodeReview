@@ -20,7 +20,7 @@
         android:layout_toRightOf="@+id/checkbox"
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginLeft="8dp"
-		android:layout_marginRight="8dp"
+        android:layout_marginRight="8dp"
         android:singleLine="true"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceLarge" />

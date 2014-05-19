@@ -43,7 +43,7 @@ public class FilesAdapter extends BaseAdapter
         CheckBox  mCheckBox;
         ImageView mExtenstion;
         TextView  mFileName;
-		TextView  mFileSize;
+        TextView  mFileSize;
     }
 
 
@@ -127,12 +127,12 @@ public class FilesAdapter extends BaseAdapter
         holder.mExtenstion.setImageResource(file.getImageId());
         holder.mFileName.setText(file.getFileName());
 
-		if (!mSelectionMode && !file.isDirectory())
-		{
-			holder.mFileSize.setVisibility(View.VISIBLE);
-			holder.mFileSize.setText(Utils.bytesToString(file.getSize()));
-		}
-		else
+        if (!mSelectionMode && !file.isDirectory())
+        {
+            holder.mFileSize.setVisibility(View.VISIBLE);
+            holder.mFileSize.setText(Utils.bytesToString(file.getSize()));
+        }
+        else
         {
             holder.mFileSize.setVisibility(View.GONE);
         }
