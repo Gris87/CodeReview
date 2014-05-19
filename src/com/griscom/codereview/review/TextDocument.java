@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
@@ -75,6 +76,8 @@ public class TextDocument implements OnTouchListener
     private float                     mTouchX;
     private float                     mTouchY;
     private float                     mFingerDistance;
+	private float                     mTouchMiddleX;
+	private float                     mTouchMiddleY;
     private int                       mSelectionEnd;
     private SelectionColor            mSelectionColor;
 
@@ -119,6 +122,8 @@ public class TextDocument implements OnTouchListener
         mTouchX                  = 0;
         mTouchY                  = 0;
         mFingerDistance          = 0;
+		mTouchMiddleX            = -1;
+        mTouchMiddleY            = -1;
         mSelectionEnd            = -1;
         mSelectionColor          = SelectionColor.REVIEWED;
 
@@ -148,6 +153,8 @@ public class TextDocument implements OnTouchListener
     {
         synchronized(this)
         {
+            float density=mContext.getResources().getDisplayMetrics().scaledDensity;
+
             canvas.scale(mScale, mScale);
 
             if (
@@ -226,7 +233,6 @@ public class TextDocument implements OnTouchListener
                 (mViewHeight>0 && (mHeight+BOTTOM_RIGHT_SPACE)>mViewHeight/mScale)
                 )
             {
-                float density=mContext.getResources().getDisplayMetrics().scaledDensity;
                 float margin=6*density/mScale;
 
                 Paint barPaint=new Paint();
@@ -250,6 +256,22 @@ public class TextDocument implements OnTouchListener
                     float barPosition = barHeight*mOffsetY/(mHeight+BOTTOM_RIGHT_SPACE);
 
                     canvas.drawLine((mViewWidth/mScale)-margin, barPosition+margin, (mViewWidth/mScale)-margin, barHeight*barLength+barPosition+margin, barPaint);
+                }
+            }
+
+            if (BuildConfig.DEBUG)
+            {
+                if (mTouchMiddleX>=0 && mTouchMiddleY>=0)
+                {
+                    float markerSize=10*density/mScale;
+
+                    Paint debugPaint=new Paint();
+
+                    debugPaint.setARGB(180, 0, 0, 0);
+                    debugPaint.setStrokeWidth(2*density/mScale);
+
+                    canvas.drawLine(mTouchMiddleX/mScale-markerSize, mTouchMiddleY/mScale,            mTouchMiddleX/mScale+markerSize, mTouchMiddleY/mScale,            debugPaint);
+                    canvas.drawLine(mTouchMiddleX/mScale,            mTouchMiddleY/mScale-markerSize, mTouchMiddleX/mScale,            mTouchMiddleY/mScale+markerSize, debugPaint);
                 }
             }
         }
@@ -346,6 +368,8 @@ public class TextDocument implements OnTouchListener
                     stopHighlight();
 
                     mFingerDistance = fingerDistance(event);
+					mTouchMiddleX   = (event.getX(0)+event.getX(1))*0.5f;
+					mTouchMiddleY   = (event.getY(0)+event.getY(1))*0.5f;
                 }
             }
             break;
@@ -375,27 +399,40 @@ public class TextDocument implements OnTouchListener
                 {
                     if (mFingerDistance!=0 && event.getPointerCount()>=2)
                     {
-                        float newDistance=fingerDistance(event);
+                        float newDistance = fingerDistance(event);
+						float scale       = mScale * newDistance/mFingerDistance;
 
-                        synchronized(this)
-                        {
-                            mScale = mScale * newDistance/mFingerDistance;
+						if (scale<0.25f)
+						{
+							scale=0.25f;
+						}
+						else
+						if (scale>10f)
+						{
+							scale=10f;
+						}
 
-                            if (mScale<0.25f)
-                            {
-                                mScale=0.25f;
-                            }
-                            else
-                            if (mScale>10f)
-                            {
-                                mScale=10f;
-                            }
-                        }
+						mFingerDistance=newDistance;
 
-                        mFingerDistance=newDistance;
+						if (mScale!=scale)
+						{
+						    PointF newOffsets=new PointF(mOffsetX+mTouchMiddleX/mScale*scale/mScale, mOffsetY+mTouchMiddleY/mScale*scale/mScale);
 
-                        updateVisibleRanges();
-                        repaint();
+						    fitOffsets(newOffsets);
+
+
+
+							synchronized(this)
+							{
+								mScale=scale;
+
+								mOffsetX=newOffsets.x;
+								mOffsetY=newOffsets.y;
+							}
+
+							updateVisibleRanges();
+							repaint();
+						}
                     }
                 }
                 else
@@ -417,41 +454,22 @@ public class TextDocument implements OnTouchListener
 
                     if (mTouchMode==TouchMode.DRAG)
                     {
-                        float newOffsetX=mOffsetX+(mTouchX-event.getX())/mScale;
-                        float newOffsetY=mOffsetY+(mTouchY-event.getY())/mScale;
+                        PointF newOffsets=new PointF(mOffsetX+(mTouchX-event.getX())/mScale, mOffsetY+(mTouchY-event.getY())/mScale);
 
-                        if (newOffsetX>mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE)
-                        {
-                            newOffsetX=mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE;
-                        }
-
-                        if (newOffsetX<0)
-                        {
-                            newOffsetX=0;
-                        }
-
-                        if (newOffsetY>mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE)
-                        {
-                            newOffsetY=mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE;
-                        }
-
-                        if (newOffsetY<0)
-                        {
-                            newOffsetY=0;
-                        }
+                        fitOffsets(newOffsets);
 
 
 
                         if (
-                            mOffsetX != newOffsetX
+                            mOffsetX != newOffsets.x
                             ||
-                            mOffsetY != newOffsetY
+                            mOffsetY != newOffsets.y
                             )
                         {
                             synchronized(this)
                             {
-                                mOffsetX = newOffsetX;
-                                mOffsetY = newOffsetY;
+                                mOffsetX = newOffsets.x;
+                                mOffsetY = newOffsets.y;
                             }
 
                             updateVisibleRanges();
@@ -529,6 +547,12 @@ public class TextDocument implements OnTouchListener
                     mHandler.removeMessages(SCROLL_MESSAGE);
 
                     repaint();
+                }
+                else
+                if (mTouchMode==TouchMode.ZOOM)
+                {
+                    mTouchMiddleX = -1;
+                    mTouchMiddleY = -1;
                 }
                 else
                 {
@@ -643,34 +667,26 @@ public class TextDocument implements OnTouchListener
 
     private void touchScroll()
     {
-        float newOffsetY;
+        PointF newOffsets=new PointF(mOffsetX, 0);
 
         if (mTouchY<mViewHeight/8)
         {
-            newOffsetY=mOffsetY-SCROLL_SPEED/mScale;
+            newOffsets.y=mOffsetY-SCROLL_SPEED/mScale;
         }
         else
         {
-            newOffsetY=mOffsetY+SCROLL_SPEED/mScale;
+            newOffsets.y=mOffsetY+SCROLL_SPEED/mScale;
         }
 
-        if (newOffsetY>mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE)
-        {
-            newOffsetY=mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE;
-        }
-
-        if (newOffsetY<0)
-        {
-            newOffsetY=0;
-        }
+        fitOffsets(newOffsets);
 
 
 
-        if (mOffsetY != newOffsetY)
+        if (mOffsetY != newOffsets.y)
         {
             synchronized(this)
             {
-                mOffsetY = newOffsetY;
+                mOffsetY = newOffsets.y;
             }
 
             mHandler.sendEmptyMessageDelayed(SCROLL_MESSAGE, 40);
@@ -678,6 +694,29 @@ public class TextDocument implements OnTouchListener
             updateVisibleRanges();
             updateSelection();
             repaint();
+        }
+    }
+
+    private void fitOffsets(PointF offsets)
+    {
+        if (offsets.x>mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE)
+        {
+            offsets.x=mWidth-(mViewWidth/mScale)+BOTTOM_RIGHT_SPACE;
+        }
+
+        if (offsets.x<0)
+        {
+            offsets.x=0;
+        }
+
+        if (offsets.y>mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE)
+        {
+            offsets.y=mHeight-(mViewHeight/mScale)+BOTTOM_RIGHT_SPACE;
+        }
+
+        if (offsets.y<0)
+        {
+            offsets.y=0;
         }
     }
 
