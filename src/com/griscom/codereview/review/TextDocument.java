@@ -416,7 +416,7 @@ public class TextDocument implements OnTouchListener
 
 						if (mScale!=scale)
 						{
-						    PointF newOffsets=new PointF(mOffsetX+mTouchMiddleX/mScale*scale/mScale, mOffsetY+mTouchMiddleY/mScale*scale/mScale);
+						    PointF newOffsets=new PointF(mOffsetX+mTouchMiddleX/mScale*(1-mScale/scale), mOffsetY+mTouchMiddleY/mScale*(1-mScale/scale));
 
 						    fitOffsets(newOffsets);
 
@@ -667,7 +667,7 @@ public class TextDocument implements OnTouchListener
 
     private void touchScroll()
     {
-        PointF newOffsets=new PointF(mOffsetX, 0);
+        PointF newOffsets=new PointF(mOffsetX, mOffsetY);
 
         if (mTouchY<mViewHeight/8)
         {
