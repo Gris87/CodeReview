@@ -319,11 +319,6 @@ public class FilesAdapter extends BaseAdapter
             throw new FileNotFoundException();
         }
 
-        if (BuildConfig.DEBUG)
-        {
-            Assert.assertTrue(!mCurrentPath.equals(newPath));
-        }
-
         mCurrentPath=newPath;
 
         rescan();
