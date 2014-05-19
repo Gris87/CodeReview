@@ -8,6 +8,6 @@
         android:orderInCategory="100"
         android:title="@string/action_add"
         android:icon="@drawable/add"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
 </menu>

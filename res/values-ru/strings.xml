@@ -3,6 +3,16 @@
 
     <!-- Application name -->
     <string name="app_name">Code review</string>
+    
+    <!-- Sort -->
+    <string name="action_sort">Сортировка</string>
+    
+    <!-- Sort types -->
+    <string-array name="sort_types">
+        <item>По имени</item>
+        <item>По типу</item>
+        <item>По размеру</item>        
+    </string-array>
 
     <!-- Settings -->
     <string name="action_settings">Настройки</string>
@@ -34,6 +44,7 @@
     <!-- Files selected subtitle in ActionMode -->
     <plurals name="files_selected">
         <item quantity="one">%d файл выбран</item>
+        <!-- <item quantity="two">%d files selected</item> Not used -->
         <item quantity="few">%d файла выбрано</item>
         <item quantity="many">%d файлов выбрано</item>
         <item quantity="other">%d файлов выбрано</item>

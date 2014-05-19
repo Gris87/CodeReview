@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
-import com.griscom.codereview.listeners.OnReloadRequestListener;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
@@ -34,20 +33,20 @@ import com.griscom.codereview.review.ReviewSurfaceView;
 public class ReviewActivity extends FragmentActivity
 {
     private static final String TAG = "ReviewActivity";
-    
-    
+
+
 
     public static final int RESULT_CLOSE = 1;
-    
-    
+
+
 
     private static final int REQUEST_SETTINGS       = 1;
-    
+
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
 
 
 
-    private OnReloadRequestListener mOnReloadRequestListener=null;
+    private PlaceholderFragment mPlaceholderFragment=null;
 
 
 
@@ -79,9 +78,9 @@ public class ReviewActivity extends FragmentActivity
         {
             case R.id.action_reload:
             {
-                if (mOnReloadRequestListener!=null)
+                if (mPlaceholderFragment!=null)
                 {
-                    mOnReloadRequestListener.onReloadRequest();
+                    mPlaceholderFragment.getContent().reload();
                 }
 
                 return true;
@@ -123,20 +122,20 @@ public class ReviewActivity extends FragmentActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public OnReloadRequestListener getOnReloadRequestListener()
+    public PlaceholderFragment getPlaceholderFragment()
     {
-        return mOnReloadRequestListener;
+        return mPlaceholderFragment;
     }
 
-    public void setOnBackPressedListener(OnReloadRequestListener listener)
+    public void setOnBackPressedListener(PlaceholderFragment listener)
     {
-        mOnReloadRequestListener=listener;
+        mPlaceholderFragment=listener;
     }
 
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnProgressChangedListener, OnReloadRequestListener
+    public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnProgressChangedListener
     {
         private ReviewActivity    mActivity;
         private ReviewSurfaceView mContent;
@@ -336,12 +335,6 @@ public class ReviewActivity extends FragmentActivity
         }
 
         @Override
-        public void onReloadRequest()
-        {
-            mContent.reload();
-        }
-
-        @Override
         public void onProgressChanged(int progress)
         {
             if (BuildConfig.DEBUG)
@@ -428,6 +421,11 @@ public class ReviewActivity extends FragmentActivity
             }
 
             delayedHide(AUTO_HIDE_DELAY_MILLIS);
+        }
+
+        public ReviewSurfaceView getContent()
+        {
+            return mContent;
         }
     }
 }

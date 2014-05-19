@@ -5,7 +5,10 @@ import java.io.FileNotFoundException;
 
 import junit.framework.Assert;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -30,11 +33,11 @@ import android.widget.Toast;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
-import com.griscom.codereview.listeners.OnBackPressedListener;
 import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.FileEntry;
+import com.griscom.codereview.other.SortType;
 
 public class FilesActivity extends ActionBarActivity
 {
@@ -42,8 +45,8 @@ public class FilesActivity extends ActionBarActivity
 
 
 
-    private OnBackPressedListener mOnBackPressedListener=null;
-    private long                  mBackPressTime=0;
+    private PlaceholderFragment mPlaceholderFragment=null;
+    private long                mBackPressTime=0;
 
 
 
@@ -77,6 +80,31 @@ public class FilesActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId())
         {
+            case R.id.action_sort:
+            {
+                if (mPlaceholderFragment!=null)
+                {
+                    AlertDialog dialog=new AlertDialog.Builder(this)
+                        .setTitle(R.string.action_sort)
+                        .setSingleChoiceItems(R.array.sort_types,
+                                              mPlaceholderFragment.getAdapter().getSortType().ordinal()-1,
+                                              new OnClickListener()
+                                              {
+                                                  @Override
+                                                  public void onClick(DialogInterface dialog, int which)
+                                                  {
+                                                      mPlaceholderFragment.getAdapter().sort(SortType.values()[which+1]);
+
+                                                      dialog.dismiss();
+                                                  }
+                                              }).create();
+
+                    dialog.show();
+                }
+
+                return true;
+            }
+
             case R.id.action_settings:
             {
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -98,7 +126,7 @@ public class FilesActivity extends ActionBarActivity
     @Override
     public void onBackPressed()
     {
-        if (mOnBackPressedListener==null || !mOnBackPressedListener.onBackPressed())
+        if (mPlaceholderFragment==null || !mPlaceholderFragment.onBackPressed())
         {
             long curTime=System.currentTimeMillis();
 
@@ -125,20 +153,20 @@ public class FilesActivity extends ActionBarActivity
         editor.commit();
     }
 
-    public OnBackPressedListener getOnBackPressedListener()
+    public PlaceholderFragment getPlaceholderFragment()
     {
-        return mOnBackPressedListener;
+        return mPlaceholderFragment;
     }
 
-    public void setOnBackPressedListener(OnBackPressedListener listener)
+    public void setPlaceholderFragment(PlaceholderFragment listener)
     {
-        mOnBackPressedListener=listener;
+        mPlaceholderFragment=listener;
     }
 
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnBackPressedListener
+    public static class PlaceholderFragment extends Fragment implements OnItemClickListener
     {
         private FilesActivity mActivity;
         private ActionBar     mActionBar;
@@ -188,7 +216,7 @@ public class FilesActivity extends ActionBarActivity
             mActionBar.setDisplayShowHomeEnabled(false);
             mActionBar.setTitle(mAdapter.getCurrentPath());
 
-            mActivity.setOnBackPressedListener(this);
+            mActivity.setPlaceholderFragment(this);
 
             return rootView;
         }
@@ -332,7 +360,6 @@ public class FilesActivity extends ActionBarActivity
             });
         }
 
-        @Override
         public boolean onBackPressed()
         {
             if (mAdapter.getCurrentPath().equals("/"))
@@ -492,6 +519,11 @@ public class FilesActivity extends ActionBarActivity
             {
                 openFile(fileName);
             }
+        }
+
+        public FilesAdapter getAdapter()
+        {
+            return mAdapter;
         }
     }
 }

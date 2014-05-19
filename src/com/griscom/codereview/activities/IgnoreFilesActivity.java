@@ -23,12 +23,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.griscom.codereview.R;
-import com.griscom.codereview.listeners.OnFileAddedListener;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
 
 public class IgnoreFilesActivity extends ActionBarActivity
 {
-    private OnFileAddedListener mOnFileAddedListener=null;
+    private PlaceholderFragment mPlaceholderFragment=null;
 
 
 
@@ -76,9 +75,9 @@ public class IgnoreFilesActivity extends ActionBarActivity
                                             @Override
                                             public void onClick(DialogInterface dialog, int whichButton)
                                             {
-                                                if (mOnFileAddedListener!=null)
+                                                if (mPlaceholderFragment!=null)
                                                 {
-                                                    mOnFileAddedListener.onFileAdded(editText.getText().toString());
+                                                    mPlaceholderFragment.getAdapter().addFile(editText.getText().toString());
                                                 }
 
                                                 dialog.dismiss();
@@ -104,20 +103,20 @@ public class IgnoreFilesActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public OnFileAddedListener getOnFileAddedListener()
+    public PlaceholderFragment getPlaceholderFragment()
     {
-        return mOnFileAddedListener;
+        return mPlaceholderFragment;
     }
 
-    public void setOnFileAddedListener(OnFileAddedListener listener)
+    public void setPlaceholderFragment(PlaceholderFragment listener)
     {
-        mOnFileAddedListener=listener;
+        mPlaceholderFragment=listener;
     }
 
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnItemClickListener, OnFileAddedListener
+    public static class PlaceholderFragment extends Fragment implements OnItemClickListener
     {
         private IgnoreFilesActivity mActivity;
         private ListView            mIgnoreFilesListView;
@@ -152,7 +151,7 @@ public class IgnoreFilesActivity extends ActionBarActivity
                 setChoiceListener();
             }
 
-            mActivity.setOnFileAddedListener(this);
+            mActivity.setPlaceholderFragment(this);
 
             return rootView;
         }
@@ -270,10 +269,9 @@ public class IgnoreFilesActivity extends ActionBarActivity
             });
         }
 
-        @Override
-        public void onFileAdded(String fileName)
+        public IgnoreFilesAdapter getAdapter()
         {
-            mAdapter.addFile(fileName);
+            return mAdapter;
         }
     }
 }

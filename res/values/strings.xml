@@ -3,6 +3,16 @@
 
     <!-- Application name -->
     <string name="app_name">Code review</string>
+    
+    <!-- Sort -->
+    <string name="action_sort">Sort</string>
+    
+    <!-- Sort types -->
+    <string-array name="sort_types">
+        <item>By name</item>
+        <item>By type</item>
+        <item>By size</item>        
+    </string-array>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>

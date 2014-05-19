@@ -25,7 +25,7 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
-import com.griscom.codereview.util.*;
+import com.griscom.codereview.util.Utils;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -53,7 +53,7 @@ public class FilesAdapter extends BaseAdapter
         mContext       = context;
         mCurrentPath   = Environment.getExternalStorageDirectory().getPath();
         mFiles         = new ArrayList<FileEntry>();
-        mSortType      = SortType.ALPHABET;
+        mSortType      = SortType.NAME;
         mSelectionMode = false;
         mSelection     = new ArrayList<Integer>();
 
@@ -90,7 +90,7 @@ public class FilesAdapter extends BaseAdapter
         holder.mExtenstion = (ImageView)resView.findViewById(R.id.extensionImageView);
         holder.mFileName   = (TextView) resView.findViewById(R.id.fileNameTextView);
         holder.mFileSize   = (TextView) resView.findViewById(R.id.fileSizeTextView);
-		
+
         resView.setTag(holder);
 
         return resView;
@@ -126,7 +126,7 @@ public class FilesAdapter extends BaseAdapter
 
         holder.mExtenstion.setImageResource(file.getImageId());
         holder.mFileName.setText(file.getFileName());
-		
+
 		if (!mSelectionMode && !file.isDirectory())
 		{
 			holder.mFileSize.setVisibility(View.VISIBLE);
@@ -332,6 +332,11 @@ public class FilesAdapter extends BaseAdapter
     public String getCurrentPath()
     {
         return mCurrentPath;
+    }
+
+    public SortType getSortType()
+    {
+        return mSortType;
     }
 
     public void setSelected(int index, boolean checked)
