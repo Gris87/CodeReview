@@ -2,7 +2,7 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="TypographyDashes">
-    
+
   <!--Replace placeholder ID with your tracking ID-->
   <string name="ga_trackingId">UA-51133429-1</string>
 
@@ -11,5 +11,5 @@
 
   <!--Enable automatic exception tracking-->
   <bool name="ga_reportUncaughtExceptions">true</bool>
-  
+
 </resources>
