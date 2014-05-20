@@ -56,7 +56,9 @@ public class TextDocument implements OnTouchListener
     private ArrayList<TextRow>        mRows;
     private OnProgressChangedListener mProgressChangedListener;
     private int                       mProgress;
-    private Paint                     mRowPaint;
+	private int                       mFontSize;
+	private int                       mTabSize;
+	private Paint                     mRowPaint;
 
     private float                     mIndexWidth;
     private float                     mX;
@@ -99,10 +101,12 @@ public class TextDocument implements OnTouchListener
         mRows                    = new ArrayList<TextRow>();
         mProgressChangedListener = null;
         mProgress                = 0;
+		mFontSize                = ApplicationSettings.fontSize(mContext);
+		mTabSize                 = ApplicationSettings.tabSize(mContext);
         mRowPaint                = new Paint();
         mRowPaint.setColor(Color.LTGRAY);
         mRowPaint.setTypeface(Typeface.MONOSPACE);
-        mRowPaint.setTextSize(Utils.spToPixels(ApplicationSettings.fontSize(mContext), mContext));
+        mRowPaint.setTextSize(Utils.spToPixels(mFontSize, mContext));
 
         mIndexWidth              = 0;
         mX                       = 0;
@@ -805,6 +809,71 @@ public class TextDocument implements OnTouchListener
             }
         }
     }
+	
+	private void updateSizes()
+	{
+		PointF newOffsets=new PointF(mOffsetX, mOffsetY);
+
+		fitOffsets(newOffsets);
+
+
+
+		if (
+			mOffsetX != newOffsets.x
+			||
+			mOffsetY != newOffsets.y
+			)
+		{
+			synchronized(this)
+			{
+				mOffsetX = newOffsets.x;
+				mOffsetY = newOffsets.y;
+			}
+		}
+
+		updateVisibleRanges();
+		repaint();
+	}
+	
+	public void setFontSize(int fontSize)
+	{
+		if (mFontSize!=fontSize)
+		{
+			mFontSize=fontSize;
+			
+			for (int i=0; i<mRows.size(); ++i)
+			{
+				mRows.get(i).setFontSize(mFontSize);
+			}
+			
+			mRowPaint.setTextSize(Utils.spToPixels(mFontSize, mContext));
+			
+			mX-=mIndexWidth;
+			mIndexWidth=mRowPaint.measureText(String.valueOf(mRows.size()+1));
+			mX+=mIndexWidth;
+			
+			// --------------------------------
+			
+			updateSizes();
+		}
+	}
+	
+	public void setTabSize(int tabSize)
+	{
+		if (mTabSize!=tabSize)
+		{
+			mTabSize=tabSize;
+			
+			for (int i=0; i<mRows.size(); ++i)
+			{
+				mRows.get(i).setTabSize(mTabSize);
+			}
+			
+			// --------------------------------
+
+			updateSizes();
+		}
+	}
 
     public void setSelectionColor(SelectionColor selectionColor)
     {

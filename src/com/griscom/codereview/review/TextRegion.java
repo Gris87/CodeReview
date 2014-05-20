@@ -82,6 +82,16 @@ public class TextRegion
             return mDisplayedText;
         }
     }
+	
+	public void setFontSize(int fontSize)
+	{
+
+	}
+
+	public void setTabSize(int tabSize)
+	{
+
+	}
 
     public void setX(float x)
     {

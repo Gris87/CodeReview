@@ -47,6 +47,22 @@ public class TextRow
             mHeight=region.getHeight();
         }
     }
+	
+	public void setFontSize(int fontSize)
+	{
+		for (int i=0; i<mRegions.size(); ++i)
+		{
+			mRegions.get(i).setFontSize(fontSize);
+		}
+	}
+
+	public void setTabSize(int tabSize)
+	{
+		for (int i=0; i<mRegions.size(); ++i)
+		{
+			mRegions.get(i).setTabSize(tabSize);
+		}
+	}
 
     public void setSelectionColor(SelectionColor selectionColor)
     {
