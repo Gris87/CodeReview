@@ -38,6 +38,22 @@ public class TextRow
     {
         mRegions.add(region);
 
+        updateSizeByRegion(region);
+    }
+
+    private void updateSizes()
+    {
+        mWidth  = 0;
+        mHeight = 0;
+
+        for (int i=0; i<mRegions.size(); ++i)
+        {
+            updateSizeByRegion(mRegions.get(i));
+        }
+    }
+
+    private void updateSizeByRegion(TextRegion region)
+    {
         region.setX(mWidth);
 
         mWidth+=region.getWidth();
@@ -47,22 +63,26 @@ public class TextRow
             mHeight=region.getHeight();
         }
     }
-	
-	public void setFontSize(int fontSize)
-	{
-		for (int i=0; i<mRegions.size(); ++i)
-		{
-			mRegions.get(i).setFontSize(fontSize);
-		}
-	}
 
-	public void setTabSize(int tabSize)
-	{
-		for (int i=0; i<mRegions.size(); ++i)
-		{
-			mRegions.get(i).setTabSize(tabSize);
-		}
-	}
+    public void setFontSize(float textSize)
+    {
+        for (int i=0; i<mRegions.size(); ++i)
+        {
+            mRegions.get(i).setFontSize(textSize);
+        }
+
+        updateSizes();
+    }
+
+    public void setTabSize(int tabSize)
+    {
+        for (int i=0; i<mRegions.size(); ++i)
+        {
+            mRegions.get(i).setTabSize(tabSize);
+        }
+
+        updateSizes();
+    }
 
     public void setSelectionColor(SelectionColor selectionColor)
     {

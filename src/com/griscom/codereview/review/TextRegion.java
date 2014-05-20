@@ -5,10 +5,10 @@ import android.graphics.Paint;
 
 public class TextRegion
 {
+    private int    mPosition;
     private String mOriginalText;
     private String mDisplayedText;
     private Paint  mPaint;
-    private float  mAscent;
     private float  mX;
     private float  mWidth;
     private float  mHeight;
@@ -17,22 +17,20 @@ public class TextRegion
 
     public TextRegion(String text, Paint paint, int position, int tabSize)
     {
-        setupDisplayedText(text, position, tabSize);
+        mPosition=position;
         mPaint  = paint;
-
-        Paint.FontMetrics fontMetrics=mPaint.getFontMetrics();
-        mAscent = -fontMetrics.ascent;
         mX      = 0;
-        mWidth  = mPaint.measureText(mDisplayedText);
-        mHeight = fontMetrics.descent + mAscent + fontMetrics.leading;
+
+        setupDisplayedText(text, tabSize);
+        updateSizes();
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
     {
-        canvas.drawText(mDisplayedText, mX+offsetX, offsetY+mAscent, mPaint);
+        canvas.drawText(mDisplayedText, mX+offsetX, offsetY-mPaint.ascent(), mPaint);
     }
 
-    private void setupDisplayedText(String text, int position, int tabSize)
+    private void setupDisplayedText(String text, int tabSize)
     {
         int index=text.indexOf('\t');
 
@@ -44,7 +42,7 @@ public class TextRegion
 
             do
             {
-                int requiredSpaces=tabSize-((position+index) % tabSize);
+                int requiredSpaces=tabSize-((mPosition+index) % tabSize);
                 sb.replace(index, index+1, spaces(requiredSpaces));
 
                 index=sb.indexOf("\t", index);
@@ -71,6 +69,14 @@ public class TextRegion
         return sb.toString();
     }
 
+    private void updateSizes()
+    {
+        Paint.FontMetrics fontMetrics=mPaint.getFontMetrics();
+
+        mWidth  = mPaint.measureText(mDisplayedText);
+        mHeight = fontMetrics.descent - fontMetrics.ascent + fontMetrics.leading;
+    }
+
     public String getOriginalText()
     {
         if (mOriginalText!=null)
@@ -82,16 +88,22 @@ public class TextRegion
             return mDisplayedText;
         }
     }
-	
-	public void setFontSize(int fontSize)
-	{
 
-	}
+    public void setFontSize(float textSize)
+    {
+        mPaint.setTextSize(textSize);
 
-	public void setTabSize(int tabSize)
-	{
+        updateSizes();
+    }
 
-	}
+    public void setTabSize(int tabSize)
+    {
+        if (mOriginalText!=null)
+        {
+            setupDisplayedText(mOriginalText, tabSize);
+            updateSizes();
+        }
+    }
 
     public void setX(float x)
     {

@@ -27,10 +27,10 @@ import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationExtras;
+import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.ReviewSurfaceView;
-import com.griscom.codereview.other.*;
 
 public class ReviewActivity extends FragmentActivity
 {
@@ -64,7 +64,7 @@ public class ReviewActivity extends FragmentActivity
                                        .add(R.id.container, new PlaceholderFragment())
                                        .commit();
         }
-	}
+    }
 
     @Override
     protected void onStart()
@@ -134,9 +134,9 @@ public class ReviewActivity extends FragmentActivity
             case REQUEST_SETTINGS:
             {
                 ColorCache.update(this);
-				
-				mPlaceholderFragment.getContent().setFontSize(ApplicationSettings.fontSize(this));
-				mPlaceholderFragment.getContent().setTabSize (ApplicationSettings.tabSize(this));
+
+                mPlaceholderFragment.getContent().setFontSize(ApplicationSettings.fontSize(this));
+                mPlaceholderFragment.getContent().setTabSize (ApplicationSettings.tabSize(this));
             }
         }
 

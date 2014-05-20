@@ -22,10 +22,10 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
+import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
-import com.griscom.codereview.other.*;
 
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
@@ -42,8 +42,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private long                      mModifiedTime;
     private SyntaxParserBase          mSyntaxParser;
     private TextDocument              mDocument;
-	private int                       mFontSize;
-	private int                       mTabSize;
+    private int                       mFontSize;
+    private int                       mTabSize;
     private SelectionColor            mSelectionColor;
     private OnProgressChangedListener mProgressChangedListener;
 
@@ -75,8 +75,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         {
             mLastLoadedDocument.init(ReviewSurfaceView.this);
 
-			mLastLoadedDocument.setFontSize(mFontSize);
-			mLastLoadedDocument.setTabSize(mTabSize);
+            mLastLoadedDocument.setFontSize(mFontSize);
+            mLastLoadedDocument.setTabSize(mTabSize);
             mLastLoadedDocument.setSelectionColor(mSelectionColor);
             mLastLoadedDocument.setOnProgressChangedListener(mProgressChangedListener);
 
@@ -132,8 +132,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mModifiedTime            = 0;
         mSyntaxParser            = null;
         mDocument                = null;
-		mFontSize                = ApplicationSettings.fontSize(mContext);
-		mTabSize                 = ApplicationSettings.tabSize(mContext);
+        mFontSize                = ApplicationSettings.fontSize(mContext);
+        mTabSize                 = ApplicationSettings.tabSize(mContext);
         mSelectionColor          = SelectionColor.REVIEWED;
         mProgressChangedListener = null;
         mLastLoadedDocument      = null;
@@ -326,32 +326,32 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         // Maybe reload but no. Calls once and reload will come at the next step
         // reload();
     }
-	
-	public void setFontSize(int fontSize)
-	{
-		if (mFontSize!=fontSize)
-		{
-			mFontSize=fontSize;
-			
-			if (mDocument!=null)
+
+    public void setFontSize(int fontSize)
+    {
+        if (mFontSize!=fontSize)
+        {
+            mFontSize=fontSize;
+
+            if (mDocument!=null)
             {
                 mDocument.setFontSize(mFontSize);
             }
-		}
-	}
+        }
+    }
 
-	public void setTabSize(int tabSize)
-	{
-		if (mTabSize!=tabSize)
-		{
-			mTabSize=tabSize;
-			
-			if (mDocument!=null)
+    public void setTabSize(int tabSize)
+    {
+        if (mTabSize!=tabSize)
+        {
+            mTabSize=tabSize;
+
+            if (mDocument!=null)
             {
                 mDocument.setTabSize(mTabSize);
             }
-		}
-	}
+        }
+    }
 
     public void setSelectionColor(SelectionColor selectionColor)
     {

@@ -1,7 +1,6 @@
 Select all in ActionMode
 Hide Done button in ActionMode
 Save/load dialogs state
-Fix issue with changing font size and tab size
 Highlight syntax
 Separate text to TextRegions
 Different font sizes, check that align bottom
