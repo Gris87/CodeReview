@@ -93,4 +93,9 @@ public abstract class SyntaxParserBase
     {
         return ApplicationSettings.tabSize(mContext);
     }
+	
+	public String getCommentLine()
+	{
+		return null;
+	}
 }

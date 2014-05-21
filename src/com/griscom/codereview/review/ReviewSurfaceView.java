@@ -26,6 +26,8 @@ import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
+import com.griscom.codereview.listeners.*;
+import android.text.*;
 
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
@@ -45,6 +47,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private int                       mFontSize;
     private int                       mTabSize;
     private SelectionColor            mSelectionColor;
+	private OnNoteSupportListener     mNoteSupportListener;
     private OnProgressChangedListener mProgressChangedListener;
 
     // USED IN HANDLER [
@@ -135,6 +138,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mFontSize                = ApplicationSettings.fontSize(mContext);
         mTabSize                 = ApplicationSettings.tabSize(mContext);
         mSelectionColor          = SelectionColor.REVIEWED;
+		mNoteSupportListener     = null;
         mProgressChangedListener = null;
         mLastLoadedDocument      = null;
     }
@@ -322,6 +326,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mFileName=fileName;
 
         mSyntaxParser=SyntaxParserBase.createParserByFileName(mFileName, mContext);
+		
+		if (mNoteSupportListener!=null && mSyntaxParser!=null)
+		{
+			mNoteSupportListener.onNoteSupport(!TextUtils.isEmpty(mSyntaxParser.getCommentLine()));
+		}
 
         // Maybe reload but no. Calls once and reload will come at the next step
         // reload();
@@ -365,6 +374,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             }
         }
     }
+	
+	public void setOnNoteSupportListener(OnNoteSupportListener listener)
+	{
+		mNoteSupportListener=listener;
+		
+		if (mNoteSupportListener!=null && mSyntaxParser!=null)
+		{
+			mNoteSupportListener.onNoteSupport(!TextUtils.isEmpty(mSyntaxParser.getCommentLine()));
+		}
+	}
 
     public void setOnProgressChangedListener(OnProgressChangedListener listener)
     {

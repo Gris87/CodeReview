@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
+import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationSettings;
@@ -156,7 +157,7 @@ public class ReviewActivity extends FragmentActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnProgressChangedListener
+    public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnProgressChangedListener
     {
         private ReviewActivity    mActivity;
         private ReviewSurfaceView mContent;
@@ -213,6 +214,7 @@ public class ReviewActivity extends FragmentActivity
 
             mContent.setFileName(mFileName);
             mContent.setOnTouchListener(this);
+			mContent.setOnNoteSupportListener(this);
             mContent.setOnProgressChangedListener(this);
 
             mTitleTextView.setText(mFileName.substring(mFileName.lastIndexOf('/')+1));
@@ -354,6 +356,19 @@ public class ReviewActivity extends FragmentActivity
                 }
             }
         }
+
+		@Override
+		public void onNoteSupport(boolean noteSupported)
+		{
+			if (noteSupported)
+			{
+				mNoteButton.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				mNoteButton.setVisibility(View.GONE);
+			}
+		}
 
         @Override
         public void onProgressChanged(int progress)
