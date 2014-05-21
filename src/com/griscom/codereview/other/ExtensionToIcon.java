@@ -11,7 +11,14 @@ public class ExtensionToIcon
 
     static
     {
-        map.put("cs", R.drawable.icon_cs);
+        map.put("bat",  R.drawable.icon_bat);
+		map.put("c",    R.drawable.icon_c);
+		map.put("cpp",  R.drawable.icon_cpp);
+		map.put("cs",   R.drawable.icon_cs);
+		map.put("h",    R.drawable.icon_h);
+		map.put("hpp",  R.drawable.icon_hpp);
+		map.put("java", R.drawable.icon_java);
+		map.put("sh",   R.drawable.icon_sh);
     }
 
     public static int getIcon(String extension)

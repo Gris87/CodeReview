@@ -62,6 +62,11 @@ public abstract class SyntaxParserBase
             {
                 return new BashSyntaxParser(context);
             }
+			
+			if (extension.equals("bat"))
+            {
+                return new BatchSyntaxParser(context);
+            }
         }
 
         return new PlainTextSyntaxParser(context);
