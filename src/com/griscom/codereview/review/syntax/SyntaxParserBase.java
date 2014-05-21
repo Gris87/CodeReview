@@ -35,9 +35,32 @@ public abstract class SyntaxParserBase
         {
             String extension=fileName.substring(index+1).toLowerCase();
 
+			if (
+			    extension.equals("c")
+			    ||
+				extension.equals("h")
+				||
+				extension.equals("cpp")
+			    ||
+				extension.equals("hpp")
+			   )
+            {
+                return new CPlusPlusSyntaxParser(context);
+            }
+			
             if (extension.equals("cs"))
             {
                 return new CSharpSyntaxParser(context);
+            }
+			
+			if (extension.equals("java"))
+            {
+                return new JavaSyntaxParser(context);
+            }
+			
+			if (extension.equals("sh"))
+            {
+                return new BashSyntaxParser(context);
             }
         }
 
