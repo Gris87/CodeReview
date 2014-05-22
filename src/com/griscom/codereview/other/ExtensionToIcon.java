@@ -54,6 +54,6 @@ public class ExtensionToIcon
             return res.intValue();
         }
 
-        return R.drawable._icon_file;
+        return R.drawable.__icon_file;
     }
 }

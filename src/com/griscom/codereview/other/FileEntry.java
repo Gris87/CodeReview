@@ -40,12 +40,12 @@ public class FileEntry
             }
             else
             {
-                mImageId=R.drawable._icon_file;
+                mImageId=R.drawable.__icon_file;
             }
         }
         else
         {
-            mImageId=R.drawable._icon_folder;
+            mImageId=R.drawable.__icon_folder;
         }
     }
 
@@ -57,7 +57,7 @@ public class FileEntry
         parentFolder.mIsDirectory = true;
         parentFolder.mType        = "";
         parentFolder.mSize        = 0;
-        parentFolder.mImageId     = R.drawable._icon_folder;
+        parentFolder.mImageId     = R.drawable.__icon_folder;
 
         return parentFolder;
     }

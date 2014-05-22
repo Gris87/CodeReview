@@ -34,6 +34,11 @@ public abstract class SyntaxParserBase
         if (index>0)
         {
             String extension=fileName.substring(index+1).toLowerCase();
+			
+			if (extension.equals("bat"))
+            {
+                return new BatchSyntaxParser(context);
+            }
 
 			if (
 			    extension.equals("c")
@@ -63,9 +68,15 @@ public abstract class SyntaxParserBase
                 return new BashSyntaxParser(context);
             }
 			
-			if (extension.equals("bat"))
+			if (
+			    extension.equals("xml")
+				||
+				extension.equals("html")
+				||
+				extension.equals("ui")
+			   )
             {
-                return new BatchSyntaxParser(context);
+                return new XmlSyntaxParser(context);
             }
         }
 
@@ -123,6 +134,11 @@ public abstract class SyntaxParserBase
     }
 	
 	public String getCommentLine()
+	{
+		return null;
+	}
+	
+	public String getCommentLineEnd()
 	{
 		return null;
 	}
