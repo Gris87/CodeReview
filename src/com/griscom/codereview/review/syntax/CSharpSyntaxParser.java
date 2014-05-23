@@ -46,11 +46,11 @@ public class CSharpSyntaxParser extends SyntaxParserBase
             Paint stringPaint      = new Paint(basePaint);
             Paint punctuationPaint = new Paint(basePaint);
 
-            keywordPaint.setColor    (Color.rgb(150, 0,   85));
-            keywordPaint.setTypeface (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+            keywordPaint.setColor       (Color.rgb(150, 0,   85));
+            keywordPaint.setTypeface    (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
             keywordPaint.setFakeBoldText(true);
-            commentPaint.setColor    (Color.rgb(64,  128, 100));
-            stringPaint.setColor     (Color.rgb(0,   0,   192));
+            commentPaint.setColor       (Color.rgb(64,  128, 100));
+            stringPaint.setColor        (Color.rgb(0,   0,   192));
 
             Map<String, Paint> colorsMap = new HashMap<String, Paint>();
             colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);

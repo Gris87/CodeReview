@@ -46,11 +46,13 @@ public class XmlSyntaxParser extends SyntaxParserBase
             Paint stringPaint      = new Paint(basePaint);
             Paint punctuationPaint = new Paint(basePaint);
 
-            tagPaint.setColor    (Color.rgb(150, 0,   85));
-            tagPaint.setTypeface (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
-            tagPaint.setFakeBoldText(true);
-            commentPaint.setColor    (Color.rgb(64,  128, 100));
-            stringPaint.setColor     (Color.rgb(0,   0,   192));
+            tagPaint.setColor        (Color.rgb(64,  128, 128));
+            tagPaint.setTypeface     (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+            tagPaint.setFakeBoldText (true);
+            attribNamePaint.setColor (Color.rgb(172, 0,   172));
+            attribValuePaint.setColor(Color.rgb(40,  0,   255));
+            commentPaint.setColor    (Color.rgb(64,  96,  192));
+            stringPaint.setColor     (Color.rgb(40,  0,   255));
 
             Map<String, Paint> colorsMap = new HashMap<String, Paint>();
             colorsMap.put(Prettify.PR_TAG,          tagPaint);
