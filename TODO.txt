@@ -3,7 +3,6 @@ Hide Done button in ActionMode
 Save/load dialogs state
 Highlight syntax
 Separate text to TextRegions
-Different font sizes, check that align bottom
 Row note region index
 Add notes
 Remove notes

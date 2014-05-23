@@ -83,6 +83,7 @@ public class JavaSyntaxParser extends SyntaxParserBase
             List<ParseResult> results=new PrettifyParser().parse("java", sourceCode);
 
             TextRow row=null;
+            int curColumn=0;
 
             for (ParseResult result : results)
             {
@@ -118,15 +119,17 @@ public class JavaSyntaxParser extends SyntaxParserBase
                     String contentPart=content.substring(0, index);
                     content=content.substring(index+1);
 
-                    row.addTextRegion(new TextRegion(contentPart, selectedPaint, 0, tabSize));
+                    row.addTextRegion(new TextRegion(contentPart, selectedPaint, curColumn, tabSize));
                     res.addTextRow(row);
 
                     row=new TextRow();
+                    curColumn=0;
                 } while (true);
 
                 if (!content.equals(""))
                 {
-                    row.addTextRegion(new TextRegion(content, selectedPaint, 0, tabSize));
+                    row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));
+                    curColumn+=content.length();
                 }
             }
 
