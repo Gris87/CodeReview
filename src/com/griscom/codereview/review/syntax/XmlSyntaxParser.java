@@ -39,23 +39,23 @@ public class XmlSyntaxParser extends SyntaxParserBase
             basePaint.setTypeface(Typeface.MONOSPACE);
             basePaint.setTextSize(getFontSize());
 
-            Paint typePaint        = new Paint(basePaint);
-            Paint keywordPaint     = new Paint(basePaint);
-            Paint literalPaint     = new Paint(basePaint);
+            Paint tagPaint         = new Paint(basePaint);
+            Paint attribNamePaint  = new Paint(basePaint);
+            Paint attribValuePaint = new Paint(basePaint);
             Paint commentPaint     = new Paint(basePaint);
             Paint stringPaint      = new Paint(basePaint);
             Paint punctuationPaint = new Paint(basePaint);
 
-            keywordPaint.setColor    (Color.rgb(150, 0,   85));
-            keywordPaint.setTypeface (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
-            keywordPaint.setFakeBoldText(true);
+            tagPaint.setColor    (Color.rgb(150, 0,   85));
+            tagPaint.setTypeface (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+            tagPaint.setFakeBoldText(true);
             commentPaint.setColor    (Color.rgb(64,  128, 100));
             stringPaint.setColor     (Color.rgb(0,   0,   192));
 
             Map<String, Paint> colorsMap = new HashMap<String, Paint>();
-            colorsMap.put(Prettify.PR_TAG,          keywordPaint);
-            colorsMap.put(Prettify.PR_ATTRIB_VALUE, typePaint);
-            colorsMap.put(Prettify.PR_ATTRIB_NAME,  literalPaint);
+            colorsMap.put(Prettify.PR_TAG,          tagPaint);
+            colorsMap.put(Prettify.PR_ATTRIB_NAME,  attribNamePaint);
+            colorsMap.put(Prettify.PR_ATTRIB_VALUE, attribValuePaint);
             colorsMap.put(Prettify.PR_COMMENT,      commentPaint);
             colorsMap.put(Prettify.PR_STRING,       stringPaint);
             colorsMap.put(Prettify.PR_PUNCTUATION,  punctuationPaint);

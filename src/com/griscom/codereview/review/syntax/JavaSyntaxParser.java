@@ -39,8 +39,8 @@ public class JavaSyntaxParser extends SyntaxParserBase
             basePaint.setTypeface(Typeface.MONOSPACE);
             basePaint.setTextSize(getFontSize());
 
-            Paint typePaint        = new Paint(basePaint);
             Paint keywordPaint     = new Paint(basePaint);
+            Paint typePaint        = new Paint(basePaint);
             Paint literalPaint     = new Paint(basePaint);
             Paint commentPaint     = new Paint(basePaint);
             Paint stringPaint      = new Paint(basePaint);
@@ -53,8 +53,8 @@ public class JavaSyntaxParser extends SyntaxParserBase
             stringPaint.setColor     (Color.rgb(0,   0,   192));
 
             Map<String, Paint> colorsMap = new HashMap<String, Paint>();
-            colorsMap.put(Prettify.PR_TYPE,        typePaint);
             colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);
+            colorsMap.put(Prettify.PR_TYPE,        typePaint);
             colorsMap.put(Prettify.PR_LITERAL,     literalPaint);
             colorsMap.put(Prettify.PR_COMMENT,     commentPaint);
             colorsMap.put(Prettify.PR_STRING,      stringPaint);
