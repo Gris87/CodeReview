@@ -35,11 +35,6 @@ public abstract class SyntaxParserBase
         {
             String extension=fileName.substring(index+1).toLowerCase();
 
-            if (extension.equals("bat"))
-            {
-                return new BatchSyntaxParser(context);
-            }
-
             if (
                 extension.equals("c")
                 ||
