@@ -60,9 +60,9 @@ public class CSharpSyntaxParser extends SyntaxParserBase
         return res;
     }
 
-	@Override
-	public String getCommentLine()
-	{
-		return "//";
-	}
+    @Override
+    public String getCommentLine()
+    {
+        return "//";
+    }
 }

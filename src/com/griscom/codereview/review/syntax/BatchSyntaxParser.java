@@ -60,9 +60,9 @@ public class BatchSyntaxParser extends SyntaxParserBase
         return res;
     }
 
-	@Override
-	public String getCommentLine()
-	{
-		return "rem ";
-	}
+    @Override
+    public String getCommentLine()
+    {
+        return "rem ";
+    }
 }

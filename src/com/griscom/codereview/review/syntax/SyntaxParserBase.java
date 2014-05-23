@@ -34,47 +34,47 @@ public abstract class SyntaxParserBase
         if (index>0)
         {
             String extension=fileName.substring(index+1).toLowerCase();
-			
-			if (extension.equals("bat"))
+
+            if (extension.equals("bat"))
             {
                 return new BatchSyntaxParser(context);
             }
 
-			if (
-			    extension.equals("c")
-			    ||
-				extension.equals("h")
-				||
-				extension.equals("cpp")
-			    ||
-				extension.equals("hpp")
-			   )
+            if (
+                extension.equals("c")
+                ||
+                extension.equals("h")
+                ||
+                extension.equals("cpp")
+                ||
+                extension.equals("hpp")
+               )
             {
                 return new CPlusPlusSyntaxParser(context);
             }
-			
+
             if (extension.equals("cs"))
             {
                 return new CSharpSyntaxParser(context);
             }
-			
-			if (extension.equals("java"))
+
+            if (extension.equals("java"))
             {
                 return new JavaSyntaxParser(context);
             }
-			
-			if (extension.equals("sh"))
+
+            if (extension.equals("sh"))
             {
                 return new BashSyntaxParser(context);
             }
-			
-			if (
-			    extension.equals("xml")
-				||
-				extension.equals("html")
-				||
-				extension.equals("ui")
-			   )
+
+            if (
+                extension.equals("xml")
+                ||
+                extension.equals("html")
+                ||
+                extension.equals("ui")
+               )
             {
                 return new XmlSyntaxParser(context);
             }
@@ -132,14 +132,14 @@ public abstract class SyntaxParserBase
     {
         return ApplicationSettings.tabSize(mContext);
     }
-	
-	public String getCommentLine()
-	{
-		return null;
-	}
-	
-	public String getCommentLineEnd()
-	{
-		return null;
-	}
+
+    public String getCommentLine()
+    {
+        return null;
+    }
+
+    public String getCommentLineEnd()
+    {
+        return null;
+    }
 }

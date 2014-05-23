@@ -2,8 +2,10 @@ package com.griscom.codereview.review;
 
 import java.util.ArrayList;
 
+import junit.framework.Assert;
 import android.graphics.Canvas;
 
+import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.other.SelectionColor;
 
 public class TextRow
@@ -36,6 +38,16 @@ public class TextRow
 
     public void addTextRegion(TextRegion region)
     {
+        if (mRegions.size()>0 && region.getOriginalText().equals(""))
+        {
+            return;
+        }
+
+        if (BuildConfig.DEBUG)
+        {
+            Assert.assertTrue(mRegions.size()==0 || !mRegions.get(mRegions.size()-1).getOriginalText().equals(""));
+        }
+
         mRegions.add(region);
 
         updateSizeByRegion(region);

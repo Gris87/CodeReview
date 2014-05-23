@@ -214,7 +214,7 @@ public class ReviewActivity extends FragmentActivity
 
             mContent.setFileName(mFileName);
             mContent.setOnTouchListener(this);
-			mContent.setOnNoteSupportListener(this);
+            mContent.setOnNoteSupportListener(this);
             mContent.setOnProgressChangedListener(this);
 
             mTitleTextView.setText(mFileName.substring(mFileName.lastIndexOf('/')+1));
@@ -357,18 +357,18 @@ public class ReviewActivity extends FragmentActivity
             }
         }
 
-		@Override
-		public void onNoteSupport(boolean noteSupported)
-		{
-			if (noteSupported)
-			{
-				mNoteButton.setVisibility(View.VISIBLE);
-			}
-			else
-			{
-				mNoteButton.setVisibility(View.GONE);
-			}
-		}
+        @Override
+        public void onNoteSupport(boolean noteSupported)
+        {
+            if (noteSupported)
+            {
+                mNoteButton.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                mNoteButton.setVisibility(View.GONE);
+            }
+        }
 
         @Override
         public void onProgressChanged(int progress)

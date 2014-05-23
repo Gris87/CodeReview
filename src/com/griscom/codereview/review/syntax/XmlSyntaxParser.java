@@ -60,15 +60,15 @@ public class XmlSyntaxParser extends SyntaxParserBase
         return res;
     }
 
-	@Override
-	public String getCommentLine()
-	{
-		return "<!--";
-	}
+    @Override
+    public String getCommentLine()
+    {
+        return "<!--";
+    }
 
-	@Override
-	public String getCommentLineEnd()
-	{
-		return "-->";
-	}
+    @Override
+    public String getCommentLineEnd()
+    {
+        return "-->";
+    }
 }
