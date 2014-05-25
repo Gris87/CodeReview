@@ -34,6 +34,36 @@ public abstract class SyntaxParserBase
         if (index>0)
         {
             String extension=fileName.substring(index+1).toLowerCase();
+            
+            if (
+                extension.equals("apollo")
+                ||
+                extension.equals("agc")
+                ||
+                extension.equals("aea")
+               )
+            {
+                return new ApolloSyntaxParser(context);
+            }
+            
+            if (extension.equals("sh"))
+            {
+                return new BashSyntaxParser(context);
+            }
+            
+            if (
+                extension.equals("basic")
+                ||
+                extension.equals("cbm")
+               )
+            {
+                return new BasicSyntaxParser(context);
+            }
+            
+            if (extension.equals("clj"))
+            {
+                return new CljSyntaxParser(context);
+            }
 
             if (
                 extension.equals("c")
@@ -52,15 +82,97 @@ public abstract class SyntaxParserBase
             {
                 return new CSharpSyntaxParser(context);
             }
+            
+            if (extension.equals("css"))
+            {
+                return new CssSyntaxParser(context);
+            }
+            
+            if (extension.equals("css-kw"))
+            {
+                return new CsssKwSyntaxParser(context);
+            }
+            
+            if (extension.equals("css-str"))
+            {
+                return new CssStrSyntaxParser(context);
+            }
+            
+            if (extension.equals("dart"))
+            {
+                return new DartSyntaxParser(context);
+            }
+            
+            if (
+                extension.equals("erlang")
+                ||
+                extension.equals("erl")
+               )
+            {
+                return new ErlangSyntaxParser(context);
+            }
+            
+            if (extension.equals("go"))
+            {
+                return new GoSyntaxParser(context);
+            }
+            
+            if (extension.equals("hs"))
+            {
+                return new HsSyntaxParser(context);
+            }
 
             if (extension.equals("java"))
             {
                 return new JavaSyntaxParser(context);
             }
-
-            if (extension.equals("sh"))
+            
+            if (
+                extension.equals("cl")
+                ||
+                extension.equals("el")
+                ||
+                extension.equals("lisp")
+                ||
+                extension.equals("lsp")
+                ||
+                extension.equals("scm")
+                ||
+                extension.equals("ss")
+                ||
+                extension.equals("rkt")
+               )
             {
-                return new BashSyntaxParser(context);
+                return new LispSyntaxParser(context);
+            }
+            
+            if (
+                extension.equals("llvm")
+                ||
+                extension.equals("ll")
+               )
+            {
+                return new LlvmSyntaxParser(context);
+            }
+            
+            if (extension.equals("lua"))
+            {
+                return new LuaSyntaxParser(context);
+            }
+            
+            if (extension.equals("matlab"))
+            {
+                return new MatlabSyntaxParser(context);
+            }
+            
+            if (extension.equals("matlab-identifiers"))
+            {
+                return new MatlabIdentifiersSyntaxParser(context);
+            }
+            
+            if (extension.equals("matlab-operators"))
+            {
+                return new MatlabOperatorsSyntaxParser(context);
             }
 
             if (

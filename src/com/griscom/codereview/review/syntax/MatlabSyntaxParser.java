@@ -17,11 +17,11 @@ import com.griscom.codereview.review.TextDocument;
 import com.griscom.codereview.review.TextRegion;
 import com.griscom.codereview.review.TextRow;
 
-public class MathlabSyntaxParser extends SyntaxParserBase
+public class MatlabSyntaxParser extends SyntaxParserBase
 {
-    private static final String TAG="MathlabSyntaxParser";
+    private static final String TAG="MatlabSyntaxParser";
 
-    public MathlabSyntaxParser(Context context)
+    public MatlabSyntaxParser(Context context)
     {
         super(context);
     }
@@ -80,7 +80,7 @@ public class MathlabSyntaxParser extends SyntaxParserBase
             int tabSize=getTabSize();
 
             String sourceCode=codeBuilder.toString();
-            List<ParseResult> results=new PrettifyParser().parse("mathlab", sourceCode);
+            List<ParseResult> results=new PrettifyParser().parse("matlab", sourceCode);
 
             TextRow row=null;
             int curColumn=0;
