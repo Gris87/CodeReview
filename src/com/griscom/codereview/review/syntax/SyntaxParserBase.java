@@ -29,11 +29,13 @@ public abstract class SyntaxParserBase
 
     public static SyntaxParserBase createParserByFileName(String fileName, Context context)
     {
+		fileName=fileName.toLowerCase();
+		
         int index=fileName.lastIndexOf('.');
 
         if (index>0)
         {
-            String extension=fileName.substring(index+1).toLowerCase();
+            String extension=fileName.substring(index+1);
             
             if (
                 extension.equals("apollo")
@@ -90,7 +92,7 @@ public abstract class SyntaxParserBase
             
             if (extension.equals("css-kw"))
             {
-                return new CsssKwSyntaxParser(context);
+                return new CssKwSyntaxParser(context);
             }
             
             if (extension.equals("css-str"))
@@ -174,7 +176,102 @@ public abstract class SyntaxParserBase
             {
                 return new MatlabOperatorsSyntaxParser(context);
             }
+			
+			if (
+                extension.equals("fs")
+                ||
+                extension.equals("ml")
+			   )
+            {
+                return new MlSyntaxParser(context);
+            }
+			
+			if (extension.equals("mumps"))
+            {
+                return new MumpsSyntaxParser(context);
+            }
+			
+			if (
+                extension.equals("n")
+                ||
+                extension.equals("nemerle")
+			   )
+            {
+                return new NSyntaxParser(context);
+            }
+			
+			if (
+                extension.equals("pas")
+                ||
+                extension.equals("pascal")
+			   )
+            {
+                return new PascalSyntaxParser(context);
+            }
 
+			if (
+                extension.equals("r")
+                ||
+                extension.equals("s")
+				||
+                extension.equals("splus")
+			   )
+            {
+                return new RSyntaxParser(context);
+            }
+
+			if (extension.equals("rd"))
+            {
+                return new RdSyntaxParser(context);
+            }
+			
+			if (extension.equals("scala"))
+            {
+                return new ScalaSyntaxParser(context);
+            }
+			
+			if (extension.equals("sql"))
+            {
+                return new SqlSyntaxParser(context);
+            }
+			
+			if (extension.equals("tcl"))
+            {
+                return new TclSyntaxParser(context);
+            }
+			
+			if (
+                extension.equals("latex")
+                ||
+                extension.equals("tex")
+				)
+            {
+                return new TexSyntaxParser(context);
+            }
+			
+			if (
+                extension.equals("vb")
+                ||
+                extension.equals("vbs")
+				)
+            {
+                return new VisualBasicSyntaxParser(context);
+            }
+			
+			if (
+                extension.equals("vhdl")
+                ||
+                extension.equals("vhd")
+				)
+            {
+                return new VhdlSyntaxParser(context);
+            }
+			
+			if (fileName.endsWith(".wiki.meta"))
+            {
+                return new WikiSyntaxParser(context);
+            }
+			
             if (
                 extension.equals("xml")
                 ||
@@ -184,6 +281,24 @@ public abstract class SyntaxParserBase
                )
             {
                 return new XmlSyntaxParser(context);
+            }
+			
+			if (
+                extension.equals("xq")
+                ||
+                extension.equals("xquery")
+				)
+            {
+                return new XqSyntaxParser(context);
+            }
+			
+			if (
+                extension.equals("yaml")
+                ||
+                extension.equals("yml")
+				)
+            {
+                return new YamlSyntaxParser(context);
             }
         }
 
