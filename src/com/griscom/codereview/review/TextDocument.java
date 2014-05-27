@@ -30,6 +30,9 @@ import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.util.Utils;
+import android.widget.*;
+import android.app.*;
+import android.content.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -487,8 +490,10 @@ public class TextDocument implements OnTouchListener
             {
                 if (mTouchMode==TouchMode.SELECT)
                 {
-                    int firstRow;
-                    int lastRow;
+					mHandler.removeMessages(SCROLL_MESSAGE);
+					
+                    final int firstRow;
+                    final int lastRow;
 
                     if (mSelectionEnd>mHighlightedRow)
                     {
@@ -500,45 +505,46 @@ public class TextDocument implements OnTouchListener
                         firstRow = mSelectionEnd;
                         lastRow  = mHighlightedRow;
                     }
+					
+					if (mSelectionColor==SelectionColor.NOTE)
+					{
+						final EditText editText=new EditText(mContext);
 
-                    int coloredRows=0;
+						AlertDialog dialog=new AlertDialog.Builder(mContext)
+							.setTitle(R.string.dialog_input_comment_title)
+							.setMessage(R.string.dialog_input_comment_message)
+							.setView(editText)
+							.setPositiveButton(android.R.string.ok,
+							new DialogInterface.OnClickListener()
+							{
+								@Override
+								public void onClick(DialogInterface dialog, int whichButton)
+								{
+									performSelection(firstRow, lastRow);
+									finishSelection();
+									
+									dialog.dismiss();
+								}
+							})
+							.setNegativeButton(android.R.string.cancel,
+							new DialogInterface.OnClickListener()
+							{
+								@Override
+								public void onClick(DialogInterface dialog, int whichButton)
+								{
+									finishSelection();
+									dialog.dismiss();
+								}
+							}).create();
 
-                    for (int i=firstRow; i<=lastRow; ++i)
-                    {
-                        if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
-                        {
-                            coloredRows++;
-                        }
-                    }
-
-                    synchronized(this)
-                    {
-                        for (int i=firstRow; i<=lastRow; ++i)
-                        {
-                            mRows.get(i).setSelectionColor(mSelectionColor);
-
-                            if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
-                            {
-                                coloredRows--;
-                            }
-                        }
-                    }
-
-                    if (coloredRows!=0)
-                    {
-                        // Decrease because coloredRows will be negative if new colors added
-                        mProgress-=coloredRows;
-
-                        progressChanged();
-                    }
-
-                    mHighlightedRow = -1;
-                    mSelectionEnd   = -1;
-
-                    mHandler.removeMessages(SELECTION_MESSAGE);
-                    mHandler.removeMessages(SCROLL_MESSAGE);
-
-                    repaint();
+						dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+						dialog.show();
+					}
+					else
+					{
+                        performSelection(firstRow, lastRow);
+						finishSelection();
+					}
                 }
                 else
                 if (mTouchMode==TouchMode.ZOOM)
@@ -575,6 +581,50 @@ public class TextDocument implements OnTouchListener
             mHandler.removeMessages(HIGHLIGHT_MESSAGE);
         }
     }
+	
+	private void performSelection(final int firstRow, final int lastRow)
+	{
+		int coloredRows=0;
+
+		for (int i=firstRow; i<=lastRow; ++i)
+		{
+			if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
+			{
+				coloredRows++;
+			}
+		}
+
+		synchronized(this)
+		{
+			for (int i=firstRow; i<=lastRow; ++i)
+			{
+				mRows.get(i).setSelectionColor(mSelectionColor);
+
+				if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
+				{
+					coloredRows--;
+				}
+			}
+		}
+
+		if (coloredRows!=0)
+		{
+			// Decrease because coloredRows will be negative if new colors added
+			mProgress-=coloredRows;
+
+			progressChanged();
+		}
+	}
+	
+	private void finishSelection()
+	{
+		mHighlightedRow = -1;
+		mSelectionEnd   = -1;
+		
+		mHandler.removeMessages(SELECTION_MESSAGE);
+
+		repaint();
+	}
 
     private void repaint()
     {

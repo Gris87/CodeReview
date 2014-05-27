@@ -58,6 +58,12 @@
 
     <!-- Review file not found message -->
     <string name="file_not_found">Файл не найден</string>
+	
+	<!-- Title for comment dialog in review activity -->
+    <string name="dialog_input_comment_title">Комментарий</string>
+
+    <!-- Message for comment dialog in review activity -->
+    <string name="dialog_input_comment_message">Введите комментарий:</string>
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Игнорирование файлов</string>

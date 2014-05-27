@@ -98,7 +98,10 @@ public class TextRow
 
     public void setSelectionColor(SelectionColor selectionColor)
     {
-        mSelectionColor=selectionColor;
+		if (mSelectionColor!=SelectionColor.NOTE)
+		{
+			mSelectionColor=selectionColor;
+		}
     }
 
     public SelectionColor getSelectionColor()
