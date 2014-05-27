@@ -88,6 +88,14 @@ public class TextRegion
             return mDisplayedText;
         }
     }
+	
+	public void setOriginalText(String text)
+    {
+        mOriginalText  = null;
+		mDisplayedText = text;
+		
+		// TODO: Update size
+    }
 
     public void setFontSize(float textSize)
     {

@@ -33,6 +33,7 @@ import com.griscom.codereview.util.Utils;
 import android.widget.*;
 import android.app.*;
 import android.content.*;
+import com.griscom.codereview.review.syntax.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -52,9 +53,10 @@ public class TextDocument implements OnTouchListener
 
 
 
+	private SyntaxParserBase          mSyntaxParser;
     private Context                   mContext;
+	private ReviewSurfaceView         mParent;
     private Vibrator                  mVibrator;
-    private ReviewSurfaceView         mParent;
     private DocumentHandler           mHandler;
     private ArrayList<TextRow>        mRows;
     private OnProgressChangedListener mProgressChangedListener;
@@ -95,11 +97,12 @@ public class TextDocument implements OnTouchListener
 
 
 
-    public TextDocument(Context context)
+    public TextDocument(SyntaxParserBase parser)
     {
-        mContext                 = context;
+		mSyntaxParser            = parser;
+        mContext                 = mSyntaxParser.getContext();
+		mParent                  = null;
         mVibrator                = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
-        mParent                  = null;
         mHandler                 = null;
         mRows                    = new ArrayList<TextRow>();
         mProgressChangedListener = null;
@@ -520,7 +523,7 @@ public class TextDocument implements OnTouchListener
 								@Override
 								public void onClick(DialogInterface dialog, int whichButton)
 								{
-									performSelection(firstRow, lastRow);
+									performSelection(firstRow, lastRow, editText.getText().toString());
 									finishSelection();
 									
 									dialog.dismiss();
@@ -542,7 +545,7 @@ public class TextDocument implements OnTouchListener
 					}
 					else
 					{
-                        performSelection(firstRow, lastRow);
+                        performSelection(firstRow, lastRow, null);
 						finishSelection();
 					}
                 }
@@ -582,7 +585,7 @@ public class TextDocument implements OnTouchListener
         }
     }
 	
-	private void performSelection(final int firstRow, final int lastRow)
+	private void performSelection(final int firstRow, final int lastRow, String comment)
 	{
 		int coloredRows=0;
 
@@ -598,9 +601,18 @@ public class TextDocument implements OnTouchListener
 		{
 			for (int i=firstRow; i<=lastRow; ++i)
 			{
-				mRows.get(i).setSelectionColor(mSelectionColor);
+				TextRow row=mRows.get(i);
+				
+				if (comment!=null)
+				{
+             		row.setComment(comment, mSyntaxParser.getCommentPaint());
+				}
+				else
+				{
+					row.setSelectionColor(mSelectionColor);
+				}
 
-				if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
+				if (row.getSelectionColor()!=SelectionColor.CLEAR)
 				{
 					coloredRows--;
 				}

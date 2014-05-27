@@ -29,7 +29,7 @@ public class CljSyntaxParser extends SyntaxParserBase
     @Override
     public TextDocument parseFile(String fileName)
     {
-        TextDocument res=new TextDocument(mContext);
+        TextDocument res=new TextDocument(this);
 
         try
         {
@@ -42,21 +42,21 @@ public class CljSyntaxParser extends SyntaxParserBase
             Paint keywordPaint     = new Paint(basePaint);
             Paint typePaint        = new Paint(basePaint);
             Paint literalPaint     = new Paint(basePaint);
-            Paint commentPaint     = new Paint(basePaint);
+            mCommentPaint          = new Paint(basePaint);
             Paint stringPaint      = new Paint(basePaint);
             Paint punctuationPaint = new Paint(basePaint);
 
             keywordPaint.setColor       (Color.rgb(150, 0,   85));
             keywordPaint.setTypeface    (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
             keywordPaint.setFakeBoldText(true);
-            commentPaint.setColor       (Color.rgb(64,  128, 100));
+            mCommentPaint.setColor      (Color.rgb(64,  128, 100));
             stringPaint.setColor        (Color.rgb(0,   0,   192));
 
             Map<String, Paint> colorsMap = new HashMap<String, Paint>();
             colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);
             colorsMap.put(Prettify.PR_TYPE,        typePaint);
             colorsMap.put(Prettify.PR_LITERAL,     literalPaint);
-            colorsMap.put(Prettify.PR_COMMENT,     commentPaint);
+            colorsMap.put(Prettify.PR_COMMENT,     mCommentPaint);
             colorsMap.put(Prettify.PR_STRING,      stringPaint);
             colorsMap.put(Prettify.PR_PUNCTUATION, punctuationPaint);
 

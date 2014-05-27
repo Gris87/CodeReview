@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.other.SelectionColor;
+import android.text.*;
+import android.graphics.*;
 
 public class TextRow
 {
@@ -15,6 +17,7 @@ public class TextRow
     private float                 mY;
     private float                 mWidth;
     private float                 mHeight;
+	private int                   mCommentIndex;
 
 
 
@@ -26,6 +29,8 @@ public class TextRow
         mY              = 0;
         mWidth          = 0;
         mHeight         = 0;
+		
+		mCommentIndex   =-1;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
@@ -75,6 +80,33 @@ public class TextRow
             mHeight=region.getHeight();
         }
     }
+	
+	public void setComment(String comment, Paint paint)
+	{
+		if (TextUtils.isEmpty(comment))
+		{
+			if (mCommentIndex>=0)
+			{
+				mRegions.remove(mCommentIndex);
+				mCommentIndex=-1;
+				
+				mSelectionColor=SelectionColor.CLEAR;
+			}
+		}
+		else
+		{
+			if (mCommentIndex>=0)
+			{
+				mRegions.get(mCommentIndex).setOriginalText(comment);
+			}
+			else
+			{
+				addTextRegion(new TextRegion(comment, paint, 0, 4));
+				mCommentIndex=mRegions.size()-1;
+				mSelectionColor=SelectionColor.NOTE;
+			}
+		}
+	}
 
     public void setFontSize(float textSize)
     {

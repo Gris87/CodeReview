@@ -12,19 +12,22 @@ import android.content.Context;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.review.TextDocument;
 import com.griscom.codereview.util.Utils;
+import android.graphics.*;
 
 @SuppressLint("DefaultLocale")
 public abstract class SyntaxParserBase
 {
     protected Context        mContext;
     protected BufferedReader mReader;
+	protected Paint          mCommentPaint;
 
 
 
     protected SyntaxParserBase(Context context)
     {
-        mContext = context;
-        mReader  = null;
+        mContext      = context;
+        mReader       = null;
+		mCommentPaint = null;
     }
 
     public static SyntaxParserBase createParserByFileName(String fileName, Context context)
@@ -364,4 +367,14 @@ public abstract class SyntaxParserBase
     {
         return null;
     }
+	
+	public Context getContext()
+    {
+        return mContext;
+    }
+	
+	public Paint getCommentPaint()
+	{
+		return mCommentPaint;
+	}
 }

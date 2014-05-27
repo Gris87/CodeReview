@@ -22,7 +22,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
     @Override
     public TextDocument parseFile(String fileName)
     {
-        TextDocument res=new TextDocument(mContext);
+        TextDocument res=new TextDocument(this);
 
         try
         {
