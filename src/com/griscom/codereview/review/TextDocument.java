@@ -35,6 +35,8 @@ import android.app.*;
 import android.content.*;
 import com.griscom.codereview.review.syntax.*;
 import org.w3c.dom.*;
+import com.griscom.codereview.listeners.*;
+import java.security.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -555,6 +557,8 @@ public class TextDocument implements OnTouchListener
 									performSelection(firstRow, lastRow, comment);
 									updateSizes();
 									
+									saveFile();
+									
 									finishSelection();
 									dialog.dismiss();
 								}
@@ -673,6 +677,14 @@ public class TextDocument implements OnTouchListener
         if (mParent!=null)
         {
             mParent.repaint();
+        }
+    }
+	
+	private void saveFile()
+    {
+        if (mParent!=null)
+        {
+            mParent.onSaveRequested();
         }
     }
 
@@ -941,6 +953,18 @@ public class TextDocument implements OnTouchListener
             mWidth=row.getWidth();
         }
     }
+	
+	public ArrayList<String> getRows()
+	{
+		ArrayList<String> res=new ArrayList<String>();
+		
+		for (int i=0; i<mRows.size(); ++i)
+		{
+			res.add(mRows.get(i).toString());
+		}
+		
+		return res;
+	}
 
     public void setFontSize(int fontSize)
     {
@@ -990,6 +1014,7 @@ public class TextDocument implements OnTouchListener
     public void setOnProgressChangedListener(OnProgressChangedListener listener)
     {
         mProgressChangedListener=listener;
+		progressChanged();
     }
 
     public void setX(float x)

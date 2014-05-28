@@ -28,9 +28,14 @@ import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
+import java.io.*;
+import java.util.*;
+import android.util.*;
 
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
+	private static final String TAG = "ReviewSurfaceView";
+	
     private static final int LOADED_MESSAGE  = 1;
     private static final int REPAINT_MESSAGE = 2;
 
@@ -233,6 +238,35 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mLastLoadedDocument=document;
         mHandler.sendEmptyMessage(LOADED_MESSAGE);
     }
+	
+	@Override
+	public void onSaveRequested()
+	{
+		if (mDocument!=null)
+		{
+			try
+			{
+                ArrayList<String> rows   = mDocument.getRows();
+				PrintWriter       writer = new PrintWriter(mFileName);
+                
+				for (int i=0; i<rows.size(); ++i)
+                {
+                    writer.println(rows.get(i));
+                }
+				
+				writer.close();
+
+				synchronized(this)
+				{
+					mModifiedTime = new File(mFileName).lastModified();
+				}
+			}
+			catch(Exception e)
+			{
+				Log.e(TAG, "Impossible to save file: "+mFileName, e);
+			}
+		}
+	}
 
     public void repaint()
     {

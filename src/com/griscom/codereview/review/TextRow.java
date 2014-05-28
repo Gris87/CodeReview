@@ -75,6 +75,19 @@ public class TextRow
             mHeight=region.getHeight();
         }
     }
+
+	@Override
+	public String toString()
+	{
+		StringBuilder res=new StringBuilder();
+		
+		for (int i=0; i<mRegions.size(); ++i)
+        {
+        	res.append(mRegions.get(i).getOriginalText());
+        }
+		
+		return res.toString();
+	}
 	
 	public void setComment(String comment, Paint paint)
 	{
