@@ -48,11 +48,6 @@ public class TextRow
             return;
         }
 
-        if (BuildConfig.DEBUG)
-        {
-            Assert.assertTrue(mRegions.size()==0 || !mRegions.get(mRegions.size()-1).getOriginalText().equals(""));
-        }
-
         mRegions.add(region);
 
         updateSizeByRegion(region);
@@ -95,6 +90,27 @@ public class TextRow
 		}
 		else
 		{
+			if (
+			    mRegions.size()>0
+				&&
+				(
+			     (
+				  mCommentIndex<0
+				  &&
+				  !mRegions.get(mRegions.size()-1).getOriginalText().equals("")
+				 )
+				 ||
+				 (
+				  mCommentIndex>0
+				  &&
+				  !mRegions.get(mCommentIndex-1).getOriginalText().equals("")
+				 )
+				)
+			   )
+			{
+				comment=" "+comment;
+			}
+			
 			if (mCommentIndex>=0)
 			{
 				mRegions.get(mCommentIndex).setOriginalText(comment);

@@ -63,7 +63,7 @@
     <string name="dialog_input_comment_title">Комментарий</string>
 
     <!-- Message for comment dialog in review activity -->
-    <string name="dialog_input_comment_message">Введите комментарий:</string>
+    <string name="dialog_input_comment_message">Введите комментарий (пустой для удаления):</string>
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Игнорирование файлов</string>

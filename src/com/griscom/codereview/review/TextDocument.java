@@ -34,6 +34,7 @@ import android.widget.*;
 import android.app.*;
 import android.content.*;
 import com.griscom.codereview.review.syntax.*;
+import org.w3c.dom.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -523,9 +524,38 @@ public class TextDocument implements OnTouchListener
 								@Override
 								public void onClick(DialogInterface dialog, int whichButton)
 								{
-									performSelection(firstRow, lastRow, editText.getText().toString());
-									finishSelection();
+									String comment=editText.getText().toString();
 									
+									if (!comment.equals(""))
+									{
+										if (mSyntaxParser.getCommentLine().endsWith(" "))
+										{
+											comment=mSyntaxParser.getCommentLine()+"TODO: "+comment;
+										}
+										else
+										{
+											comment=mSyntaxParser.getCommentLine()+" TODO: "+comment;
+										}
+										
+										if (mSyntaxParser.getCommentLineEnd()!=null)
+										{
+											if (mSyntaxParser.getCommentLineEnd().startsWith(" "))
+											{
+												comment=comment+mSyntaxParser.getCommentLineEnd();
+											}
+											else
+											{
+												comment=comment+" "+mSyntaxParser.getCommentLineEnd();
+											}
+										}
+									}
+									
+									
+									
+									performSelection(firstRow, lastRow, comment);
+									updateSizes();
+									
+									finishSelection();
 									dialog.dismiss();
 								}
 							})

@@ -63,7 +63,7 @@
     <string name="dialog_input_comment_title">Comment</string>
 
     <!-- Message for comment dialog in review activity -->
-    <string name="dialog_input_comment_message">Input comment:</string>
+    <string name="dialog_input_comment_message">Input comment (empty comment to remove it):</string>
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Ignore files</string>
