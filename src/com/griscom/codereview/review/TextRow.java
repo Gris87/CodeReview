@@ -137,6 +137,11 @@ public class TextRow
         return res.toString();
     }
 
+    public boolean hasRegions()
+    {
+        return mRegions.size()>0;
+    }
+
     public void setComment(String comment, Paint paint)
     {
         if (TextUtils.isEmpty(comment))

@@ -330,7 +330,29 @@ public abstract class SyntaxParserBase
 
         if (reader!=null)
         {
-            return reader.readLine();
+            StringBuilder res=null;
+
+            do
+            {
+                int oneChar=reader.read();
+
+                if (oneChar<0)
+                {
+                    return res!=null? res.toString() : null;
+                }
+
+                if (res==null)
+                {
+                    res=new StringBuilder();
+                }
+
+                res.append((char)oneChar);
+
+                if (oneChar=='\n')
+                {
+                    return res.toString();
+                }
+            } while(true);
         }
 
         return null;
