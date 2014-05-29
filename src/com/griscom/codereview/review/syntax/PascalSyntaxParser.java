@@ -70,7 +70,6 @@ public class PascalSyntaxParser extends SyntaxParserBase
             while ((line = readLine()) != null)
             {
                 codeBuilder.append(line);
-                codeBuilder.append("\n");
             }
 
             closeReader();
@@ -107,6 +106,8 @@ public class PascalSyntaxParser extends SyntaxParserBase
                     selectedPaint=basePaint;
                 }
 
+                boolean lastEnter=content.endsWith("\n");
+
                 do
                 {
                     int index=content.indexOf('\n');
@@ -126,14 +127,14 @@ public class PascalSyntaxParser extends SyntaxParserBase
                     curColumn=0;
                 } while (true);
 
-                if (!content.equals(""))
+                if (lastEnter || !content.equals(""))
                 {
                     row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));
                     curColumn+=content.length();
                 }
             }
 
-            if (row!=null)
+            if (row!=null && row.hasRegions())
             {
                 res.addTextRow(row);
             }
