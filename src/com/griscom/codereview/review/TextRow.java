@@ -3,14 +3,16 @@ package com.griscom.codereview.review;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.text.TextUtils;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.other.SelectionColor;
-import android.text.*;
-import android.graphics.*;
-import com.griscom.codereview.review.syntax.*;
+import com.griscom.codereview.review.syntax.SyntaxParserBase;
 
+@SuppressLint("DefaultLocale")
 public class TextRow
 {
     private ArrayList<TextRegion> mRegions;
@@ -18,7 +20,7 @@ public class TextRow
     private float                 mY;
     private float                 mWidth;
     private float                 mHeight;
-	private int                   mCommentIndex;
+    private int                   mCommentIndex;
 
 
 
@@ -30,8 +32,8 @@ public class TextRow
         mY              = 0;
         mWidth          = 0;
         mHeight         = 0;
-		
-		mCommentIndex   =-1;
+
+        mCommentIndex   =-1;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
@@ -53,49 +55,49 @@ public class TextRow
 
         updateSizeByRegion(region);
     }
-    
+
     public void checkForComment(SyntaxParserBase parser)
     {
         if (BuildConfig.DEBUG)
         {
             Assert.assertTrue(mCommentIndex<0);
         }
-        
+
         String commentBegin=parser.getCommentLine();
-        
+
         if (commentBegin!=null)
         {
-			commentBegin=commentBegin.toUpperCase();
-			
-			String commentEnd=parser.getCommentLineEnd();
-			
-			if (commentEnd!=null)
-			{
-				commentEnd=commentEnd.toUpperCase();
-		    }
-			
+            commentBegin=commentBegin.toUpperCase();
+
+            String commentEnd=parser.getCommentLineEnd();
+
+            if (commentEnd!=null)
+            {
+                commentEnd=commentEnd.toUpperCase();
+            }
+
             for (int i=0; i<mRegions.size(); ++i)
-			{
-				String text=mRegions.get(i).getOriginalText().toUpperCase();
-				
-				if (
-				    text.contains(commentBegin)
-					&&
-					text.contains("TODO")
-					&&
-					(
-					 commentEnd==null
-					 ||
-					 text.contains(commentEnd)
-					)
-				   )
-				{
-					mCommentIndex=i;
-					mSelectionColor=SelectionColor.NOTE;
-					
-					return;
-				}
-			}
+            {
+                String text=mRegions.get(i).getOriginalText().toUpperCase();
+
+                if (
+                    text.contains(commentBegin)
+                    &&
+                    text.contains("TODO")
+                    &&
+                    (
+                     commentEnd==null
+                     ||
+                     text.contains(commentEnd)
+                    )
+                   )
+                {
+                    mCommentIndex=i;
+                    mSelectionColor=SelectionColor.NOTE;
+
+                    return;
+                }
+            }
         }
     }
 
@@ -122,66 +124,66 @@ public class TextRow
         }
     }
 
-	@Override
-	public String toString()
-	{
-		StringBuilder res=new StringBuilder();
-		
-		for (int i=0; i<mRegions.size(); ++i)
+    @Override
+    public String toString()
+    {
+        StringBuilder res=new StringBuilder();
+
+        for (int i=0; i<mRegions.size(); ++i)
         {
-        	res.append(mRegions.get(i).getOriginalText());
+            res.append(mRegions.get(i).getOriginalText());
         }
-		
-		return res.toString();
-	}
-	
-	public void setComment(String comment, Paint paint)
-	{
-		if (TextUtils.isEmpty(comment))
-		{
-			if (mCommentIndex>=0)
-			{
-				mRegions.remove(mCommentIndex);
-				mCommentIndex=-1;
-				
-				mSelectionColor=SelectionColor.CLEAR;
-			}
-		}
-		else
-		{
-			if (
-			    mRegions.size()>0
-				&&
-				(
-			     (
-				  mCommentIndex<0
-				  &&
-				  !mRegions.get(mRegions.size()-1).getOriginalText().equals("")
-				 )
-				 ||
-				 (
-				  mCommentIndex>0
-				  &&
-				  !mRegions.get(mCommentIndex-1).getOriginalText().equals("")
-				 )
-				)
-			   )
-			{
-				comment=" "+comment;
-			}
-			
-			if (mCommentIndex>=0)
-			{
-				mRegions.get(mCommentIndex).setOriginalText(comment);
-			}
-			else
-			{
-				addTextRegion(new TextRegion(comment, paint, 0, 4));
-				mCommentIndex=mRegions.size()-1;
-				mSelectionColor=SelectionColor.NOTE;
-			}
-		}
-	}
+
+        return res.toString();
+    }
+
+    public void setComment(String comment, Paint paint)
+    {
+        if (TextUtils.isEmpty(comment))
+        {
+            if (mCommentIndex>=0)
+            {
+                mRegions.remove(mCommentIndex);
+                mCommentIndex=-1;
+
+                mSelectionColor=SelectionColor.CLEAR;
+            }
+        }
+        else
+        {
+            if (
+                mRegions.size()>0
+                &&
+                (
+                 (
+                  mCommentIndex<0
+                  &&
+                  !mRegions.get(mRegions.size()-1).getOriginalText().equals("")
+                 )
+                 ||
+                 (
+                  mCommentIndex>0
+                  &&
+                  !mRegions.get(mCommentIndex-1).getOriginalText().equals("")
+                 )
+                )
+               )
+            {
+                comment=" "+comment;
+            }
+
+            if (mCommentIndex>=0)
+            {
+                mRegions.get(mCommentIndex).setOriginalText(comment);
+            }
+            else
+            {
+                addTextRegion(new TextRegion(comment, paint, 0, 4));
+                mCommentIndex=mRegions.size()-1;
+                mSelectionColor=SelectionColor.NOTE;
+            }
+        }
+    }
 
     public void setFontSize(float textSize)
     {
@@ -205,10 +207,10 @@ public class TextRow
 
     public void setSelectionColor(SelectionColor selectionColor)
     {
-		if (mSelectionColor!=SelectionColor.NOTE)
-		{
-			mSelectionColor=selectionColor;
-		}
+        if (mSelectionColor!=SelectionColor.NOTE)
+        {
+            mSelectionColor=selectionColor;
+        }
     }
 
     public SelectionColor getSelectionColor()

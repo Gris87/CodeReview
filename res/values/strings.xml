@@ -58,8 +58,8 @@
 
     <!-- Review file not found message -->
     <string name="file_not_found">File not found</string>
-	
-	<!-- Title for comment dialog in review activity -->
+
+    <!-- Title for comment dialog in review activity -->
     <string name="dialog_input_comment_title">Comment</string>
 
     <!-- Message for comment dialog in review activity -->

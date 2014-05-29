@@ -8,18 +8,18 @@ import java.io.InputStreamReader;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Paint;
 
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.review.TextDocument;
 import com.griscom.codereview.util.Utils;
-import android.graphics.*;
 
 @SuppressLint("DefaultLocale")
 public abstract class SyntaxParserBase
 {
     protected Context        mContext;
     protected BufferedReader mReader;
-	protected Paint          mCommentPaint;
+    protected Paint          mCommentPaint;
 
 
 
@@ -27,19 +27,19 @@ public abstract class SyntaxParserBase
     {
         mContext      = context;
         mReader       = null;
-		mCommentPaint = null;
+        mCommentPaint = null;
     }
 
     public static SyntaxParserBase createParserByFileName(String fileName, Context context)
     {
-		fileName=fileName.toLowerCase();
-		
+        fileName=fileName.toLowerCase();
+
         int index=fileName.lastIndexOf('.');
 
         if (index>0)
         {
             String extension=fileName.substring(index+1);
-            
+
             if (
                 extension.equals("apollo")
                 ||
@@ -50,12 +50,12 @@ public abstract class SyntaxParserBase
             {
                 return new ApolloSyntaxParser(context);
             }
-            
+
             if (extension.equals("sh"))
             {
                 return new BashSyntaxParser(context);
             }
-            
+
             if (
                 extension.equals("basic")
                 ||
@@ -64,7 +64,7 @@ public abstract class SyntaxParserBase
             {
                 return new BasicSyntaxParser(context);
             }
-            
+
             if (extension.equals("clj"))
             {
                 return new CljSyntaxParser(context);
@@ -87,27 +87,27 @@ public abstract class SyntaxParserBase
             {
                 return new CSharpSyntaxParser(context);
             }
-            
+
             if (extension.equals("css"))
             {
                 return new CssSyntaxParser(context);
             }
-            
+
             if (extension.equals("css-kw"))
             {
                 return new CssKwSyntaxParser(context);
             }
-            
+
             if (extension.equals("css-str"))
             {
                 return new CssStrSyntaxParser(context);
             }
-            
+
             if (extension.equals("dart"))
             {
                 return new DartSyntaxParser(context);
             }
-            
+
             if (
                 extension.equals("erlang")
                 ||
@@ -116,12 +116,12 @@ public abstract class SyntaxParserBase
             {
                 return new ErlangSyntaxParser(context);
             }
-            
+
             if (extension.equals("go"))
             {
                 return new GoSyntaxParser(context);
             }
-            
+
             if (extension.equals("hs"))
             {
                 return new HsSyntaxParser(context);
@@ -131,7 +131,7 @@ public abstract class SyntaxParserBase
             {
                 return new JavaSyntaxParser(context);
             }
-            
+
             if (
                 extension.equals("cl")
                 ||
@@ -150,7 +150,7 @@ public abstract class SyntaxParserBase
             {
                 return new LispSyntaxParser(context);
             }
-            
+
             if (
                 extension.equals("llvm")
                 ||
@@ -159,122 +159,122 @@ public abstract class SyntaxParserBase
             {
                 return new LlvmSyntaxParser(context);
             }
-            
+
             if (extension.equals("lua"))
             {
                 return new LuaSyntaxParser(context);
             }
-            
+
             if (extension.equals("matlab"))
             {
                 return new MatlabSyntaxParser(context);
             }
-            
+
             if (extension.equals("matlab-identifiers"))
             {
                 return new MatlabIdentifiersSyntaxParser(context);
             }
-            
+
             if (extension.equals("matlab-operators"))
             {
                 return new MatlabOperatorsSyntaxParser(context);
             }
-			
-			if (
+
+            if (
                 extension.equals("fs")
                 ||
                 extension.equals("ml")
-			   )
+               )
             {
                 return new MlSyntaxParser(context);
             }
-			
-			if (extension.equals("mumps"))
+
+            if (extension.equals("mumps"))
             {
                 return new MumpsSyntaxParser(context);
             }
-			
-			if (
+
+            if (
                 extension.equals("n")
                 ||
                 extension.equals("nemerle")
-			   )
+               )
             {
                 return new NSyntaxParser(context);
             }
-			
-			if (
+
+            if (
                 extension.equals("pas")
                 ||
                 extension.equals("pascal")
-			   )
+               )
             {
                 return new PascalSyntaxParser(context);
             }
 
-			if (
+            if (
                 extension.equals("r")
                 ||
                 extension.equals("s")
-				||
+                ||
                 extension.equals("splus")
-			   )
+               )
             {
                 return new RSyntaxParser(context);
             }
 
-			if (extension.equals("rd"))
+            if (extension.equals("rd"))
             {
                 return new RdSyntaxParser(context);
             }
-			
-			if (extension.equals("scala"))
+
+            if (extension.equals("scala"))
             {
                 return new ScalaSyntaxParser(context);
             }
-			
-			if (extension.equals("sql"))
+
+            if (extension.equals("sql"))
             {
                 return new SqlSyntaxParser(context);
             }
-			
-			if (extension.equals("tcl"))
+
+            if (extension.equals("tcl"))
             {
                 return new TclSyntaxParser(context);
             }
-			
-			if (
+
+            if (
                 extension.equals("latex")
                 ||
                 extension.equals("tex")
-				)
+                )
             {
                 return new TexSyntaxParser(context);
             }
-			
-			if (
+
+            if (
                 extension.equals("vb")
                 ||
                 extension.equals("vbs")
-				)
+                )
             {
                 return new VisualBasicSyntaxParser(context);
             }
-			
-			if (
+
+            if (
                 extension.equals("vhdl")
                 ||
                 extension.equals("vhd")
-				)
+                )
             {
                 return new VhdlSyntaxParser(context);
             }
-			
-			if (fileName.endsWith(".wiki.meta"))
+
+            if (fileName.endsWith(".wiki.meta"))
             {
                 return new WikiSyntaxParser(context);
             }
-			
+
             if (
                 extension.equals("xml")
                 ||
@@ -285,21 +285,21 @@ public abstract class SyntaxParserBase
             {
                 return new XmlSyntaxParser(context);
             }
-			
-			if (
+
+            if (
                 extension.equals("xq")
                 ||
                 extension.equals("xquery")
-				)
+                )
             {
                 return new XqSyntaxParser(context);
             }
-			
-			if (
+
+            if (
                 extension.equals("yaml")
                 ||
                 extension.equals("yml")
-				)
+                )
             {
                 return new YamlSyntaxParser(context);
             }
@@ -367,14 +367,14 @@ public abstract class SyntaxParserBase
     {
         return null;
     }
-	
-	public Context getContext()
+
+    public Context getContext()
     {
         return mContext;
     }
-	
-	public Paint getCommentPaint()
-	{
-		return mCommentPaint;
-	}
+
+    public Paint getCommentPaint()
+    {
+        return mCommentPaint;
+    }
 }

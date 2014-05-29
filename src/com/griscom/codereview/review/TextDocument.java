@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import junit.framework.Assert;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
@@ -29,14 +32,8 @@ import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.other.TouchMode;
+import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
-import android.widget.*;
-import android.app.*;
-import android.content.*;
-import com.griscom.codereview.review.syntax.*;
-import org.w3c.dom.*;
-import com.griscom.codereview.listeners.*;
-import java.security.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -56,9 +53,9 @@ public class TextDocument implements OnTouchListener
 
 
 
-	private SyntaxParserBase          mSyntaxParser;
+    private SyntaxParserBase          mSyntaxParser;
     private Context                   mContext;
-	private ReviewSurfaceView         mParent;
+    private ReviewSurfaceView         mParent;
     private Vibrator                  mVibrator;
     private DocumentHandler           mHandler;
     private ArrayList<TextRow>        mRows;
@@ -102,9 +99,9 @@ public class TextDocument implements OnTouchListener
 
     public TextDocument(SyntaxParserBase parser)
     {
-		mSyntaxParser            = parser;
+        mSyntaxParser            = parser;
         mContext                 = mSyntaxParser.getContext();
-		mParent                  = null;
+        mParent                  = null;
         mVibrator                = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
         mHandler                 = null;
         mRows                    = new ArrayList<TextRow>();
@@ -289,13 +286,13 @@ public class TextDocument implements OnTouchListener
     {
         mRows.add(row);
 
-		row.checkForComment(mSyntaxParser);
-		
-		if (row.getSelectionColor()!=SelectionColor.CLEAR)
-		{
-			mProgress++;
-		}
-		
+        row.checkForComment(mSyntaxParser);
+
+        if (row.getSelectionColor()!=SelectionColor.CLEAR)
+        {
+            mProgress++;
+        }
+
         updateSizeByRow(row);
     }
 
@@ -503,8 +500,8 @@ public class TextDocument implements OnTouchListener
             {
                 if (mTouchMode==TouchMode.SELECT)
                 {
-					mHandler.removeMessages(SCROLL_MESSAGE);
-					
+                    mHandler.removeMessages(SCROLL_MESSAGE);
+
                     final int firstRow;
                     final int lastRow;
 
@@ -518,77 +515,77 @@ public class TextDocument implements OnTouchListener
                         firstRow = mSelectionEnd;
                         lastRow  = mHighlightedRow;
                     }
-					
-					if (mSelectionColor==SelectionColor.NOTE)
-					{
-						final EditText editText=new EditText(mContext);
 
-						AlertDialog dialog=new AlertDialog.Builder(mContext)
-							.setTitle(R.string.dialog_input_comment_title)
-							.setMessage(R.string.dialog_input_comment_message)
-							.setView(editText)
-							.setPositiveButton(android.R.string.ok,
-							new DialogInterface.OnClickListener()
-							{
-								@Override
-								public void onClick(DialogInterface dialog, int whichButton)
-								{
-									String comment=editText.getText().toString();
-									
-									if (!comment.equals(""))
-									{
-										if (mSyntaxParser.getCommentLine().endsWith(" "))
-										{
-											comment=mSyntaxParser.getCommentLine()+"TODO: "+comment;
-										}
-										else
-										{
-											comment=mSyntaxParser.getCommentLine()+" TODO: "+comment;
-										}
-										
-										if (mSyntaxParser.getCommentLineEnd()!=null)
-										{
-											if (mSyntaxParser.getCommentLineEnd().startsWith(" "))
-											{
-												comment=comment+mSyntaxParser.getCommentLineEnd();
-											}
-											else
-											{
-												comment=comment+" "+mSyntaxParser.getCommentLineEnd();
-											}
-										}
-									}
-									
-									
-									
-									performSelection(firstRow, lastRow, comment);
-									updateSizes();
-									
-									saveFile();
-									
-									finishSelection();
-									dialog.dismiss();
-								}
-							})
-							.setNegativeButton(android.R.string.cancel,
-							new DialogInterface.OnClickListener()
-							{
-								@Override
-								public void onClick(DialogInterface dialog, int whichButton)
-								{
-									finishSelection();
-									dialog.dismiss();
-								}
-							}).create();
+                    if (mSelectionColor==SelectionColor.NOTE)
+                    {
+                        final EditText editText=new EditText(mContext);
 
-						dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-						dialog.show();
-					}
-					else
-					{
+                        AlertDialog dialog=new AlertDialog.Builder(mContext)
+                            .setTitle(R.string.dialog_input_comment_title)
+                            .setMessage(R.string.dialog_input_comment_message)
+                            .setView(editText)
+                            .setPositiveButton(android.R.string.ok,
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int whichButton)
+                                {
+                                    String comment=editText.getText().toString();
+
+                                    if (!comment.equals(""))
+                                    {
+                                        if (mSyntaxParser.getCommentLine().endsWith(" "))
+                                        {
+                                            comment=mSyntaxParser.getCommentLine()+"TODO: "+comment;
+                                        }
+                                        else
+                                        {
+                                            comment=mSyntaxParser.getCommentLine()+" TODO: "+comment;
+                                        }
+
+                                        if (mSyntaxParser.getCommentLineEnd()!=null)
+                                        {
+                                            if (mSyntaxParser.getCommentLineEnd().startsWith(" "))
+                                            {
+                                                comment=comment+mSyntaxParser.getCommentLineEnd();
+                                            }
+                                            else
+                                            {
+                                                comment=comment+" "+mSyntaxParser.getCommentLineEnd();
+                                            }
+                                        }
+                                    }
+
+
+
+                                    performSelection(firstRow, lastRow, comment);
+                                    updateSizes();
+
+                                    saveFile();
+
+                                    finishSelection();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel,
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int whichButton)
+                                {
+                                    finishSelection();
+                                    dialog.dismiss();
+                                }
+                            }).create();
+
+                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        dialog.show();
+                    }
+                    else
+                    {
                         performSelection(firstRow, lastRow, null);
-						finishSelection();
-					}
+                        finishSelection();
+                    }
                 }
                 else
                 if (mTouchMode==TouchMode.ZOOM)
@@ -625,59 +622,59 @@ public class TextDocument implements OnTouchListener
             mHandler.removeMessages(HIGHLIGHT_MESSAGE);
         }
     }
-	
-	private void performSelection(final int firstRow, final int lastRow, String comment)
-	{
-		int coloredRows=0;
 
-		for (int i=firstRow; i<=lastRow; ++i)
-		{
-			if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
-			{
-				coloredRows++;
-			}
-		}
+    private void performSelection(final int firstRow, final int lastRow, String comment)
+    {
+        int coloredRows=0;
 
-		synchronized(this)
-		{
-			for (int i=firstRow; i<=lastRow; ++i)
-			{
-				TextRow row=mRows.get(i);
-				
-				if (comment!=null)
-				{
-             		row.setComment(comment, mSyntaxParser.getCommentPaint());
-				}
-				else
-				{
-					row.setSelectionColor(mSelectionColor);
-				}
+        for (int i=firstRow; i<=lastRow; ++i)
+        {
+            if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
+            {
+                coloredRows++;
+            }
+        }
 
-				if (row.getSelectionColor()!=SelectionColor.CLEAR)
-				{
-					coloredRows--;
-				}
-			}
-		}
+        synchronized(this)
+        {
+            for (int i=firstRow; i<=lastRow; ++i)
+            {
+                TextRow row=mRows.get(i);
 
-		if (coloredRows!=0)
-		{
-			// Decrease because coloredRows will be negative if new colors added
-			mProgress-=coloredRows;
+                if (comment!=null)
+                {
+                     row.setComment(comment, mSyntaxParser.getCommentPaint());
+                }
+                else
+                {
+                    row.setSelectionColor(mSelectionColor);
+                }
 
-			progressChanged();
-		}
-	}
-	
-	private void finishSelection()
-	{
-		mHighlightedRow = -1;
-		mSelectionEnd   = -1;
-		
-		mHandler.removeMessages(SELECTION_MESSAGE);
+                if (row.getSelectionColor()!=SelectionColor.CLEAR)
+                {
+                    coloredRows--;
+                }
+            }
+        }
 
-		repaint();
-	}
+        if (coloredRows!=0)
+        {
+            // Decrease because coloredRows will be negative if new colors added
+            mProgress-=coloredRows;
+
+            progressChanged();
+        }
+    }
+
+    private void finishSelection()
+    {
+        mHighlightedRow = -1;
+        mSelectionEnd   = -1;
+
+        mHandler.removeMessages(SELECTION_MESSAGE);
+
+        repaint();
+    }
 
     private void repaint()
     {
@@ -686,8 +683,8 @@ public class TextDocument implements OnTouchListener
             mParent.repaint();
         }
     }
-	
-	private void saveFile()
+
+    private void saveFile()
     {
         if (mParent!=null)
         {
@@ -960,18 +957,18 @@ public class TextDocument implements OnTouchListener
             mWidth=row.getWidth();
         }
     }
-	
-	public ArrayList<String> getRows()
-	{
-		ArrayList<String> res=new ArrayList<String>();
-		
-		for (int i=0; i<mRows.size(); ++i)
-		{
-			res.add(mRows.get(i).toString());
-		}
-		
-		return res;
-	}
+
+    public ArrayList<String> getRows()
+    {
+        ArrayList<String> res=new ArrayList<String>();
+
+        for (int i=0; i<mRows.size(); ++i)
+        {
+            res.add(mRows.get(i).toString());
+        }
+
+        return res;
+    }
 
     public void setFontSize(int fontSize)
     {
@@ -1021,7 +1018,7 @@ public class TextDocument implements OnTouchListener
     public void setOnProgressChangedListener(OnProgressChangedListener listener)
     {
         mProgressChangedListener=listener;
-		progressChanged();
+        progressChanged();
     }
 
     public void setX(float x)

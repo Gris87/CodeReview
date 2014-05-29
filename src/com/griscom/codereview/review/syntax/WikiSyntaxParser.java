@@ -149,7 +149,7 @@ public class WikiSyntaxParser extends SyntaxParserBase
     @Override
     public String getCommentLine()
     {
-	    // TODO: Check it
+        // TODO: Check it
         return "-- ";
     }
 }

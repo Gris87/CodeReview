@@ -149,7 +149,7 @@ public class CssSyntaxParser extends SyntaxParserBase
     @Override
     public String getCommentLine()
     {
-	    // TODO: Check it
+        // TODO: Check it
         return ";";
     }
 }
