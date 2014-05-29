@@ -289,6 +289,13 @@ public class TextDocument implements OnTouchListener
     {
         mRows.add(row);
 
+		row.checkForComment(mSyntaxParser);
+		
+		if (row.getSelectionColor()!=SelectionColor.CLEAR)
+		{
+			mProgress++;
+		}
+		
         updateSizeByRow(row);
     }
 
@@ -684,7 +691,7 @@ public class TextDocument implements OnTouchListener
     {
         if (mParent!=null)
         {
-            mParent.onSaveRequested();
+            mParent.saveRequested();
         }
     }
 

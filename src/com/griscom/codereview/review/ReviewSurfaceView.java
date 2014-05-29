@@ -239,8 +239,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mHandler.sendEmptyMessage(LOADED_MESSAGE);
     }
 	
-	@Override
-	public void onSaveRequested()
+	public void saveRequested()
 	{
 		if (mDocument!=null)
 		{
@@ -249,10 +248,15 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                 ArrayList<String> rows   = mDocument.getRows();
 				PrintWriter       writer = new PrintWriter(mFileName);
                 
-				for (int i=0; i<rows.size(); ++i)
+				for (int i=0; i<rows.size()-1; ++i)
                 {
                     writer.println(rows.get(i));
                 }
+				
+				if (rows.size()>0)
+				{
+					writer.print(rows.get(rows.size()-1));
+				}
 				
 				writer.close();
 

@@ -9,6 +9,7 @@ import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.other.SelectionColor;
 import android.text.*;
 import android.graphics.*;
+import com.griscom.codereview.review.syntax.*;
 
 public class TextRow
 {
@@ -51,6 +52,51 @@ public class TextRow
         mRegions.add(region);
 
         updateSizeByRegion(region);
+    }
+    
+    public void checkForComment(SyntaxParserBase parser)
+    {
+        if (BuildConfig.DEBUG)
+        {
+            Assert.assertTrue(mCommentIndex<0);
+        }
+        
+        String commentBegin=parser.getCommentLine();
+        
+        if (commentBegin!=null)
+        {
+			commentBegin=commentBegin.toUpperCase();
+			
+			String commentEnd=parser.getCommentLineEnd();
+			
+			if (commentEnd!=null)
+			{
+				commentEnd=commentEnd.toUpperCase();
+		    }
+			
+            for (int i=0; i<mRegions.size(); ++i)
+			{
+				String text=mRegions.get(i).getOriginalText().toUpperCase();
+				
+				if (
+				    text.contains(commentBegin)
+					&&
+					text.contains("TODO")
+					&&
+					(
+					 commentEnd==null
+					 ||
+					 text.contains(commentEnd)
+					)
+				   )
+				{
+					mCommentIndex=i;
+					mSelectionColor=SelectionColor.NOTE;
+					
+					return;
+				}
+			}
+        }
     }
 
     private void updateSizes()
