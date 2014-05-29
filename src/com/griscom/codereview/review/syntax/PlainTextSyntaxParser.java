@@ -38,13 +38,31 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
 
             createReader(fileName);
 
+            boolean lastEnter=false;
+
             String line;
             while ((line = readLine()) != null)
             {
+                lastEnter=line.endsWith("\n");
+
+                if (lastEnter)
+                {
+                    line=line.substring(0, line.length()-1);
+                }
+
+
+
                 TextRow    newRow    = new TextRow();
                 TextRegion newRegion = new TextRegion(line, basePaint, 0, tabSize);
 
+                newRow.addTextRegion(newRegion);
+                res.addTextRow(newRow);
+            }
 
+            if (lastEnter)
+            {
+                TextRow    newRow    = new TextRow();
+                TextRegion newRegion = new TextRegion("", basePaint, 0, tabSize);
 
                 newRow.addTextRegion(newRegion);
                 res.addTextRow(newRow);
