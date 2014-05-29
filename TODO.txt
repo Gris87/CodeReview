@@ -1,11 +1,9 @@
 Select all in ActionMode
 Hide Done button in ActionMode
-Row note region index
-Add notes
-Remove notes
+Popup dialog with frequent comments
 Save state to database
 Restore state from database
-Mark to rename/delete
+Mark to rename/delete/comment
 Rename
 Delete
 Code folding
