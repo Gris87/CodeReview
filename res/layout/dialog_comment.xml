@@ -1,7 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="32dp" >
+    android:layout_height="40dp"
+	android:paddingBottom="@dimen/dialog_vertical_margin"
+    android:paddingLeft="@dimen/dialog_horizontal_margin"
+    android:paddingRight="@dimen/dialog_horizontal_margin"
+    android:paddingTop="@dimen/dialog_vertical_margin" >
 	
 	<EditText
         android:id="@+id/commentEditText"
@@ -14,6 +18,6 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
 		android:layout_alignParentRight="true"
-		android:drawableLeft="@drawable/drop_down" />
+		android:src="@drawable/drop_down" />
     
 </RelativeLayout>

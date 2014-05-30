@@ -526,8 +526,8 @@ public class TextDocument implements OnTouchListener
 						
 						View view=inflater.inflate(R.layout.dialog_comment, null);
 						
-                        final EditText editText=(EditText)view.findViewById(R.id.commentEditText);
-						ImageButton chooseButton=(ImageButton)view.findViewById(R.id.commentChooseButton);
+                        final EditText editText     = (EditText)    view.findViewById(R.id.commentEditText);
+						ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.commentChooseButton);
 						
 						chooseButton.setOnClickListener(new OnClickListener()
 							{
