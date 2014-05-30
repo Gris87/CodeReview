@@ -7,12 +7,13 @@
         android:id="@+id/commentEditText"
         android:layout_width="match_parent"
         android:layout_height="32dp"
-		android:layout_toRightOf="@+id/commentChooseButton" />
+		android:layout_toLeftOf="@+id/commentChooseButton" />
 	
 	<ImageButton
 		android:id="@+id/commentChooseButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
-		android:layout_alignParentRight="true"/>
+		android:layout_alignParentRight="true"
+		android:drawableLeft="@drawable/drop_down" />
     
 </RelativeLayout>

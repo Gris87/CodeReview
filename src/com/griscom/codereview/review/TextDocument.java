@@ -34,6 +34,10 @@ import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
+import java.util.zip.*;
+import android.view.*;
+import android.widget.*;
+import android.view.View.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -518,12 +522,26 @@ public class TextDocument implements OnTouchListener
 
                     if (mSelectionColor==SelectionColor.NOTE)
                     {
-                        final EditText editText=new EditText(mContext);
+						LayoutInflater inflater=(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+						
+						View view=inflater.inflate(R.layout.dialog_comment, null);
+						
+                        final EditText editText=(EditText)view.findViewById(R.id.commentEditText);
+						ImageButton chooseButton=(ImageButton)view.findViewById(R.id.commentChooseButton);
+						
+						chooseButton.setOnClickListener(new OnClickListener()
+							{
+								@Override
+								public void onClick(View view)
+								{
+									editText.setText("");
+								}
+						    });
 
                         AlertDialog dialog=new AlertDialog.Builder(mContext)
                             .setTitle(R.string.dialog_input_comment_title)
                             .setMessage(R.string.dialog_input_comment_message)
-                            .setView(editText)
+                            .setView(view)
                             .setPositiveButton(android.R.string.ok,
                             new DialogInterface.OnClickListener()
                             {
