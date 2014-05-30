@@ -9,7 +9,7 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
 
-    <style name="FullscreenTheme" parent="android:Theme.Holo.NoActionBar.Fullscreen">
+    <style name="FullscreenTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
         <item name="android:windowBackground">@null</item>
         <item name="metaTitleBarStyle">@style/TitleBar</item>
         <item name="metaTitleBarTextStyle">@style/TitleBarText</item>

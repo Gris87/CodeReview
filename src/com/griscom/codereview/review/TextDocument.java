@@ -534,7 +534,21 @@ public class TextDocument implements OnTouchListener
                                 @Override
                                 public void onClick(View view)
                                 {
-                                    editText.setText("");
+                                    final CharSequence items[]={"g", "d", "a"};
+
+                                    AlertDialog chooseDialog=new AlertDialog.Builder(mContext)
+                                        .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int index)
+                                            {
+                                                editText.setText(items[index]);
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .create();
+
+                                    chooseDialog.show();
                                 }
                             });
 
