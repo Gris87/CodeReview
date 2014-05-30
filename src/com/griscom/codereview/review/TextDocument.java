@@ -1,4 +1,5 @@
 package com.griscom.codereview.review;
+
 import java.util.ArrayList;
 
 import junit.framework.Assert;
@@ -19,11 +20,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
@@ -34,10 +38,6 @@ import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
-import java.util.zip.*;
-import android.view.*;
-import android.widget.*;
-import android.view.View.*;
 
 public class TextDocument implements OnTouchListener
 {
@@ -522,21 +522,21 @@ public class TextDocument implements OnTouchListener
 
                     if (mSelectionColor==SelectionColor.NOTE)
                     {
-						LayoutInflater inflater=(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-						
-						View view=inflater.inflate(R.layout.dialog_comment, null);
-						
+                        LayoutInflater inflater=(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                        View view=inflater.inflate(R.layout.dialog_comment, null);
+
                         final EditText editText     = (EditText)    view.findViewById(R.id.commentEditText);
-						ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.commentChooseButton);
-						
-						chooseButton.setOnClickListener(new OnClickListener()
-							{
-								@Override
-								public void onClick(View view)
-								{
-									editText.setText("");
-								}
-						    });
+                        ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.commentChooseButton);
+
+                        chooseButton.setOnClickListener(new OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    editText.setText("");
+                                }
+                            });
 
                         AlertDialog dialog=new AlertDialog.Builder(mContext)
                             .setTitle(R.string.dialog_input_comment_title)

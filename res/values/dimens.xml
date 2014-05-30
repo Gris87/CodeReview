@@ -7,7 +7,7 @@
     <dimen name="review_horizontal_margin">4dp</dimen>
     <dimen name="review_vertical_margin">4dp</dimen>
 
-	<dimen name="dialog_horizontal_margin">4dp</dimen>
-    <dimen name="dialog_vertical_margin">4dp</dimen>
-	
+    <dimen name="dialog_horizontal_margin">4dp</dimen>
+    <dimen name="dialog_vertical_margin">8dp</dimen>
+
 </resources>
