@@ -165,18 +165,20 @@ public class FilesActivity extends ActionBarActivity
     private void clearPath()
     {
         SharedPreferences prefs=getPreferences(Context.MODE_PRIVATE);
-
         SharedPreferences.Editor editor=prefs.edit();
+		
         editor.putString(ApplicationPreferences.LAST_PATH, "");
+		
         editor.commit();
     }
 
     private void saveSortType()
     {
         SharedPreferences prefs=getPreferences(Context.MODE_PRIVATE);
-
         SharedPreferences.Editor editor=prefs.edit();
+		
         editor.putInt(ApplicationPreferences.SORT_TYPE, mPlaceholderFragment.getAdapter().getSortType().ordinal());
+		
         editor.commit();
     }
 
@@ -506,9 +508,10 @@ public class FilesActivity extends ActionBarActivity
         private void savePath()
         {
             SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
-
             SharedPreferences.Editor editor=prefs.edit();
+			
             editor.putString(ApplicationPreferences.LAST_PATH, mAdapter.getCurrentPath());
+			
             editor.commit();
         }
 
@@ -532,9 +535,10 @@ public class FilesActivity extends ActionBarActivity
         private void saveLastFile(String fileName)
         {
             SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
-
             SharedPreferences.Editor editor=prefs.edit();
+			
             editor.putString(ApplicationPreferences.LAST_FILE, fileName);
+			
             editor.commit();
         }
 

@@ -64,6 +64,9 @@
 
     <!-- Message for comment dialog in review activity -->
     <string name="dialog_input_comment_message">Input comment (empty comment to remove it):</string>
+	
+	<!-- Show message if there is no last comments -->
+    <string name="no_last_comment">Please input atleast one comment to use it later</string>
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Ignore files</string>

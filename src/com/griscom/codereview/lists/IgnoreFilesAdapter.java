@@ -199,9 +199,10 @@ public class IgnoreFilesAdapter extends BaseAdapter
         }
 
         SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
-
         SharedPreferences.Editor editor=prefs.edit();
+		
         editor.putString(ApplicationPreferences.IGNORE_FILES, res.toString());
+		
         editor.commit();
 
         // -----------------------------------------------------------------------------------
