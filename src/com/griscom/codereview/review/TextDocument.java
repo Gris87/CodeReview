@@ -8,6 +8,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,25 +30,23 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
+import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
-import android.content.*;
-import com.griscom.codereview.other.*;
-import android.text.*;
-import android.widget.*;
 
 public class TextDocument implements OnTouchListener
 {
 	private static final String SHARED_PREFERENCES = "TextDocument";
-	
+
     private static final int   HIDE_BARS_MESSAGE   = 1;
     private static final int   HIGHLIGHT_MESSAGE   = 2;
     private static final int   SELECTION_MESSAGE   = 3;
@@ -541,14 +541,29 @@ public class TextDocument implements OnTouchListener
                                 public void onClick(View view)
                                 {
 									ArrayList<CharSequence> comments=loadLastComments();
-									
+
 									if (comments.size()>0)
 									{
-										final CharSequence items[]=comments.toArray(null);
+									    final CharSequence items[]=new CharSequence[comments.size()];
+									    String currentComment=editText.getText().toString();
+									    int index=-1;
 
-										int index=comments.indexOf(editText.getText().toString());
+										for (int i=0; i<comments.size(); i++)
+										{
+										    String oneComment=(String)comments.get(i);
 
-										index=0;
+										    if (index<0 && oneComment.equals(currentComment))
+										    {
+										        index=i;
+										    }
+
+										    items[i]=oneComment;
+										}
+
+										if (index<0)
+										{
+										    index=0;
+										}
 
 										AlertDialog chooseDialog=new AlertDialog.Builder(mContext)
 											.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
@@ -586,13 +601,13 @@ public class TextDocument implements OnTouchListener
                                     if (!comment.equals(""))
                                     {
 										ArrayList<CharSequence> comments=loadLastComments();
-										
+
 										comments.remove(comment);
 										comments.add(0, comment);
 										saveLastComments(comments);
-										
+
 										// ----------------------------------
-										
+
                                         if (mSyntaxParser.getCommentLine().endsWith(" "))
                                         {
                                             comment=mSyntaxParser.getCommentLine()+"TODO: "+comment;
@@ -1016,19 +1031,19 @@ public class TextDocument implements OnTouchListener
             mWidth=row.getWidth();
         }
     }
-	
+
 	public ArrayList<CharSequence> loadLastComments()
 	{
 		SharedPreferences prefs=mContext.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
 		int commentCount=prefs.getInt(ApplicationPreferences.LAST_COMMENTS, 0);
-		
+
 		ArrayList<CharSequence> res=new ArrayList<CharSequence>();
-		
+
 		for (int i=0; i<commentCount; ++i)
 		{
 			String comment=prefs.getString(ApplicationPreferences.COMMENT+"_"+String.valueOf(i+1),"");
-			
+
 			if (
 			    !TextUtils.isEmpty(comment)
 				&&
@@ -1038,22 +1053,22 @@ public class TextDocument implements OnTouchListener
 				res.add(comment);
 			}
 		}
-		
+
 		return res;
 	}
-	
+
 	public void saveLastComments(ArrayList<CharSequence> comments)
 	{
 		SharedPreferences prefs=mContext.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor=prefs.edit();
-		
+
 		editor.putInt(ApplicationPreferences.LAST_COMMENTS, comments.size());
-		
+
 		for (int i=0; i<comments.size(); ++i)
 		{
 			editor.putString(ApplicationPreferences.COMMENT+"_"+String.valueOf(i+1), comments.get(i).toString());
 		}
-		
+
 		editor.commit();
 	}
 

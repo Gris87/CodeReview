@@ -35,7 +35,7 @@
     </style>
 
     <style name="TitleBarText">
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:textStyle">bold</item>
     </style>
 

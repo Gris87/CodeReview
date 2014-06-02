@@ -1,6 +1,5 @@
 Select all in ActionMode
 Hide Done button in ActionMode
-Popup dialog with frequent comments
 Save state to database
 Restore state from database
 Mark to rename/delete/comment
