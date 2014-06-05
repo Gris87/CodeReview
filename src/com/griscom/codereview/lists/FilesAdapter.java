@@ -26,6 +26,8 @@ import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
 import com.griscom.codereview.util.Utils;
+import com.griscom.codereview.db.*;
+import android.database.sqlite.*;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -35,6 +37,7 @@ public class FilesAdapter extends BaseAdapter
     private SortType             mSortType;
     private boolean              mSelectionMode;
     private ArrayList<Integer>   mSelection;
+	private SQLiteDatabase       mMainDatabase;
 
 
 
@@ -56,9 +59,18 @@ public class FilesAdapter extends BaseAdapter
         mSortType      = SortType.NAME;
         mSelectionMode = false;
         mSelection     = new ArrayList<Integer>();
-
+		mMainDatabase  = new MainDatabase(mContext).getWritableDatabase();
+		
         rescan();
     }
+
+	@Override
+	protected void finalize() throws Throwable
+	{
+		mMainDatabase.close();
+		
+		super.finalize();
+	}
 
     @Override
     public int getCount()
