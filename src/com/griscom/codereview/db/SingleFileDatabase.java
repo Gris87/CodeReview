@@ -2,17 +2,14 @@ package com.griscom.codereview.db;
 
 import android.database.sqlite.*;
 import android.content.*;
+import java.util.*;
+import android.util.*;
+import android.database.*;
 
 public class SingleFileDatabase extends SQLiteOpenHelper
 {
 	private static final String DB_NAME    = "file";
 	private static final int    DB_VERSION = 1;
-	
-	
-	
-	public static final char ROW_TYPE_NONE     = '-';
-	public static final char ROW_TYPE_REVIEWED = 'r';
-	public static final char Row_TYPE_INVALID  = 'i';
 	
 	
 
@@ -22,7 +19,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
 
 
-    public static final String[] FILES_COLUMNS = {
+    public static final String[] ROWS_COLUMNS = {
 		                                             COLUMN_ID,
 													 COLUMN_ROW_ID,
 													 COLUMN_ROW_TYPE
@@ -55,5 +52,10 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
 		// Nothing
+	}
+	
+	public static Cursor getRows(SQLiteDatabase db)
+	{
+		return db.query(ROWS_TABLE_NAME, ROWS_COLUMNS, null, null, null, null, COLUMN_ROW_ID);
 	}
 }
