@@ -45,7 +45,7 @@ import com.griscom.codereview.util.Utils;
 
 public class TextDocument implements OnTouchListener
 {
-	private static final String SHARED_PREFERENCES = "TextDocument";
+    private static final String SHARED_PREFERENCES = "TextDocument";
 
     private static final int   HIDE_BARS_MESSAGE   = 1;
     private static final int   HIGHLIGHT_MESSAGE   = 2;
@@ -540,49 +540,49 @@ public class TextDocument implements OnTouchListener
                                 @Override
                                 public void onClick(View view)
                                 {
-									ArrayList<CharSequence> comments=loadLastComments();
+                                    ArrayList<CharSequence> comments=loadLastComments();
 
-									if (comments.size()>0)
-									{
-									    final CharSequence items[]=new CharSequence[comments.size()];
-									    String currentComment=editText.getText().toString();
-									    int index=-1;
+                                    if (comments.size()>0)
+                                    {
+                                        final CharSequence items[]=new CharSequence[comments.size()];
+                                        String currentComment=editText.getText().toString();
+                                        int index=-1;
 
-										for (int i=0; i<comments.size(); i++)
-										{
-										    String oneComment=(String)comments.get(i);
+                                        for (int i=0; i<comments.size(); i++)
+                                        {
+                                            String oneComment=(String)comments.get(i);
 
-										    if (index<0 && oneComment.equals(currentComment))
-										    {
-										        index=i;
-										    }
+                                            if (index<0 && oneComment.equals(currentComment))
+                                            {
+                                                index=i;
+                                            }
 
-										    items[i]=oneComment;
-										}
+                                            items[i]=oneComment;
+                                        }
 
-										if (index<0)
-										{
-										    index=0;
-										}
+                                        if (index<0)
+                                        {
+                                            index=0;
+                                        }
 
-										AlertDialog chooseDialog=new AlertDialog.Builder(mContext)
-											.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
-											{
-												@Override
-												public void onClick(DialogInterface dialog, int index)
-												{
-													editText.setText(items[index]);
-													dialog.dismiss();
-												}
-											})
-											.create();
+                                        AlertDialog chooseDialog=new AlertDialog.Builder(mContext)
+                                            .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int index)
+                                                {
+                                                    editText.setText(items[index]);
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .create();
 
-										chooseDialog.show();
-									}
-									else
-									{
-										 Toast.makeText(mContext, R.string.no_last_comment, Toast.LENGTH_SHORT).show();
-									}
+                                        chooseDialog.show();
+                                    }
+                                    else
+                                    {
+                                         Toast.makeText(mContext, R.string.no_last_comment, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
 
@@ -600,13 +600,13 @@ public class TextDocument implements OnTouchListener
 
                                     if (!comment.equals(""))
                                     {
-										ArrayList<CharSequence> comments=loadLastComments();
+                                        ArrayList<CharSequence> comments=loadLastComments();
 
-										comments.remove(comment);
-										comments.add(0, comment);
-										saveLastComments(comments);
+                                        comments.remove(comment);
+                                        comments.add(0, comment);
+                                        saveLastComments(comments);
 
-										// ----------------------------------
+                                        // ----------------------------------
 
                                         if (mSyntaxParser.getCommentLine().endsWith(" "))
                                         {
@@ -770,7 +770,14 @@ public class TextDocument implements OnTouchListener
     {
         if (mProgressChangedListener!=null)
         {
-            mProgressChangedListener.onProgressChanged(mProgress*100/mRows.size());
+            if (mRows.size()==0)
+            {
+                mProgressChangedListener.onProgressChanged(100);
+            }
+            else
+            {
+                mProgressChangedListener.onProgressChanged(mProgress*100/mRows.size());
+            }
         }
     }
 
@@ -1032,45 +1039,45 @@ public class TextDocument implements OnTouchListener
         }
     }
 
-	public ArrayList<CharSequence> loadLastComments()
-	{
-		SharedPreferences prefs=mContext.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+    public ArrayList<CharSequence> loadLastComments()
+    {
+        SharedPreferences prefs=mContext.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
-		int commentCount=prefs.getInt(ApplicationPreferences.LAST_COMMENTS, 0);
+        int commentCount=prefs.getInt(ApplicationPreferences.LAST_COMMENTS, 0);
 
-		ArrayList<CharSequence> res=new ArrayList<CharSequence>();
+        ArrayList<CharSequence> res=new ArrayList<CharSequence>();
 
-		for (int i=0; i<commentCount; ++i)
-		{
-			String comment=prefs.getString(ApplicationPreferences.COMMENT+"_"+String.valueOf(i+1),"");
+        for (int i=0; i<commentCount; ++i)
+        {
+            String comment=prefs.getString(ApplicationPreferences.COMMENT+"_"+String.valueOf(i+1),"");
 
-			if (
-			    !TextUtils.isEmpty(comment)
-				&&
-				!res.contains(comment)
-			   )
-			{
-				res.add(comment);
-			}
-		}
+            if (
+                !TextUtils.isEmpty(comment)
+                &&
+                !res.contains(comment)
+               )
+            {
+                res.add(comment);
+            }
+        }
 
-		return res;
-	}
+        return res;
+    }
 
-	public void saveLastComments(ArrayList<CharSequence> comments)
-	{
-		SharedPreferences prefs=mContext.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor=prefs.edit();
+    public void saveLastComments(ArrayList<CharSequence> comments)
+    {
+        SharedPreferences prefs=mContext.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=prefs.edit();
 
-		editor.putInt(ApplicationPreferences.LAST_COMMENTS, comments.size());
+        editor.putInt(ApplicationPreferences.LAST_COMMENTS, comments.size());
 
-		for (int i=0; i<comments.size(); ++i)
-		{
-			editor.putString(ApplicationPreferences.COMMENT+"_"+String.valueOf(i+1), comments.get(i).toString());
-		}
+        for (int i=0; i<comments.size(); ++i)
+        {
+            editor.putString(ApplicationPreferences.COMMENT+"_"+String.valueOf(i+1), comments.get(i).toString());
+        }
 
-		editor.commit();
-	}
+        editor.commit();
+    }
 
     public ArrayList<String> getRows()
     {

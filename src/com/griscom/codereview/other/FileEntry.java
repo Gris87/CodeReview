@@ -17,12 +17,12 @@ public class FileEntry
     private String  mType;
     private long    mSize;
     private int     mImageId;
-	private int     mDbFileId;
-	private int     mReviewedCount;
-	private int     mInvalidCount;
-	private int     mNoteCount;
-	private int     mRowCount;
-	private String  mFileNote;
+    private int     mDbFileId;
+    private int     mReviewedCount;
+    private int     mInvalidCount;
+    private int     mNoteCount;
+    private int     mRowCount;
+    private String  mFileNote;
 
     private FileEntry()
     {
@@ -53,13 +53,13 @@ public class FileEntry
         {
             mImageId=R.drawable.__icon_folder;
         }
-		
-		mDbFileId      = -1;
-		mReviewedCount = 0;
-		mInvalidCount  = 0;
-		mNoteCount     = 0;
-		mRowCount      = 0;
-		mFileNote      = "";
+
+        mDbFileId      = -1;
+        mReviewedCount = 0;
+        mInvalidCount  = 0;
+        mNoteCount     = 0;
+        mRowCount      = 0;
+        mFileNote      = "";
     }
 
     public static FileEntry createParentFolder()
@@ -71,12 +71,12 @@ public class FileEntry
         parentFolder.mType          = "";
         parentFolder.mSize          = 0;
         parentFolder.mImageId       = R.drawable.__icon_folder;
-		parentFolder.mDbFileId      = -1;
-		parentFolder.mReviewedCount = 0;
-		parentFolder.mInvalidCount  = 0;
-		parentFolder.mNoteCount     = 0;
-		parentFolder.mRowCount      = 0;
-		parentFolder.mFileNote      = "";
+        parentFolder.mDbFileId      = -1;
+        parentFolder.mReviewedCount = 0;
+        parentFolder.mInvalidCount  = 0;
+        parentFolder.mNoteCount     = 0;
+        parentFolder.mRowCount      = 0;
+        parentFolder.mFileNote      = "";
 
         return parentFolder;
     }
@@ -135,124 +135,124 @@ public class FileEntry
     {
         return mImageId;
     }
-	
-	public int getDbFileId()
-    {
-		int res;
-		
-		synchronized(this)
-		{
-			res=mDbFileId;
-		}
-		
-        return res;
-    }
-	
-	public void setDbFileId(int dbFileId)
-	{
-		synchronized(this)
-		{
-			mDbFileId=dbFileId;
-		}
-	}
 
-	public int getReviewedCount()
+    public int getDbFileId()
     {
-		int res;
+        int res;
 
-		synchronized(this)
-		{
-			res=mReviewedCount;
-		}
+        synchronized(this)
+        {
+            res=mDbFileId;
+        }
 
         return res;
     }
 
-	public void setReviewedCount(int count)
-	{
-		synchronized(this)
-		{
-			mReviewedCount=count;
-		}
-	}
-
-	public int getInvalidCount()
+    public void setDbFileId(int dbFileId)
     {
-		int res;
+        synchronized(this)
+        {
+            mDbFileId=dbFileId;
+        }
+    }
 
-		synchronized(this)
-		{
-			res=mInvalidCount;
-		}
+    public int getReviewedCount()
+    {
+        int res;
+
+        synchronized(this)
+        {
+            res=mReviewedCount;
+        }
 
         return res;
     }
 
-	public void setInvalidCount(int count)
-	{
-		synchronized(this)
-		{
-			mInvalidCount=count;
-		}
-	}
-
-	public int getNoteCount()
+    public void setReviewedCount(int count)
     {
-		int res;
+        synchronized(this)
+        {
+            mReviewedCount=count;
+        }
+    }
 
-		synchronized(this)
-		{
-			res=mNoteCount;
-		}
+    public int getInvalidCount()
+    {
+        int res;
+
+        synchronized(this)
+        {
+            res=mInvalidCount;
+        }
 
         return res;
     }
 
-	public void setNoteCount(int count)
-	{
-		synchronized(this)
-		{
-			mNoteCount=count;
-		}
-	}
-
-	public int getRowCount()
+    public void setInvalidCount(int count)
     {
-		int res;
+        synchronized(this)
+        {
+            mInvalidCount=count;
+        }
+    }
 
-		synchronized(this)
-		{
-			res=mRowCount;
-		}
+    public int getNoteCount()
+    {
+        int res;
+
+        synchronized(this)
+        {
+            res=mNoteCount;
+        }
 
         return res;
     }
 
-	public void setRowCount(int count)
-	{
-		synchronized(this)
-		{
-			mRowCount=count;
-		}
-	}
-	
-	public String getFileNote()
+    public void setNoteCount(int count)
     {
-		String res;
+        synchronized(this)
+        {
+            mNoteCount=count;
+        }
+    }
 
-		synchronized(this)
-		{
-			res=mFileNote;
-		}
+    public int getRowCount()
+    {
+        int res;
+
+        synchronized(this)
+        {
+            res=mRowCount;
+        }
 
         return res;
     }
 
-	public void setFileNote(String note)
-	{
-		synchronized(this)
-		{
-			mFileNote=note;
-		}
-	}
+    public void setRowCount(int count)
+    {
+        synchronized(this)
+        {
+            mRowCount=count;
+        }
+    }
+
+    public String getFileNote()
+    {
+        String res;
+
+        synchronized(this)
+        {
+            res=mFileNote;
+        }
+
+        return res;
+    }
+
+    public void setFileNote(String note)
+    {
+        synchronized(this)
+        {
+            mFileNote=note;
+        }
+    }
 }
