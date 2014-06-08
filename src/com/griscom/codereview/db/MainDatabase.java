@@ -74,17 +74,17 @@ public class MainDatabase extends SQLiteOpenHelper
         // Nothing
     }
 
-    public static Cursor getFiles(SQLiteDatabase db, String path)
+    public Cursor getFiles(SQLiteDatabase db, String path)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH+"=?", new String[]{path}, null, null, null);
     }
 
-    public static Cursor getFile(SQLiteDatabase db, String path, String name)
+    public Cursor getFile(SQLiteDatabase db, String path, String name)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH+"=? AND "+COLUMN_NAME+"=?", new String[]{path, name}, null, null, null);
     }
 
-    public static Cursor getFile(SQLiteDatabase db, String md5)
+    public Cursor getFile(SQLiteDatabase db, String md5)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_MD5+"=?", new String[]{md5}, null, null, null);
     }

@@ -59,7 +59,7 @@ public class FilesAdapter extends BaseAdapter
         mSortType      = SortType.NAME;
         mSelectionMode = false;
         mSelection     = new ArrayList<Integer>();
-        mMainDatabase  = new MainDatabase(mContext).getWritableDatabase();
+        mMainDatabase  = new MainDatabase(mContext).getReadableDatabase();
 
         rescan();
     }

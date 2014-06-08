@@ -1,5 +1,6 @@
 Select all in ActionMode
 Hide Done button in ActionMode
+Icons
 Save state to database
 Restore state from database
 Mark to rename/delete/comment

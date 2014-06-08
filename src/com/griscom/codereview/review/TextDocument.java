@@ -296,13 +296,6 @@ public class TextDocument implements OnTouchListener
     {
         mRows.add(row);
 
-        row.checkForComment(mSyntaxParser);
-
-        if (row.getSelectionColor()!=SelectionColor.CLEAR)
-        {
-            mProgress++;
-        }
-
         updateSizeByRow(row);
     }
 
@@ -1079,16 +1072,9 @@ public class TextDocument implements OnTouchListener
         editor.commit();
     }
 
-    public ArrayList<String> getRows()
+    public ArrayList<TextRow> getRows()
     {
-        ArrayList<String> res=new ArrayList<String>();
-
-        for (int i=0; i<mRows.size(); ++i)
-        {
-            res.add(mRows.get(i).toString());
-        }
-
-        return res;
+       return mRows;
     }
 
     public void setFontSize(int fontSize)
@@ -1139,6 +1125,12 @@ public class TextDocument implements OnTouchListener
     public void setOnProgressChangedListener(OnProgressChangedListener listener)
     {
         mProgressChangedListener=listener;
+        progressChanged();
+    }
+
+    public void setProgress(int progress)
+    {
+        mProgress=progress;
         progressChanged();
     }
 

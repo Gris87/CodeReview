@@ -169,7 +169,6 @@ public class ReviewActivity extends FragmentActivity
         private Button            mInvalidButton;
         private Button            mNoteButton;
         private Button            mClearButton;
-        private String            mFileName;
         private boolean           mControlsVisible;
         private Button            mLastSelectedButton;
         private int               mDefaultColor;
@@ -193,8 +192,9 @@ public class ReviewActivity extends FragmentActivity
 
             // ---------------------------------------------------------------------------------------
 
-            Intent intent=mActivity.getIntent();
-            mFileName=intent.getStringExtra(ApplicationExtras.OPEN_FILE);
+            Intent intent   = mActivity.getIntent();
+            String fileName = intent.getStringExtra(ApplicationExtras.FILE_NAME);
+            int    fileId   = intent.getIntExtra   (ApplicationExtras.FILE_ID, 0);
 
 
 
@@ -212,12 +212,12 @@ public class ReviewActivity extends FragmentActivity
 
             // ---------------------------------------------------------------------------------------
 
-            mContent.setFileName(mFileName);
+            mContent.setFileName(fileName, fileId);
             mContent.setOnTouchListener(this);
             mContent.setOnNoteSupportListener(this);
             mContent.setOnProgressChangedListener(this);
 
-            mTitleTextView.setText(mFileName.substring(mFileName.lastIndexOf('/')+1));
+            mTitleTextView.setText(fileName.substring(fileName.lastIndexOf('/')+1));
             mProgressTextView.setText("0 %");
 
 

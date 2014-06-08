@@ -46,6 +46,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private LoadingThread             mLoadingThread;
     private DrawThread                mDrawThread;
     private String                    mFileName;
+    private int                       mFileId;
     private long                      mModifiedTime;
     private SyntaxParserBase          mSyntaxParser;
     private TextDocument              mDocument;
@@ -88,9 +89,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             mLastLoadedDocument.setSelectionColor(mSelectionColor);
             mLastLoadedDocument.setOnProgressChangedListener(mProgressChangedListener);
 
+            long modifiedTime=new File(mFileName).lastModified();
+
             synchronized(this)
             {
-                mModifiedTime       = new File(mFileName).lastModified();
+                mModifiedTime       = modifiedTime;
 
                 mDocument           = mLastLoadedDocument;
                 mLastLoadedDocument = null;
@@ -137,6 +140,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mSurfaceHolder           = getHolder();
         mLoadingThread           = null;
         mDrawThread              = null;
+        mFileId                  = 0;
         mModifiedTime            = 0;
         mSyntaxParser            = null;
         mDocument                = null;
@@ -245,12 +249,12 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         {
             try
             {
-                ArrayList<String> rows   = mDocument.getRows();
-                PrintWriter       writer = new PrintWriter(mFileName);
+                ArrayList<TextRow> rows   = mDocument.getRows();
+                PrintWriter        writer = new PrintWriter(mFileName);
 
                 for (int i=0; i<rows.size()-1; ++i)
                 {
-                    writer.println(rows.get(i));
+                    writer.println(rows.get(i).toString());
                 }
 
                 if (rows.size()>0)
@@ -260,9 +264,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
                 writer.close();
 
+                long modifiedTime=new File(mFileName).lastModified();
+
                 synchronized(this)
                 {
-                    mModifiedTime = new File(mFileName).lastModified();
+                    mModifiedTime=modifiedTime;
                 }
             }
             catch(Exception e)
@@ -311,7 +317,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             if (file.exists())
             {
-                mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName);
+                mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName, mFileId);
                 mLoadingThread.start();
             }
         }
@@ -359,9 +365,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
-    public void setFileName(String fileName)
+    public void setFileName(String fileName, int fileId)
     {
-        mFileName=fileName;
+        mFileName = fileName;
+        mFileId   = fileId;
 
         mSyntaxParser=SyntaxParserBase.createParserByFileName(mFileName, mContext);
 

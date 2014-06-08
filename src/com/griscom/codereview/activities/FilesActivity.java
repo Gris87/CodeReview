@@ -293,7 +293,7 @@ public class FilesActivity extends ActionBarActivity
 
                     try
                     {
-                        openFile(fileName);
+                        openFile(fileName, file.getDbFileId());
                     }
                     catch (FileNotFoundException e)
                     {
@@ -491,7 +491,7 @@ public class FilesActivity extends ActionBarActivity
             mActionBar.setTitle(newPath);
         }
 
-        private void openFile(String fileName) throws FileNotFoundException
+        private void openFile(String fileName, int fileId) throws FileNotFoundException
         {
             String filePath=mAdapter.pathToFile(fileName);
 
@@ -501,7 +501,8 @@ public class FilesActivity extends ActionBarActivity
             }
 
             Intent intent = new Intent(mActivity, ReviewActivity.class);
-            intent.putExtra(ApplicationExtras.OPEN_FILE, filePath);
+            intent.putExtra(ApplicationExtras.FILE_NAME, filePath);
+            intent.putExtra(ApplicationExtras.FILE_ID,   fileId);
             startActivityForResult(intent, REQUEST_REVIEW);
         }
 
@@ -550,7 +551,7 @@ public class FilesActivity extends ActionBarActivity
 
             if (!TextUtils.isEmpty(fileName))
             {
-                openFile(fileName);
+                openFile(fileName, 0);
             }
         }
 

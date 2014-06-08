@@ -53,7 +53,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
         // Nothing
     }
 
-    public static Cursor getRows(SQLiteDatabase db)
+    public Cursor getRows(SQLiteDatabase db)
     {
         return db.query(ROWS_TABLE_NAME, ROWS_COLUMNS, null, null, null, null, COLUMN_ROW_ID);
     }
