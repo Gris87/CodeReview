@@ -77,7 +77,9 @@ public class TextDocument implements OnTouchListener
     private DocumentHandler           mHandler;
     private ArrayList<TextRow>        mRows;
     private OnProgressChangedListener mProgressChangedListener;
-    private int                       mProgress;
+    private int                       mReviewedCount;
+    private int                       mInvalidCount;
+    private int                       mNoteCount;
     private int                       mFontSize;
     private int                       mTabSize;
     private Paint                     mRowPaint;
@@ -123,7 +125,9 @@ public class TextDocument implements OnTouchListener
         mHandler                 = null;
         mRows                    = new ArrayList<TextRow>();
         mProgressChangedListener = null;
-        mProgress                = 0;
+        mReviewedCount           = 0;
+        mInvalidCount            = 0;
+        mNoteCount               = 0;
         mFontSize                = ApplicationSettings.fontSize(mContext);
         mTabSize                 = ApplicationSettings.tabSize(mContext);
         mRowPaint                = new Paint();
@@ -649,15 +653,15 @@ public class TextDocument implements OnTouchListener
                                     dialog.dismiss();
                                 }
                             })
-							.setOnDismissListener(
-							new DialogInterface.OnDismissListener()
-							{
-								@Override
-								public void onDismiss(DialogInterface dialog)
-								{
-									finishSelection();
-								}
-							}).create();
+                            .setOnDismissListener(
+                            new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    finishSelection();
+                                }
+                            }).create();
 
                         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                         dialog.show();
@@ -706,29 +710,47 @@ public class TextDocument implements OnTouchListener
 
     private void performSelection(final int firstRow, final int lastRow, String comment)
     {
-        int coloredRows=0;
+        int reviewedCount = 0;
+        int invalidCount  = 0;
+        int noteCount     = 0;
 
         for (int i=firstRow; i<=lastRow; ++i)
         {
-            if (mRows.get(i).getSelectionColor()!=SelectionColor.CLEAR)
+            switch (mRows.get(i).getSelectionColor())
             {
-                coloredRows++;
+                case REVIEWED:
+                    --reviewedCount;
+                break;
+                case INVALID:
+                    --invalidCount;
+                break;
+                case NOTE:
+                    --noteCount;
+                break;
+                case CLEAR:
+                    // Nothing
+                break;
+                default:
+                    Log.e(TAG, "Unknown selection color: "+String.valueOf(mRows.get(i).getSelectionColor()));
+                break;
             }
         }
 
-		MainDatabase helper=new MainDatabase(mContext);
-		SQLiteDatabase db=helper.getWritableDatabase();
+        MainDatabase helper=new MainDatabase(mContext);
+        SQLiteDatabase db=helper.getWritableDatabase();
 
-		int fileId=mParent.getFileId();
+        int fileId=mParent.getFileId();
 
-		if (fileId<=0)
-		{
-			fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
-			mParent.setFileId(fileId);
-		}
+        if (fileId<=0)
+        {
+            fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
+            mParent.setFileId(fileId);
+        }
 
-		SingleFileDatabase fileHelper=new SingleFileDatabase(mContext, fileId);
-		SQLiteDatabase db2=fileHelper.getWritableDatabase();
+        db.close();
+
+        SingleFileDatabase fileHelper=new SingleFileDatabase(mContext, fileId);
+        db=fileHelper.getWritableDatabase();
 
         synchronized(this)
         {
@@ -745,43 +767,37 @@ public class TextDocument implements OnTouchListener
                     row.setSelectionColor(mSelectionColor);
                 }
 
-                if (row.getSelectionColor()!=SelectionColor.CLEAR)
+                switch (mRows.get(i).getSelectionColor())
                 {
-                    coloredRows--;
-
-                    switch (row.getSelectionColor())
-                    {
-                        case REVIEWED:
-                            fileHelper.insertOrUpdateRow(db2, i, DbRowType.REVIEWED);
-                        break;
-                        case INVALID:
-                            fileHelper.insertOrUpdateRow(db2, i, DbRowType.INVALID);
-                        break;
-                        case NOTE:
-                            fileHelper.removeRow(db2, i);
-                        break;
-                        default:
-                            Log.e(TAG, "Unknown selection color: "+String.valueOf(row.getSelectionColor()));
-                        break;
-                    }
-                }
-                else
-                {
-                    fileHelper.removeRow(db2, i);
+                    case REVIEWED:
+                        ++reviewedCount;
+                        fileHelper.insertOrUpdateRow(db, i, DbRowType.REVIEWED);
+                    break;
+                    case INVALID:
+                        ++invalidCount;
+                        fileHelper.insertOrUpdateRow(db, i, DbRowType.INVALID);
+                    break;
+                    case NOTE:
+                        ++noteCount;
+                        fileHelper.removeRow(db, i);
+                    break;
+                    case CLEAR:
+                        fileHelper.removeRow(db, i);
+                    break;
+                    default:
+                        Log.e(TAG, "Unknown selection color: "+String.valueOf(mRows.get(i).getSelectionColor()));
+                    break;
                 }
             }
         }
 
-        if (coloredRows!=0)
-        {
-            // Decrease because coloredRows will be negative if new colors added
-            mProgress-=coloredRows;
+        db.close();
 
-            progressChanged();
-        }
-
-		db.close();
-		db2.close();
+        setProgress(
+                    mReviewedCount + reviewedCount,
+                    mInvalidCount  + invalidCount,
+                    mNoteCount     + noteCount
+                   );
     }
 
     private void finishSelection()
@@ -820,9 +836,10 @@ public class TextDocument implements OnTouchListener
             }
             else
             {
-                int percent=mProgress*100/mRows.size();
+                int progress = mReviewedCount+mInvalidCount+mNoteCount;
+                int percent  = progress*100/mRows.size();
 
-                if (percent==0 && mProgress>0)
+                if (percent==0 && progress>0)
                 {
                     percent=1;
                 }
@@ -1186,10 +1203,22 @@ public class TextDocument implements OnTouchListener
         progressChanged();
     }
 
-    public void setProgress(int progress)
+    public void setProgress(int reviewedCount, int invalidCount, int noteCount)
     {
-        mProgress=progress;
-        progressChanged();
+        if (
+            mReviewedCount != reviewedCount
+            ||
+            mInvalidCount  != invalidCount
+            ||
+            mNoteCount     != noteCount
+           )
+        {
+            mReviewedCount = reviewedCount;
+            mInvalidCount  = invalidCount;
+            mNoteCount     = noteCount;
+
+            progressChanged();
+        }
     }
 
     public void setX(float x)

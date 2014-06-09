@@ -89,69 +89,69 @@ public class MainDatabase extends SQLiteOpenHelper
         int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
         int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
 
-		cursor.moveToFirst();
-		
+        cursor.moveToFirst();
+
         while (!cursor.isAfterLast())
         {
             if (cursor.getLong(modificationIndex)==modifiedTime)
             {
                 return cursor.getInt(idIndex);
             }
-			
-			cursor.moveToNext();
+
+            cursor.moveToNext();
         }
 
         return 0;
     }
 
-	public int getOrCreateFile(SQLiteDatabase db, String fileName, int rowCount)
-	{
-	    String md5        = Utils.md5ForFile(fileName);
+    public int getOrCreateFile(SQLiteDatabase db, String fileName, int rowCount)
+    {
+        String md5        = Utils.md5ForFile(fileName);
         long modifiedTime = new File(fileName).lastModified();
 
-	    Cursor cursor=getFileByMD5(db, md5);
+        Cursor cursor=getFileByMD5(db, md5);
 
-	    int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
+        int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
         int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
 
-		cursor.moveToFirst();
-		
+        cursor.moveToFirst();
+
         while (!cursor.isAfterLast())
         {
             if (cursor.getLong(modificationIndex)==modifiedTime)
             {
                 return cursor.getInt(idIndex);
             }
-			
-			cursor.moveToNext();
+
+            cursor.moveToNext();
         }
 
-	    //----------------------------------------------------------------
-	    // Create new
+        //----------------------------------------------------------------
+        // Create new
 
-		ContentValues values=new ContentValues();
+        ContentValues values=new ContentValues();
 
-		String folder=fileName.substring(0, fileName.lastIndexOf('/'));
+        String folder=fileName.substring(0, fileName.lastIndexOf('/'));
 
-		if (folder.equals(""))
-		{
-		    folder="/";
-		}
+        if (folder.equals(""))
+        {
+            folder="/";
+        }
 
-		values.put(COLUMN_PATH,              folder);
-		values.put(COLUMN_NAME,              fileName.substring(fileName.lastIndexOf('/')+1));
-		values.put(COLUMN_MD5,               md5);
-		values.put(COLUMN_MODIFICATION_TIME, modifiedTime);
-		values.put(COLUMN_REVIEWED_COUNT,    0);
-		values.put(COLUMN_INVALID_COUNT,     0);
-		values.put(COLUMN_NOTE_COUNT,        0);
-		values.put(COLUMN_ROW_COUNT,         rowCount);
-		values.put(COLUMN_NOTE,              "");
+        values.put(COLUMN_PATH,              folder);
+        values.put(COLUMN_NAME,              fileName.substring(fileName.lastIndexOf('/')+1));
+        values.put(COLUMN_MD5,               md5);
+        values.put(COLUMN_MODIFICATION_TIME, modifiedTime);
+        values.put(COLUMN_REVIEWED_COUNT,    0);
+        values.put(COLUMN_INVALID_COUNT,     0);
+        values.put(COLUMN_NOTE_COUNT,        0);
+        values.put(COLUMN_ROW_COUNT,         rowCount);
+        values.put(COLUMN_NOTE,              "");
 
-		return (int)db.insertOrThrow(FILES_TABLE_NAME, null, values);
-	}
+        return (int)db.insertOrThrow(FILES_TABLE_NAME, null, values);
+    }
 
-	public void updateFilePath(SQLiteDatabase db, int fileId, String fileName)
+    public void updateFilePath(SQLiteDatabase db, int fileId, String fileName)
     {
         ContentValues values=new ContentValues();
 
@@ -168,9 +168,9 @@ public class MainDatabase extends SQLiteOpenHelper
         db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
     }
 
-	public void updateFileMeta(SQLiteDatabase db, int fileId, String fileName)
+    public void updateFileMeta(SQLiteDatabase db, int fileId, String fileName)
     {
-	    String md5        = Utils.md5ForFile(fileName);
+        String md5        = Utils.md5ForFile(fileName);
         long modifiedTime = new File(fileName).lastModified();
 
 
@@ -183,18 +183,18 @@ public class MainDatabase extends SQLiteOpenHelper
         db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
     }
 
-	public void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount)
-	{
-	    ContentValues values=new ContentValues();
+    public void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount)
+    {
+        ContentValues values=new ContentValues();
 
-	    values.put(COLUMN_REVIEWED_COUNT, reviewedCount);
+        values.put(COLUMN_REVIEWED_COUNT, reviewedCount);
         values.put(COLUMN_INVALID_COUNT,  invalidCount);
         values.put(COLUMN_NOTE_COUNT,     noteCount);
 
-	    db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
-	}
+        db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
+    }
 
-	public void updateFileNote(SQLiteDatabase db, int fileId, String note)
+    public void updateFileNote(SQLiteDatabase db, int fileId, String note)
     {
         ContentValues values=new ContentValues();
 

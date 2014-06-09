@@ -81,8 +81,8 @@ public class LoadingThread extends Thread
                 int rowIndex  = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ROW_ID);
                 int typeIndex = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ROW_TYPE);
 
-				cursor.moveToFirst();
-				
+                cursor.moveToFirst();
+
                 while (!cursor.isAfterLast())
                 {
                     int  row  = cursor.getInt(rowIndex)-1;
@@ -100,12 +100,14 @@ public class LoadingThread extends Thread
                             Log.e(TAG, "Unknown row type \""+String.valueOf(type)+"\" in database \""+helper.getDbName()+"\"");
                         break;
                     }
-					
-					cursor.moveToNext();
+
+                    cursor.moveToNext();
                 }
             }
 
-            int progress=0;
+            int reviewedCount = 0;
+            int invalidCount  = 0;
+            int noteCount     = 0;
 
             for (int i=0; i<rows.size(); ++i)
             {
@@ -113,13 +115,27 @@ public class LoadingThread extends Thread
 
                 row.checkForComment(mSyntaxParser);
 
-                if (row.getSelectionColor()!=SelectionColor.CLEAR)
+                switch (row.getSelectionColor())
                 {
-                    ++progress;
+                    case REVIEWED:
+                        ++reviewedCount;
+                    break;
+                    case INVALID:
+                        ++invalidCount;
+                    break;
+                    case NOTE:
+                        ++noteCount;
+                    break;
+                    case CLEAR:
+                        // Nothing
+                    break;
+                    default:
+                        Log.e(TAG, "Unknown selection color: "+String.valueOf(row.getSelectionColor()));
+                    break;
                 }
             }
 
-            document.setProgress(progress);
+            document.setProgress(reviewedCount, invalidCount, noteCount);
 
             mListener.onDocumentLoaded(document);
         }
