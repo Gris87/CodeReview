@@ -1,9 +1,14 @@
 package com.griscom.codereview.db;
 
+import java.io.File;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.griscom.codereview.util.Utils;
 
 public class MainDatabase extends SQLiteOpenHelper
 {
@@ -46,7 +51,7 @@ public class MainDatabase extends SQLiteOpenHelper
                                                           COLUMN_ID                + " INTEGER PRIMARY KEY, " +
                                                           COLUMN_PATH              + " TEXT, "                +
                                                           COLUMN_NAME              + " TEXT, "                +
-                                                          COLUMN_MD5               + " INTEGER, "             + // TODO: Check it
+                                                          COLUMN_MD5               + " TEXT, "                +
                                                           COLUMN_MODIFICATION_TIME + " INTEGER, "             + // TODO: Check it
                                                           COLUMN_REVIEWED_COUNT    + " INTEGER, "             +
                                                           COLUMN_INVALID_COUNT     + " INTEGER, "             +
@@ -72,6 +77,106 @@ public class MainDatabase extends SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         // Nothing
+    }
+
+	public int getOrCreateFile(SQLiteDatabase db, String fileName, int rowCount)
+	{
+	    String md5        = Utils.md5ForFile(fileName);
+        long modifiedTime = new File(fileName).lastModified();
+
+	    Cursor cursor=getFile(db, md5);
+
+	    if (cursor!=null && cursor.getCount()>0)
+	    {
+	        int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
+	        int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
+
+            while (!cursor.isAfterLast())
+            {
+                if (cursor.getLong(modificationIndex)==modifiedTime)
+                {
+                    return cursor.getInt(idIndex);
+                }
+
+                cursor.moveToNext();
+            }
+	    }
+
+	    //----------------------------------------------------------------
+	    // Create new
+
+		ContentValues values=new ContentValues();
+
+		String folder=fileName.substring(0, fileName.lastIndexOf('/'));
+
+		if (folder.equals(""))
+		{
+		    folder="/";
+		}
+
+		values.put(COLUMN_PATH,              folder);
+		values.put(COLUMN_NAME,              fileName.substring(fileName.lastIndexOf('/')+1));
+		values.put(COLUMN_MD5,               md5);
+		values.put(COLUMN_MODIFICATION_TIME, modifiedTime);
+		values.put(COLUMN_REVIEWED_COUNT,    0);
+		values.put(COLUMN_INVALID_COUNT,     0);
+		values.put(COLUMN_NOTE_COUNT,        0);
+		values.put(COLUMN_ROW_COUNT,         rowCount);
+		values.put(COLUMN_NOTE,              "");
+
+		return (int)db.insertOrThrow(FILES_TABLE_NAME, null, values);
+	}
+
+	public void updateFilePath(SQLiteDatabase db, int fileId, String fileName)
+    {
+        ContentValues values=new ContentValues();
+
+        String folder=fileName.substring(0, fileName.lastIndexOf('/'));
+
+        if (folder.equals(""))
+        {
+            folder="/";
+        }
+
+        values.put(COLUMN_PATH, folder);
+        values.put(COLUMN_NAME, fileName.substring(fileName.lastIndexOf('/')+1));
+
+        db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
+    }
+
+	public void updateFileMeta(SQLiteDatabase db, int fileId, String fileName)
+    {
+	    String md5        = Utils.md5ForFile(fileName);
+        long modifiedTime = new File(fileName).lastModified();
+
+
+
+        ContentValues values=new ContentValues();
+
+        values.put(COLUMN_MD5,               md5);
+        values.put(COLUMN_MODIFICATION_TIME, modifiedTime);
+
+        db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
+    }
+
+	public void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount)
+	{
+	    ContentValues values=new ContentValues();
+
+	    values.put(COLUMN_REVIEWED_COUNT, reviewedCount);
+        values.put(COLUMN_INVALID_COUNT,  invalidCount);
+        values.put(COLUMN_NOTE_COUNT,     noteCount);
+
+	    db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
+	}
+
+	public void updateFileNote(SQLiteDatabase db, int fileId, String note)
+    {
+        ContentValues values=new ContentValues();
+
+        values.put(COLUMN_NOTE, note);
+
+        db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
     }
 
     public Cursor getFiles(SQLiteDatabase db, String path)

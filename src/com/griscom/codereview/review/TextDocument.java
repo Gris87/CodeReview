@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
+import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
@@ -702,6 +704,16 @@ public class TextDocument implements OnTouchListener
             }
         }
 
+		MainDatabase helper=new MainDatabase(mContext);
+		SQLiteDatabase db=helper.getWritableDatabase();
+		int fileId=mParent.getFileId();
+
+		if (fileId==0)
+		{
+			fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
+			mParent.setFileId(fileId);
+		}
+
         synchronized(this)
         {
             for (int i=firstRow; i<=lastRow; ++i)
@@ -731,6 +743,8 @@ public class TextDocument implements OnTouchListener
 
             progressChanged();
         }
+
+		db.close();
     }
 
     private void finishSelection()
@@ -769,7 +783,14 @@ public class TextDocument implements OnTouchListener
             }
             else
             {
-                mProgressChangedListener.onProgressChanged(mProgress*100/mRows.size());
+                int percent=mProgress*100/mRows.size();
+
+                if (percent==0 && mProgress>0)
+                {
+                    percent=1;
+                }
+
+                mProgressChangedListener.onProgressChanged(percent);
             }
         }
     }

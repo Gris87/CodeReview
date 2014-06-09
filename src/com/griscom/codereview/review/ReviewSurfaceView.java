@@ -364,6 +364,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             } while(true);
         }
     }
+	
+	public String getFileName()
+	{
+		return mFileName;
+	}
+	
+	public int getFileId()
+	{
+		return mFileId;
+	}
 
     public void setFileName(String fileName, int fileId)
     {
@@ -380,6 +390,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         // Maybe reload but no. Calls once and reload will come at the next step
         // reload();
     }
+	
+	public void setFileId(int fileId)
+	{
+		mFileId=fileId;
+	}
 
     public void setFontSize(int fontSize)
     {

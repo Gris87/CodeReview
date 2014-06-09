@@ -31,7 +31,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
                                                     "(" +
                                                          COLUMN_ID       + " INTEGER PRIMARY KEY, " +
                                                          COLUMN_ROW_ID   + " INTEGER, "             +
-                                                         COLUMN_ROW_TYPE + " CHAR"                  + // TODO: Check it
+                                                         COLUMN_ROW_TYPE + " TEXT"                  +
                                                     ");";
 
 
