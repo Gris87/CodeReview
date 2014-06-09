@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,7 +36,9 @@ import android.widget.Toast;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
+import com.griscom.codereview.db.DbRowType;
 import com.griscom.codereview.db.MainDatabase;
+import com.griscom.codereview.db.SingleFileDatabase;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
@@ -47,6 +50,8 @@ import com.griscom.codereview.util.Utils;
 
 public class TextDocument implements OnTouchListener
 {
+    private static final String TAG="TextDocument";
+
     private static final String SHARED_PREFERENCES = "TextDocument";
 
     private static final int   HIDE_BARS_MESSAGE   = 1;
@@ -706,13 +711,17 @@ public class TextDocument implements OnTouchListener
 
 		MainDatabase helper=new MainDatabase(mContext);
 		SQLiteDatabase db=helper.getWritableDatabase();
+
 		int fileId=mParent.getFileId();
 
-		if (fileId==0)
+		if (fileId<=0)
 		{
 			fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
 			mParent.setFileId(fileId);
 		}
+
+		SingleFileDatabase fileHelper=new SingleFileDatabase(mContext, fileId);
+		SQLiteDatabase db2=fileHelper.getWritableDatabase();
 
         synchronized(this)
         {
@@ -732,6 +741,26 @@ public class TextDocument implements OnTouchListener
                 if (row.getSelectionColor()!=SelectionColor.CLEAR)
                 {
                     coloredRows--;
+
+                    switch (row.getSelectionColor())
+                    {
+                        case REVIEWED:
+                            fileHelper.insertOrUpdateRow(db2, i, DbRowType.REVIEWED);
+                        break;
+                        case INVALID:
+                            fileHelper.insertOrUpdateRow(db2, i, DbRowType.INVALID);
+                        break;
+                        case NOTE:
+                            fileHelper.removeRow(db2, i);
+                        break;
+                        default:
+                            Log.e(TAG, "Unknown selection color: "+String.valueOf(row.getSelectionColor()));
+                        break;
+                    }
+                }
+                else
+                {
+                    fileHelper.removeRow(db2, i);
                 }
             }
         }
@@ -745,6 +774,7 @@ public class TextDocument implements OnTouchListener
         }
 
 		db.close();
+		db2.close();
     }
 
     private void finishSelection()

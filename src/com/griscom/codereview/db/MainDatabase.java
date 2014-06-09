@@ -79,28 +79,48 @@ public class MainDatabase extends SQLiteOpenHelper
         // Nothing
     }
 
+    public int getFile(SQLiteDatabase db, String fileName)
+    {
+        String md5        = Utils.md5ForFile(fileName);
+        long modifiedTime = new File(fileName).lastModified();
+
+        Cursor cursor=getFileByMD5(db, md5);
+
+        int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
+        int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
+
+        while (!cursor.isLast())
+        {
+            cursor.moveToNext();
+
+            if (cursor.getLong(modificationIndex)==modifiedTime)
+            {
+                return cursor.getInt(idIndex);
+            }
+        }
+
+        return 0;
+    }
+
 	public int getOrCreateFile(SQLiteDatabase db, String fileName, int rowCount)
 	{
 	    String md5        = Utils.md5ForFile(fileName);
         long modifiedTime = new File(fileName).lastModified();
 
-	    Cursor cursor=getFile(db, md5);
+	    Cursor cursor=getFileByMD5(db, md5);
 
-	    if (cursor!=null && cursor.getCount()>0)
-	    {
-	        int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
-	        int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
+	    int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
+        int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
 
-            while (!cursor.isAfterLast())
+        while (!cursor.isLast())
+        {
+            cursor.moveToNext();
+
+            if (cursor.getLong(modificationIndex)==modifiedTime)
             {
-                if (cursor.getLong(modificationIndex)==modifiedTime)
-                {
-                    return cursor.getInt(idIndex);
-                }
-
-                cursor.moveToNext();
+                return cursor.getInt(idIndex);
             }
-	    }
+        }
 
 	    //----------------------------------------------------------------
 	    // Create new
@@ -189,7 +209,7 @@ public class MainDatabase extends SQLiteOpenHelper
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH+"=? AND "+COLUMN_NAME+"=?", new String[]{path, name}, null, null, null);
     }
 
-    public Cursor getFile(SQLiteDatabase db, String md5)
+    public Cursor getFileByMD5(SQLiteDatabase db, String md5)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_MD5+"=?", new String[]{md5}, null, null, null);
     }

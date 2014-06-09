@@ -54,7 +54,7 @@ public class FileEntry
             mImageId=R.drawable.__icon_folder;
         }
 
-        mDbFileId      = -1;
+        mDbFileId      = 0;
         mReviewedCount = 0;
         mInvalidCount  = 0;
         mNoteCount     = 0;
@@ -71,7 +71,7 @@ public class FileEntry
         parentFolder.mType          = "";
         parentFolder.mSize          = 0;
         parentFolder.mImageId       = R.drawable.__icon_folder;
-        parentFolder.mDbFileId      = -1;
+        parentFolder.mDbFileId      = 0;
         parentFolder.mReviewedCount = 0;
         parentFolder.mInvalidCount  = 0;
         parentFolder.mNoteCount     = 0;

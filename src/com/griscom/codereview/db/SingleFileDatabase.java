@@ -1,5 +1,6 @@
 package com.griscom.codereview.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -35,10 +36,13 @@ public class SingleFileDatabase extends SQLiteOpenHelper
                                                     ");";
 
 
+    private String mDbName;
 
     public SingleFileDatabase(Context context, int fileId)
     {
         super(context, DB_NAME+String.valueOf(fileId)+".db", null, DB_VERSION);
+
+        mDbName=DB_NAME+String.valueOf(fileId)+".db";
     }
 
     @Override
@@ -53,8 +57,46 @@ public class SingleFileDatabase extends SQLiteOpenHelper
         // Nothing
     }
 
+    public void insertOrUpdateRow(SQLiteDatabase db, int row, char type)
+    {
+        Cursor cursor=db.query(ROWS_TABLE_NAME, ROWS_COLUMNS, COLUMN_ROW_ID+"=?", new String[]{String.valueOf(row+1)}, null, null, null, null);
+
+        if (cursor.getCount()==1)
+        {
+            cursor.moveToFirst();
+
+            if (cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROW_TYPE)).charAt(0)!=type)
+            {
+                ContentValues values=new ContentValues();
+
+                values.put(COLUMN_ROW_TYPE, String.valueOf(type));
+
+                db.update(ROWS_TABLE_NAME, values, COLUMN_ROW_ID+"=?", new String[]{String.valueOf(row+1)});
+            }
+        }
+        else
+        {
+            ContentValues values=new ContentValues();
+
+            values.put(COLUMN_ROW_ID,   row+1);
+            values.put(COLUMN_ROW_TYPE, String.valueOf(type));
+
+            db.insert(ROWS_TABLE_NAME, null, values);
+        }
+    }
+
+    public void removeRow(SQLiteDatabase db, int row)
+    {
+        db.delete(ROWS_TABLE_NAME, COLUMN_ROW_ID+"=?", new String[]{String.valueOf(row+1)});
+    }
+
     public Cursor getRows(SQLiteDatabase db)
     {
         return db.query(ROWS_TABLE_NAME, ROWS_COLUMNS, null, null, null, null, COLUMN_ROW_ID);
+    }
+
+    public String getDbName()
+    {
+        return mDbName;
     }
 }

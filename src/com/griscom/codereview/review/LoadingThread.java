@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.griscom.codereview.db.DbRowType;
+import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.other.SelectionColor;
@@ -57,6 +58,17 @@ public class LoadingThread extends Thread
         {
             TextDocument document=mSyntaxParser.parseFile(mFileName);
 
+            if (mFileId<=0)
+            {
+                MainDatabase helper=new MainDatabase(mSyntaxParser.getContext());
+                db=helper.getReadableDatabase();
+
+                mFileId=helper.getFile(db, mFileName);
+
+                db.close();
+                db=null;
+            }
+
             ArrayList<TextRow> rows=document.getRows();
 
             if (mFileId>0)
@@ -69,8 +81,10 @@ public class LoadingThread extends Thread
                 int rowIndex  = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ROW_ID);
                 int typeIndex = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ROW_TYPE);
 
-                while (!cursor.isAfterLast())
+                while (!cursor.isLast())
                 {
+                    cursor.moveToNext();
+
                     int  row  = cursor.getInt(rowIndex)-1;
                     char type = cursor.getString(typeIndex).charAt(0);
 
@@ -83,11 +97,9 @@ public class LoadingThread extends Thread
                             rows.get(row).setSelectionColor(SelectionColor.INVALID);
                         break;
                         default:
-                            Log.e(TAG, "Unknown row type \""+String.valueOf(type)+"\" in database \""+helper.getDatabaseName()+"\"");
+                            Log.e(TAG, "Unknown row type \""+String.valueOf(type)+"\" in database \""+helper.getDbName()+"\"");
                         break;
                     }
-
-                    cursor.moveToNext();
                 }
             }
 
