@@ -81,10 +81,10 @@ public class LoadingThread extends Thread
                 int rowIndex  = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ROW_ID);
                 int typeIndex = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ROW_TYPE);
 
-                while (!cursor.isLast())
+				cursor.moveToFirst();
+				
+                while (!cursor.isAfterLast())
                 {
-                    cursor.moveToNext();
-
                     int  row  = cursor.getInt(rowIndex)-1;
                     char type = cursor.getString(typeIndex).charAt(0);
 
@@ -100,6 +100,8 @@ public class LoadingThread extends Thread
                             Log.e(TAG, "Unknown row type \""+String.valueOf(type)+"\" in database \""+helper.getDbName()+"\"");
                         break;
                     }
+					
+					cursor.moveToNext();
                 }
             }
 

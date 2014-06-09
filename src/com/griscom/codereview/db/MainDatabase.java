@@ -89,14 +89,16 @@ public class MainDatabase extends SQLiteOpenHelper
         int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
         int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
 
-        while (!cursor.isLast())
+		cursor.moveToFirst();
+		
+        while (!cursor.isAfterLast())
         {
-            cursor.moveToNext();
-
             if (cursor.getLong(modificationIndex)==modifiedTime)
             {
                 return cursor.getInt(idIndex);
             }
+			
+			cursor.moveToNext();
         }
 
         return 0;
@@ -112,14 +114,16 @@ public class MainDatabase extends SQLiteOpenHelper
 	    int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
         int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
 
-        while (!cursor.isLast())
+		cursor.moveToFirst();
+		
+        while (!cursor.isAfterLast())
         {
-            cursor.moveToNext();
-
             if (cursor.getLong(modificationIndex)==modifiedTime)
             {
                 return cursor.getInt(idIndex);
             }
+			
+			cursor.moveToNext();
         }
 
 	    //----------------------------------------------------------------

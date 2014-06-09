@@ -1,6 +1,9 @@
 Select all in ActionMode
 Hide Done button in ActionMode
 Icons
+Smooth movement
+Display file state in explorer
+Update reviewed count and friends
 Save state to database
 Restore state from database
 Mark to rename/delete/comment

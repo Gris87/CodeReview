@@ -637,7 +637,6 @@ public class TextDocument implements OnTouchListener
 
                                     saveFile();
 
-                                    finishSelection();
                                     dialog.dismiss();
                                 }
                             })
@@ -647,10 +646,18 @@ public class TextDocument implements OnTouchListener
                                 @Override
                                 public void onClick(DialogInterface dialog, int whichButton)
                                 {
-                                    finishSelection();
                                     dialog.dismiss();
                                 }
-                            }).create();
+                            })
+							.setOnDismissListener(
+							new DialogInterface.OnDismissListener()
+							{
+								@Override
+								public void onDismiss(DialogInterface dialog)
+								{
+									finishSelection();
+								}
+							}).create();
 
                         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                         dialog.show();
