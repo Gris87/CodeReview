@@ -37,12 +37,14 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
+import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
 
 public class FilesActivity extends ActionBarActivity
 {
-    private static final int REQUEST_REVIEW = 1;
+    private static final int REQUEST_SETTINGS = 1;
+    private static final int REQUEST_REVIEW   = 2;
 
 
 
@@ -126,7 +128,7 @@ public class FilesActivity extends ActionBarActivity
             case R.id.action_settings:
             {
                 Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_SETTINGS);
 
                 return true;
             }
@@ -139,6 +141,20 @@ public class FilesActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch (requestCode)
+        {
+            case REQUEST_SETTINGS:
+            {
+                ColorCache.update(this);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -211,6 +227,8 @@ public class FilesActivity extends ActionBarActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             mActivity=(FilesActivity)getActivity();
+
+            ColorCache.update(mActivity);
 
             mAdapter=new FilesAdapter(mActivity);
 

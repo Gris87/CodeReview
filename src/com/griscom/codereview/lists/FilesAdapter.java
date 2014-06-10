@@ -11,6 +11,11 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -27,7 +32,9 @@ import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.other.ApplicationSettings;
+import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.FileEntry;
+import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.other.SortType;
 import com.griscom.codereview.util.Utils;
 
@@ -102,11 +109,201 @@ public class FilesAdapter extends BaseAdapter
         return resView;
     }
 
+    @SuppressWarnings("deprecation")
     private void bindView(int position, View view)
     {
         FileEntry file=mFiles.get(position);
 
         ViewHolder holder=(ViewHolder)view.getTag();
+
+        if (file.getDbFileId()>0)
+        {
+            int reviewedCount  = file.getReviewedCount();
+            int invalidCount   = file.getInvalidCount();
+            int noteCount      = file.getNoteCount();
+            int rowCount       = file.getRowCount();
+
+            if (rowCount>0)
+            {
+                int reviewedPercent = reviewedCount * 100 / rowCount;
+                int invalidPercent  = invalidCount  * 100 / rowCount;
+                int notePercent     = noteCount     * 100 / rowCount;
+                int clearPercent    = 100 - ((reviewedCount+invalidCount+noteCount) * 100 / rowCount);
+
+                if (reviewedPercent<=0)
+                {
+                    if (reviewedCount>0)
+                    {
+                        reviewedPercent=1;
+                    }
+                    else
+                    {
+                        reviewedPercent=0;
+                    }
+                }
+                else
+                if (reviewedPercent>100)
+                {
+                    reviewedPercent=100;
+                }
+
+                if (invalidPercent<=0)
+                {
+                    if (invalidCount>0)
+                    {
+                        invalidPercent=1;
+                    }
+                    else
+                    {
+                        invalidPercent=0;
+                    }
+                }
+                else
+                if (invalidPercent>100)
+                {
+                    invalidPercent=100;
+                }
+
+                if (notePercent<=0)
+                {
+                    if (noteCount>0)
+                    {
+                        notePercent=1;
+                    }
+                    else
+                    {
+                        notePercent=0;
+                    }
+                }
+                else
+                if (notePercent>100)
+                {
+                    notePercent=100;
+                }
+
+                if (clearPercent<=0)
+                {
+                    if (reviewedCount + invalidCount + noteCount != rowCount)
+                    {
+                        clearPercent=1;
+                    }
+                    else
+                    {
+                        clearPercent=0;
+                    }
+                }
+                else
+                if (clearPercent>100)
+                {
+                    clearPercent=100;
+                }
+
+                int totalPercent=reviewedPercent + invalidPercent + notePercent + clearPercent;
+
+                if (totalPercent != 100)
+                {
+                    if (
+                        reviewedPercent>invalidPercent
+                        &&
+                        reviewedPercent>notePercent
+                        &&
+                        reviewedPercent>clearPercent
+                       )
+                    {
+                        reviewedPercent -= totalPercent-100;
+                    }
+                    if (
+                        invalidPercent>reviewedPercent
+                        &&
+                        invalidPercent>notePercent
+                        &&
+                        invalidPercent>clearPercent
+                       )
+                    {
+                        invalidPercent  -= totalPercent-100;
+                    }
+
+                    if (
+                        notePercent>reviewedPercent
+                        &&
+                        notePercent>invalidPercent
+                        &&
+                        notePercent>clearPercent
+                       )
+                    {
+                        notePercent     -= totalPercent-100;
+                    }
+                    else
+                    {
+                        clearPercent    -= totalPercent-100;
+                    }
+                }
+
+                // ----------------------------------------------
+
+                ColorCache.get(SelectionColor.REVIEWED);
+
+                Bitmap bitmap=Bitmap.createBitmap(100, 1, Config.ARGB_8888);
+
+                Canvas canvas=new Canvas(bitmap);
+
+                int curPercent=0;
+
+                if (reviewedPercent>0)
+                {
+                    Paint paint=new Paint();
+
+                    paint.setColor(ColorCache.get(SelectionColor.REVIEWED));
+                    paint.setAlpha(220);
+
+                    canvas.drawLine(curPercent, 0, curPercent+reviewedPercent, 0, paint);
+                    curPercent += reviewedPercent;
+                }
+
+                if (invalidPercent>0)
+                {
+                    Paint paint=new Paint();
+
+                    paint.setColor(ColorCache.get(SelectionColor.INVALID));
+                    paint.setAlpha(220);
+
+                    canvas.drawLine(curPercent, 0, curPercent+invalidPercent, 0, paint);
+                    curPercent += invalidPercent;
+                }
+
+                if (notePercent>0)
+                {
+                    Paint paint=new Paint();
+
+                    paint.setColor(ColorCache.get(SelectionColor.NOTE));
+                    paint.setAlpha(220);
+
+                    canvas.drawLine(curPercent, 0, curPercent+notePercent, 0, paint);
+                    curPercent += notePercent;
+                }
+
+                if (clearPercent>0)
+                {
+                    Paint paint=new Paint();
+
+                    paint.setColor(ColorCache.get(SelectionColor.CLEAR));
+                    paint.setAlpha(220);
+
+                    canvas.drawLine(curPercent, 0, curPercent+clearPercent, 0, paint);
+                    curPercent += clearPercent;
+                }
+
+                view.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
+            }
+            else
+            {
+                view.setBackgroundDrawable(null);
+            }
+        }
+        else
+        {
+            view.setBackgroundDrawable(null);
+        }
 
         if (
             mSelectionMode
