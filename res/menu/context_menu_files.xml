@@ -16,8 +16,8 @@
         android:title="@string/action_mark_to_delete"
         android:icon="@drawable/mark_delete"
         app:showAsAction="always" />
-	
-	<item
+
+    <item
         android:id="@+id/action_note"
         android:orderInCategory="300"
         android:title="@string/action_note"

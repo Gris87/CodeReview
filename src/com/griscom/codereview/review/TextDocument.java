@@ -1158,10 +1158,10 @@ public class TextDocument implements OnTouchListener
         editor.commit();
     }
 
-	public void setParent(ReviewSurfaceView parent)
-	{
-		mParent=parent;
-	}
+    public void setParent(ReviewSurfaceView parent)
+    {
+        mParent=parent;
+    }
 
     public ArrayList<TextRow> getRows()
     {
@@ -1233,20 +1233,20 @@ public class TextDocument implements OnTouchListener
             mInvalidCount  = invalidCount;
             mNoteCount     = noteCount;
 
-			MainDatabase helper=new MainDatabase(mContext);
-			SQLiteDatabase db=helper.getWritableDatabase();
+            MainDatabase helper=new MainDatabase(mContext);
+            SQLiteDatabase db=helper.getWritableDatabase();
 
-			int fileId=mParent.getFileId();
+            int fileId=mParent.getFileId();
 
-			if (fileId<=0)
-			{
-				fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
-				mParent.setFileId(fileId);
-			}
+            if (fileId<=0)
+            {
+                fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
+                mParent.setFileId(fileId);
+            }
 
-			helper.updateFileStats(db, fileId, mReviewedCount, mInvalidCount, mNoteCount);
+            helper.updateFileStats(db, fileId, mReviewedCount, mInvalidCount, mNoteCount);
 
-			db.close();
+            db.close();
 
             progressChanged();
         }

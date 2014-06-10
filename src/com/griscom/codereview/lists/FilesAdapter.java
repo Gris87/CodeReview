@@ -378,50 +378,50 @@ public class FilesAdapter extends BaseAdapter
             return false;
         }
 
-		synchronized (this)
-		{
-			mFiles.clear();
+        synchronized (this)
+        {
+            mFiles.clear();
 
-			if (!mCurrentPath.equals("/"))
-			{
-				mFiles.add(FileEntry.createParentFolder());
-			}
+            if (!mCurrentPath.equals("/"))
+            {
+                mFiles.add(FileEntry.createParentFolder());
+            }
 
 
 
-			File folder=new File(mCurrentPath);
-			File[] files=folder.listFiles();
+            File folder=new File(mCurrentPath);
+            File[] files=folder.listFiles();
 
-			if (files!=null)
-			{
-				ArrayList<String> ignoreFiles=new ArrayList<String>();
+            if (files!=null)
+            {
+                ArrayList<String> ignoreFiles=new ArrayList<String>();
 
-				String[] filterFiles=ApplicationSettings.ignoreFiles(mContext);
+                String[] filterFiles=ApplicationSettings.ignoreFiles(mContext);
 
-				if (filterFiles!=null)
-				{
-					for (int i=0; i<filterFiles.length; ++i)
-					{
-						if (!TextUtils.isEmpty(filterFiles[i]))
-						{
-							ignoreFiles.add(filterFiles[i]);
-						}
-					}
-				}
+                if (filterFiles!=null)
+                {
+                    for (int i=0; i<filterFiles.length; ++i)
+                    {
+                        if (!TextUtils.isEmpty(filterFiles[i]))
+                        {
+                            ignoreFiles.add(filterFiles[i]);
+                        }
+                    }
+                }
 
-				WildcardFileFilter filter=new WildcardFileFilter(ignoreFiles);
+                WildcardFileFilter filter=new WildcardFileFilter(ignoreFiles);
 
-				for (int i=0; i<files.length; ++i)
-				{
-					if (!filter.accept(files[i]))
-					{
-						FileEntry newEntry=new FileEntry(files[i]);
+                for (int i=0; i<files.length; ++i)
+                {
+                    if (!filter.accept(files[i]))
+                    {
+                        FileEntry newEntry=new FileEntry(files[i]);
 
-						mFiles.add(newEntry);
-					}
-				}
-			}
-		}
+                        mFiles.add(newEntry);
+                    }
+                }
+            }
+        }
 
         sort();
 
@@ -448,28 +448,28 @@ public class FilesAdapter extends BaseAdapter
             mSortType=sortType;
         }
 
-		synchronized (this)
-		{
-			for (int e=0; e<mFiles.size()-1; ++e)
-			{
-				int minIndex=e;
+        synchronized (this)
+        {
+            for (int e=0; e<mFiles.size()-1; ++e)
+            {
+                int minIndex=e;
 
-				for (int i=e+1; i<mFiles.size(); ++i)
-				{
-					if (mFiles.get(i).isLess(mFiles.get(minIndex), mSortType))
-					{
-						minIndex=i;
-					}
-				}
+                for (int i=e+1; i<mFiles.size(); ++i)
+                {
+                    if (mFiles.get(i).isLess(mFiles.get(minIndex), mSortType))
+                    {
+                        minIndex=i;
+                    }
+                }
 
-				if (e!=minIndex)
-				{
-					FileEntry temp=mFiles.get(e);
-					mFiles.set(e, mFiles.get(minIndex));
-					mFiles.set(minIndex, temp);
-				}
-			}
-		}
+                if (e!=minIndex)
+                {
+                    FileEntry temp=mFiles.get(e);
+                    mFiles.set(e, mFiles.get(minIndex));
+                    mFiles.set(minIndex, temp);
+                }
+            }
+        }
 
         notifyDataSetChanged();
     }
@@ -578,6 +578,11 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
+    public ArrayList<Integer> getSelection()
+    {
+        return mSelection;
+    }
+
     private class CheckedChangedListener implements CompoundButton.OnCheckedChangeListener
     {
         private Integer mPosition;
@@ -601,8 +606,8 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
-	private class DbReaderTask extends AsyncTask<Void, Void, Void>
-	{
+    private class DbReaderTask extends AsyncTask<Void, Void, Void>
+    {
         @Override
         protected Void doInBackground(Void... arg0)
         {
@@ -670,5 +675,5 @@ public class FilesAdapter extends BaseAdapter
             notifyDataSetChanged();
             mDbReaderTask=null;
         }
-	}
+    }
 }

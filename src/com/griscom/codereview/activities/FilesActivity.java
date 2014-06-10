@@ -2,6 +2,7 @@ package com.griscom.codereview.activities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import junit.framework.Assert;
 import android.annotation.TargetApi;
@@ -17,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -43,6 +45,8 @@ import com.griscom.codereview.other.SortType;
 
 public class FilesActivity extends ActionBarActivity
 {
+    private static final String TAG = "FilesActivity";
+
     private static final int REQUEST_SETTINGS = 1;
     private static final int REQUEST_REVIEW   = 2;
 
@@ -347,6 +351,46 @@ public class FilesActivity extends ActionBarActivity
             super.onCreateContextMenu(menu, v, menuInfo);
         }
 
+        @Override
+        public boolean onContextItemSelected(MenuItem item)
+        {
+            switch (item.getItemId())
+            {
+                case R.id.action_mark_to_rename:
+                {
+                    markToRename(new int[]{mLastSelectedItem});
+                }
+                break;
+                case R.id.action_mark_to_delete:
+                {
+                    markToDelete(new int[]{mLastSelectedItem});
+                }
+                break;
+                case R.id.action_note:
+                {
+                    assignNote(new int[]{mLastSelectedItem});
+                }
+                break;
+                 case R.id.action_rename:
+                {
+                    rename(new int[]{mLastSelectedItem});
+                }
+                break;
+                case R.id.action_delete:
+                {
+                    delete(new int[]{mLastSelectedItem});
+                }
+                break;
+                default:
+                {
+                    Log.e(TAG, "Unknown action: "+String.valueOf(item));
+                }
+                break;
+            }
+
+            return super.onContextItemSelected(item);
+        }
+
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void setChoiceListener()
         {
@@ -397,7 +441,55 @@ public class FilesActivity extends ActionBarActivity
                 @Override
                 public boolean onActionItemClicked(ActionMode mode, MenuItem item)
                 {
-                    // TODO: Implement this method
+                    ArrayList<Integer> tempList=mAdapter.getSelection();
+                    int items[]=new int[tempList.size()];
+
+                    for (int i=0; i<tempList.size(); ++i)
+                    {
+                        items[i]=tempList.get(i).intValue();
+                    }
+
+                    boolean res=true;
+
+                    switch (item.getItemId())
+                    {
+                        case R.id.action_mark_to_rename:
+                        {
+                            res=markToRename(items);
+                        }
+                        break;
+                        case R.id.action_mark_to_delete:
+                        {
+                            res=markToDelete(items);
+                        }
+                        break;
+                        case R.id.action_note:
+                        {
+                            res=assignNote(items);
+                        }
+                        break;
+                        case R.id.action_rename:
+                        {
+                            res=rename(items);
+                        }
+                        break;
+                        case R.id.action_delete:
+                        {
+                            res=delete(items);
+                        }
+                        break;
+                        default:
+                        {
+                            Log.e(TAG, "Unknown action: "+String.valueOf(item));
+                        }
+                        break;
+                    }
+
+                    if (res)
+                    {
+                        mode.finish();
+                    }
+
                     return true;
                 }
 
@@ -407,6 +499,41 @@ public class FilesActivity extends ActionBarActivity
                     mAdapter.setSelectionMode(false);
                 }
             });
+        }
+
+        private boolean markToRename(int items[])
+        {
+            Log.e("gfy","markToRename");
+
+            return true;
+        }
+
+        private boolean markToDelete(int items[])
+        {
+            Log.e("gfy","markToDelete");
+
+            return true;
+        }
+
+        private boolean assignNote(int items[])
+        {
+            Log.e("gfy","assignNote");
+
+            return true;
+        }
+
+        private boolean rename(int items[])
+        {
+            Log.e("gfy","rename");
+
+            return true;
+        }
+
+        private boolean delete(int items[])
+        {
+            Log.e("gfy","delete");
+
+            return true;
         }
 
         public boolean onBackPressed()
