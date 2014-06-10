@@ -31,6 +31,9 @@
 
     <!-- Mark to delete -->
     <string name="action_mark_to_delete">Отметить удаление</string>
+	
+    <!-- Note -->
+    <string name="action_note">Заметка</string>
 
     <!-- Reload -->
     <string name="action_reload">Переоткрыть</string>

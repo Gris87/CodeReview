@@ -32,6 +32,9 @@
     <!-- Mark to delete -->
     <string name="action_mark_to_delete">Mark to delete</string>
 
+    <!-- Note -->
+    <string name="action_note">Note</string>
+	
     <!-- Reload -->
     <string name="action_reload">Reload</string>
 
