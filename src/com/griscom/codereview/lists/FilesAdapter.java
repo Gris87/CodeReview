@@ -9,7 +9,9 @@ import junit.framework.Assert;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -32,12 +34,12 @@ import com.griscom.codereview.util.Utils;
 public class FilesAdapter extends BaseAdapter
 {
     private Context              mContext;
+    private DbReaderTask         mDbReaderTask;
     private String               mCurrentPath;
     private ArrayList<FileEntry> mFiles;
     private SortType             mSortType;
     private boolean              mSelectionMode;
     private ArrayList<Integer>   mSelection;
-    private SQLiteDatabase       mMainDatabase;
 
 
 
@@ -54,22 +56,14 @@ public class FilesAdapter extends BaseAdapter
     public FilesAdapter(Context context)
     {
         mContext       = context;
+        mDbReaderTask  = null;
         mCurrentPath   = Environment.getExternalStorageDirectory().getPath();
         mFiles         = new ArrayList<FileEntry>();
         mSortType      = SortType.NAME;
         mSelectionMode = false;
         mSelection     = new ArrayList<Integer>();
-        mMainDatabase  = new MainDatabase(mContext).getReadableDatabase();
 
         rescan();
-    }
-
-    @Override
-    protected void finalize() throws Throwable
-    {
-        mMainDatabase.close();
-
-        super.finalize();
     }
 
     @Override
@@ -187,53 +181,60 @@ public class FilesAdapter extends BaseAdapter
             return false;
         }
 
+		synchronized (this)
+		{
+			mFiles.clear();
+
+			if (!mCurrentPath.equals("/"))
+			{
+				mFiles.add(FileEntry.createParentFolder());
+			}
 
 
-        mFiles.clear();
 
-        if (!mCurrentPath.equals("/"))
-        {
-            mFiles.add(FileEntry.createParentFolder());
-        }
+			File folder=new File(mCurrentPath);
+			File[] files=folder.listFiles();
 
+			if (files!=null)
+			{
+				ArrayList<String> ignoreFiles=new ArrayList<String>();
 
+				String[] filterFiles=ApplicationSettings.ignoreFiles(mContext);
 
-        File folder=new File(mCurrentPath);
-        File[] files=folder.listFiles();
+				if (filterFiles!=null)
+				{
+					for (int i=0; i<filterFiles.length; ++i)
+					{
+						if (!TextUtils.isEmpty(filterFiles[i]))
+						{
+							ignoreFiles.add(filterFiles[i]);
+						}
+					}
+				}
 
-        if (files!=null)
-        {
-            ArrayList<String> ignoreFiles=new ArrayList<String>();
+				WildcardFileFilter filter=new WildcardFileFilter(ignoreFiles);
 
-            String[] filterFiles=ApplicationSettings.ignoreFiles(mContext);
+				for (int i=0; i<files.length; ++i)
+				{
+					if (!filter.accept(files[i]))
+					{
+						FileEntry newEntry=new FileEntry(files[i]);
 
-            if (filterFiles!=null)
-            {
-                for (int i=0; i<filterFiles.length; ++i)
-                {
-                    if (!TextUtils.isEmpty(filterFiles[i]))
-                    {
-                        ignoreFiles.add(filterFiles[i]);
-                    }
-                }
-            }
-
-            WildcardFileFilter filter=new WildcardFileFilter(ignoreFiles);
-
-            for (int i=0; i<files.length; ++i)
-            {
-                if (!filter.accept(files[i]))
-                {
-                    FileEntry newEntry=new FileEntry(files[i]);
-
-                    mFiles.add(newEntry);
-                }
-            }
-        }
-
-
+						mFiles.add(newEntry);
+					}
+				}
+			}
+		}
 
         sort();
+
+        if (mDbReaderTask!=null)
+        {
+            mDbReaderTask.cancel(true);
+        }
+
+        mDbReaderTask=new DbReaderTask();
+        mDbReaderTask.execute();
 
         return true;
     }
@@ -250,25 +251,28 @@ public class FilesAdapter extends BaseAdapter
             mSortType=sortType;
         }
 
-        for (int e=0; e<mFiles.size()-1; ++e)
-        {
-            int minIndex=e;
+		synchronized (this)
+		{
+			for (int e=0; e<mFiles.size()-1; ++e)
+			{
+				int minIndex=e;
 
-            for (int i=e+1; i<mFiles.size(); ++i)
-            {
-                if (mFiles.get(i).isLess(mFiles.get(minIndex), mSortType))
-                {
-                    minIndex=i;
-                }
-            }
+				for (int i=e+1; i<mFiles.size(); ++i)
+				{
+					if (mFiles.get(i).isLess(mFiles.get(minIndex), mSortType))
+					{
+						minIndex=i;
+					}
+				}
 
-            if (e!=minIndex)
-            {
-                FileEntry temp=mFiles.get(e);
-                mFiles.set(e, mFiles.get(minIndex));
-                mFiles.set(minIndex, temp);
-            }
-        }
+				if (e!=minIndex)
+				{
+					FileEntry temp=mFiles.get(e);
+					mFiles.set(e, mFiles.get(minIndex));
+					mFiles.set(minIndex, temp);
+				}
+			}
+		}
 
         notifyDataSetChanged();
     }
@@ -331,7 +335,10 @@ public class FilesAdapter extends BaseAdapter
             throw new FileNotFoundException();
         }
 
-        mCurrentPath=newPath;
+        synchronized (this)
+        {
+            mCurrentPath=newPath;
+        }
 
         rescan();
     }
@@ -396,4 +403,75 @@ public class FilesAdapter extends BaseAdapter
             }
         }
     }
+
+	private class DbReaderTask extends AsyncTask<Void, Void, Void>
+	{
+        @Override
+        protected Void doInBackground(Void... arg0)
+        {
+            MainDatabase helper=new MainDatabase(mContext);
+            SQLiteDatabase db=helper.getReadableDatabase();
+
+            String path;
+
+            synchronized (FilesAdapter.this)
+            {
+                path=mCurrentPath;
+            }
+
+            Cursor cursor=helper.getFiles(db, path);
+
+            int idIndex            = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_ID);
+            int nameIndex          = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_NAME);
+            int reviewedCountIndex = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_REVIEWED_COUNT);
+            int invalidCountIndex  = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_INVALID_COUNT);
+            int noteCountIndex     = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_NOTE_COUNT);
+            int rowCountIndex      = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_ROW_COUNT);
+            int noteIndex          = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_NOTE);
+
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast() && !isCancelled())
+            {
+                String fileName=cursor.getString(nameIndex);
+
+                FileEntry entry=null;
+
+                synchronized (FilesAdapter.this)
+                {
+                    int index=indexOf(fileName);
+
+                    if (index>=0)
+                    {
+                        entry=mFiles.get(index);
+                    }
+                }
+
+                if (entry!=null)
+                {
+                    entry.updateFromDb(
+                                       cursor.getInt(idIndex),
+                                       cursor.getInt(reviewedCountIndex),
+                                       cursor.getInt(invalidCountIndex),
+                                       cursor.getInt(noteCountIndex),
+                                       cursor.getInt(rowCountIndex),
+                                       cursor.getString(noteIndex)
+                                      );
+                }
+
+                cursor.moveToNext();
+            }
+
+            db.close();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            notifyDataSetChanged();
+            mDbReaderTask=null;
+        }
+	}
 }

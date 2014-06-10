@@ -164,9 +164,8 @@ public class TextDocument implements OnTouchListener
         mSelectionMakeLight      = false;
     }
 
-    public void init(ReviewSurfaceView parent)
+    public void init()
     {
-        mParent=parent;
         mHandler=new DocumentHandler();
 
         mX=mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin);
@@ -641,6 +640,7 @@ public class TextDocument implements OnTouchListener
 
                                     saveFile();
 
+                                    finishSelection();
                                     dialog.dismiss();
                                 }
                             })
@@ -650,14 +650,15 @@ public class TextDocument implements OnTouchListener
                                 @Override
                                 public void onClick(DialogInterface dialog, int whichButton)
                                 {
+                                    finishSelection();
                                     dialog.dismiss();
                                 }
                             })
-                            .setOnDismissListener(
-                            new DialogInterface.OnDismissListener()
+                            .setOnCancelListener(
+                            new DialogInterface.OnCancelListener()
                             {
                                 @Override
-                                public void onDismiss(DialogInterface dialog)
+                                public void onCancel(DialogInterface dialog)
                                 {
                                     finishSelection();
                                 }
@@ -823,6 +824,16 @@ public class TextDocument implements OnTouchListener
         if (mParent!=null)
         {
             mParent.saveRequested();
+
+            if (mParent.getFileId()>0)
+            {
+                MainDatabase helper=new MainDatabase(mContext);
+                SQLiteDatabase db=helper.getWritableDatabase();
+
+                helper.updateFileMeta(db, mParent.getFileId(), mParent.getFileName());
+
+                db.close();
+            }
         }
     }
 
@@ -1147,6 +1158,11 @@ public class TextDocument implements OnTouchListener
         editor.commit();
     }
 
+	public void setParent(ReviewSurfaceView parent)
+	{
+		mParent=parent;
+	}
+
     public ArrayList<TextRow> getRows()
     {
        return mRows;
@@ -1216,6 +1232,21 @@ public class TextDocument implements OnTouchListener
             mReviewedCount = reviewedCount;
             mInvalidCount  = invalidCount;
             mNoteCount     = noteCount;
+
+			MainDatabase helper=new MainDatabase(mContext);
+			SQLiteDatabase db=helper.getWritableDatabase();
+
+			int fileId=mParent.getFileId();
+
+			if (fileId<=0)
+			{
+				fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
+				mParent.setFileId(fileId);
+			}
+
+			helper.updateFileStats(db, fileId, mReviewedCount, mInvalidCount, mNoteCount);
+
+			db.close();
 
             progressChanged();
         }

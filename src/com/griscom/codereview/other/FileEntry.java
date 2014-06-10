@@ -111,6 +111,19 @@ public class FileEntry
         return false;
     }
 
+    public void updateFromDb(int dbFileId, int reviewedCount, int invalidCount, int noteCount, int rowCount, String note)
+    {
+        synchronized(this)
+        {
+            mDbFileId      = dbFileId;
+            mReviewedCount = reviewedCount;
+            mInvalidCount  = invalidCount;
+            mNoteCount     = noteCount;
+            mRowCount      = rowCount;
+            mFileNote      = note;
+        }
+    }
+
     public String getFileName()
     {
         return mFileName;

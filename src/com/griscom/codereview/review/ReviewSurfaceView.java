@@ -82,7 +82,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
         private void loaded()
         {
-            mLastLoadedDocument.init(ReviewSurfaceView.this);
+            mLastLoadedDocument.init();
 
             mLastLoadedDocument.setFontSize(mFontSize);
             mLastLoadedDocument.setTabSize(mTabSize);
@@ -317,7 +317,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             if (file.exists())
             {
-                mLoadingThread=new LoadingThread(mSyntaxParser, this, mFileName, mFileId);
+                mLoadingThread=new LoadingThread(this, mSyntaxParser, this, mFileName, mFileId);
                 mLoadingThread.start();
             }
         }

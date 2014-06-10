@@ -19,6 +19,7 @@ public class LoadingThread extends Thread
 
 
 
+	private ReviewSurfaceView        mParent;
     private SyntaxParserBase         mSyntaxParser;
     private OnDocumentLoadedListener mListener;
     private String                   mFileName;
@@ -26,8 +27,9 @@ public class LoadingThread extends Thread
 
 
 
-    public LoadingThread(SyntaxParserBase syntaxParser, OnDocumentLoadedListener listener, String fileName, int fileId)
+    public LoadingThread(ReviewSurfaceView parent, SyntaxParserBase syntaxParser, OnDocumentLoadedListener listener, String fileName, int fileId)
     {
+		mParent       = parent;
         mSyntaxParser = syntaxParser;
         mListener     = listener;
         mFileName     = fileName;
@@ -57,6 +59,8 @@ public class LoadingThread extends Thread
         try
         {
             TextDocument document=mSyntaxParser.parseFile(mFileName);
+			
+			document.setParent(mParent);
 
             if (mFileId<=0)
             {
