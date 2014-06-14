@@ -19,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,10 @@ import com.griscom.codereview.util.Utils;
 
 public class FilesAdapter extends BaseAdapter
 {
+    private static final String TAG = "FilesAdapter";
+
+
+
     private Context              mContext;
     private DbReaderTask         mDbReaderTask;
     private String               mCurrentPath;
@@ -54,7 +59,7 @@ public class FilesAdapter extends BaseAdapter
     {
         CheckBox  mCheckBox;
         ImageView mExtenstion;
-		TextView  mFileNote;
+        TextView  mFileNote;
         TextView  mFileName;
         TextView  mFileSize;
     }
@@ -102,7 +107,7 @@ public class FilesAdapter extends BaseAdapter
 
         holder.mCheckBox   = (CheckBox) resView.findViewById(R.id.checkbox);
         holder.mExtenstion = (ImageView)resView.findViewById(R.id.extensionImageView);
-		holder.mFileNote   = (TextView) resView.findViewById(R.id.fileNoteTextView);
+        holder.mFileNote   = (TextView) resView.findViewById(R.id.fileNoteTextView);
         holder.mFileName   = (TextView) resView.findViewById(R.id.fileNameTextView);
         holder.mFileSize   = (TextView) resView.findViewById(R.id.fileSizeTextView);
 
@@ -306,19 +311,19 @@ public class FilesAdapter extends BaseAdapter
         {
             view.setBackgroundDrawable(null);
         }
-		
-		
-		String note=file.getFileNote();
-		
-		if (!TextUtils.isEmpty(note))
-		{
-			holder.mFileNote.setVisibility(View.VISIBLE);
-			holder.mFileNote.setText(note);
-		}
-		else
-		{
-			holder.mFileNote.setVisibility(View.GONE);
-		}
+
+
+        String note=file.getFileNote();
+
+        if (!TextUtils.isEmpty(note))
+        {
+            holder.mFileNote.setVisibility(View.VISIBLE);
+            holder.mFileNote.setText(note);
+        }
+        else
+        {
+            holder.mFileNote.setVisibility(View.GONE);
+        }
 
         if (
             mSelectionMode
@@ -513,16 +518,16 @@ public class FilesAdapter extends BaseAdapter
 
         return -1;
     }
-	
-	public void assignNote(int files[], String note)
-	{
-		for (int i=0; i<files.length; ++i)
-		{
-			mFiles.get(files[i]).setFileNote(note);
-		}
-		
-		notifyDataSetChanged();
-	}
+
+    public void assignNote(int files[], String note)
+    {
+        for (int i=0; i<files.length; ++i)
+        {
+            mFiles.get(files[i]).setFileNote(note);
+        }
+
+        notifyDataSetChanged();
+    }
 
     public void setCurrentPathBacktrace(String newPath)
     {
@@ -650,6 +655,7 @@ public class FilesAdapter extends BaseAdapter
 
             int idIndex            = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_ID);
             int nameIndex          = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_NAME);
+            int modificationIndex  = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_MODIFICATION_TIME);
             int reviewedCountIndex = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_REVIEWED_COUNT);
             int invalidCountIndex  = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_INVALID_COUNT);
             int noteCountIndex     = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_NOTE_COUNT);
@@ -687,6 +693,56 @@ public class FilesAdapter extends BaseAdapter
                 }
 
                 cursor.moveToNext();
+            }
+
+            for (int i=0; i<mFiles.size() && !isCancelled(); ++i)
+            {
+                FileEntry entry=mFiles.get(i);
+
+                try
+                {
+                    if (
+                        !entry.isDirectory()
+                        &&
+                        entry.getDbFileId()<=0
+                       )
+                    {
+                        String filePath=pathToFile(entry.getFileName());
+
+                        String md5        = Utils.md5ForFile(filePath);
+                        long modifiedTime = new File(filePath).lastModified();
+
+                        cursor=helper.getFileByMD5(db, md5);
+
+                        cursor.moveToFirst();
+
+                        while (!cursor.isAfterLast())
+                        {
+                            if (cursor.getLong(modificationIndex)==modifiedTime)
+                            {
+                                String fileName=cursor.getString(nameIndex);
+
+                                if (entry.getFileName().equals(fileName))
+                                {
+                                    entry.updateFromDb(
+                                        cursor.getInt(idIndex),
+                                        cursor.getInt(reviewedCountIndex),
+                                        cursor.getInt(invalidCountIndex),
+                                        cursor.getInt(noteCountIndex),
+                                        cursor.getInt(rowCountIndex),
+                                        cursor.getString(noteIndex)
+                                    );
+                                }
+                            }
+
+                            cursor.moveToNext();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.e(TAG, "Impossible to get file id by MD5 for file: "+entry.getFileName(), e);
+                }
             }
 
             db.close();

@@ -2,7 +2,6 @@ Select all in ActionMode
 Hide Done button in ActionMode
 Icons
 Smooth movement
-Mark to rename/delete/comment
 Rename
 Delete
 Code folding
