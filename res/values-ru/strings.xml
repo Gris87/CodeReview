@@ -52,6 +52,36 @@
         <item quantity="many">%d файлов выбрано</item>
         <item quantity="other">%d файлов выбрано</item>
     </plurals>
+	
+	<!-- Title for filename dialog in files activity -->
+    <string name="dialog_input_filename_title">Имя файла</string>
+
+    <!-- Message for filename dialog in files activity -->
+    <string name="dialog_input_filename_message">Введите имя файла:</string>
+
+    <!-- Show message if there is no last filenames -->
+    <string name="no_last_filenames">Введите хотя бы одно имя файла, чтобы в дальнейшем использовать его</string>
+
+	<!-- Show message if filename is empty -->
+    <string name="empty_filename">Пожалуйста введите имя файла</string>
+
+	<!-- Title for filenote dialog in files activity -->
+    <string name="dialog_input_filenote_title">Заметка файла</string>
+
+    <!-- Message for filenote dialog in files activity -->
+    <string name="dialog_input_filenote_message">Введите заметку (пустая для удаления):</string>
+
+    <!-- Show message if there is no last filenotes -->
+    <string name="no_last_filenotes">Введите хотя бы одну заметку, чтобы в дальнейшем использовать ее</string>
+	
+	<!-- Need to rename -->
+    <string name="need_to_rename">Нужно переименовать</string>
+
+	<!-- Rename to %s -->
+    <string name="rename_to">Переименовать в %s</string>
+
+    <!-- Need to delete -->
+    <string name="need_to_delete">Нужно удалить</string>
 
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Нажмите снова для выхода</string>

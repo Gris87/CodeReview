@@ -54,6 +54,7 @@ public class FilesAdapter extends BaseAdapter
     {
         CheckBox  mCheckBox;
         ImageView mExtenstion;
+		TextView  mFileNote;
         TextView  mFileName;
         TextView  mFileSize;
     }
@@ -101,6 +102,7 @@ public class FilesAdapter extends BaseAdapter
 
         holder.mCheckBox   = (CheckBox) resView.findViewById(R.id.checkbox);
         holder.mExtenstion = (ImageView)resView.findViewById(R.id.extensionImageView);
+		holder.mFileNote   = (TextView) resView.findViewById(R.id.fileNoteTextView);
         holder.mFileName   = (TextView) resView.findViewById(R.id.fileNameTextView);
         holder.mFileSize   = (TextView) resView.findViewById(R.id.fileSizeTextView);
 
@@ -304,6 +306,19 @@ public class FilesAdapter extends BaseAdapter
         {
             view.setBackgroundDrawable(null);
         }
+		
+		
+		String note=file.getFileNote();
+		
+		if (!TextUtils.isEmpty(note))
+		{
+			holder.mFileNote.setVisibility(View.VISIBLE);
+			holder.mFileNote.setText(note);
+		}
+		else
+		{
+			holder.mFileNote.setVisibility(View.GONE);
+		}
 
         if (
             mSelectionMode
@@ -498,6 +513,16 @@ public class FilesAdapter extends BaseAdapter
 
         return -1;
     }
+	
+	public void assignNote(int files[], String note)
+	{
+		for (int i=0; i<files.length; ++i)
+		{
+			mFiles.get(files[i]).setFileNote(note);
+		}
+		
+		notifyDataSetChanged();
+	}
 
     public void setCurrentPathBacktrace(String newPath)
     {

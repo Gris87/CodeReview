@@ -9,7 +9,6 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -42,10 +41,16 @@ import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
+import android.view.*;
+import android.widget.*;
+import android.view.View.*;
 
 public class FilesActivity extends ActionBarActivity
 {
     private static final String TAG = "FilesActivity";
+	
+	private static final String FILENAMES_SHARED_PREFERENCES = "FileNames";
+	private static final String FILENOTES_SHARED_PREFERENCES = "FileNotes";
 
     private static final int REQUEST_SETTINGS = 1;
     private static final int REQUEST_REVIEW   = 2;
@@ -111,7 +116,7 @@ public class FilesActivity extends ActionBarActivity
                         .setTitle(R.string.action_sort)
                         .setSingleChoiceItems(R.array.sort_types,
                                               mPlaceholderFragment.getAdapter().getSortType().ordinal()-1,
-                                              new OnClickListener()
+                                              new DialogInterface.OnClickListener()
                                               {
                                                   @Override
                                                   public void onClick(DialogInterface dialog, int which)
@@ -501,25 +506,239 @@ public class FilesActivity extends ActionBarActivity
             });
         }
 
-        private boolean markToRename(int items[])
+        private boolean markToRename(final int items[])
         {
-            Log.e("gfy","markToRename");
+			if (items.length==1)
+			{
+				LayoutInflater inflater=(LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+				View view=inflater.inflate(R.layout.dialog_input, null);
+
+				final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
+				ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
+				
+				editText.setText(((FileEntry)mAdapter.getItem(items[0])).getFileName());
+
+				chooseButton.setOnClickListener(new OnClickListener()
+					{
+						@Override
+						public void onClick(View view)
+						{
+							ArrayList<CharSequence> filenames=loadLastFileNames();
+
+							if (filenames.size()>0)
+							{
+								final CharSequence items[]=new CharSequence[filenames.size()];
+								String currentFilename=editText.getText().toString();
+								int index=-1;
+
+								for (int i=0; i<filenames.size(); i++)
+								{
+									String oneFilename=(String)filenames.get(i);
+
+									if (index<0 && oneFilename.equals(currentFilename))
+									{
+										index=i;
+									}
+
+									items[i]=oneFilename;
+								}
+
+								if (index<0)
+								{
+									index=0;
+								}
+
+								AlertDialog chooseDialog=new AlertDialog.Builder(mActivity)
+									.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
+									{
+										@Override
+										public void onClick(DialogInterface dialog, int index)
+										{
+											editText.setText(items[index]);
+											dialog.dismiss();
+										}
+									})
+									.create();
+
+								chooseDialog.show();
+							}
+							else
+							{
+								Toast.makeText(mActivity, R.string.no_last_filenames, Toast.LENGTH_SHORT).show();
+							}
+						}
+					});
+
+				AlertDialog dialog=new AlertDialog.Builder(mActivity)
+					.setTitle(R.string.dialog_input_filename_title)
+					.setMessage(R.string.dialog_input_filename_message)
+					.setView(view)
+					.setPositiveButton(android.R.string.ok,
+					new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int whichButton)
+						{
+							String filename=editText.getText().toString();
+
+							if (!filename.equals(""))
+							{
+								ArrayList<CharSequence> filenames=loadLastFileNames();
+
+								filenames.remove(filename);
+								filenames.add(0, filename);
+								saveLastFileNames(filenames);
+
+								// ----------------------------------
+								
+								mAdapter.assignNote(items, getString(R.string.rename_to, filename));
+								hideActionMode();
+								
+								dialog.dismiss();
+							}
+							else
+							{
+								Toast.makeText(mActivity, R.string.empty_filename, Toast.LENGTH_SHORT).show();
+							}
+						}
+					})
+					.setNegativeButton(android.R.string.cancel,
+					new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int whichButton)
+						{
+							dialog.dismiss();
+						}
+					}).create();
+
+				dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+				dialog.show();
+				
+				return false;
+			}
+			else
+			{
+				mAdapter.assignNote(items, getString(R.string.need_to_rename));
+			}
 
             return true;
         }
 
         private boolean markToDelete(int items[])
         {
-            Log.e("gfy","markToDelete");
+            mAdapter.assignNote(items, getString(R.string.need_to_delete));
 
             return true;
         }
 
-        private boolean assignNote(int items[])
+        private boolean assignNote(final int items[])
         {
-            Log.e("gfy","assignNote");
+           	LayoutInflater inflater=(LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            return true;
+			View view=inflater.inflate(R.layout.dialog_input, null);
+
+			final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
+			ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
+			
+			if (items.length==1)
+			{
+				editText.setText(((FileEntry)mAdapter.getItem(items[0])).getFileNote());
+			}
+
+			chooseButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						ArrayList<CharSequence> filenotes=loadLastFileNotes();
+
+						if (filenotes.size()>0)
+						{
+							final CharSequence items[]=new CharSequence[filenotes.size()];
+							String currentFilenote=editText.getText().toString();
+							int index=-1;
+
+							for (int i=0; i<filenotes.size(); i++)
+							{
+								String oneFilenote=(String)filenotes.get(i);
+
+								if (index<0 && oneFilenote.equals(currentFilenote))
+								{
+									index=i;
+								}
+
+								items[i]=oneFilenote;
+							}
+
+							if (index<0)
+							{
+								index=0;
+							}
+
+							AlertDialog chooseDialog=new AlertDialog.Builder(mActivity)
+								.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
+								{
+									@Override
+									public void onClick(DialogInterface dialog, int index)
+									{
+										editText.setText(items[index]);
+										dialog.dismiss();
+									}
+								})
+								.create();
+
+							chooseDialog.show();
+						}
+						else
+						{
+							Toast.makeText(mActivity, R.string.no_last_filenotes, Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+
+			AlertDialog dialog=new AlertDialog.Builder(mActivity)
+				.setTitle(R.string.dialog_input_filenote_title)
+				.setMessage(R.string.dialog_input_filenote_message)
+				.setView(view)
+				.setPositiveButton(android.R.string.ok,
+				new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int whichButton)
+					{
+						String filenote=editText.getText().toString();
+
+						if (!filenote.equals(""))
+						{
+							ArrayList<CharSequence> filenotes=loadLastFileNotes();
+
+							filenotes.remove(filenote);
+							filenotes.add(0, filenote);
+							saveLastFileNotes(filenotes);
+						}
+						
+						mAdapter.assignNote(items, filenote);
+						hideActionMode();
+
+						dialog.dismiss();
+					}
+				})
+				.setNegativeButton(android.R.string.cancel,
+				new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int whichButton)
+					{
+						dialog.dismiss();
+					}
+				}).create();
+
+			dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+			dialog.show();
+
+			return false;
         }
 
         private boolean rename(int items[])
@@ -535,6 +754,11 @@ public class FilesActivity extends ActionBarActivity
 
             return true;
         }
+		
+		private void hideActionMode()
+		{
+			// TODO: Implement it
+		}
 
         public boolean onBackPressed()
         {
@@ -712,6 +936,86 @@ public class FilesActivity extends ActionBarActivity
                 mAdapter.sort(sortTypes[sortType]);
             }
         }
+		
+		public ArrayList<CharSequence> loadLastFileNames()
+		{
+			SharedPreferences prefs=mActivity.getSharedPreferences(FILENAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+
+			int fileNameCount=prefs.getInt(ApplicationPreferences.LAST_FILENAMES, 0);
+
+			ArrayList<CharSequence> res=new ArrayList<CharSequence>();
+
+			for (int i=0; i<fileNameCount; ++i)
+			{
+				String fileName=prefs.getString(ApplicationPreferences.ONE_FILENAME+"_"+String.valueOf(i+1),"");
+
+				if (
+					!TextUtils.isEmpty(fileName)
+					&&
+					!res.contains(fileName)
+					)
+				{
+					res.add(fileName);
+				}
+			}
+
+			return res;
+		}
+
+		public void saveLastFileNames(ArrayList<CharSequence> fileNames)
+		{
+			SharedPreferences prefs=mActivity.getSharedPreferences(FILENAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor=prefs.edit();
+
+			editor.putInt(ApplicationPreferences.LAST_FILENAMES, fileNames.size());
+
+			for (int i=0; i<fileNames.size(); ++i)
+			{
+				editor.putString(ApplicationPreferences.ONE_FILENAME+"_"+String.valueOf(i+1), fileNames.get(i).toString());
+			}
+
+			editor.commit();
+		}
+		
+		public ArrayList<CharSequence> loadLastFileNotes()
+		{
+			SharedPreferences prefs=mActivity.getSharedPreferences(FILENOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+
+			int filenoteCount=prefs.getInt(ApplicationPreferences.LAST_FILENOTES, 0);
+
+			ArrayList<CharSequence> res=new ArrayList<CharSequence>();
+
+			for (int i=0; i<filenoteCount; ++i)
+			{
+				String fileNote=prefs.getString(ApplicationPreferences.ONE_FILENOTE+"_"+String.valueOf(i+1),"");
+
+				if (
+					!TextUtils.isEmpty(fileNote)
+					&&
+					!res.contains(fileNote)
+					)
+				{
+					res.add(fileNote);
+				}
+			}
+
+			return res;
+		}
+
+		public void saveLastFileNotes(ArrayList<CharSequence> filenotes)
+		{
+			SharedPreferences prefs=mActivity.getSharedPreferences(FILENOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor=prefs.edit();
+
+			editor.putInt(ApplicationPreferences.LAST_FILENOTES, filenotes.size());
+
+			for (int i=0; i<filenotes.size(); ++i)
+			{
+				editor.putString(ApplicationPreferences.ONE_FILENOTE+"_"+String.valueOf(i+1), filenotes.get(i).toString());
+			}
+
+			editor.commit();
+		}
 
         public FilesAdapter getAdapter()
         {

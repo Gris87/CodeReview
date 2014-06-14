@@ -52,7 +52,7 @@ public class TextDocument implements OnTouchListener
 {
     private static final String TAG="TextDocument";
 
-    private static final String SHARED_PREFERENCES = "TextDocument";
+    private static final String COMMENTS_SHARED_PREFERENCES = "Comments";
 
     private static final int   HIDE_BARS_MESSAGE   = 1;
     private static final int   HIGHLIGHT_MESSAGE   = 2;
@@ -533,10 +533,10 @@ public class TextDocument implements OnTouchListener
                     {
                         LayoutInflater inflater=(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                        View view=inflater.inflate(R.layout.dialog_comment, null);
+                        View view=inflater.inflate(R.layout.dialog_input, null);
 
-                        final EditText editText     = (EditText)    view.findViewById(R.id.commentEditText);
-                        ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.commentChooseButton);
+                        final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
+                        ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
 
                         chooseButton.setOnClickListener(new OnClickListener()
                             {
@@ -1120,7 +1120,7 @@ public class TextDocument implements OnTouchListener
 
     public ArrayList<CharSequence> loadLastComments()
     {
-        SharedPreferences prefs=mContext.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs=mContext.getSharedPreferences(COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
         int commentCount=prefs.getInt(ApplicationPreferences.LAST_COMMENTS, 0);
 
@@ -1128,7 +1128,7 @@ public class TextDocument implements OnTouchListener
 
         for (int i=0; i<commentCount; ++i)
         {
-            String comment=prefs.getString(ApplicationPreferences.COMMENT+"_"+String.valueOf(i+1),"");
+            String comment=prefs.getString(ApplicationPreferences.ONE_COMMENT+"_"+String.valueOf(i+1),"");
 
             if (
                 !TextUtils.isEmpty(comment)
@@ -1145,14 +1145,14 @@ public class TextDocument implements OnTouchListener
 
     public void saveLastComments(ArrayList<CharSequence> comments)
     {
-        SharedPreferences prefs=mContext.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs=mContext.getSharedPreferences(COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=prefs.edit();
 
         editor.putInt(ApplicationPreferences.LAST_COMMENTS, comments.size());
 
         for (int i=0; i<comments.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.COMMENT+"_"+String.valueOf(i+1), comments.get(i).toString());
+            editor.putString(ApplicationPreferences.ONE_COMMENT+"_"+String.valueOf(i+1), comments.get(i).toString());
         }
 
         editor.commit();

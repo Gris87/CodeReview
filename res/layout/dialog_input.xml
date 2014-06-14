@@ -8,13 +8,13 @@
     android:paddingTop="@dimen/dialog_vertical_margin" >
 
     <EditText
-        android:id="@+id/commentEditText"
+        android:id="@+id/inputEditText"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_toLeftOf="@+id/commentChooseButton" />
+        android:layout_toLeftOf="@+id/chooseButton" />
 
     <ImageButton
-        android:id="@+id/commentChooseButton"
+        android:id="@+id/chooseButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentRight="true"

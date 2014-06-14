@@ -52,7 +52,37 @@
         <item quantity="many">%d files selected</item>
         <item quantity="other">%d files selected</item>
     </plurals>
+	
+	<!-- Title for filename dialog in files activity -->
+    <string name="dialog_input_filename_title">File name</string>
 
+    <!-- Message for filename dialog in files activity -->
+    <string name="dialog_input_filename_message">Input file name:</string>
+
+    <!-- Show message if there is no last filenames -->
+    <string name="no_last_filenames">Please input atleast one file name to use it later</string>
+
+	<!-- Show message if filename is empty -->
+    <string name="empty_filename">Please input file name</string>
+	
+	<!-- Title for filenote dialog in files activity -->
+    <string name="dialog_input_filenote_title">File note</string>
+
+    <!-- Message for filenote dialog in files activity -->
+    <string name="dialog_input_filenote_message">Input file note:</string>
+
+    <!-- Show message if there is no last filenotes -->
+    <string name="no_last_filenotes">Please input atleast one file note to use it later</string>
+
+    <!-- Need to rename -->
+    <string name="need_to_rename">Need to rename</string>
+
+	<!-- Rename to %s -->
+    <string name="rename_to">Rename to %s</string>
+	
+    <!-- Need to delete -->
+    <string name="need_to_delete">Need to delete</string>
+	
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Press again to exit</string>
 
