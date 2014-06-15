@@ -6,6 +6,9 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.griscom.codereview.R;
+import com.griscom.codereview.db.*;
+import android.content.*;
+import android.database.sqlite.*;
 
 @SuppressLint("DefaultLocale")
 public class FileEntry
@@ -161,14 +164,6 @@ public class FileEntry
         return res;
     }
 
-    public void setDbFileId(int dbFileId)
-    {
-        synchronized(this)
-        {
-            mDbFileId=dbFileId;
-        }
-    }
-
     public int getReviewedCount()
     {
         int res;
@@ -179,14 +174,6 @@ public class FileEntry
         }
 
         return res;
-    }
-
-    public void setReviewedCount(int count)
-    {
-        synchronized(this)
-        {
-            mReviewedCount=count;
-        }
     }
 
     public int getInvalidCount()
@@ -201,14 +188,6 @@ public class FileEntry
         return res;
     }
 
-    public void setInvalidCount(int count)
-    {
-        synchronized(this)
-        {
-            mInvalidCount=count;
-        }
-    }
-
     public int getNoteCount()
     {
         int res;
@@ -219,14 +198,6 @@ public class FileEntry
         }
 
         return res;
-    }
-
-    public void setNoteCount(int count)
-    {
-        synchronized(this)
-        {
-            mNoteCount=count;
-        }
     }
 
     public int getRowCount()
@@ -241,14 +212,6 @@ public class FileEntry
         return res;
     }
 
-    public void setRowCount(int count)
-    {
-        synchronized(this)
-        {
-            mRowCount=count;
-        }
-    }
-
     public String getFileNote()
     {
         String res;
@@ -261,11 +224,24 @@ public class FileEntry
         return res;
     }
 
-    public void setFileNote(String note)
+    public void setFileNote(Context context, String filename, String note)
     {
         synchronized(this)
         {
             mFileNote=note;
+			
+			MainDatabase helper=new MainDatabase(context);
+			
+			SQLiteDatabase db=helper.getWritableDatabase();
+			
+			if (mDbFileId<=0)
+			{
+				mDbFileId=helper.getOrCreateFile(db, filename);
+			}
+			
+			helper.updateFileNote(db, mDbFileId, note);
+			
+			db.close();
         }
     }
 }

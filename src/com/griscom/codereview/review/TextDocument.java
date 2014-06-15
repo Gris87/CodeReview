@@ -744,7 +744,7 @@ public class TextDocument implements OnTouchListener
 
         if (fileId<=0)
         {
-            fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
+            fileId=helper.getOrCreateFile(db, mParent.getFileName());
             mParent.setFileId(fileId);
         }
 
@@ -1240,11 +1240,11 @@ public class TextDocument implements OnTouchListener
 
             if (fileId<=0)
             {
-                fileId=helper.getOrCreateFile(db, mParent.getFileName(), mRows.size());
+                fileId=helper.getOrCreateFile(db, mParent.getFileName());
                 mParent.setFileId(fileId);
             }
 
-            helper.updateFileStats(db, fileId, mReviewedCount, mInvalidCount, mNoteCount);
+            helper.updateFileStats(db, fileId, mReviewedCount, mInvalidCount, mNoteCount, mRows.size());
 
             db.close();
 

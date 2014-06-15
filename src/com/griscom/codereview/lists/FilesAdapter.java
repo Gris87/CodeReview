@@ -523,7 +523,7 @@ public class FilesAdapter extends BaseAdapter
     {
         for (int i=0; i<files.length; ++i)
         {
-            mFiles.get(files[i]).setFileNote(note);
+            mFiles.get(files[i]).setFileNote(mContext, pathToFile(mFiles.get(files[i]).getFileName()), note);
         }
 
         notifyDataSetChanged();

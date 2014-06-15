@@ -104,7 +104,7 @@ public class MainDatabase extends SQLiteOpenHelper
         return 0;
     }
 
-    public int getOrCreateFile(SQLiteDatabase db, String fileName, int rowCount)
+    public int getOrCreateFile(SQLiteDatabase db, String fileName)
     {
         String md5        = Utils.md5ForFile(fileName);
         long modifiedTime = new File(fileName).lastModified();
@@ -145,7 +145,7 @@ public class MainDatabase extends SQLiteOpenHelper
         values.put(COLUMN_REVIEWED_COUNT,    0);
         values.put(COLUMN_INVALID_COUNT,     0);
         values.put(COLUMN_NOTE_COUNT,        0);
-        values.put(COLUMN_ROW_COUNT,         rowCount);
+        values.put(COLUMN_ROW_COUNT,         0);
         values.put(COLUMN_NOTE,              "");
 
         return (int)db.insertOrThrow(FILES_TABLE_NAME, null, values);
@@ -183,13 +183,14 @@ public class MainDatabase extends SQLiteOpenHelper
         db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
     }
 
-    public void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount)
+    public void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount, int rowCount)
     {
         ContentValues values=new ContentValues();
 
         values.put(COLUMN_REVIEWED_COUNT, reviewedCount);
         values.put(COLUMN_INVALID_COUNT,  invalidCount);
         values.put(COLUMN_NOTE_COUNT,     noteCount);
+		values.put(COLUMN_ROW_COUNT,      rowCount);
 
         db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
     }
