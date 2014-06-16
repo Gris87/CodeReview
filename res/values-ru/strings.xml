@@ -82,6 +82,30 @@
 
     <!-- Need to delete -->
     <string name="need_to_delete">Нужно удалить</string>
+	
+	<!-- Title for delete dialog in files activity -->
+    <string name="dialog_delete_files_title">Удалить</string>
+
+    <!-- Message for delete dialog in files activity -->
+    <plurals name="dialog_delete_files_message">
+        <item quantity="one">Вы хотите удалить %d файл?</item>
+        <!-- <item quantity="two">Do you want to delete %d files?</item> Not used -->
+        <item quantity="few">Вы хотите удалить %d файла?</item>
+        <item quantity="many">Вы хотите удалить %d файлов?</item>
+        <item quantity="other">Вы хотите удалить %d файлов?</item>
+    </plurals>
+	
+	<!-- Can't delete file -->
+    <string name="can_not_delete_file">Не удалось удалить файл: %s</string>
+
+    <!-- Can't delete files -->
+    <plurals name="can_not_delete_files">
+        <item quantity="one">Не удалось удалить %d файл</item>
+        <!-- <item quantity="two">Can not delete %d files</item> Not used -->
+        <item quantity="few">Не удалось удалить %d файла</item>
+        <item quantity="many">Не удалось удалить %d файлов</item>
+        <item quantity="other">Не удалось удалить %d файлов</item>
+    </plurals>
 
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Нажмите снова для выхода</string>

@@ -626,7 +626,7 @@ public class FilesActivity extends ActionBarActivity
             return true;
         }
 
-        private boolean markToDelete(int items[])
+        private boolean markToDelete(final int items[])
         {
             mAdapter.assignNote(items, getString(R.string.need_to_delete));
 
@@ -741,16 +741,53 @@ public class FilesActivity extends ActionBarActivity
             return false;
         }
 
-        private boolean rename(int items[])
+        private boolean rename(final int items[])
         {
             Log.e("gfy","rename");
 
             return true;
         }
 
-        private boolean delete(int items[])
+        private boolean delete(final int items[])
         {
-            Log.e("gfy","delete");
+			AlertDialog dialog=new AlertDialog.Builder(mActivity)
+			    .setTitle(R.string.dialog_delete_files_title)
+				.setMessage(mActivity.getResources().getQuantityString(R.plurals.dialog_delete_files_message, items.length, items.length, items.length))
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int index)
+					{
+						ArrayList<String> keep=mAdapter.deleteFiles(items);
+						
+						if (keep.size()>0)
+						{
+							if (keep.size()==1)
+							{
+								Toast.makeText(mActivity, getResources().getString(R.string.can_not_delete_file, keep.get(0)), Toast.LENGTH_SHORT).show();
+							}
+							else
+							{
+								Toast.makeText(mActivity, getResources().getQuantityString(R.plurals.can_not_delete_files, keep.size(), keep.size()), Toast.LENGTH_SHORT).show();
+							}
+						}
+						
+						hideActionMode();
+						
+						dialog.dismiss();
+					}
+				})
+				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int index)
+					{
+						dialog.dismiss();
+					}
+				})
+				.create();
+
+			dialog.show();
 
             return true;
         }

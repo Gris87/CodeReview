@@ -528,6 +528,48 @@ public class FilesAdapter extends BaseAdapter
 
         notifyDataSetChanged();
     }
+	
+	public ArrayList<String> deleteFiles(int files[])
+    {
+		ArrayList<String> res=new ArrayList<String>();
+		
+		for (int e=0; e<files.length-1; ++e)
+		{
+			int max=files[e];
+			int maxIndex=e;
+			
+			for (int i=e+1; i<files.length; ++i)
+			{
+				if (files[i]>max)
+				{
+					max=files[i];
+					maxIndex=i;
+				}
+			}
+			
+		    int temp        = files[e];
+			files[e]        = files[maxIndex];
+			files[maxIndex] = temp;
+		}
+		
+        for (int i=0; i<files.length; ++i)
+        {
+			String filename=mFiles.get(files[i]).getFileName();
+			
+			if (Utils.deleteFileOrFolder(pathToFile(filename)))
+			{
+				mFiles.remove(files[i]);
+			}
+			else
+			{
+				res.add(filename);
+			}
+        }
+
+        notifyDataSetChanged();
+		
+		return res;
+    }
 
     public void setCurrentPathBacktrace(String newPath)
     {

@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+import java.io.*;
 
 @SuppressLint("DefaultLocale")
 public class Utils
@@ -89,4 +90,24 @@ public class Utils
 
         return "";
     }
+	
+	public static boolean deleteFileOrFolder(String filename)
+	{
+		File file=new File(filename);
+		
+		if (file.isDirectory())
+		{
+			String files[]=file.list();
+			
+			for (int i=0; i<files.length; ++i)
+			{
+				if (!deleteFileOrFolder(filename+"/"+files[i]))
+				{
+					return false;
+				}
+			}
+		}
+		
+		return file.delete();
+	}
 }
