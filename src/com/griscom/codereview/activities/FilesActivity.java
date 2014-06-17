@@ -224,6 +224,7 @@ public class FilesActivity extends ActionBarActivity
     {
         private FilesActivity mActivity;
         private ActionBar     mActionBar;
+		private ActionMode    mActionMode;
         private ListView      mFilesListView;
         private FilesAdapter  mAdapter;
         private int           mLastSelectedItem;
@@ -240,7 +241,7 @@ public class FilesActivity extends ActionBarActivity
             ColorCache.update(mActivity);
 
             mAdapter=new FilesAdapter(mActivity);
-
+			
             try
             {
                 loadPath();
@@ -273,6 +274,8 @@ public class FilesActivity extends ActionBarActivity
             mActionBar=mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
             mActionBar.setTitle(mAdapter.getCurrentPath());
+			
+			mActionMode=null;
 
             mActivity.setPlaceholderFragment(this);
 
@@ -429,6 +432,8 @@ public class FilesActivity extends ActionBarActivity
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
+					mActionMode=mode;
+					
                     mode.setTitle(R.string.select_files);
                     mode.getMenuInflater().inflate(R.menu.context_menu_files, menu);
 
@@ -503,6 +508,7 @@ public class FilesActivity extends ActionBarActivity
                 @Override
                 public void onDestroyActionMode(ActionMode mode)
                 {
+					mActionMode=null;
                     mAdapter.setSelectionMode(false);
                 }
             });
@@ -899,12 +905,15 @@ public class FilesActivity extends ActionBarActivity
 
 			dialog.show();
 
-            return true;
+            return false;
         }
 
         private void hideActionMode()
         {
-            // TODO: Implement it
+            if (mActionMode!=null)
+			{
+				mActionMode.finish();
+			}
         }
 
         public boolean onBackPressed()
