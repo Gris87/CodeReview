@@ -378,7 +378,7 @@ public class FilesActivity extends ActionBarActivity
                 break;
                  case R.id.action_rename:
                 {
-                    rename(new int[]{mLastSelectedItem});
+                    rename(mLastSelectedItem);
                 }
                 break;
                 case R.id.action_delete:
@@ -440,7 +440,9 @@ public class FilesActivity extends ActionBarActivity
                 @Override
                 public boolean onPrepareActionMode(ActionMode mode, Menu menu)
                 {
-                    return false;
+					menu.findItem(R.id.action_rename).setVisible(mAdapter.getSelection().size()==1);
+					
+                    return true;
                 }
 
                 @Override
@@ -475,7 +477,7 @@ public class FilesActivity extends ActionBarActivity
                         break;
                         case R.id.action_rename:
                         {
-                            res=rename(items);
+                            res=rename(items[0]);
                         }
                         break;
                         case R.id.action_delete:
@@ -635,7 +637,7 @@ public class FilesActivity extends ActionBarActivity
 
         private boolean assignNote(final int items[])
         {
-               LayoutInflater inflater=(LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater=(LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View view=inflater.inflate(R.layout.dialog_input, null);
 
@@ -741,11 +743,119 @@ public class FilesActivity extends ActionBarActivity
             return false;
         }
 
-        private boolean rename(final int items[])
+        private boolean rename(final int item)
         {
-            Log.e("gfy","rename");
+            LayoutInflater inflater=(LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            return true;
+			View view=inflater.inflate(R.layout.dialog_input, null);
+
+			final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
+			ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
+
+			editText.setText(((FileEntry)mAdapter.getItem(item)).getFileName());
+
+			chooseButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						ArrayList<CharSequence> filenames=loadLastFileNames();
+
+						if (filenames.size()>0)
+						{
+							final CharSequence items[]=new CharSequence[filenames.size()];
+							String currentFilename=editText.getText().toString();
+							int index=-1;
+
+							for (int i=0; i<filenames.size(); i++)
+							{
+								String oneFilename=(String)filenames.get(i);
+
+								if (index<0 && oneFilename.equals(currentFilename))
+								{
+									index=i;
+								}
+
+								items[i]=oneFilename;
+							}
+
+							if (index<0)
+							{
+								index=0;
+							}
+
+							AlertDialog chooseDialog=new AlertDialog.Builder(mActivity)
+								.setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
+								{
+									@Override
+									public void onClick(DialogInterface dialog, int index)
+									{
+										editText.setText(items[index]);
+										dialog.dismiss();
+									}
+								})
+								.create();
+
+							chooseDialog.show();
+						}
+						else
+						{
+							Toast.makeText(mActivity, R.string.no_last_filenames, Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+
+			AlertDialog dialog=new AlertDialog.Builder(mActivity)
+				.setTitle(R.string.dialog_input_filename_title)
+				.setMessage(R.string.dialog_input_filename_message)
+				.setView(view)
+				.setPositiveButton(android.R.string.ok,
+				new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int whichButton)
+					{
+						String filename=editText.getText().toString();
+
+						if (!filename.equals(""))
+						{
+							ArrayList<CharSequence> filenames=loadLastFileNames();
+
+							filenames.remove(filename);
+							filenames.add(0, filename);
+							saveLastFileNames(filenames);
+
+							// ----------------------------------
+
+							if (!mAdapter.renameFile(item, filename))
+							{
+								Toast.makeText(mActivity, R.string.can_not_rename_file, Toast.LENGTH_SHORT).show();
+							}
+							
+							hideActionMode();
+
+							dialog.dismiss();
+						}
+						else
+						{
+							Toast.makeText(mActivity, R.string.empty_filename, Toast.LENGTH_SHORT).show();
+						}
+					}
+				})
+				.setNegativeButton(android.R.string.cancel,
+				new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int whichButton)
+					{
+						dialog.dismiss();
+					}
+				}).create();
+
+			dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+			dialog.show();
+
+			return false;
         }
 
         private boolean delete(final int items[])

@@ -131,6 +131,11 @@ public class FileEntry
     {
         return mFileName;
     }
+	
+	public void setFileName(String filename)
+    {
+        mFileName=filename;
+    }
 
     public boolean isDirectory()
     {

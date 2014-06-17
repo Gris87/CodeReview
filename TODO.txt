@@ -2,8 +2,6 @@ Select all in ActionMode
 Hide Done button in ActionMode
 Icons
 Smooth movement
-Rename
-Delete
 Code folding
 Save/load dialogs state
 

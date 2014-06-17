@@ -508,13 +508,16 @@ public class FilesAdapter extends BaseAdapter
 
     public int indexOf(String fileName)
     {
-        for (int i=0; i<mFiles.size(); ++i)
-        {
-            if (mFiles.get(i).getFileName().equals(fileName))
-            {
-                return i;
-            }
-        }
+		synchronized (this)
+		{
+			for (int i=0; i<mFiles.size(); ++i)
+			{
+				if (mFiles.get(i).getFileName().equals(fileName))
+				{
+					return i;
+				}
+			}
+		}
 
         return -1;
     }
@@ -528,6 +531,32 @@ public class FilesAdapter extends BaseAdapter
 
         notifyDataSetChanged();
     }
+	
+	public boolean renameFile(int index, String filename)
+	{
+		if (
+		    filename.contains("/")
+			||
+			filename.contains("\\")
+		   )
+		{
+			return false;
+		}
+		
+		if (new File(pathToFile(mFiles.get(index).getFileName())).renameTo(new File(pathToFile(filename))))
+		{
+			synchronized (this)
+			{
+				mFiles.get(index).setFileName(filename);
+			}
+			
+			rescan();
+
+			return true;
+		}
+		
+		return false;
+	}
 	
 	public ArrayList<String> deleteFiles(int files[])
     {
@@ -558,15 +587,21 @@ public class FilesAdapter extends BaseAdapter
 			
 			if (Utils.deleteFileOrFolder(pathToFile(filename)))
 			{
-				mFiles.remove(files[i]);
+				synchronized (this)
+				{
+					mFiles.remove(files[i]);
+				}
 			}
 			else
 			{
 				res.add(filename);
 			}
         }
-
-        notifyDataSetChanged();
+		
+		if (res.size()<files.length)
+		{
+			notifyDataSetChanged();
+		}
 		
 		return res;
     }
@@ -724,68 +759,80 @@ public class FilesAdapter extends BaseAdapter
 
                 if (entry!=null)
                 {
-                    entry.updateFromDb(
-                                       cursor.getInt(idIndex),
-                                       cursor.getInt(reviewedCountIndex),
-                                       cursor.getInt(invalidCountIndex),
-                                       cursor.getInt(noteCountIndex),
-                                       cursor.getInt(rowCountIndex),
-                                       cursor.getString(noteIndex)
-                                      );
+					String filePath=pathToFile(entry.getFileName());
+					
+					long modifiedTime = new File(filePath).lastModified();
+					
+					if (cursor.getLong(modificationIndex)==modifiedTime)
+					{
+						entry.updateFromDb(
+							               cursor.getInt(idIndex),
+							    		   cursor.getInt(reviewedCountIndex),
+										   cursor.getInt(invalidCountIndex),
+										   cursor.getInt(noteCountIndex),
+										   cursor.getInt(rowCountIndex),
+										   cursor.getString(noteIndex)
+										  );
+					}
                 }
 
                 cursor.moveToNext();
             }
+			
+			synchronized (FilesAdapter.this)
+			{
+				for (int i=0; i<mFiles.size() && !isCancelled(); ++i)
+				{
+					FileEntry entry=mFiles.get(i);
 
-            for (int i=0; i<mFiles.size() && !isCancelled(); ++i)
-            {
-                FileEntry entry=mFiles.get(i);
+					try
+					{
+						if (
+							!entry.isDirectory()
+							&&
+							entry.getDbFileId()<=0
+							)
+						{
+							String filePath=pathToFile(entry.getFileName());
 
-                try
-                {
-                    if (
-                        !entry.isDirectory()
-                        &&
-                        entry.getDbFileId()<=0
-                       )
-                    {
-                        String filePath=pathToFile(entry.getFileName());
+							String md5        = Utils.md5ForFile(filePath);
+							long modifiedTime = new File(filePath).lastModified();
 
-                        String md5        = Utils.md5ForFile(filePath);
-                        long modifiedTime = new File(filePath).lastModified();
+							cursor=helper.getFileByMD5(db, md5);
 
-                        cursor=helper.getFileByMD5(db, md5);
+							cursor.moveToFirst();
 
-                        cursor.moveToFirst();
+							while (!cursor.isAfterLast())
+							{
+								if (cursor.getLong(modificationIndex)==modifiedTime)
+								{
+									String fileName=cursor.getString(nameIndex);
 
-                        while (!cursor.isAfterLast())
-                        {
-                            if (cursor.getLong(modificationIndex)==modifiedTime)
-                            {
-                                String fileName=cursor.getString(nameIndex);
+									if (entry.getFileName().equals(fileName))
+									{
+										entry.updateFromDb(
+														   cursor.getInt(idIndex),
+														   cursor.getInt(reviewedCountIndex),
+														   cursor.getInt(invalidCountIndex),
+														   cursor.getInt(noteCountIndex),
+														   cursor.getInt(rowCountIndex),
+														   cursor.getString(noteIndex)
+														  );
+									}
+								}
 
-                                if (entry.getFileName().equals(fileName))
-                                {
-                                    entry.updateFromDb(
-                                        cursor.getInt(idIndex),
-                                        cursor.getInt(reviewedCountIndex),
-                                        cursor.getInt(invalidCountIndex),
-                                        cursor.getInt(noteCountIndex),
-                                        cursor.getInt(rowCountIndex),
-                                        cursor.getString(noteIndex)
-                                    );
-                                }
-                            }
+								cursor.moveToNext();
+							}
+						}
+					}
+					catch (Exception e)
+					{
+						Log.e(TAG, "Impossible to get file id by MD5 for file: "+entry.getFileName(), e);
+					}
+				}
+			}
 
-                            cursor.moveToNext();
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.e(TAG, "Impossible to get file id by MD5 for file: "+entry.getFileName(), e);
-                }
-            }
+            
 
             db.close();
 

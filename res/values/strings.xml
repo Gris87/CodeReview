@@ -83,6 +83,9 @@
     <!-- Need to delete -->
     <string name="need_to_delete">Need to delete</string>
 	
+	<!-- Can't rename file -->
+    <string name="can_not_rename_file">Can not rename file</string>
+	
 	<!-- Title for delete dialog in files activity -->
     <string name="dialog_delete_files_title">Delete</string>
 
