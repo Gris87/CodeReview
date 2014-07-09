@@ -1,6 +1,5 @@
 Select all in ActionMode
 Hide Done button in ActionMode
-Icons
 Smooth movement
 Code folding
 Save/load dialogs state

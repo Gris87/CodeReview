@@ -82,11 +82,11 @@
 
     <!-- Need to delete -->
     <string name="need_to_delete">Need to delete</string>
-	
-	<!-- Can't rename file -->
+
+    <!-- Can't rename file -->
     <string name="can_not_rename_file">Can not rename file</string>
-	
-	<!-- Title for delete dialog in files activity -->
+
+    <!-- Title for delete dialog in files activity -->
     <string name="dialog_delete_files_title">Delete</string>
 
     <!-- Message for delete dialog in files activity -->
@@ -97,8 +97,8 @@
         <item quantity="many">Do you want to delete %d files?</item>
         <item quantity="other">Do you want to delete %d files?</item>
     </plurals>
-	
-	<!-- Can't delete file -->
+
+    <!-- Can't delete file -->
     <string name="can_not_delete_file">Can not delete file: %s</string>
 
     <!-- Can't delete files -->

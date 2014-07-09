@@ -131,8 +131,8 @@ public class FileEntry
     {
         return mFileName;
     }
-	
-	public void setFileName(String filename)
+
+    public void setFileName(String filename)
     {
         mFileName=filename;
     }
@@ -234,19 +234,19 @@ public class FileEntry
         synchronized(this)
         {
             mFileNote=note;
-			
-			MainDatabase helper=new MainDatabase(context);
-			
-			SQLiteDatabase db=helper.getWritableDatabase();
-			
-			if (mDbFileId<=0)
-			{
-				mDbFileId=helper.getOrCreateFile(db, filename);
-			}
-			
-			helper.updateFileNote(db, mDbFileId, note);
-			
-			db.close();
+
+            MainDatabase helper=new MainDatabase(context);
+
+            SQLiteDatabase db=helper.getWritableDatabase();
+
+            if (mDbFileId<=0)
+            {
+                mDbFileId=helper.getOrCreateFile(db, filename);
+            }
+
+            helper.updateFileNote(db, mDbFileId, note);
+
+            db.close();
         }
     }
 }

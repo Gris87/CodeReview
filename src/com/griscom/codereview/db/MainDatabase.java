@@ -52,7 +52,7 @@ public class MainDatabase extends SQLiteOpenHelper
                                                           COLUMN_PATH              + " TEXT, "                +
                                                           COLUMN_NAME              + " TEXT, "                +
                                                           COLUMN_MD5               + " TEXT, "                +
-                                                          COLUMN_MODIFICATION_TIME + " INTEGER, "             + // TODO: Check it
+                                                          COLUMN_MODIFICATION_TIME + " INTEGER, "             +
                                                           COLUMN_REVIEWED_COUNT    + " INTEGER, "             +
                                                           COLUMN_INVALID_COUNT     + " INTEGER, "             +
                                                           COLUMN_NOTE_COUNT        + " INTEGER, "             +
@@ -190,7 +190,7 @@ public class MainDatabase extends SQLiteOpenHelper
         values.put(COLUMN_REVIEWED_COUNT, reviewedCount);
         values.put(COLUMN_INVALID_COUNT,  invalidCount);
         values.put(COLUMN_NOTE_COUNT,     noteCount);
-		values.put(COLUMN_ROW_COUNT,      rowCount);
+        values.put(COLUMN_ROW_COUNT,      rowCount);
 
         db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
     }

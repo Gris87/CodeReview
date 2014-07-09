@@ -82,11 +82,11 @@
 
     <!-- Need to delete -->
     <string name="need_to_delete">Нужно удалить</string>
-	
-	<!-- Can't rename file -->
+
+    <!-- Can't rename file -->
     <string name="can_not_rename_file">Не удалось переименовать файл</string>
-	
-	<!-- Title for delete dialog in files activity -->
+
+    <!-- Title for delete dialog in files activity -->
     <string name="dialog_delete_files_title">Удалить</string>
 
     <!-- Message for delete dialog in files activity -->
@@ -97,8 +97,8 @@
         <item quantity="many">Вы хотите удалить %d файлов?</item>
         <item quantity="other">Вы хотите удалить %d файлов?</item>
     </plurals>
-	
-	<!-- Can't delete file -->
+
+    <!-- Can't delete file -->
     <string name="can_not_delete_file">Не удалось удалить файл: %s</string>
 
     <!-- Can't delete files -->
