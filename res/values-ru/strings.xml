@@ -69,7 +69,7 @@
     <string name="dialog_input_filenote_title">Заметка файла</string>
 
     <!-- Message for filenote dialog in files activity -->
-    <string name="dialog_input_filenote_message">Введите заметку (пустая для удаления):</string>
+    <string name="dialog_input_filenote_message">Введите заметку:</string>
 
     <!-- Show message if there is no last filenotes -->
     <string name="no_last_filenotes">Введите хотя бы одну заметку, чтобы в дальнейшем использовать ее</string>
@@ -143,6 +143,7 @@
     <!-- Items selected subtitle in ActionMode -->
     <plurals name="items_selected">
         <item quantity="one">%d элемент выбран</item>
+        <!-- <item quantity="two">%d items selected</item> Not used -->
         <item quantity="few">%d элемента выбрано</item>
         <item quantity="many">%d элементов выбрано</item>
         <item quantity="other">%d элементов выбрано</item>

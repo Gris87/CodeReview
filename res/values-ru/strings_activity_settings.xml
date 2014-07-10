@@ -28,6 +28,7 @@
     <string name="pref_desc_selection_color">Цвет выделения.</string>
 
 
+
     <!-- Editor settings -->
     <string name="pref_header_editor">Редактор</string>
 

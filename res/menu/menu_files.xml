@@ -20,6 +20,6 @@
         android:orderInCategory="300"
         android:title="@string/action_close"
         android:icon="@drawable/close"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>
