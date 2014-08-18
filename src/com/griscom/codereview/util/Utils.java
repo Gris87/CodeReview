@@ -1,12 +1,12 @@
 package com.griscom.codereview.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
-import java.io.*;
 
 @SuppressLint("DefaultLocale")
 public class Utils

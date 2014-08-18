@@ -24,11 +24,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,9 +45,6 @@ import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
-import android.view.*;
-import android.widget.*;
-import android.view.View.*;
 
 public class FilesActivity extends ActionBarActivity
 {
@@ -90,6 +91,14 @@ public class FilesActivity extends ActionBarActivity
         super.onStop();
 
         EasyTracker.getInstance(this).activityStop(this);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        mPlaceholderFragment=null;
+
+        super.onDestroy();
     }
 
     @Override
@@ -434,8 +443,8 @@ public class FilesActivity extends ActionBarActivity
                 {
                     mActionMode=mode;
 
-                    mode.setTitle(R.string.select_files);
-                    mode.getMenuInflater().inflate(R.menu.context_menu_files, menu);
+                    mActionMode.setTitle(R.string.select_files);
+                    mActionMode.getMenuInflater().inflate(R.menu.context_menu_files, menu);
 
                     mAdapter.setSelectionMode(true);
 
@@ -499,7 +508,7 @@ public class FilesActivity extends ActionBarActivity
 
                     if (res)
                     {
-                        mode.finish();
+                        mActionMode.finish();
                     }
 
                     return true;
@@ -908,6 +917,7 @@ public class FilesActivity extends ActionBarActivity
             return false;
         }
 
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void hideActionMode()
         {
             if (mActionMode!=null)

@@ -3,12 +3,12 @@ package com.griscom.codereview.other;
 import java.io.File;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.griscom.codereview.R;
-import com.griscom.codereview.db.*;
-import android.content.*;
-import android.database.sqlite.*;
+import com.griscom.codereview.db.MainDatabase;
 
 @SuppressLint("DefaultLocale")
 public class FileEntry

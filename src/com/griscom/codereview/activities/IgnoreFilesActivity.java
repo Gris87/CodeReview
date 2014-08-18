@@ -63,6 +63,14 @@ public class IgnoreFilesActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        mPlaceholderFragment=null;
+
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.

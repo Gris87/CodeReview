@@ -84,6 +84,14 @@ public class ReviewActivity extends FragmentActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        mPlaceholderFragment=null;
+
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.menu_review, menu);
