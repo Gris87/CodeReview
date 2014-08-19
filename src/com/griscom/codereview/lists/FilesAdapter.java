@@ -248,8 +248,6 @@ public class FilesAdapter extends BaseAdapter
 
                 // ----------------------------------------------
 
-                ColorCache.get(SelectionColor.REVIEWED);
-
                 Bitmap bitmap=Bitmap.createBitmap(100, 1, Config.ARGB_8888);
 
                 Canvas canvas=new Canvas(bitmap);
@@ -496,13 +494,16 @@ public class FilesAdapter extends BaseAdapter
 
     public String pathToFile(String fileName)
     {
-        if (mCurrentPath.endsWith("/"))
+        synchronized (this)
         {
-            return mCurrentPath+fileName;
-        }
-        else
-        {
-            return mCurrentPath+"/"+fileName;
+            if (mCurrentPath.endsWith("/"))
+            {
+                return mCurrentPath+fileName;
+            }
+            else
+            {
+                return mCurrentPath+"/"+fileName;
+            }
         }
     }
 

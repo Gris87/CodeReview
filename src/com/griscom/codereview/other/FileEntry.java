@@ -159,74 +159,50 @@ public class FileEntry
 
     public int getDbFileId()
     {
-        int res;
-
         synchronized(this)
         {
-            res=mDbFileId;
+            return mDbFileId;
         }
-
-        return res;
     }
 
     public int getReviewedCount()
     {
-        int res;
-
         synchronized(this)
         {
-            res=mReviewedCount;
+            return mReviewedCount;
         }
-
-        return res;
     }
 
     public int getInvalidCount()
     {
-        int res;
-
         synchronized(this)
         {
-            res=mInvalidCount;
+            return mInvalidCount;
         }
-
-        return res;
     }
 
     public int getNoteCount()
     {
-        int res;
-
         synchronized(this)
         {
-            res=mNoteCount;
+            return mNoteCount;
         }
-
-        return res;
     }
 
     public int getRowCount()
     {
-        int res;
-
         synchronized(this)
         {
-            res=mRowCount;
+            return mRowCount;
         }
-
-        return res;
     }
 
     public String getFileNote()
     {
-        String res;
-
         synchronized(this)
         {
-            res=mFileNote;
+            return mFileNote;
         }
-
-        return res;
     }
 
     public void setFileNote(Context context, String filename, String note)

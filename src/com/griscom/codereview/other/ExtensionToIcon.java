@@ -27,15 +27,7 @@ public class ExtensionToIcon
                 if (drawableName.startsWith("_icon_"))
                 {
                     String extension=drawableName.substring(6);
-
-                    if (
-                        !extension.equals("file")
-                        &&
-                        !extension.equals("folder")
-                       )
-                    {
-                        map.put(extension, drawables[i].getInt(null));
-                    }
+                    map.put(extension, drawables[i].getInt(null));
                 }
             }
             catch (Exception e)
