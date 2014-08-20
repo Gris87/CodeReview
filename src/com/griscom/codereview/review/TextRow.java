@@ -180,6 +180,8 @@ public class TextRow
             if (mCommentIndex>=0)
             {
                 mRegions.get(mCommentIndex).setOriginalText(comment);
+
+                updateSizes();
             }
             else
             {

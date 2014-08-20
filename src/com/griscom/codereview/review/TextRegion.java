@@ -17,9 +17,9 @@ public class TextRegion
 
     public TextRegion(String text, Paint paint, int position, int tabSize)
     {
-        mPosition=position;
-        mPaint  = paint;
-        mX      = 0;
+        mPosition = position;
+        mPaint    = paint;
+        mX        = 0;
 
         setupDisplayedText(text, tabSize);
         updateSizes();
@@ -94,7 +94,7 @@ public class TextRegion
         mOriginalText  = null;
         mDisplayedText = text;
 
-        // TODO: Update size
+        updateSizes();
     }
 
     public void setFontSize(float textSize)

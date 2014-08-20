@@ -761,7 +761,7 @@ public class TextDocument implements OnTouchListener
 
                 if (comment!=null)
                 {
-                     row.setComment(comment, mSyntaxParser.getCommentPaint());
+                    row.setComment(comment, mSyntaxParser.getCommentPaint());
                 }
                 else
                 {
