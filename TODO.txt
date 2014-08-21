@@ -6,6 +6,4 @@ Save/load dialogs state
 
 -----------------------------------
 
-App icon (+ic_launcher-web.png)
-Readme
 Publish
