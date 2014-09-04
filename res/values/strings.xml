@@ -16,6 +16,9 @@
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>
+    
+    <!-- Donate -->
+    <string name="action_donate">Donate</string>
 
     <!-- Add -->
     <string name="action_add">Add</string>

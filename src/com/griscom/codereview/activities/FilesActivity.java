@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -147,6 +148,14 @@ public class FilesActivity extends ActionBarActivity
             {
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivityForResult(intent, REQUEST_SETTINGS);
+
+                return true;
+            }
+
+            case R.id.action_donate:
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=68VPVB8SNFHJ4"));
+                startActivity(intent);
 
                 return true;
             }
