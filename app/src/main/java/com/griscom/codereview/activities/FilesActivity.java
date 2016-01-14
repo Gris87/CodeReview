@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
+
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,7 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ActionMode;
@@ -49,24 +50,33 @@ import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
 
-public class FilesActivity extends ActionBarActivity
+public class FilesActivity extends AppCompatActivity
 {
     private static final String TAG = "FilesActivity";
 
-    private static final String FILENAMES_SHARED_PREFERENCES = "FileNames";
-    private static final String FILENOTES_SHARED_PREFERENCES = "FileNotes";
+    private static final String FILE_NAMES_SHARED_PREFERENCES = "FileNames";
+    private static final String FILE_NOTES_SHARED_PREFERENCES = "FileNotes";
 
     private static final int REQUEST_SETTINGS = 1;
     private static final int REQUEST_REVIEW   = 2;
 
-
-
-    private PlaceholderFragment mPlaceholderFragment=null;
-    private Tracker             mTracker;
-    private long                mBackPressTime=0;
+    private static final int TIME_FOR_CLOSE   = 1000;
 
 
 
+    private PlaceholderFragment mPlaceholderFragment = null;
+    private Tracker             mTracker             = null;
+    private long                mBackPressTime       = 0;
+
+
+
+    /**
+     * Called when the activity is starting. This is where most initialization should go: calling setContentView(int) to inflate the activity's UI, using findViewById(int) to programmatically interact with widgets in the UI, calling managedQuery(android.net.Uri, String[], String, String[], String) to retrieve cursors for data being displayed, etc.
+     * You can call finish() from within this function, in which case onDestroy() will be immediately called without any of the rest of the activity lifecycle (onStart(), onResume(), onPause(), etc) executing.
+     * Derived classes must call through to the super class's implementation of this method. If they do not, an exception will be thrown.
+     *
+     * @param savedInstanceState    If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -84,6 +94,11 @@ public class FilesActivity extends ActionBarActivity
         }
     }
 
+    /**
+     * Called after onRestoreInstanceState(Bundle), onRestart(), or onPause(), for your activity to start interacting with the user. This is a good place to begin animations, open exclusive-access devices (such as the camera), etc.
+     * Keep in mind that onResume is not the best indicator that your activity is visible to the user; a system window such as the keyguard may be in front. Use onWindowFocusChanged(boolean) to know for certain that your activity is visible to the user (for example, to resume a game).
+     * Derived classes must call through to the super class's implementation of this method. If they do not, an exception will be thrown.
+     */
     @Override
     protected void onResume()
     {
@@ -96,14 +111,29 @@ public class FilesActivity extends ActionBarActivity
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
+    /**
+     * Perform any final cleanup before an activity is destroyed. This can happen either because the activity is finishing (someone called finish() on it, or because the system is temporarily destroying this instance of the activity to save space. You can distinguish between these two scenarios with the isFinishing() method.
+     * Note: do not count on this method being called as a place for saving data! For example, if an activity is editing data in a content provider, those edits should be committed in either onPause() or onSaveInstanceState(Bundle), not here. This method is usually implemented to free resources like threads that are associated with an activity, so that a destroyed activity does not leave such things around while the rest of its application is still running. There are situations where the system will simply kill the activity's hosting process without calling this method (or any others) in it, so it should not be used to do things that are intended to remain around after the process goes away.
+     * Derived classes must call through to the super class's implementation of this method. If they do not, an exception will be thrown.
+     */
     @Override
     protected void onDestroy()
     {
-        mPlaceholderFragment=null;
+        mPlaceholderFragment = null;
 
         super.onDestroy();
     }
 
+    /**
+     * Initialize the contents of the Activity's standard options menu. You should place your menu items in to menu.
+     * This is only called once, the first time the options menu is displayed. To update the menu every time it is displayed, see onPrepareOptionsMenu(Menu).
+     * The default implementation populates the menu with standard system menu items. These are placed in the CATEGORY_SYSTEM group so that they will be correctly ordered with application-defined menu items. Deriving classes should always call through to the base implementation.
+     * You can safely hold on to menu (and any items created from it), making modifications to it as desired, until the next time onCreateOptionsMenu() is called.
+     * When you add items to the menu, you can implement the Activity's onOptionsItemSelected(MenuItem) method to handle them there.
+     *
+     * @param menu  The options menu in which you place your items.
+     * @return      You must return true for the menu to be displayed; if you return false it will not be shown.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -112,33 +142,56 @@ public class FilesActivity extends ActionBarActivity
         return true;
     }
 
+    /**
+     * This hook is called whenever an item in your options menu is selected. The default implementation simply returns false to have the normal processing happen (calling the item's Runnable or sending a message to its Handler as appropriate). You can use this method for any items for which you would like to do processing without those other facilities.
+     * Derived classes should call through to the base class for it to perform the default menu handling.
+     *
+     * @param item  The menu item that was selected.
+     * @return      Return false to allow normal menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch(item.getItemId())
+        switch (item.getItemId())
         {
             case R.id.action_sort:
             {
-                if (mPlaceholderFragment!=null)
+                if (mPlaceholderFragment != null)
                 {
-                    AlertDialog dialog=new AlertDialog.Builder(this)
+                    AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle(R.string.action_sort)
                         .setSingleChoiceItems(R.array.sort_types,
-                                              mPlaceholderFragment.getAdapter().getSortType().ordinal()-1,
-                                              new DialogInterface.OnClickListener()
-                                              {
-                                                  @Override
-                                                  public void onClick(DialogInterface dialog, int which)
-                                                  {
-                                                      mPlaceholderFragment.getAdapter().sort(SortType.values()[which+1]);
-                                                      saveSortType();
+                                mPlaceholderFragment.getAdapter().getSortType().ordinal() - 1,
+                                new DialogInterface.OnClickListener()
+                                {
+                                    /**
+                                     * Handler for click event
+                                     *
+                                     * @param dialog    Dialog
+                                     * @param which     Selected option
+                                     */
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which)
+                                    {
+                                        SortType selectedType = SortType.values()[which + 1];
 
-                                                      dialog.dismiss();
-                                                  }
-                                              }).create();
+                                        mTracker.send(
+                                                      new HitBuilders.EventBuilder()
+                                                                                    .setCategory("Action")
+                                                                                    .setAction("Sort")
+                                                                                    .setLabel("By" + selectedType.toString())
+                                                                                    .build()
+                                                     );
+
+                                        mPlaceholderFragment.getAdapter().sort(selectedType);
+                                        saveSortType();
+
+                                        dialog.dismiss();
+                                    }
+                                }).create();
 
                     dialog.show();
                 }
@@ -159,12 +212,27 @@ public class FilesActivity extends ActionBarActivity
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=68VPVB8SNFHJ4"));
                 startActivity(intent);
 
+                mTracker.send(
+                              new HitBuilders.EventBuilder()
+                                                            .setCategory("Action")
+                                                            .setAction("Donate")
+                                                            .build()
+                             );
+
                 return true;
             }
 
             case R.id.action_close:
             {
+                mTracker.send(
+                              new HitBuilders.EventBuilder()
+                                                            .setCategory("Action")
+                                                            .setAction("Exit")
+                                                            .build()
+                             );
+
                 finish();
+
                 return true;
             }
         }
@@ -172,6 +240,15 @@ public class FilesActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Called when an activity you launched exits, giving you the requestCode you started it with, the resultCode it returned, and any additional data from it. The resultCode will be RESULT_CANCELED if the activity explicitly returned that, didn't return any result, or crashed during its operation.
+     * You will receive this call immediately before onResume() when your activity is re-starting.
+     * This method is never invoked if your activity sets noHistory to true.
+     *
+     * @param requestCode   The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
+     * @param resultCode    The integer result code returned by the child activity through its setResult().
+     * @param data          An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -186,52 +263,72 @@ public class FilesActivity extends ActionBarActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Called when the activity has detected the user's press of the back key. The default implementation simply finishes the current activity, but you can override this to do whatever you want.
+     */
     @Override
     public void onBackPressed()
     {
-        if (mPlaceholderFragment==null || !mPlaceholderFragment.onBackPressed())
+        if (mPlaceholderFragment == null || !mPlaceholderFragment.onBackPressed())
         {
-            long curTime=System.currentTimeMillis();
+            long curTime = System.currentTimeMillis();
 
-            if (curTime-mBackPressTime<1000)
+            if (curTime - mBackPressTime < TIME_FOR_CLOSE)
             {
                 clearPath();
+
                 super.onBackPressed();
             }
             else
             {
-                mBackPressTime=curTime;
+                mBackPressTime = curTime;
 
                 Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    /**
+     * Clears LAST_PATH preference
+     */
     private void clearPath()
     {
-        SharedPreferences prefs=getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=prefs.edit();
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
 
         editor.putString(ApplicationPreferences.LAST_PATH, "");
 
-        editor.commit();
+        editor.apply();
     }
 
+    /**
+     * Saves sort type
+     */
     private void saveSortType()
     {
-        SharedPreferences prefs=getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=prefs.edit();
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
 
         editor.putInt(ApplicationPreferences.SORT_TYPE, mPlaceholderFragment.getAdapter().getSortType().ordinal());
 
-        editor.commit();
+        editor.apply();
     }
 
+    /**
+     * Returns placeholder fragment
+     *
+     * @return  Placeholder fragment
+     */
     public PlaceholderFragment getPlaceholderFragment()
     {
         return mPlaceholderFragment;
     }
 
+    /**
+     * Sets placeholder fragment
+     *
+     * @param fragment  Placeholder fragment
+     */
     public void setPlaceholderFragment(PlaceholderFragment fragment)
     {
         mPlaceholderFragment=fragment;
@@ -249,6 +346,11 @@ public class FilesActivity extends ActionBarActivity
         private FilesAdapter  mAdapter;
         private int           mLastSelectedItem;
 
+
+
+        /**
+         * PlaceholderFragment constructor
+         */
         public PlaceholderFragment()
         {
         }
@@ -1059,7 +1161,7 @@ public class FilesActivity extends ActionBarActivity
 
             editor.putString(ApplicationPreferences.LAST_PATH, mAdapter.getCurrentPath());
 
-            editor.commit();
+            editor.apply();
         }
 
         private void loadPath() throws FileNotFoundException
@@ -1086,7 +1188,7 @@ public class FilesActivity extends ActionBarActivity
 
             editor.putString(ApplicationPreferences.LAST_FILE, fileName);
 
-            editor.commit();
+            editor.apply();
         }
 
         private void loadLastFile() throws FileNotFoundException
@@ -1116,7 +1218,7 @@ public class FilesActivity extends ActionBarActivity
 
         public ArrayList<CharSequence> loadLastFileNames()
         {
-            SharedPreferences prefs=mActivity.getSharedPreferences(FILENAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences prefs=mActivity.getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
             int fileNameCount=prefs.getInt(ApplicationPreferences.LAST_FILENAMES, 0);
 
@@ -1141,7 +1243,7 @@ public class FilesActivity extends ActionBarActivity
 
         public void saveLastFileNames(ArrayList<CharSequence> fileNames)
         {
-            SharedPreferences prefs=mActivity.getSharedPreferences(FILENAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences prefs=mActivity.getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor=prefs.edit();
 
             editor.putInt(ApplicationPreferences.LAST_FILENAMES, fileNames.size());
@@ -1151,12 +1253,12 @@ public class FilesActivity extends ActionBarActivity
                 editor.putString(ApplicationPreferences.ONE_FILENAME+"_"+String.valueOf(i+1), fileNames.get(i).toString());
             }
 
-            editor.commit();
+            editor.apply();
         }
 
         public ArrayList<CharSequence> loadLastFileNotes()
         {
-            SharedPreferences prefs=mActivity.getSharedPreferences(FILENOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences prefs=mActivity.getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
             int filenoteCount=prefs.getInt(ApplicationPreferences.LAST_FILENOTES, 0);
 
@@ -1181,7 +1283,7 @@ public class FilesActivity extends ActionBarActivity
 
         public void saveLastFileNotes(ArrayList<CharSequence> filenotes)
         {
-            SharedPreferences prefs=mActivity.getSharedPreferences(FILENOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences prefs=mActivity.getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor=prefs.edit();
 
             editor.putInt(ApplicationPreferences.LAST_FILENOTES, filenotes.size());
@@ -1191,7 +1293,7 @@ public class FilesActivity extends ActionBarActivity
                 editor.putString(ApplicationPreferences.ONE_FILENOTE+"_"+String.valueOf(i+1), filenotes.get(i).toString());
             }
 
-            editor.commit();
+            editor.apply();
         }
 
         public FilesAdapter getAdapter()

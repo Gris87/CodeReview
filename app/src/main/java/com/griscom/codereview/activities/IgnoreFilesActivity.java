@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -29,7 +29,7 @@ import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
 
-public class IgnoreFilesActivity extends ActionBarActivity
+public class IgnoreFilesActivity extends AppCompatActivity
 {
     private static final String TAG = "IgnoreFilesActivity";
 

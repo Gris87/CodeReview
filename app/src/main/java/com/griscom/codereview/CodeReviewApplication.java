@@ -7,11 +7,14 @@ import com.google.android.gms.analytics.Tracker;
 
 public class CodeReviewApplication extends Application
 {
-    private Tracker mTracker;
+    private Tracker mTracker = null;
+
+
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
-     * @return tracker
+     *
+     * @return  Google Analytics tracker
      */
     synchronized public Tracker getDefaultTracker()
     {

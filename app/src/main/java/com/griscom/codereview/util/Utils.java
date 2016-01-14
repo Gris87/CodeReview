@@ -16,9 +16,9 @@ public class Utils
     /**
      * Converts sp to pixels
      *
-     * @param sp Value in sp
-     * @param context Android context
-     * @return Converted sp value in pixels
+     * @param sp        Value in sp
+     * @param context   Android context
+     * @return          Converted sp value in pixels
      */
     public static float spToPixels(float sp, Context context)
     {
@@ -28,8 +28,8 @@ public class Utils
     /**
      * Converts bytes to string representation
      *
-     * @param bytes Amount of bytes
-     * @return String representation of bytes value
+     * @param bytes     Amount of bytes
+     * @return          String representation of bytes value
      */
     public static String bytesToString(long bytes)
     {
@@ -108,8 +108,8 @@ public class Utils
     /**
      * Deletes specified file or specified folder recursively
      *
-     * @param filename Path to file or path to folder
-     * @return True if deletion successful, otherwise false
+     * @param filename  Path to file or path to folder
+     * @return          True if deletion successful, otherwise false
      */
     public static boolean deleteFileOrFolder(String filename)
     {
@@ -130,11 +130,6 @@ public class Utils
             }
         }
 
-        if (!file.delete())
-        {
-            return false;
-        }
-
-        return res;
+        return file.delete() && res;
     }
 }
