@@ -4,44 +4,58 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
-@SuppressLint("DefaultLocale")
 public class Utils
 {
     private static final String TAG="Utils";
 
+
+
+    /**
+     * Converts sp to pixels
+     *
+     * @param sp Value in sp
+     * @param context Android context
+     * @return Converted sp value in pixels
+     */
     public static float spToPixels(float sp, Context context)
     {
-        return sp*context.getResources().getDisplayMetrics().scaledDensity;
+        return sp * context.getResources().getDisplayMetrics().scaledDensity;
     }
 
+    /**
+     * Converts bytes to string representation
+     *
+     * @param bytes Amount of bytes
+     * @return String representation of bytes value
+     */
     public static String bytesToString(long bytes)
     {
-        int    type     = 0;
+        byte   type     = 0;
         double bytesDiv = bytes;
 
-        while (bytesDiv>=1024)
+        while (bytesDiv >= 1024d && type < 5)
         {
             ++type;
 
-            bytesDiv/=1024;
+            bytesDiv /= 1024d;
         }
 
         switch (type)
         {
-            case 0: return String.valueOf(bytes)                         +  " B";
-            case 1: return String.valueOf(Math.round(bytesDiv*100)/100f) + " KB";
-            case 2: return String.valueOf(Math.round(bytesDiv*100)/100f) + " MB";
-            case 3: return String.valueOf(Math.round(bytesDiv*100)/100f) + " GB";
-            case 4: return String.valueOf(Math.round(bytesDiv*100)/100f) + " TB";
+            case 0: return String.valueOf(bytes)                             +  " B";
+            case 1: return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " KB";
+            case 2: return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " MB";
+            case 3: return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " GB";
+            case 4: return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " TB";
         }
 
-        return String.valueOf(Math.round(bytesDiv*100)/100f)+" PB";
+        return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " PB";
     }
 
+    // TODO: Need to verify it
     public static String md5ForFile(String fileName)
     {
         FileInputStream in=null;
@@ -91,23 +105,36 @@ public class Utils
         return "";
     }
 
+    /**
+     * Deletes specified file or specified folder recursively
+     *
+     * @param filename Path to file or path to folder
+     * @return True if deletion successful, otherwise false
+     */
     public static boolean deleteFileOrFolder(String filename)
     {
-        File file=new File(filename);
+        boolean res = true;
+
+        File file = new File(filename);
 
         if (file.isDirectory())
         {
-            String files[]=file.list();
+            String files[] = file.list();
 
-            for (int i=0; i<files.length; ++i)
+            for (String oneFile : files)
             {
-                if (!deleteFileOrFolder(filename+"/"+files[i]))
+                if (!deleteFileOrFolder(filename + "/" + oneFile))
                 {
-                    return false;
+                    res = false;
                 }
             }
         }
 
-        return file.delete();
+        if (!file.delete())
+        {
+            return false;
+        }
+
+        return res;
     }
 }
