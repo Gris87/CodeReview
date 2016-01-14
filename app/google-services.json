@@ -1,0 +1,45 @@
+{
+  "project_info": {
+    "project_id": "codereview-58025",
+    "project_number": "22421881292",
+    "name": "CodeReview"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22421881292:android:a9f7bb41e14bd3ed",
+        "client_id": "android:com.griscom.codereview",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.griscom.codereview"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-51133429-1"
+          }
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

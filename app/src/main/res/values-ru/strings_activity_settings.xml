@@ -1,0 +1,41 @@
+<resources>
+
+    <!-- Settings title -->
+    <string name="title_activity_settings">Настройки</string>
+
+
+
+    <!-- File manager settings -->
+    <string name="pref_header_file_manager">Проводник</string>
+
+    <string name="pref_title_ignore_files">Игнорировать файлы</string>
+
+
+
+    <!-- Colors settings -->
+    <string name="pref_header_colors">Цвета</string>
+
+    <string name="pref_title_reviewed_color">Просмотрено</string>
+    <string name="pref_desc_reviewed_color">Цвет просмотренных строк.</string>
+
+    <string name="pref_title_invalid_color">Некорректно</string>
+    <string name="pref_desc_invalid_color">Цвет неправильных строк.</string>
+
+    <string name="pref_title_note_color">Заметка</string>
+    <string name="pref_desc_note_color">Цвет строк с заметками.</string>
+
+    <string name="pref_title_selection_color">Выделение</string>
+    <string name="pref_desc_selection_color">Цвет выделения.</string>
+
+
+
+    <!-- Editor settings -->
+    <string name="pref_header_editor">Редактор</string>
+
+    <string name="pref_title_font_size">Размер шрифта</string>
+    <string name="pref_desc_font_size">Укажите размер шрифта.</string>
+
+    <string name="pref_title_tab_size">Размер табуляции</string>
+    <string name="pref_desc_tab_size">Отображаемая ширина табуляции в пробелах.</string>
+
+</resources>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application name -->
+    <string name="app_name">Code review</string>
+
+    <!-- Sort -->
+    <string name="action_sort">Sort</string>
+
+    <!-- Sort types -->
+    <string-array name="sort_types">
+        <item>By name</item>
+        <item>By type</item>
+        <item>By size</item>
+    </string-array>
+
+    <!-- Settings -->
+    <string name="action_settings">Settings</string>
+    
+    <!-- Donate -->
+    <string name="action_donate">Donate</string>
+
+    <!-- Add -->
+    <string name="action_add">Add</string>
+
+    <!-- Rename -->
+    <string name="action_rename">Rename</string>
+
+    <!-- Mark to rename -->
+    <string name="action_mark_to_rename">Mark to rename</string>
+
+    <!-- Delete -->
+    <string name="action_delete">Delete</string>
+
+    <!-- Mark to delete -->
+    <string name="action_mark_to_delete">Mark to delete</string>
+
+    <!-- Note -->
+    <string name="action_note">Note</string>
+
+    <!-- Reload -->
+    <string name="action_reload">Reload</string>
+
+    <!-- Close -->
+    <string name="action_close">Close</string>
+
+    <!-- Select files title in ActionMode -->
+    <string name="select_files">Select files</string>
+
+    <!-- Files selected subtitle in ActionMode -->
+    <plurals name="files_selected">
+        <item quantity="one">%d file selected</item>
+        <item quantity="two">%d files selected</item>
+        <item quantity="few">%d files selected</item>
+        <item quantity="many">%d files selected</item>
+        <item quantity="other">%d files selected</item>
+    </plurals>
+
+    <!-- Title for filename dialog in files activity -->
+    <string name="dialog_input_filename_title">File name</string>
+
+    <!-- Message for filename dialog in files activity -->
+    <string name="dialog_input_filename_message">Input file name:</string>
+
+    <!-- Show message if there is no last filenames -->
+    <string name="no_last_filenames">Please input atleast one file name to use it later</string>
+
+    <!-- Show message if filename is empty -->
+    <string name="empty_filename">Please input file name</string>
+
+    <!-- Title for filenote dialog in files activity -->
+    <string name="dialog_input_filenote_title">File note</string>
+
+    <!-- Message for filenote dialog in files activity -->
+    <string name="dialog_input_filenote_message">Input file note:</string>
+
+    <!-- Show message if there is no last filenotes -->
+    <string name="no_last_filenotes">Please input atleast one file note to use it later</string>
+
+    <!-- Need to rename -->
+    <string name="need_to_rename">Need to rename</string>
+
+    <!-- Rename to %s -->
+    <string name="rename_to">Rename to %s</string>
+
+    <!-- Need to delete -->
+    <string name="need_to_delete">Need to delete</string>
+
+    <!-- Can't rename file -->
+    <string name="can_not_rename_file">Can not rename file</string>
+
+    <!-- Title for delete dialog in files activity -->
+    <string name="dialog_delete_files_title">Delete</string>
+
+    <!-- Message for delete dialog in files activity -->
+    <plurals name="dialog_delete_files_message">
+        <item quantity="one">Do you want to delete %d file?</item>
+        <item quantity="two">Do you want to delete %d files?</item>
+        <item quantity="few">Do you want to delete %d files?</item>
+        <item quantity="many">Do you want to delete %d files?</item>
+        <item quantity="other">Do you want to delete %d files?</item>
+    </plurals>
+
+    <!-- Can't delete file -->
+    <string name="can_not_delete_file">Can not delete file: %s</string>
+
+    <!-- Can't delete files -->
+    <plurals name="can_not_delete_files">
+        <item quantity="one">Can not delete %d file</item>
+        <item quantity="two">Can not delete %d files</item>
+        <item quantity="few">Can not delete %d files</item>
+        <item quantity="many">Can not delete %d files</item>
+        <item quantity="other">Can not delete %d files</item>
+    </plurals>
+
+    <!-- Press back one more time in file explorer -->
+    <string name="press_again_to_exit">Press again to exit</string>
+
+    <!-- Review loading message -->
+    <string name="loading">Loading&#8230;</string>
+
+    <!-- Review file not found message -->
+    <string name="file_not_found">File not found</string>
+
+    <!-- Title for comment dialog in review activity -->
+    <string name="dialog_input_comment_title">Comment</string>
+
+    <!-- Message for comment dialog in review activity -->
+    <string name="dialog_input_comment_message">Input comment (empty comment to remove it):</string>
+
+    <!-- Show message if there is no last comments -->
+    <string name="no_last_comment">Please input atleast one comment to use it later</string>
+
+    <!-- Ignore files activity title -->
+    <string name="title_activity_ignore_files">Ignore files</string>
+
+    <!-- Title for dialog in ignore files activity -->
+    <string name="dialog_add_file_title">Ignore file</string>
+
+    <!-- Message for dialog in ignore files activity -->
+    <string name="dialog_add_file_message">Input name of file or pattern\n(\'*\' and \'?\' is allowed):</string>
+
+    <!-- Select items title in ActionMode -->
+    <string name="select_items">Select items</string>
+
+    <!-- Items selected subtitle in ActionMode -->
+    <plurals name="items_selected">
+        <item quantity="one">%d item selected</item>
+        <item quantity="two">%d items selected</item>
+        <item quantity="few">%d items selected</item>
+        <item quantity="many">%d items selected</item>
+        <item quantity="other">%d items selected</item>
+    </plurals>
+
+</resources>

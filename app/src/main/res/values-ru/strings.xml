@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application name -->
+    <string name="app_name">Code review</string>
+
+    <!-- Sort -->
+    <string name="action_sort">Сортировка</string>
+
+    <!-- Sort types -->
+    <string-array name="sort_types">
+        <item>По имени</item>
+        <item>По типу</item>
+        <item>По размеру</item>
+    </string-array>
+
+    <!-- Settings -->
+    <string name="action_settings">Настройки</string>
+    
+    <!-- Donate -->
+    <string name="action_donate">Пожертвовать</string>
+
+    <!-- Add -->
+    <string name="action_add">Добавить</string>
+
+    <!-- Rename -->
+    <string name="action_rename">Переименовать</string>
+
+    <!-- Mark to rename -->
+    <string name="action_mark_to_rename">Отметить переименовывание</string>
+
+    <!-- Delete -->
+    <string name="action_delete">Удалить</string>
+
+    <!-- Mark to delete -->
+    <string name="action_mark_to_delete">Отметить удаление</string>
+
+    <!-- Note -->
+    <string name="action_note">Заметка</string>
+
+    <!-- Reload -->
+    <string name="action_reload">Переоткрыть</string>
+
+    <!-- Close -->
+    <string name="action_close">Закрыть</string>
+
+    <!-- Select files title in ActionMode -->
+    <string name="select_files">Выберите файлы</string>
+
+    <!-- Files selected subtitle in ActionMode -->
+    <plurals name="files_selected">
+        <item quantity="one">%d файл выбран</item>
+        <!-- <item quantity="two">%d files selected</item> Not used -->
+        <item quantity="few">%d файла выбрано</item>
+        <item quantity="many">%d файлов выбрано</item>
+        <item quantity="other">%d файлов выбрано</item>
+    </plurals>
+
+    <!-- Title for filename dialog in files activity -->
+    <string name="dialog_input_filename_title">Имя файла</string>
+
+    <!-- Message for filename dialog in files activity -->
+    <string name="dialog_input_filename_message">Введите имя файла:</string>
+
+    <!-- Show message if there is no last filenames -->
+    <string name="no_last_filenames">Введите хотя бы одно имя файла, чтобы в дальнейшем использовать его</string>
+
+    <!-- Show message if filename is empty -->
+    <string name="empty_filename">Пожалуйста введите имя файла</string>
+
+    <!-- Title for filenote dialog in files activity -->
+    <string name="dialog_input_filenote_title">Заметка файла</string>
+
+    <!-- Message for filenote dialog in files activity -->
+    <string name="dialog_input_filenote_message">Введите заметку:</string>
+
+    <!-- Show message if there is no last filenotes -->
+    <string name="no_last_filenotes">Введите хотя бы одну заметку, чтобы в дальнейшем использовать ее</string>
+
+    <!-- Need to rename -->
+    <string name="need_to_rename">Нужно переименовать</string>
+
+    <!-- Rename to %s -->
+    <string name="rename_to">Переименовать в %s</string>
+
+    <!-- Need to delete -->
+    <string name="need_to_delete">Нужно удалить</string>
+
+    <!-- Can't rename file -->
+    <string name="can_not_rename_file">Не удалось переименовать файл</string>
+
+    <!-- Title for delete dialog in files activity -->
+    <string name="dialog_delete_files_title">Удалить</string>
+
+    <!-- Message for delete dialog in files activity -->
+    <plurals name="dialog_delete_files_message">
+        <item quantity="one">Вы хотите удалить %d файл?</item>
+        <!-- <item quantity="two">Do you want to delete %d files?</item> Not used -->
+        <item quantity="few">Вы хотите удалить %d файла?</item>
+        <item quantity="many">Вы хотите удалить %d файлов?</item>
+        <item quantity="other">Вы хотите удалить %d файлов?</item>
+    </plurals>
+
+    <!-- Can't delete file -->
+    <string name="can_not_delete_file">Не удалось удалить файл: %s</string>
+
+    <!-- Can't delete files -->
+    <plurals name="can_not_delete_files">
+        <item quantity="one">Не удалось удалить %d файл</item>
+        <!-- <item quantity="two">Can not delete %d files</item> Not used -->
+        <item quantity="few">Не удалось удалить %d файла</item>
+        <item quantity="many">Не удалось удалить %d файлов</item>
+        <item quantity="other">Не удалось удалить %d файлов</item>
+    </plurals>
+
+    <!-- Press back one more time in file explorer -->
+    <string name="press_again_to_exit">Нажмите снова для выхода</string>
+
+    <!-- Review loading message -->
+    <string name="loading">Загрузка&#8230;</string>
+
+    <!-- Review file not found message -->
+    <string name="file_not_found">Файл не найден</string>
+
+    <!-- Title for comment dialog in review activity -->
+    <string name="dialog_input_comment_title">Комментарий</string>
+
+    <!-- Message for comment dialog in review activity -->
+    <string name="dialog_input_comment_message">Введите комментарий (пустой для удаления):</string>
+
+    <!-- Show message if there is no last comments -->
+    <string name="no_last_comment">Введите хотя бы один комментарий, чтобы в дальнейшем использовать его</string>
+
+    <!-- Ignore files activity title -->
+    <string name="title_activity_ignore_files">Игнорирование файлов</string>
+
+    <!-- Title for dialog in ignore files activity -->
+    <string name="dialog_add_file_title">Игнорирование файла</string>
+
+    <!-- Message for dialog in ignore files activity -->
+    <string name="dialog_add_file_message">Введите имя файла или шаблон\n(разрешены символы \'*\' и \'?\'):</string>
+
+    <!-- Select items title in ActionMode -->
+    <string name="select_items">Выберите элементы</string>
+
+    <!-- Items selected subtitle in ActionMode -->
+    <plurals name="items_selected">
+        <item quantity="one">%d элемент выбран</item>
+        <!-- <item quantity="two">%d items selected</item> Not used -->
+        <item quantity="few">%d элемента выбрано</item>
+        <item quantity="many">%d элементов выбрано</item>
+        <item quantity="other">%d элементов выбрано</item>
+    </plurals>
+
+</resources>

@@ -1,0 +1,11 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Ignore files -->
+    <Preference android:title="@string/pref_title_ignore_files" >
+        <intent
+             android:action="android.intent.action.VIEW"
+             android:targetPackage="com.griscom.codereview"
+             android:targetClass="com.griscom.codereview.activities.IgnoreFilesActivity" />
+    </Preference>
+
+</PreferenceScreen>

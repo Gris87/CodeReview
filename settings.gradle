@@ -1,0 +1,4 @@
+include ':app', ':ColorPickerPreference', ':NumberPickerDialogPreference', ':NumberPicker'
+project(':ColorPickerPreference').projectDir = new File('app/libs/ColorPickerPreference')
+project(':NumberPickerDialogPreference').projectDir = new File('app/libs/NumberPickerDialogPreference')
+project(':NumberPicker').projectDir = new File('app/libs/NumberPickerDialogPreference/libs/NumberPicker')

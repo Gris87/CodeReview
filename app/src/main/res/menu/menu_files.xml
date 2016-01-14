@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.griscom.codereview.activities.FilesActivity" >
+
+    <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="100"
+        android:title="@string/action_sort"
+        android:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="200"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    
+    <item
+        android:id="@+id/action_donate"
+        android:orderInCategory="300"
+        android:title="@string/action_donate"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_close"
+        android:orderInCategory="400"
+        android:title="@string/action_close"
+        android:icon="@drawable/close"
+        app:showAsAction="always" />
+
+</menu>
