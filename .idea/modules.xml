@@ -4,8 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CodeReview.iml" filepath="$PROJECT_DIR$/CodeReview.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/libs/ColorPickerPreference/ColorPickerPreference.iml" filepath="$PROJECT_DIR$/app/libs/ColorPickerPreference/ColorPickerPreference.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/libs/NumberPickerDialogPreference/libs/NumberPicker/NumberPicker.iml" filepath="$PROJECT_DIR$/app/libs/NumberPickerDialogPreference/libs/NumberPicker/NumberPicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/libs/JavaPrettify/JavaPrettify.iml" filepath="$PROJECT_DIR$/app/libs/JavaPrettify/JavaPrettify.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/libs/NumberPickerDialogPreference/NumberPickerDialogPreference.iml" filepath="$PROJECT_DIR$/app/libs/NumberPickerDialogPreference/NumberPickerDialogPreference.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/libs/NumberPickerDialogPreference/libs/NumberPicker/NumberPicker.iml" filepath="$PROJECT_DIR$/app/libs/NumberPickerDialogPreference/libs/NumberPicker/NumberPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
