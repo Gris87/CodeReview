@@ -1,5 +1,9 @@
 Select all in ActionMode
-Hide Done button in ActionMode
+Mark as correct file in ActionMode
+Mark as invalid file in ActionMode
+Colorize files after using actions above
+Hide Done/Back button in ActionMode
+Make usage of last comments looks better
 Smooth movement
 Code folding
 Save/load dialogs state
