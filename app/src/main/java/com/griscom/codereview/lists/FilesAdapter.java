@@ -246,7 +246,7 @@ public class FilesAdapter extends BaseAdapter
                     }
                 }
 
-                // -------------------------------------------- -  -
+                // ----------------------------------------------
 
                 Bitmap bitmap = Bitmap.createBitmap(100, 1, Config.ARGB_8888);
 

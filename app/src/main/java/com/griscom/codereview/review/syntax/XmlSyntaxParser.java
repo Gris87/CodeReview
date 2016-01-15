@@ -62,7 +62,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
             colorsMap.put(Prettify.PR_STRING,       stringPaint);
             colorsMap.put(Prettify.PR_PUNCTUATION,  punctuationPaint);
 
-            // -------------------------------------------------------------- -
+            // ---------------------------------------------------------------
 
             StringBuilder codeBuilder = new StringBuilder();
 
@@ -76,7 +76,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
 
             closeReader();
 
-            // -------------------------------------------------------------- -
+            // ---------------------------------------------------------------
 
             int tabSize = getTabSize();
 

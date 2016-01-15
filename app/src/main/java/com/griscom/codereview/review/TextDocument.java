@@ -457,11 +457,11 @@ public class TextDocument implements OnTouchListener
                 {
                     if (
                         mTouchMode == TouchMode.NONE
-                         &&
+                        &&
                         (
-                        Math.abs(mTouchX - event.getX()) > SCROLL_THRESHOLD
+                         Math.abs(mTouchX - event.getX()) > SCROLL_THRESHOLD
                          ||
-                        Math.abs(mTouchY - event.getY()) > SCROLL_THRESHOLD
+                         Math.abs(mTouchY - event.getY()) > SCROLL_THRESHOLD
                         )
                        )
                     {
@@ -480,7 +480,7 @@ public class TextDocument implements OnTouchListener
 
                         if (
                             mOffsetX != newOffsets.x
-                             ||
+                            ||
                             mOffsetY != newOffsets.y
                             )
                         {
@@ -609,7 +609,7 @@ public class TextDocument implements OnTouchListener
                                         comments.add(0, comment);
                                         saveLastComments(comments);
 
-                                        // -------------------------------- -  -
+                                        // ----------------------------------
 
                                         if (mSyntaxParser.getCommentLine().endsWith(" "))
                                         {
@@ -1059,7 +1059,7 @@ public class TextDocument implements OnTouchListener
 
         if (
             mVisibleBegin != visibleBegin
-             ||
+            ||
             mVisibleEnd != visibleEnd
            )
         {
@@ -1081,7 +1081,7 @@ public class TextDocument implements OnTouchListener
             updateSizeByRow(mRows.get(i));
         }
 
-        // ---------------------------------------------- -
+        // -----------------------------------------------
 
         PointF newOffsets = new PointF(mOffsetX, mOffsetY);
 
@@ -1091,7 +1091,7 @@ public class TextDocument implements OnTouchListener
 
         if (
             mOffsetX != newOffsets.x
-             ||
+            ||
             mOffsetY != newOffsets.y
             )
         {
@@ -1132,7 +1132,7 @@ public class TextDocument implements OnTouchListener
 
             if (
                 !TextUtils.isEmpty(comment)
-                 &&
+                &&
                 !res.contains(comment)
                )
             {
@@ -1223,9 +1223,9 @@ public class TextDocument implements OnTouchListener
     {
         if (
             mReviewedCount != reviewedCount
-             ||
+            ||
             mInvalidCount  != invalidCount
-             ||
+            ||
             mNoteCount     != noteCount
            )
         {

@@ -33,7 +33,7 @@ public class TextRow
         mWidth          = 0;
         mHeight         = 0;
 
-        mCommentIndex    = -1;
+        mCommentIndex   = -1;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
@@ -82,12 +82,12 @@ public class TextRow
 
                 if (
                     text.contains(commentBegin)
-                     &&
+                    &&
                     text.contains("TODO")
-                     &&
+                    &&
                     (
                      commentEnd == null
-                      ||
+                     ||
                      text.contains(commentEnd)
                     )
                    )
@@ -158,17 +158,17 @@ public class TextRow
         {
             if (
                 mRegions.size() > 0
-                 &&
+                &&
                 (
                  (
                   mCommentIndex < 0
-                   &&
+                  &&
                   !mRegions.get(mRegions.size() - 1).getOriginalText().equals("")
                  )
-                  ||
+                 ||
                  (
                   mCommentIndex > 0
-                   &&
+                  &&
                   !mRegions.get(mCommentIndex - 1).getOriginalText().equals("")
                  )
                 )

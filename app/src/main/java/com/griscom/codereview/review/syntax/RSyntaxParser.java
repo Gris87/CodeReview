@@ -60,7 +60,7 @@ public class RSyntaxParser extends SyntaxParserBase
             colorsMap.put(Prettify.PR_STRING,      stringPaint);
             colorsMap.put(Prettify.PR_PUNCTUATION, punctuationPaint);
 
-            // -------------------------------------------------------------- -
+            // ---------------------------------------------------------------
 
             StringBuilder codeBuilder = new StringBuilder();
 
@@ -74,7 +74,7 @@ public class RSyntaxParser extends SyntaxParserBase
 
             closeReader();
 
-            // -------------------------------------------------------------- -
+            // ---------------------------------------------------------------
 
             int tabSize = getTabSize();
 

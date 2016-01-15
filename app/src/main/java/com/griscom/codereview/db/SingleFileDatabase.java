@@ -29,7 +29,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
     public  static final String ROWS_TABLE_NAME   = "rows";
     private static final String ROWS_TABLE_CREATE = "CREATE TABLE " + ROWS_TABLE_NAME + " " +
-                                                    "("  +
+                                                    "(" +
                                                          COLUMN_ID       + " INTEGER PRIMARY KEY, " +
                                                          COLUMN_ROW_ID   + " INTEGER, "             +
                                                          COLUMN_ROW_TYPE + " TEXT"                  +

@@ -43,7 +43,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
         mSelectionMode = false;
         mSelection     = new ArrayList<Integer>();
 
-        // ---------------------------------------------------------------------------------- -
+        // -----------------------------------------------------------------------------------
 
         String[] files = ApplicationSettings.ignoreFiles(mContext);
 
@@ -184,7 +184,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
     {
         Collections.sort(mFiles);
 
-        // ---------------------------------------------------------------------------------- -
+        // -----------------------------------------------------------------------------------
 
         StringBuilder res = new StringBuilder();
 
@@ -205,7 +205,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         editor.commit();
 
-        // ---------------------------------------------------------------------------------- -
+        // -----------------------------------------------------------------------------------
 
         notifyDataSetChanged();
     }

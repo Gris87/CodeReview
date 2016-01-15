@@ -42,9 +42,9 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("apollo")
-                 ||
+                ||
                 extension.equals("agc")
-                 ||
+                ||
                 extension.equals("aea")
                )
             {
@@ -58,7 +58,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("basic")
-                 ||
+                ||
                 extension.equals("cbm")
                )
             {
@@ -72,11 +72,11 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("c")
-                 ||
+                ||
                 extension.equals("h")
-                 ||
+                ||
                 extension.equals("cpp")
-                 ||
+                ||
                 extension.equals("hpp")
                )
             {
@@ -93,12 +93,12 @@ public abstract class SyntaxParserBase
                 return new CssSyntaxParser(context);
             }
 
-            if (extension.equals("css - kw"))
+            if (extension.equals("css-kw"))
             {
                 return new CssKwSyntaxParser(context);
             }
 
-            if (extension.equals("css - str"))
+            if (extension.equals("css-str"))
             {
                 return new CssStrSyntaxParser(context);
             }
@@ -110,7 +110,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("erlang")
-                 ||
+                ||
                 extension.equals("erl")
                )
             {
@@ -134,17 +134,17 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("cl")
-                 ||
+                ||
                 extension.equals("el")
-                 ||
+                ||
                 extension.equals("lisp")
-                 ||
+                ||
                 extension.equals("lsp")
-                 ||
+                ||
                 extension.equals("scm")
-                 ||
+                ||
                 extension.equals("ss")
-                 ||
+                ||
                 extension.equals("rkt")
                )
             {
@@ -153,7 +153,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("llvm")
-                 ||
+                ||
                 extension.equals("ll")
                )
             {
@@ -170,19 +170,19 @@ public abstract class SyntaxParserBase
                 return new MatlabSyntaxParser(context);
             }
 
-            if (extension.equals("matlab - identifiers"))
+            if (extension.equals("matlab-identifiers"))
             {
                 return new MatlabIdentifiersSyntaxParser(context);
             }
 
-            if (extension.equals("matlab - operators"))
+            if (extension.equals("matlab-operators"))
             {
                 return new MatlabOperatorsSyntaxParser(context);
             }
 
             if (
                 extension.equals("fs")
-                 ||
+                ||
                 extension.equals("ml")
                )
             {
@@ -196,7 +196,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("n")
-                 ||
+                ||
                 extension.equals("nemerle")
                )
             {
@@ -205,7 +205,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("pas")
-                 ||
+                ||
                 extension.equals("pascal")
                )
             {
@@ -214,9 +214,9 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("r")
-                 ||
+                ||
                 extension.equals("s")
-                 ||
+                ||
                 extension.equals("splus")
                )
             {
@@ -245,7 +245,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("latex")
-                 ||
+                ||
                 extension.equals("tex")
                 )
             {
@@ -254,7 +254,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("vb")
-                 ||
+                ||
                 extension.equals("vbs")
                 )
             {
@@ -263,7 +263,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("vhdl")
-                 ||
+                ||
                 extension.equals("vhd")
                 )
             {
@@ -277,9 +277,9 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("xml")
-                 ||
+                ||
                 extension.equals("html")
-                 ||
+                ||
                 extension.equals("ui")
                )
             {
@@ -288,7 +288,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("xq")
-                 ||
+                ||
                 extension.equals("xquery")
                 )
             {
@@ -297,7 +297,7 @@ public abstract class SyntaxParserBase
 
             if (
                 extension.equals("yaml")
-                 ||
+                ||
                 extension.equals("yml")
                 )
             {

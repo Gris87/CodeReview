@@ -34,7 +34,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
             basePaint.setTypeface(Typeface.MONOSPACE);
             basePaint.setTextSize(getFontSize());
 
-            // -------------------------------------------------------------- -
+            // ---------------------------------------------------------------
 
             createReader(fileName);
 
