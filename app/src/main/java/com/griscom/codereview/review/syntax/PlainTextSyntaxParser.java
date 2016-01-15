@@ -12,7 +12,7 @@ import com.griscom.codereview.review.TextRow;
 
 public class PlainTextSyntaxParser extends SyntaxParserBase
 {
-    private static final String TAG="PlainTextSyntaxParser";
+    private static final String TAG = "PlainTextSyntaxParser";
 
     public PlainTextSyntaxParser(Context context)
     {
@@ -22,32 +22,32 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
     @Override
     public TextDocument parseFile(String fileName)
     {
-        TextDocument res=new TextDocument(this);
+        TextDocument res = new TextDocument(this);
 
         try
         {
-            int tabSize=getTabSize();
+            int tabSize = getTabSize();
 
-            Paint basePaint=new Paint();
+            Paint basePaint = new Paint();
 
             basePaint.setColor(Color.BLACK);
             basePaint.setTypeface(Typeface.MONOSPACE);
             basePaint.setTextSize(getFontSize());
 
-            // ---------------------------------------------------------------
+            // -------------------------------------------------------------- -
 
             createReader(fileName);
 
-            boolean lastEnter=false;
+            boolean lastEnter = false;
 
             String line;
             while ((line = readLine()) != null)
             {
-                lastEnter=line.endsWith("\n");
+                lastEnter = line.endsWith("\n");
 
                 if (lastEnter)
                 {
-                    line=line.substring(0, line.length()-1);
+                    line = line.substring(0, line.length() - 1);
                 }
 
 
@@ -72,7 +72,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
         }
         catch (Exception e)
         {
-            Log.e(TAG, "Impossible to read file: "+fileName, e);
+            Log.e(TAG, "Impossible to read file: " + fileName, e);
         }
 
         return res;

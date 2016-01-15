@@ -35,7 +35,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
 
 
 
-    private PlaceholderFragment mPlaceholderFragment=null;
+    private PlaceholderFragment mPlaceholderFragment = null;
     private Tracker             mTracker;
 
 
@@ -72,7 +72,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-        mPlaceholderFragment=null;
+        mPlaceholderFragment = null;
 
         super.onDestroy();
     }
@@ -95,9 +95,9 @@ public class IgnoreFilesActivity extends AppCompatActivity
         {
             case R.id.action_add:
             {
-                final EditText editText=new EditText(this);
+                final EditText editText = new EditText(this);
 
-                AlertDialog dialog=new AlertDialog.Builder(this)
+                AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.dialog_add_file_title)
                     .setMessage(R.string.dialog_add_file_message)
                     .setView(editText)
@@ -107,7 +107,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
                                             @Override
                                             public void onClick(DialogInterface dialog, int whichButton)
                                             {
-                                                if (mPlaceholderFragment!=null)
+                                                if (mPlaceholderFragment != null)
                                                 {
                                                     mPlaceholderFragment.getAdapter().addFile(editText.getText().toString());
                                                 }
@@ -142,12 +142,12 @@ public class IgnoreFilesActivity extends AppCompatActivity
 
     public void setPlaceholderFragment(PlaceholderFragment fragment)
     {
-        mPlaceholderFragment=fragment;
+        mPlaceholderFragment = fragment;
     }
 
     /**
      * A placeholder fragment containing a simple view.
-     */
+      */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener
     {
         private IgnoreFilesActivity mActivity;
@@ -162,15 +162,15 @@ public class IgnoreFilesActivity extends AppCompatActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            mActivity=(IgnoreFilesActivity)getActivity();
+            mActivity = (IgnoreFilesActivity)getActivity();
 
-            mAdapter=new IgnoreFilesAdapter(mActivity);
+            mAdapter = new IgnoreFilesAdapter(mActivity);
 
 
 
-            View rootView=inflater.inflate(R.layout.fragment_ignore_files, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_ignore_files, container, false);
 
-            mIgnoreFilesListView=(ListView)rootView.findViewById(R.id.ignoreFileslistView);
+            mIgnoreFilesListView = (ListView)rootView.findViewById(R.id.ignoreFileslistView);
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
 
@@ -191,11 +191,11 @@ public class IgnoreFilesActivity extends AppCompatActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
         {
-            final EditText editText=new EditText(mActivity);
+            final EditText editText = new EditText(mActivity);
             editText.setText((String)parent.getItemAtPosition(position));
             editText.selectAll();
 
-            AlertDialog dialog=new AlertDialog.Builder(mActivity)
+            AlertDialog dialog = new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.dialog_add_file_title)
                 .setMessage(R.string.dialog_add_file_message)
                 .setView(editText)
@@ -227,7 +227,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
         {
-            mLastSelectedItem=((AdapterContextMenuInfo)menuInfo).position;
+            mLastSelectedItem = ((AdapterContextMenuInfo)menuInfo).position;
 
             mActivity.getMenuInflater().inflate(R.menu.context_menu_ignore_files, menu);
             super.onCreateContextMenu(menu, v, menuInfo);
@@ -255,7 +255,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
                 @Override
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
                 {
-                    int selectedCount=mIgnoreFilesListView.getCheckedItemCount();
+                    int selectedCount = mIgnoreFilesListView.getCheckedItemCount();
                     mode.setSubtitle(mActivity.getResources().getQuantityString(R.plurals.items_selected, selectedCount, selectedCount));
 
                     mAdapter.setSelected(position, checked);

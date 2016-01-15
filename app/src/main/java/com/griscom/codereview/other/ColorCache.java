@@ -5,9 +5,9 @@ import android.graphics.Color;
 
 public class ColorCache
 {
-    private static final int SELECTION_COLOR=4;
+    private static final int SELECTION_COLOR = 4;
 
-    private static int mCache[]=new int[5];
+    private static int mCache[] = new int[5];
 
 
 

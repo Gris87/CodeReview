@@ -29,7 +29,7 @@ import com.griscom.codereview.other.ApplicationPreferences;
  * Android Design: Settings</a> for design guidelines and the <a
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
- */
+  */
 public class SettingsActivity extends PreferenceActivity
 {
     private static final String TAG = "SettingsActivity";
@@ -37,14 +37,14 @@ public class SettingsActivity extends PreferenceActivity
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
-     * as a master/detail two-pane view on tablets. When true, a single pane is
+     * as a master/detail two - pane view on tablets. When true, a single pane is
      * shown on tablets.
-     */
+      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
     /**
      * Force to use multi pan
-     */
+      */
     private static final boolean ALWAYS_MULTIPAN = false;
 
 
@@ -78,9 +78,9 @@ public class SettingsActivity extends PreferenceActivity
 
     /**
      * Shows the simplified settings UI if the device configuration if the
-     * device configuration dictates that a simplified, single-pane UI should be
+     * device configuration dictates that a simplified, single - pane UI should be
      * shown.
-     */
+      */
     @SuppressWarnings("deprecation")
     private void setupSimplePreferencesScreen()
     {
@@ -93,7 +93,7 @@ public class SettingsActivity extends PreferenceActivity
         // use the older PreferenceActivity APIs.
 
         // Change preference file name
-        PreferenceManager prefManager=getPreferenceManager();
+        PreferenceManager prefManager = getPreferenceManager();
         prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
         prefManager.setSharedPreferencesMode(MODE_PRIVATE);
 
@@ -119,7 +119,7 @@ public class SettingsActivity extends PreferenceActivity
         addPreferencesFromResource(R.xml.pref_editor);
     }
 
-    /** {@inheritDoc} */
+    /**  {@inheritDoc}  */
     @Override
     public boolean onIsMultiPane()
     {
@@ -127,9 +127,9 @@ public class SettingsActivity extends PreferenceActivity
     }
 
     /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
+     * Helper method to determine if the device has an extra - large screen. For
+     * example, 10" tablets are extra - large.
+      */
     private static boolean isLargeTablet(Context context)
     {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
@@ -139,23 +139,23 @@ public class SettingsActivity extends PreferenceActivity
      * Determines whether the simplified settings UI should be shown. This is
      * true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or the device
      * doesn't have newer APIs like {@link PreferenceFragment}, or the device
-     * doesn't have an extra-large screen. In these cases, a single-pane
+     * doesn't have an extra - large screen. In these cases, a single - pane
      * "simplified" settings UI should be shown.
-     */
+      */
     private static boolean isSimplePreferences(Context context)
     {
         return ALWAYS_SIMPLE_PREFS
-               ||
+                ||
                Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
-               ||
+                ||
                (
                 !ALWAYS_MULTIPAN
-                &&
+                 &&
                 !isLargeTablet(context)
                );
     }
 
-    /** {@inheritDoc} */
+    /**  {@inheritDoc}  */
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target)
@@ -168,8 +168,8 @@ public class SettingsActivity extends PreferenceActivity
 
     /**
      * This fragment shows file manager preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
+     * activity is showing a two - pane settings UI.
+      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class FileManagerPreferenceFragment extends PreferenceFragment
     {
@@ -179,7 +179,7 @@ public class SettingsActivity extends PreferenceActivity
             super.onCreate(savedInstanceState);
 
             // Change preference file name
-            PreferenceManager prefManager=getPreferenceManager();
+            PreferenceManager prefManager = getPreferenceManager();
             prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
             prefManager.setSharedPreferencesMode(MODE_PRIVATE);
 
@@ -189,8 +189,8 @@ public class SettingsActivity extends PreferenceActivity
 
     /**
      * This fragment shows colors preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
+     * activity is showing a two - pane settings UI.
+      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class ColorsPreferenceFragment extends PreferenceFragment
     {
@@ -200,7 +200,7 @@ public class SettingsActivity extends PreferenceActivity
             super.onCreate(savedInstanceState);
 
             // Change preference file name
-            PreferenceManager prefManager=getPreferenceManager();
+            PreferenceManager prefManager = getPreferenceManager();
             prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
             prefManager.setSharedPreferencesMode(MODE_PRIVATE);
 
@@ -210,8 +210,8 @@ public class SettingsActivity extends PreferenceActivity
 
     /**
      * This fragment shows editor preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
+     * activity is showing a two - pane settings UI.
+      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class EditorPreferenceFragment extends PreferenceFragment
     {
@@ -221,7 +221,7 @@ public class SettingsActivity extends PreferenceActivity
             super.onCreate(savedInstanceState);
 
             // Change preference file name
-            PreferenceManager prefManager=getPreferenceManager();
+            PreferenceManager prefManager = getPreferenceManager();
             prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
             prefManager.setSharedPreferencesMode(MODE_PRIVATE);
 

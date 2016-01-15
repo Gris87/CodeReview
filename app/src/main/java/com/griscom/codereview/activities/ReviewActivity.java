@@ -51,7 +51,7 @@ public class ReviewActivity extends FragmentActivity
 
 
 
-    private PlaceholderFragment mPlaceholderFragment=null;
+    private PlaceholderFragment mPlaceholderFragment = null;
     private Tracker             mTracker;
 
 
@@ -65,7 +65,7 @@ public class ReviewActivity extends FragmentActivity
         CodeReviewApplication application = (CodeReviewApplication) getApplication();
         mTracker = application.getDefaultTracker();
 
-        if (savedInstanceState==null)
+        if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction()
                                        .add(R.id.container, new PlaceholderFragment())
@@ -88,7 +88,7 @@ public class ReviewActivity extends FragmentActivity
     @Override
     protected void onDestroy()
     {
-        mPlaceholderFragment=null;
+        mPlaceholderFragment = null;
 
         super.onDestroy();
     }
@@ -107,7 +107,7 @@ public class ReviewActivity extends FragmentActivity
         {
             case R.id.action_reload:
             {
-                if (mPlaceholderFragment!=null)
+                if (mPlaceholderFragment != null)
                 {
                     mPlaceholderFragment.getContent().reload();
                 }
@@ -125,7 +125,7 @@ public class ReviewActivity extends FragmentActivity
 
             case R.id.action_close:
             {
-                Intent data=new Intent();
+                Intent data = new Intent();
 
                 setResult(RESULT_CLOSE, data);
                 finish();
@@ -161,12 +161,12 @@ public class ReviewActivity extends FragmentActivity
 
     public void setPlaceholderFragment(PlaceholderFragment fragment)
     {
-        mPlaceholderFragment=fragment;
+        mPlaceholderFragment = fragment;
     }
 
     /**
      * A placeholder fragment containing a simple view.
-     */
+      */
     public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnProgressChangedListener
     {
         private ReviewActivity    mActivity;
@@ -192,7 +192,7 @@ public class ReviewActivity extends FragmentActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            mActivity=(ReviewActivity)getActivity();
+            mActivity = (ReviewActivity)getActivity();
 
             ColorCache.update(mActivity);
 
@@ -200,7 +200,7 @@ public class ReviewActivity extends FragmentActivity
             mSelectedColor = mActivity.getResources().getColor(R.color.selected);
             mHoverColor    = mActivity.getResources().getColor(R.color.hover);
 
-            // ---------------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------------- -
 
             Intent intent   = mActivity.getIntent();
             String fileName = intent.getStringExtra(ApplicationExtras.FILE_NAME);
@@ -208,7 +208,7 @@ public class ReviewActivity extends FragmentActivity
 
 
 
-            View rootView=inflater.inflate(R.layout.fragment_review, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_review, container, false);
 
             mContent          = (ReviewSurfaceView)rootView.findViewById(R.id.fullscreen_content);
             mTitle            = rootView.findViewById(R.id.fullscreen_content_title);
@@ -220,14 +220,14 @@ public class ReviewActivity extends FragmentActivity
             mNoteButton       = (Button)rootView.findViewById(R.id.note_button);
             mClearButton      = (Button)rootView.findViewById(R.id.clear_button);
 
-            // ---------------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------------- -
 
             mContent.setFileName(fileName, fileId);
             mContent.setOnTouchListener(this);
             mContent.setOnNoteSupportListener(this);
             mContent.setOnProgressChangedListener(this);
 
-            mTitleTextView.setText(fileName.substring(fileName.lastIndexOf('/')+1));
+            mTitleTextView.setText(fileName.substring(fileName.lastIndexOf('/') + 1));
             mProgressTextView.setText("0 %");
 
 
@@ -252,7 +252,7 @@ public class ReviewActivity extends FragmentActivity
             mNoteButton.setBackgroundColor    (mDefaultColor);
             mClearButton.setBackgroundColor   (mDefaultColor);
 
-            mLastSelectedButton=mReviewedButton;
+            mLastSelectedButton = mReviewedButton;
             mLastSelectedButton.setBackgroundColor(mSelectedColor);
 
             mReviewedButton.setOnTouchListener(mHoverTouchListener);
@@ -265,9 +265,9 @@ public class ReviewActivity extends FragmentActivity
             mNoteButton.setOnClickListener    (this);
             mClearButton.setOnClickListener   (this);
 
-            // ---------------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------------- -
 
-            mControlsVisible=true;
+            mControlsVisible = true;
             delayedHide(1000);
 
             mActivity.setPlaceholderFragment(this);
@@ -310,7 +310,7 @@ public class ReviewActivity extends FragmentActivity
         @Override
         public boolean onTouch(View v, MotionEvent event)
         {
-            if (event.getAction()==MotionEvent.ACTION_DOWN)
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
             {
                 showControls();
             }
@@ -321,44 +321,44 @@ public class ReviewActivity extends FragmentActivity
         @Override
         public void onClick(View v)
         {
-            if (v==mReviewedButton)
+            if (v == mReviewedButton)
             {
                 mContent.setSelectionColor(SelectionColor.REVIEWED);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
-                mLastSelectedButton=mReviewedButton;
+                mLastSelectedButton = mReviewedButton;
                 mLastSelectedButton.setBackgroundColor(mSelectedColor);
             }
             else
-            if (v==mInvalidButton)
+            if (v == mInvalidButton)
             {
                 mContent.setSelectionColor(SelectionColor.INVALID);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
-                mLastSelectedButton=mInvalidButton;
+                mLastSelectedButton = mInvalidButton;
                 mLastSelectedButton.setBackgroundColor(mSelectedColor);
             }
             else
-            if (v==mNoteButton)
+            if (v == mNoteButton)
             {
                 mContent.setSelectionColor(SelectionColor.NOTE);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
-                mLastSelectedButton=mNoteButton;
+                mLastSelectedButton = mNoteButton;
                 mLastSelectedButton.setBackgroundColor(mSelectedColor);
             }
             else
-            if (v==mClearButton)
+            if (v == mClearButton)
             {
                 mContent.setSelectionColor(SelectionColor.CLEAR);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
-                mLastSelectedButton=mClearButton;
+                mLastSelectedButton = mClearButton;
                 mLastSelectedButton.setBackgroundColor(mSelectedColor);
             }
             else
             {
-                Log.e(TAG, "Unknown onClick receiver: "+String.valueOf(v));
+                Log.e(TAG, "Unknown onClick receiver: " + String.valueOf(v));
 
                 if (BuildConfig.DEBUG)
                 {
@@ -385,10 +385,10 @@ public class ReviewActivity extends FragmentActivity
         {
             if (BuildConfig.DEBUG)
             {
-                Assert.assertTrue(progress>=0 && progress<=100);
+                Assert.assertTrue(progress >= 0 && progress <= 100);
             }
 
-            mProgressTextView.setText(String.valueOf(progress)+" %");
+            mProgressTextView.setText(String.valueOf(progress) + " %");
         }
 
         View.OnTouchListener mHoverTouchListener = new View.OnTouchListener()
@@ -396,19 +396,19 @@ public class ReviewActivity extends FragmentActivity
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
-                if (event.getAction()==MotionEvent.ACTION_DOWN)
+                if (event.getAction() == MotionEvent.ACTION_DOWN)
                 {
                     v.setBackgroundColor(mHoverColor);
                 }
                 else
-                if (event.getAction()==MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP)
                 {
-                    float x=event.getX();
-                    float y=event.getY();
+                    float x = event.getX();
+                    float y = event.getY();
 
-                    if (x<0 || x>v.getWidth() || y<0 || y>v.getHeight())
+                    if (x < 0 || x > v.getWidth() || y < 0 || y > v.getHeight())
                     {
-                        if (v==mLastSelectedButton)
+                        if (v == mLastSelectedButton)
                         {
                             v.setBackgroundColor(mSelectedColor);
                         }
@@ -438,7 +438,7 @@ public class ReviewActivity extends FragmentActivity
         /**
          * Schedules a call to hide() in [delay] milliseconds, canceling any
          * previously scheduled calls.
-         */
+          */
         private void delayedHide(int delayMillis)
         {
             mHideHandler.removeCallbacks(mHideRunnable);
@@ -449,7 +449,7 @@ public class ReviewActivity extends FragmentActivity
         {
             if (mControlsVisible)
             {
-                mControlsVisible=false;
+                mControlsVisible = false;
 
                 mTitle.setVisibility   (View.GONE);
                 mControls.setVisibility(View.GONE);
@@ -460,7 +460,7 @@ public class ReviewActivity extends FragmentActivity
         {
             if (!mControlsVisible)
             {
-                mControlsVisible=true;
+                mControlsVisible = true;
 
                 mTitle.setVisibility   (View.VISIBLE);
                 mControls.setVisibility(View.VISIBLE);

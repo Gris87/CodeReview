@@ -50,6 +50,9 @@ import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
 
+/**
+ * Activity for displaying files
+ */
 public class FilesActivity extends AppCompatActivity
 {
     private static final String TAG = "FilesActivity";
@@ -86,7 +89,7 @@ public class FilesActivity extends AppCompatActivity
         CodeReviewApplication application = (CodeReviewApplication) getApplication();
         mTracker = application.getDefaultTracker();
 
-        if (savedInstanceState==null)
+        if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction()
                                        .add(R.id.container, new PlaceholderFragment())
@@ -331,7 +334,7 @@ public class FilesActivity extends AppCompatActivity
      */
     public void setPlaceholderFragment(PlaceholderFragment fragment)
     {
-        mPlaceholderFragment=fragment;
+        mPlaceholderFragment = fragment;
     }
 
     /**
@@ -358,11 +361,11 @@ public class FilesActivity extends AppCompatActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            mActivity=(FilesActivity)getActivity();
+            mActivity = (FilesActivity)getActivity();
 
             ColorCache.update(mActivity);
 
-            mAdapter=new FilesAdapter(mActivity);
+            mAdapter = new FilesAdapter(mActivity);
 
             try
             {
@@ -378,9 +381,9 @@ public class FilesActivity extends AppCompatActivity
 
 
 
-            View rootView=inflater.inflate(R.layout.fragment_files, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_files, container, false);
 
-            mFilesListView=(ListView)rootView.findViewById(R.id.fileslistView);
+            mFilesListView = (ListView)rootView.findViewById(R.id.fileslistView);
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
 
@@ -393,11 +396,11 @@ public class FilesActivity extends AppCompatActivity
                 setChoiceListener();
             }
 
-            mActionBar=mActivity.getSupportActionBar();
+            mActionBar = mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
             mActionBar.setTitle(mAdapter.getCurrentPath());
 
-            mActionMode=null;
+            mActionMode = null;
 
             mActivity.setPlaceholderFragment(this);
 
@@ -419,11 +422,11 @@ public class FilesActivity extends AppCompatActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            if (parent==mFilesListView)
+            if (parent == mFilesListView)
             {
-                FileEntry file=(FileEntry)mFilesListView.getItemAtPosition(position);
+                FileEntry file = (FileEntry)mFilesListView.getItemAtPosition(position);
 
-                String fileName=file.getFileName();
+                String fileName = file.getFileName();
 
                 if (file.isDirectory())
                 {
@@ -461,11 +464,11 @@ public class FilesActivity extends AppCompatActivity
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
         {
-            mLastSelectedItem=((AdapterContextMenuInfo)menuInfo).position;
+            mLastSelectedItem = ((AdapterContextMenuInfo)menuInfo).position;
 
-            if (mLastSelectedItem==0)
+            if (mLastSelectedItem == 0)
             {
-                FileEntry file=(FileEntry)mAdapter.getItem(mLastSelectedItem);
+                FileEntry file = (FileEntry)mAdapter.getItem(mLastSelectedItem);
 
                 if (
                     file.isDirectory()
@@ -513,7 +516,7 @@ public class FilesActivity extends AppCompatActivity
                 break;
                 default:
                 {
-                    Log.e(TAG, "Unknown action: "+String.valueOf(item));
+                    Log.e(TAG, "Unknown action: " + String.valueOf(item));
                 }
                 break;
             }
@@ -530,9 +533,9 @@ public class FilesActivity extends AppCompatActivity
                 @Override
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
                 {
-                    if (position==0 && checked)
+                    if (position == 0 && checked)
                     {
-                        FileEntry file=(FileEntry)mAdapter.getItem(position);
+                        FileEntry file = (FileEntry)mAdapter.getItem(position);
 
                         if (
                             file.isDirectory()
@@ -545,7 +548,7 @@ public class FilesActivity extends AppCompatActivity
                         }
                     }
 
-                    int selectedCount=mFilesListView.getCheckedItemCount();
+                    int selectedCount = mFilesListView.getCheckedItemCount();
                     mode.setSubtitle(mActivity.getResources().getQuantityString(R.plurals.files_selected, selectedCount, selectedCount));
 
                     mAdapter.setSelected(position, checked);
@@ -554,7 +557,7 @@ public class FilesActivity extends AppCompatActivity
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
-                    mActionMode=mode;
+                    mActionMode = mode;
 
                     mActionMode.setTitle(R.string.select_files);
                     mActionMode.getMenuInflater().inflate(R.menu.context_menu_files, menu);
@@ -567,7 +570,7 @@ public class FilesActivity extends AppCompatActivity
                 @Override
                 public boolean onPrepareActionMode(ActionMode mode, Menu menu)
                 {
-                    menu.findItem(R.id.action_rename).setVisible(mAdapter.getSelection().size()==1);
+                    menu.findItem(R.id.action_rename).setVisible(mAdapter.getSelection().size() == 1);
 
                     return true;
                 }
@@ -575,46 +578,46 @@ public class FilesActivity extends AppCompatActivity
                 @Override
                 public boolean onActionItemClicked(ActionMode mode, MenuItem item)
                 {
-                    ArrayList<Integer> tempList=mAdapter.getSelection();
-                    int items[]=new int[tempList.size()];
+                    ArrayList<Integer> tempList = mAdapter.getSelection();
+                    int items[] = new int[tempList.size()];
 
-                    for (int i=0; i<tempList.size(); ++i)
+                    for (int i = 0; i < tempList.size(); ++i)
                     {
-                        items[i]=tempList.get(i).intValue();
+                        items[i] = tempList.get(i).intValue();
                     }
 
-                    boolean res=true;
+                    boolean res = true;
 
                     switch (item.getItemId())
                     {
                         case R.id.action_mark_to_rename:
                         {
-                            res=markToRename(items);
+                            res = markToRename(items);
                         }
                         break;
                         case R.id.action_mark_to_delete:
                         {
-                            res=markToDelete(items);
+                            res = markToDelete(items);
                         }
                         break;
                         case R.id.action_note:
                         {
-                            res=assignNote(items);
+                            res = assignNote(items);
                         }
                         break;
                         case R.id.action_rename:
                         {
-                            res=rename(items[0]);
+                            res = rename(items[0]);
                         }
                         break;
                         case R.id.action_delete:
                         {
-                            res=delete(items);
+                            res = delete(items);
                         }
                         break;
                         default:
                         {
-                            Log.e(TAG, "Unknown action: "+String.valueOf(item));
+                            Log.e(TAG, "Unknown action: " + String.valueOf(item));
                         }
                         break;
                     }
@@ -630,7 +633,7 @@ public class FilesActivity extends AppCompatActivity
                 @Override
                 public void onDestroyActionMode(ActionMode mode)
                 {
-                    mActionMode=null;
+                    mActionMode = null;
                     mAdapter.setSelectionMode(false);
                 }
             });
@@ -638,11 +641,11 @@ public class FilesActivity extends AppCompatActivity
 
         private boolean markToRename(final int items[])
         {
-            if (items.length==1)
+            if (items.length == 1)
             {
-                LayoutInflater inflater=(LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                View view=inflater.inflate(R.layout.dialog_input, null);
+                View view = inflater.inflate(R.layout.dialog_input, null);
 
                 final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
                 ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
@@ -654,32 +657,32 @@ public class FilesActivity extends AppCompatActivity
                         @Override
                         public void onClick(View view)
                         {
-                            ArrayList<CharSequence> filenames=loadLastFileNames();
+                            ArrayList<CharSequence> filenames = loadLastFileNames();
 
-                            if (filenames.size()>0)
+                            if (filenames.size() > 0)
                             {
-                                final CharSequence items[]=new CharSequence[filenames.size()];
-                                String currentFilename=editText.getText().toString();
-                                int index=-1;
+                                final CharSequence items[] = new CharSequence[filenames.size()];
+                                String currentFilename = editText.getText().toString();
+                                int index = -1;
 
-                                for (int i=0; i<filenames.size(); i++)
+                                for (int i = 0; i < filenames.size(); i++)
                                 {
-                                    String oneFilename=(String)filenames.get(i);
+                                    String oneFilename = (String)filenames.get(i);
 
-                                    if (index<0 && oneFilename.equals(currentFilename))
+                                    if (index < 0 && oneFilename.equals(currentFilename))
                                     {
-                                        index=i;
+                                        index = i;
                                     }
 
-                                    items[i]=oneFilename;
+                                    items[i] = oneFilename;
                                 }
 
-                                if (index<0)
+                                if (index < 0)
                                 {
-                                    index=0;
+                                    index = 0;
                                 }
 
-                                AlertDialog chooseDialog=new AlertDialog.Builder(mActivity)
+                                AlertDialog chooseDialog = new AlertDialog.Builder(mActivity)
                                     .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
                                     {
                                         @Override
@@ -700,7 +703,7 @@ public class FilesActivity extends AppCompatActivity
                         }
                     });
 
-                AlertDialog dialog=new AlertDialog.Builder(mActivity)
+                AlertDialog dialog = new AlertDialog.Builder(mActivity)
                     .setTitle(R.string.dialog_input_filename_title)
                     .setMessage(R.string.dialog_input_filename_message)
                     .setView(view)
@@ -710,17 +713,17 @@ public class FilesActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int whichButton)
                         {
-                            String filename=editText.getText().toString();
+                            String filename = editText.getText().toString();
 
                             if (!filename.equals(""))
                             {
-                                ArrayList<CharSequence> filenames=loadLastFileNames();
+                                ArrayList<CharSequence> filenames = loadLastFileNames();
 
                                 filenames.remove(filename);
                                 filenames.add(0, filename);
                                 saveLastFileNames(filenames);
 
-                                // ----------------------------------
+                                // -------------------------------- -  -
 
                                 mAdapter.assignNote(items, getString(R.string.rename_to, filename));
                                 hideActionMode();
@@ -765,14 +768,14 @@ public class FilesActivity extends AppCompatActivity
 
         private boolean assignNote(final int items[])
         {
-            LayoutInflater inflater=(LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View view=inflater.inflate(R.layout.dialog_input, null);
+            View view = inflater.inflate(R.layout.dialog_input, null);
 
             final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
             ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
 
-            if (items.length==1)
+            if (items.length == 1)
             {
                 editText.setText(((FileEntry)mAdapter.getItem(items[0])).getFileNote());
             }
@@ -782,32 +785,32 @@ public class FilesActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view)
                     {
-                        ArrayList<CharSequence> filenotes=loadLastFileNotes();
+                        ArrayList<CharSequence> filenotes = loadLastFileNotes();
 
-                        if (filenotes.size()>0)
+                        if (filenotes.size() > 0)
                         {
-                            final CharSequence items[]=new CharSequence[filenotes.size()];
-                            String currentFilenote=editText.getText().toString();
-                            int index=-1;
+                            final CharSequence items[] = new CharSequence[filenotes.size()];
+                            String currentFilenote = editText.getText().toString();
+                            int index = -1;
 
-                            for (int i=0; i<filenotes.size(); i++)
+                            for (int i = 0; i < filenotes.size(); i++)
                             {
-                                String oneFilenote=(String)filenotes.get(i);
+                                String oneFilenote = (String)filenotes.get(i);
 
-                                if (index<0 && oneFilenote.equals(currentFilenote))
+                                if (index < 0 && oneFilenote.equals(currentFilenote))
                                 {
-                                    index=i;
+                                    index = i;
                                 }
 
-                                items[i]=oneFilenote;
+                                items[i] = oneFilenote;
                             }
 
-                            if (index<0)
+                            if (index < 0)
                             {
-                                index=0;
+                                index = 0;
                             }
 
-                            AlertDialog chooseDialog=new AlertDialog.Builder(mActivity)
+                            AlertDialog chooseDialog = new AlertDialog.Builder(mActivity)
                                 .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
                                 {
                                     @Override
@@ -828,7 +831,7 @@ public class FilesActivity extends AppCompatActivity
                     }
                 });
 
-            AlertDialog dialog=new AlertDialog.Builder(mActivity)
+            AlertDialog dialog = new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.dialog_input_filenote_title)
                 .setMessage(R.string.dialog_input_filenote_message)
                 .setView(view)
@@ -838,11 +841,11 @@ public class FilesActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton)
                     {
-                        String filenote=editText.getText().toString();
+                        String filenote = editText.getText().toString();
 
                         if (!filenote.equals(""))
                         {
-                            ArrayList<CharSequence> filenotes=loadLastFileNotes();
+                            ArrayList<CharSequence> filenotes = loadLastFileNotes();
 
                             filenotes.remove(filenote);
                             filenotes.add(0, filenote);
@@ -873,9 +876,9 @@ public class FilesActivity extends AppCompatActivity
 
         private boolean rename(final int item)
         {
-            LayoutInflater inflater=(LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View view=inflater.inflate(R.layout.dialog_input, null);
+            View view = inflater.inflate(R.layout.dialog_input, null);
 
             final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
             ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
@@ -887,32 +890,32 @@ public class FilesActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view)
                     {
-                        ArrayList<CharSequence> filenames=loadLastFileNames();
+                        ArrayList<CharSequence> filenames = loadLastFileNames();
 
-                        if (filenames.size()>0)
+                        if (filenames.size() > 0)
                         {
-                            final CharSequence items[]=new CharSequence[filenames.size()];
-                            String currentFilename=editText.getText().toString();
-                            int index=-1;
+                            final CharSequence items[] = new CharSequence[filenames.size()];
+                            String currentFilename = editText.getText().toString();
+                            int index = -1;
 
-                            for (int i=0; i<filenames.size(); i++)
+                            for (int i = 0; i < filenames.size(); i++)
                             {
-                                String oneFilename=(String)filenames.get(i);
+                                String oneFilename = (String)filenames.get(i);
 
-                                if (index<0 && oneFilename.equals(currentFilename))
+                                if (index < 0 && oneFilename.equals(currentFilename))
                                 {
-                                    index=i;
+                                    index = i;
                                 }
 
-                                items[i]=oneFilename;
+                                items[i] = oneFilename;
                             }
 
-                            if (index<0)
+                            if (index < 0)
                             {
-                                index=0;
+                                index = 0;
                             }
 
-                            AlertDialog chooseDialog=new AlertDialog.Builder(mActivity)
+                            AlertDialog chooseDialog = new AlertDialog.Builder(mActivity)
                                 .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
                                 {
                                     @Override
@@ -933,7 +936,7 @@ public class FilesActivity extends AppCompatActivity
                     }
                 });
 
-            AlertDialog dialog=new AlertDialog.Builder(mActivity)
+            AlertDialog dialog = new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.dialog_input_filename_title)
                 .setMessage(R.string.dialog_input_filename_message)
                 .setView(view)
@@ -943,11 +946,11 @@ public class FilesActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton)
                     {
-                        String filename=editText.getText().toString();
+                        String filename = editText.getText().toString();
 
                         if (!filename.equals(""))
                         {
-                            ArrayList<CharSequence> filenames=loadLastFileNames();
+                            ArrayList<CharSequence> filenames = loadLastFileNames();
 
                             filenames.remove(filename);
                             filenames.add(0, filename);
@@ -988,7 +991,7 @@ public class FilesActivity extends AppCompatActivity
 
         private boolean delete(final int items[])
         {
-            AlertDialog dialog=new AlertDialog.Builder(mActivity)
+            AlertDialog dialog = new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.dialog_delete_files_title)
                 .setMessage(mActivity.getResources().getQuantityString(R.plurals.dialog_delete_files_message, items.length, items.length, items.length))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
@@ -996,11 +999,11 @@ public class FilesActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int index)
                     {
-                        ArrayList<String> keep=mAdapter.deleteFiles(items);
+                        ArrayList<String> keep = mAdapter.deleteFiles(items);
 
-                        if (keep.size()>0)
+                        if (keep.size() > 0)
                         {
-                            if (keep.size()==1)
+                            if (keep.size() == 1)
                             {
                                 Toast.makeText(mActivity, getResources().getString(R.string.can_not_delete_file, keep.get(0)), Toast.LENGTH_SHORT).show();
                             }
@@ -1033,7 +1036,7 @@ public class FilesActivity extends AppCompatActivity
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void hideActionMode()
         {
-            if (mActionMode!=null)
+            if (mActionMode != null)
             {
                 mActionMode.finish();
             }
@@ -1081,48 +1084,48 @@ public class FilesActivity extends AppCompatActivity
 
         private void updateCurrentPath()
         {
-            String oldPath=(String)mActionBar.getTitle();
-            String newPath=mAdapter.getCurrentPath();
+            String oldPath = (String)mActionBar.getTitle();
+            String newPath = mAdapter.getCurrentPath();
 
-            if (newPath.length()<oldPath.length())
+            if (newPath.length() < oldPath.length())
             {
                 if (BuildConfig.DEBUG)
                 {
                     Assert.assertTrue(oldPath.startsWith(newPath));
                 }
 
-                String tail=oldPath.substring(newPath.length());
+                String tail = oldPath.substring(newPath.length());
 
                 if (tail.startsWith("/"))
                 {
                     if (BuildConfig.DEBUG)
                     {
-                        Assert.assertTrue(tail.length()>1);
+                        Assert.assertTrue(tail.length() > 1);
                     }
 
-                    tail=tail.substring(1);
+                    tail = tail.substring(1);
                 }
 
 
 
                 String prevFolder;
 
-                int index=tail.lastIndexOf("/");
+                int index = tail.lastIndexOf("/");
 
-                if (index>=0)
+                if (index >= 0)
                 {
-                    prevFolder=tail.substring(0, index);
+                    prevFolder = tail.substring(0, index);
                 }
                 else
                 {
-                    prevFolder=tail;
+                    prevFolder = tail;
                 }
 
 
 
-                index=mAdapter.indexOf(prevFolder);
+                index = mAdapter.indexOf(prevFolder);
 
-                if (index>=0)
+                if (index >= 0)
                 {
                     mFilesListView.setSelection(index);
                 }
@@ -1141,7 +1144,7 @@ public class FilesActivity extends AppCompatActivity
 
         private void openFile(String fileName, int fileId) throws FileNotFoundException
         {
-            String filePath=mAdapter.pathToFile(fileName);
+            String filePath = mAdapter.pathToFile(fileName);
 
             if (!(new File(filePath).exists()))
             {
@@ -1156,8 +1159,8 @@ public class FilesActivity extends AppCompatActivity
 
         private void savePath()
         {
-            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=prefs.edit();
+            SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
 
             editor.putString(ApplicationPreferences.LAST_PATH, mAdapter.getCurrentPath());
 
@@ -1166,9 +1169,9 @@ public class FilesActivity extends AppCompatActivity
 
         private void loadPath() throws FileNotFoundException
         {
-            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-            String path=prefs.getString(ApplicationPreferences.LAST_PATH, "");
+            String path = prefs.getString(ApplicationPreferences.LAST_PATH, "");
 
             if (!TextUtils.isEmpty(path))
             {
@@ -1183,8 +1186,8 @@ public class FilesActivity extends AppCompatActivity
 
         private void saveLastFile(String fileName)
         {
-            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=prefs.edit();
+            SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
 
             editor.putString(ApplicationPreferences.LAST_FILE, fileName);
 
@@ -1193,9 +1196,9 @@ public class FilesActivity extends AppCompatActivity
 
         private void loadLastFile() throws FileNotFoundException
         {
-            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-            String fileName=prefs.getString(ApplicationPreferences.LAST_FILE, "");
+            String fileName = prefs.getString(ApplicationPreferences.LAST_FILE, "");
 
             if (!TextUtils.isEmpty(fileName))
             {
@@ -1205,12 +1208,12 @@ public class FilesActivity extends AppCompatActivity
 
         private void loadSortType()
         {
-            SharedPreferences prefs=getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-            int sortType=prefs.getInt(ApplicationPreferences.SORT_TYPE, SortType.NAME.ordinal());
-            SortType sortTypes[]=SortType.values();
+            int sortType = prefs.getInt(ApplicationPreferences.SORT_TYPE, SortType.NAME.ordinal());
+            SortType sortTypes[] = SortType.values();
 
-            if (sortType>=1 && sortType<sortTypes.length && mAdapter.getSortType().ordinal()!=sortType)
+            if (sortType >= 1 && sortType < sortTypes.length && mAdapter.getSortType().ordinal() != sortType)
             {
                 mAdapter.sort(sortTypes[sortType]);
             }
@@ -1218,15 +1221,15 @@ public class FilesActivity extends AppCompatActivity
 
         public ArrayList<CharSequence> loadLastFileNames()
         {
-            SharedPreferences prefs=mActivity.getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences prefs = mActivity.getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
-            int fileNameCount=prefs.getInt(ApplicationPreferences.LAST_FILENAMES, 0);
+            int fileNameCount = prefs.getInt(ApplicationPreferences.LAST_FILENAMES, 0);
 
-            ArrayList<CharSequence> res=new ArrayList<CharSequence>();
+            ArrayList<CharSequence> res = new ArrayList<CharSequence>();
 
-            for (int i=0; i<fileNameCount; ++i)
+            for (int i = 0; i < fileNameCount; ++i)
             {
-                String fileName=prefs.getString(ApplicationPreferences.ONE_FILENAME+"_"+String.valueOf(i+1),"");
+                String fileName = prefs.getString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1),"");
 
                 if (
                     !TextUtils.isEmpty(fileName)
@@ -1243,14 +1246,14 @@ public class FilesActivity extends AppCompatActivity
 
         public void saveLastFileNames(ArrayList<CharSequence> fileNames)
         {
-            SharedPreferences prefs=mActivity.getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=prefs.edit();
+            SharedPreferences prefs = mActivity.getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
 
             editor.putInt(ApplicationPreferences.LAST_FILENAMES, fileNames.size());
 
-            for (int i=0; i<fileNames.size(); ++i)
+            for (int i = 0; i < fileNames.size(); ++i)
             {
-                editor.putString(ApplicationPreferences.ONE_FILENAME+"_"+String.valueOf(i+1), fileNames.get(i).toString());
+                editor.putString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1), fileNames.get(i).toString());
             }
 
             editor.apply();
@@ -1258,15 +1261,15 @@ public class FilesActivity extends AppCompatActivity
 
         public ArrayList<CharSequence> loadLastFileNotes()
         {
-            SharedPreferences prefs=mActivity.getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences prefs = mActivity.getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
-            int filenoteCount=prefs.getInt(ApplicationPreferences.LAST_FILENOTES, 0);
+            int filenoteCount = prefs.getInt(ApplicationPreferences.LAST_FILENOTES, 0);
 
-            ArrayList<CharSequence> res=new ArrayList<CharSequence>();
+            ArrayList<CharSequence> res = new ArrayList<CharSequence>();
 
-            for (int i=0; i<filenoteCount; ++i)
+            for (int i = 0; i < filenoteCount; ++i)
             {
-                String fileNote=prefs.getString(ApplicationPreferences.ONE_FILENOTE+"_"+String.valueOf(i+1),"");
+                String fileNote = prefs.getString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1),"");
 
                 if (
                     !TextUtils.isEmpty(fileNote)
@@ -1283,14 +1286,14 @@ public class FilesActivity extends AppCompatActivity
 
         public void saveLastFileNotes(ArrayList<CharSequence> filenotes)
         {
-            SharedPreferences prefs=mActivity.getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=prefs.edit();
+            SharedPreferences prefs = mActivity.getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
 
             editor.putInt(ApplicationPreferences.LAST_FILENOTES, filenotes.size());
 
-            for (int i=0; i<filenotes.size(); ++i)
+            for (int i = 0; i < filenotes.size(); ++i)
             {
-                editor.putString(ApplicationPreferences.ONE_FILENOTE+"_"+String.valueOf(i+1), filenotes.get(i).toString());
+                editor.putString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1), filenotes.get(i).toString());
             }
 
             editor.apply();

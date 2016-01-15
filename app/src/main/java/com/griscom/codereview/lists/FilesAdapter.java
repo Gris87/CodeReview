@@ -88,7 +88,7 @@ public class FilesAdapter extends BaseAdapter
     @Override
     public Object getItem(int position)
     {
-        return position>=0 && position<mFiles.size() ? mFiles.get(position) : null;
+        return position >= 0 && position < mFiles.size() ? mFiles.get(position) : null;
     }
 
     @Override
@@ -101,9 +101,9 @@ public class FilesAdapter extends BaseAdapter
     {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View resView=inflater.inflate(R.layout.list_item_files, parent, false);
+        View resView = inflater.inflate(R.layout.list_item_files, parent, false);
 
-        ViewHolder holder=new ViewHolder();
+        ViewHolder holder = new ViewHolder();
 
         holder.mCheckBox   = (CheckBox) resView.findViewById(R.id.checkbox);
         holder.mExtenstion = (ImageView)resView.findViewById(R.id.extensionImageView);
@@ -119,183 +119,183 @@ public class FilesAdapter extends BaseAdapter
     @SuppressWarnings("deprecation")
     private void bindView(int position, View view)
     {
-        FileEntry file=mFiles.get(position);
+        FileEntry file = mFiles.get(position);
 
-        ViewHolder holder=(ViewHolder)view.getTag();
+        ViewHolder holder = (ViewHolder)view.getTag();
 
-        if (file.getDbFileId()>0)
+        if (file.getDbFileId() > 0)
         {
             int reviewedCount  = file.getReviewedCount();
             int invalidCount   = file.getInvalidCount();
             int noteCount      = file.getNoteCount();
             int rowCount       = file.getRowCount();
 
-            if (rowCount>0)
+            if (rowCount > 0)
             {
                 int reviewedPercent = reviewedCount * 100 / rowCount;
                 int invalidPercent  = invalidCount  * 100 / rowCount;
                 int notePercent     = noteCount     * 100 / rowCount;
-                int clearPercent    = 100 - ((reviewedCount+invalidCount+noteCount) * 100 / rowCount);
+                int clearPercent    = 100 - ((reviewedCount + invalidCount + noteCount) * 100 / rowCount);
 
-                if (reviewedPercent<=0)
+                if (reviewedPercent <= 0)
                 {
-                    if (reviewedCount>0)
+                    if (reviewedCount > 0)
                     {
-                        reviewedPercent=1;
+                        reviewedPercent = 1;
                     }
                     else
                     {
-                        reviewedPercent=0;
+                        reviewedPercent = 0;
                     }
                 }
                 else
-                if (reviewedPercent>100)
+                if (reviewedPercent > 100)
                 {
-                    reviewedPercent=100;
+                    reviewedPercent = 100;
                 }
 
-                if (invalidPercent<=0)
+                if (invalidPercent <= 0)
                 {
-                    if (invalidCount>0)
+                    if (invalidCount > 0)
                     {
-                        invalidPercent=1;
+                        invalidPercent = 1;
                     }
                     else
                     {
-                        invalidPercent=0;
+                        invalidPercent = 0;
                     }
                 }
                 else
-                if (invalidPercent>100)
+                if (invalidPercent > 100)
                 {
-                    invalidPercent=100;
+                    invalidPercent = 100;
                 }
 
-                if (notePercent<=0)
+                if (notePercent <= 0)
                 {
-                    if (noteCount>0)
+                    if (noteCount > 0)
                     {
-                        notePercent=1;
+                        notePercent = 1;
                     }
                     else
                     {
-                        notePercent=0;
+                        notePercent = 0;
                     }
                 }
                 else
-                if (notePercent>100)
+                if (notePercent > 100)
                 {
-                    notePercent=100;
+                    notePercent = 100;
                 }
 
-                if (clearPercent<=0)
+                if (clearPercent <= 0)
                 {
                     if (reviewedCount + invalidCount + noteCount != rowCount)
                     {
-                        clearPercent=1;
+                        clearPercent = 1;
                     }
                     else
                     {
-                        clearPercent=0;
+                        clearPercent = 0;
                     }
                 }
                 else
-                if (clearPercent>100)
+                if (clearPercent > 100)
                 {
-                    clearPercent=100;
+                    clearPercent = 100;
                 }
 
-                int totalPercent=reviewedPercent + invalidPercent + notePercent + clearPercent;
+                int totalPercent = reviewedPercent + invalidPercent + notePercent + clearPercent;
 
                 if (totalPercent != 100)
                 {
                     if (
-                        reviewedPercent>invalidPercent
-                        &&
-                        reviewedPercent>notePercent
-                        &&
-                        reviewedPercent>clearPercent
+                        reviewedPercent > invalidPercent
+                         &&
+                        reviewedPercent > notePercent
+                         &&
+                        reviewedPercent > clearPercent
                        )
                     {
-                        reviewedPercent -= totalPercent-100;
+                        reviewedPercent  - = totalPercent - 100;
                     }
                     if (
-                        invalidPercent>reviewedPercent
-                        &&
-                        invalidPercent>notePercent
-                        &&
-                        invalidPercent>clearPercent
+                        invalidPercent > reviewedPercent
+                         &&
+                        invalidPercent > notePercent
+                         &&
+                        invalidPercent > clearPercent
                        )
                     {
-                        invalidPercent  -= totalPercent-100;
+                        invalidPercent   - = totalPercent - 100;
                     }
 
                     if (
-                        notePercent>reviewedPercent
-                        &&
-                        notePercent>invalidPercent
-                        &&
-                        notePercent>clearPercent
+                        notePercent > reviewedPercent
+                         &&
+                        notePercent > invalidPercent
+                         &&
+                        notePercent > clearPercent
                        )
                     {
-                        notePercent     -= totalPercent-100;
+                        notePercent      - = totalPercent - 100;
                     }
                     else
                     {
-                        clearPercent    -= totalPercent-100;
+                        clearPercent     - = totalPercent - 100;
                     }
                 }
 
-                // ----------------------------------------------
+                // -------------------------------------------- -  -
 
-                Bitmap bitmap=Bitmap.createBitmap(100, 1, Config.ARGB_8888);
+                Bitmap bitmap = Bitmap.createBitmap(100, 1, Config.ARGB_8888);
 
-                Canvas canvas=new Canvas(bitmap);
+                Canvas canvas = new Canvas(bitmap);
 
-                int curPercent=0;
+                int curPercent = 0;
 
-                if (reviewedPercent>0)
+                if (reviewedPercent > 0)
                 {
-                    Paint paint=new Paint();
+                    Paint paint = new Paint();
 
                     paint.setColor(ColorCache.get(SelectionColor.REVIEWED));
                     paint.setAlpha(220);
 
-                    canvas.drawLine(curPercent, 0, curPercent+reviewedPercent, 0, paint);
-                    curPercent += reviewedPercent;
+                    canvas.drawLine(curPercent, 0, curPercent + reviewedPercent, 0, paint);
+                    curPercent  + = reviewedPercent;
                 }
 
-                if (invalidPercent>0)
+                if (invalidPercent > 0)
                 {
-                    Paint paint=new Paint();
+                    Paint paint = new Paint();
 
                     paint.setColor(ColorCache.get(SelectionColor.INVALID));
                     paint.setAlpha(220);
 
-                    canvas.drawLine(curPercent, 0, curPercent+invalidPercent, 0, paint);
-                    curPercent += invalidPercent;
+                    canvas.drawLine(curPercent, 0, curPercent + invalidPercent, 0, paint);
+                    curPercent  + = invalidPercent;
                 }
 
-                if (notePercent>0)
+                if (notePercent > 0)
                 {
-                    Paint paint=new Paint();
+                    Paint paint = new Paint();
 
                     paint.setColor(ColorCache.get(SelectionColor.NOTE));
                     paint.setAlpha(220);
 
-                    canvas.drawLine(curPercent, 0, curPercent+notePercent, 0, paint);
-                    curPercent += notePercent;
+                    canvas.drawLine(curPercent, 0, curPercent + notePercent, 0, paint);
+                    curPercent  + = notePercent;
                 }
 
-                if (clearPercent>0)
+                if (clearPercent > 0)
                 {
-                    Paint paint=new Paint();
+                    Paint paint = new Paint();
 
                     paint.setColor(ColorCache.get(SelectionColor.CLEAR));
                     paint.setAlpha(220);
 
-                    canvas.drawLine(curPercent, 0, curPercent+clearPercent, 0, paint);
-                    curPercent += clearPercent;
+                    canvas.drawLine(curPercent, 0, curPercent + clearPercent, 0, paint);
+                    curPercent  + = clearPercent;
                 }
 
                 view.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
@@ -311,7 +311,7 @@ public class FilesAdapter extends BaseAdapter
         }
 
 
-        String note=file.getFileNote();
+        String note = file.getFileNote();
 
         if (!TextUtils.isEmpty(note))
         {
@@ -325,12 +325,12 @@ public class FilesAdapter extends BaseAdapter
 
         if (
             mSelectionMode
-            &&
+             &&
             (
-             position>0
-             ||
+             position > 0
+              ||
              !file.isDirectory()
-             ||
+              ||
              !file.getFileName().equals("..")
             )
            )
@@ -362,15 +362,15 @@ public class FilesAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view=null;
+        View view = null;
 
-        if (convertView!=null)
+        if (convertView != null)
         {
-            view=convertView;
+            view = convertView;
         }
         else
         {
-            view=newView(mContext, parent);
+            view = newView(mContext, parent);
         }
 
         bindView(position, view);
@@ -407,18 +407,18 @@ public class FilesAdapter extends BaseAdapter
 
 
 
-            File folder=new File(mCurrentPath);
-            File[] files=folder.listFiles();
+            File folder = new File(mCurrentPath);
+            File[] files = folder.listFiles();
 
-            if (files!=null)
+            if (files != null)
             {
-                ArrayList<String> ignoreFiles=new ArrayList<String>();
+                ArrayList<String> ignoreFiles = new ArrayList<String>();
 
-                String[] filterFiles=ApplicationSettings.ignoreFiles(mContext);
+                String[] filterFiles = ApplicationSettings.ignoreFiles(mContext);
 
-                if (filterFiles!=null)
+                if (filterFiles != null)
                 {
-                    for (int i=0; i<filterFiles.length; ++i)
+                    for (int i = 0; i < filterFiles.length; ++i)
                     {
                         if (!TextUtils.isEmpty(filterFiles[i]))
                         {
@@ -427,13 +427,13 @@ public class FilesAdapter extends BaseAdapter
                     }
                 }
 
-                WildcardFileFilter filter=new WildcardFileFilter(ignoreFiles);
+                WildcardFileFilter filter = new WildcardFileFilter(ignoreFiles);
 
-                for (int i=0; i<files.length; ++i)
+                for (int i = 0; i < files.length; ++i)
                 {
                     if (!filter.accept(files[i]))
                     {
-                        FileEntry newEntry=new FileEntry(files[i]);
+                        FileEntry newEntry = new FileEntry(files[i]);
 
                         mFiles.add(newEntry);
                     }
@@ -443,12 +443,12 @@ public class FilesAdapter extends BaseAdapter
 
         sort();
 
-        if (mDbReaderTask!=null)
+        if (mDbReaderTask != null)
         {
             mDbReaderTask.cancel(true);
         }
 
-        mDbReaderTask=new DbReaderTask();
+        mDbReaderTask = new DbReaderTask();
         mDbReaderTask.execute();
 
         return true;
@@ -461,28 +461,28 @@ public class FilesAdapter extends BaseAdapter
 
     public void sort(SortType sortType)
     {
-        if (sortType!=SortType.NONE)
+        if (sortType != SortType.NONE)
         {
-            mSortType=sortType;
+            mSortType = sortType;
         }
 
         synchronized (this)
         {
-            for (int e=0; e<mFiles.size()-1; ++e)
+            for (int e = 0; e < mFiles.size() - 1; ++e)
             {
-                int minIndex=e;
+                int minIndex = e;
 
-                for (int i=e+1; i<mFiles.size(); ++i)
+                for (int i = e + 1; i < mFiles.size(); ++i)
                 {
                     if (mFiles.get(i).isLess(mFiles.get(minIndex), mSortType))
                     {
-                        minIndex=i;
+                        minIndex = i;
                     }
                 }
 
-                if (e!=minIndex)
+                if (e != minIndex)
                 {
-                    FileEntry temp=mFiles.get(e);
+                    FileEntry temp = mFiles.get(e);
                     mFiles.set(e, mFiles.get(minIndex));
                     mFiles.set(minIndex, temp);
                 }
@@ -498,11 +498,11 @@ public class FilesAdapter extends BaseAdapter
         {
             if (mCurrentPath.endsWith("/"))
             {
-                return mCurrentPath+fileName;
+                return mCurrentPath + fileName;
             }
             else
             {
-                return mCurrentPath+"/"+fileName;
+                return mCurrentPath + "/" + fileName;
             }
         }
     }
@@ -511,7 +511,7 @@ public class FilesAdapter extends BaseAdapter
     {
         synchronized (this)
         {
-            for (int i=0; i<mFiles.size(); ++i)
+            for (int i = 0; i < mFiles.size(); ++i)
             {
                 if (mFiles.get(i).getFileName().equals(fileName))
                 {
@@ -520,12 +520,12 @@ public class FilesAdapter extends BaseAdapter
             }
         }
 
-        return -1;
+        return  - 1;
     }
 
     public void assignNote(int files[], String note)
     {
-        for (int i=0; i<files.length; ++i)
+        for (int i = 0; i < files.length; ++i)
         {
             mFiles.get(files[i]).setFileNote(mContext, pathToFile(mFiles.get(files[i]).getFileName()), note);
         }
@@ -537,7 +537,7 @@ public class FilesAdapter extends BaseAdapter
     {
         if (
             filename.contains("/")
-            ||
+             ||
             filename.contains("\\")
            )
         {
@@ -561,19 +561,19 @@ public class FilesAdapter extends BaseAdapter
 
     public ArrayList<String> deleteFiles(int files[])
     {
-        ArrayList<String> res=new ArrayList<String>();
+        ArrayList<String> res = new ArrayList<String>();
 
-        for (int e=0; e<files.length-1; ++e)
+        for (int e = 0; e < files.length - 1; ++e)
         {
-            int max=files[e];
-            int maxIndex=e;
+            int max = files[e];
+            int maxIndex = e;
 
-            for (int i=e+1; i<files.length; ++i)
+            for (int i = e + 1; i < files.length; ++i)
             {
-                if (files[i]>max)
+                if (files[i] > max)
                 {
-                    max=files[i];
-                    maxIndex=i;
+                    max = files[i];
+                    maxIndex = i;
                 }
             }
 
@@ -582,9 +582,9 @@ public class FilesAdapter extends BaseAdapter
             files[maxIndex] = temp;
         }
 
-        for (int i=0; i<files.length; ++i)
+        for (int i = 0; i < files.length; ++i)
         {
-            String filename=mFiles.get(files[i]).getFileName();
+            String filename = mFiles.get(files[i]).getFileName();
 
             if (Utils.deleteFileOrFolder(pathToFile(filename)))
             {
@@ -599,7 +599,7 @@ public class FilesAdapter extends BaseAdapter
             }
         }
 
-        if (res.size()<files.length)
+        if (res.size() < files.length)
         {
             notifyDataSetChanged();
         }
@@ -623,7 +623,7 @@ public class FilesAdapter extends BaseAdapter
                     Assert.assertTrue(!TextUtils.isEmpty(newPath) && !newPath.equals("/"));
                 }
 
-                newPath=newPath.substring(0, newPath.lastIndexOf('/'));
+                newPath = newPath.substring(0, newPath.lastIndexOf('/'));
             }
         } while (true);
     }
@@ -632,7 +632,7 @@ public class FilesAdapter extends BaseAdapter
     {
         if (TextUtils.isEmpty(newPath))
         {
-            newPath="/";
+            newPath = "/";
         }
 
         if (!(new File(newPath).exists()))
@@ -642,7 +642,7 @@ public class FilesAdapter extends BaseAdapter
 
         synchronized (this)
         {
-            mCurrentPath=newPath;
+            mCurrentPath = newPath;
         }
 
         rescan();
@@ -677,9 +677,9 @@ public class FilesAdapter extends BaseAdapter
 
     public void setSelectionMode(boolean enable)
     {
-        if (mSelectionMode!=enable)
+        if (mSelectionMode != enable)
         {
-            mSelectionMode=enable;
+            mSelectionMode = enable;
             mSelection.clear();
 
             notifyDataSetChanged();
@@ -697,7 +697,7 @@ public class FilesAdapter extends BaseAdapter
 
         public CheckedChangedListener(int position)
         {
-            mPosition=Integer.valueOf(position);
+            mPosition = Integer.valueOf(position);
         }
 
         @Override
@@ -714,22 +714,22 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
-    private class DbReaderTask extends AsyncTask<Void, Void, Void>
+    private class DbReaderTask extends AsyncTask < Void, Void, Void >
     {
         @Override
         protected Void doInBackground(Void... arg0)
         {
-            MainDatabase helper=new MainDatabase(mContext);
-            SQLiteDatabase db=helper.getReadableDatabase();
+            MainDatabase helper = new MainDatabase(mContext);
+            SQLiteDatabase db = helper.getReadableDatabase();
 
             String path;
 
             synchronized (FilesAdapter.this)
             {
-                path=mCurrentPath;
+                path = mCurrentPath;
             }
 
-            Cursor cursor=helper.getFiles(db, path);
+            Cursor cursor = helper.getFiles(db, path);
 
             int idIndex            = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_ID);
             int nameIndex          = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_NAME);
@@ -744,27 +744,27 @@ public class FilesAdapter extends BaseAdapter
 
             while (!cursor.isAfterLast() && !isCancelled())
             {
-                String fileName=cursor.getString(nameIndex);
+                String fileName = cursor.getString(nameIndex);
 
-                FileEntry entry=null;
+                FileEntry entry = null;
 
                 synchronized (FilesAdapter.this)
                 {
-                    int index=indexOf(fileName);
+                    int index = indexOf(fileName);
 
-                    if (index>=0)
+                    if (index >= 0)
                     {
-                        entry=mFiles.get(index);
+                        entry = mFiles.get(index);
                     }
                 }
 
-                if (entry!=null)
+                if (entry != null)
                 {
-                    String filePath=pathToFile(entry.getFileName());
+                    String filePath = pathToFile(entry.getFileName());
 
                     long modifiedTime = new File(filePath).lastModified();
 
-                    if (cursor.getLong(modificationIndex)==modifiedTime)
+                    if (cursor.getLong(modificationIndex) == modifiedTime)
                     {
                         entry.updateFromDb(
                                            cursor.getInt(idIndex),
@@ -782,32 +782,32 @@ public class FilesAdapter extends BaseAdapter
 
             synchronized (FilesAdapter.this)
             {
-                for (int i=0; i<mFiles.size() && !isCancelled(); ++i)
+                for (int i = 0; i < mFiles.size() && !isCancelled(); ++i)
                 {
-                    FileEntry entry=mFiles.get(i);
+                    FileEntry entry = mFiles.get(i);
 
                     try
                     {
                         if (
                             !entry.isDirectory()
-                            &&
-                            entry.getDbFileId()<=0
+                             &&
+                            entry.getDbFileId() <= 0
                             )
                         {
-                            String filePath=pathToFile(entry.getFileName());
+                            String filePath = pathToFile(entry.getFileName());
 
                             String md5        = Utils.md5ForFile(filePath);
                             long modifiedTime = new File(filePath).lastModified();
 
-                            cursor=helper.getFileByMD5(db, md5);
+                            cursor = helper.getFileByMD5(db, md5);
 
                             cursor.moveToFirst();
 
                             while (!cursor.isAfterLast())
                             {
-                                if (cursor.getLong(modificationIndex)==modifiedTime)
+                                if (cursor.getLong(modificationIndex) == modifiedTime)
                                 {
-                                    String fileName=cursor.getString(nameIndex);
+                                    String fileName = cursor.getString(nameIndex);
 
                                     if (entry.getFileName().equals(fileName))
                                     {
@@ -828,7 +828,7 @@ public class FilesAdapter extends BaseAdapter
                     }
                     catch (Exception e)
                     {
-                        Log.e(TAG, "Impossible to get file id by MD5 for file: "+entry.getFileName(), e);
+                        Log.e(TAG, "Impossible to get file id by MD5 for file: " + entry.getFileName(), e);
                     }
                 }
             }
@@ -844,7 +844,7 @@ public class FilesAdapter extends BaseAdapter
         protected void onPostExecute(Void result)
         {
             notifyDataSetChanged();
-            mDbReaderTask=null;
+            mDbReaderTask = null;
         }
     }
 }

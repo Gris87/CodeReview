@@ -10,23 +10,23 @@ import com.griscom.codereview.R;
 
 public class ExtensionToIcon
 {
-    private static final String TAG="ExtensionToIcon";
+    private static final String TAG = "ExtensionToIcon";
 
-    private static Map<String, Integer> map=new HashMap<String, Integer>();
+    private static Map<String, Integer> map = new HashMap<String, Integer>();
 
     static
     {
-        Field[] drawables=R.drawable.class.getFields();
+        Field[] drawables = R.drawable.class.getFields();
 
-        for (int i=0; i<drawables.length; ++i)
+        for (int i = 0; i < drawables.length; ++i)
         {
             try
             {
-                String drawableName=drawables[i].getName();
+                String drawableName = drawables[i].getName();
 
                 if (drawableName.startsWith("_icon_"))
                 {
-                    String extension=drawableName.substring(6);
+                    String extension = drawableName.substring(6);
                     map.put(extension, drawables[i].getInt(null));
                 }
             }
@@ -39,9 +39,9 @@ public class ExtensionToIcon
 
     public static int getIcon(String extension)
     {
-        Integer res=map.get(extension);
+        Integer res = map.get(extension);
 
-        if (res!=null)
+        if (res != null)
         {
             return res.intValue();
         }

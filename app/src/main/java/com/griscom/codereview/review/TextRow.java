@@ -33,20 +33,20 @@ public class TextRow
         mWidth          = 0;
         mHeight         = 0;
 
-        mCommentIndex   =-1;
+        mCommentIndex    = -1;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
     {
-        for (int i=0; i<mRegions.size(); ++i)
+        for (int i = 0; i < mRegions.size(); ++i)
         {
-            mRegions.get(i).draw(canvas, offsetX, mY+offsetY+mHeight-mRegions.get(i).getHeight());
+            mRegions.get(i).draw(canvas, offsetX, mY + offsetY + mHeight - mRegions.get(i).getHeight());
         }
     }
 
     public void addTextRegion(TextRegion region)
     {
-        if (mRegions.size()>0 && region.getOriginalText().equals(""))
+        if (mRegions.size() > 0 && region.getOriginalText().equals(""))
         {
             return;
         }
@@ -60,40 +60,40 @@ public class TextRow
     {
         if (BuildConfig.DEBUG)
         {
-            Assert.assertTrue(mCommentIndex<0);
+            Assert.assertTrue(mCommentIndex < 0);
         }
 
-        String commentBegin=parser.getCommentLine();
+        String commentBegin = parser.getCommentLine();
 
-        if (commentBegin!=null)
+        if (commentBegin != null)
         {
-            commentBegin=commentBegin.toUpperCase();
+            commentBegin = commentBegin.toUpperCase();
 
-            String commentEnd=parser.getCommentLineEnd();
+            String commentEnd = parser.getCommentLineEnd();
 
-            if (commentEnd!=null)
+            if (commentEnd != null)
             {
-                commentEnd=commentEnd.toUpperCase();
+                commentEnd = commentEnd.toUpperCase();
             }
 
-            for (int i=0; i<mRegions.size(); ++i)
+            for (int i = 0; i < mRegions.size(); ++i)
             {
-                String text=mRegions.get(i).getOriginalText().toUpperCase();
+                String text = mRegions.get(i).getOriginalText().toUpperCase();
 
                 if (
                     text.contains(commentBegin)
-                    &&
+                     &&
                     text.contains("TODO")
-                    &&
+                     &&
                     (
-                     commentEnd==null
-                     ||
+                     commentEnd == null
+                      ||
                      text.contains(commentEnd)
                     )
                    )
                 {
-                    mCommentIndex=i;
-                    mSelectionColor=SelectionColor.NOTE;
+                    mCommentIndex = i;
+                    mSelectionColor = SelectionColor.NOTE;
 
                     return;
                 }
@@ -106,7 +106,7 @@ public class TextRow
         mWidth  = 0;
         mHeight = 0;
 
-        for (int i=0; i<mRegions.size(); ++i)
+        for (int i = 0; i < mRegions.size(); ++i)
         {
             updateSizeByRegion(mRegions.get(i));
         }
@@ -116,20 +116,20 @@ public class TextRow
     {
         region.setX(mWidth);
 
-        mWidth+=region.getWidth();
+        mWidth + = region.getWidth();
 
-        if (region.getHeight()>mHeight)
+        if (region.getHeight() > mHeight)
         {
-            mHeight=region.getHeight();
+            mHeight = region.getHeight();
         }
     }
 
     @Override
     public String toString()
     {
-        StringBuilder res=new StringBuilder();
+        StringBuilder res = new StringBuilder();
 
-        for (int i=0; i<mRegions.size(); ++i)
+        for (int i = 0; i < mRegions.size(); ++i)
         {
             res.append(mRegions.get(i).getOriginalText());
         }
@@ -139,45 +139,45 @@ public class TextRow
 
     public boolean hasRegions()
     {
-        return mRegions.size()>0;
+        return mRegions.size() > 0;
     }
 
     public void setComment(String comment, Paint paint)
     {
         if (TextUtils.isEmpty(comment))
         {
-            if (mCommentIndex>=0)
+            if (mCommentIndex >= 0)
             {
                 mRegions.remove(mCommentIndex);
-                mCommentIndex=-1;
+                mCommentIndex = -1;
 
-                mSelectionColor=SelectionColor.CLEAR;
+                mSelectionColor = SelectionColor.CLEAR;
             }
         }
         else
         {
             if (
-                mRegions.size()>0
-                &&
+                mRegions.size() > 0
+                 &&
                 (
                  (
-                  mCommentIndex<0
-                  &&
-                  !mRegions.get(mRegions.size()-1).getOriginalText().equals("")
+                  mCommentIndex < 0
+                   &&
+                  !mRegions.get(mRegions.size() - 1).getOriginalText().equals("")
                  )
-                 ||
+                  ||
                  (
-                  mCommentIndex>0
-                  &&
-                  !mRegions.get(mCommentIndex-1).getOriginalText().equals("")
+                  mCommentIndex > 0
+                   &&
+                  !mRegions.get(mCommentIndex - 1).getOriginalText().equals("")
                  )
                 )
                )
             {
-                comment=" "+comment;
+                comment = " " + comment;
             }
 
-            if (mCommentIndex>=0)
+            if (mCommentIndex >= 0)
             {
                 mRegions.get(mCommentIndex).setOriginalText(comment);
 
@@ -186,15 +186,15 @@ public class TextRow
             else
             {
                 addTextRegion(new TextRegion(comment, paint, 0, 4));
-                mCommentIndex=mRegions.size()-1;
-                mSelectionColor=SelectionColor.NOTE;
+                mCommentIndex = mRegions.size() - 1;
+                mSelectionColor = SelectionColor.NOTE;
             }
         }
     }
 
     public void setFontSize(float textSize)
     {
-        for (int i=0; i<mRegions.size(); ++i)
+        for (int i = 0; i < mRegions.size(); ++i)
         {
             mRegions.get(i).setFontSize(textSize);
         }
@@ -204,7 +204,7 @@ public class TextRow
 
     public void setTabSize(int tabSize)
     {
-        for (int i=0; i<mRegions.size(); ++i)
+        for (int i = 0; i < mRegions.size(); ++i)
         {
             mRegions.get(i).setTabSize(tabSize);
         }
@@ -214,9 +214,9 @@ public class TextRow
 
     public void setSelectionColor(SelectionColor selectionColor)
     {
-        if (mSelectionColor!=SelectionColor.NOTE)
+        if (mSelectionColor != SelectionColor.NOTE)
         {
-            mSelectionColor=selectionColor;
+            mSelectionColor = selectionColor;
         }
     }
 
@@ -227,7 +227,7 @@ public class TextRow
 
     public void setY(float y)
     {
-        mY=y;
+        mY = y;
     }
 
     @Deprecated
@@ -259,6 +259,6 @@ public class TextRow
 
     public float getBottom()
     {
-        return mY+mHeight;
+        return mY + mHeight;
     }
 }

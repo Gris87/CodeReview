@@ -25,7 +25,7 @@ class DrawThread extends Thread
     @Override
     public void interrupt()
     {
-        mTerminated=true;
+        mTerminated = true;
 
         super.interrupt();
     }
@@ -34,7 +34,7 @@ class DrawThread extends Thread
     {
         synchronized (mSurfaceHolder)
         {
-            mNeedRepaint=true;
+            mNeedRepaint = true;
         }
     }
 
@@ -43,7 +43,7 @@ class DrawThread extends Thread
     {
         while (!mTerminated)
         {
-            Canvas canvas=null;
+            Canvas canvas = null;
 
             try
             {
@@ -51,12 +51,12 @@ class DrawThread extends Thread
 
                 synchronized (mSurfaceHolder)
                 {
-                    needRepaint=mNeedRepaint;
+                    needRepaint = mNeedRepaint;
                 }
 
                 if (
                     !needRepaint
-                    ||
+                     ||
                     !mSurfaceHolder.getSurface().isValid()
                    )
                 {
@@ -66,10 +66,10 @@ class DrawThread extends Thread
 
                 synchronized (mSurfaceHolder)
                 {
-                    mNeedRepaint=false;
+                    mNeedRepaint = false;
                 }
 
-                canvas=mSurfaceHolder.lockCanvas();
+                canvas = mSurfaceHolder.lockCanvas();
                 mDrawer.onReviewSurfaceDraw(canvas);
             }
             catch (Exception e)
@@ -77,7 +77,7 @@ class DrawThread extends Thread
                 // Nothing
             }
 
-            if (canvas!=null)
+            if (canvas != null)
             {
                 mSurfaceHolder.unlockCanvasAndPost(canvas);
             }

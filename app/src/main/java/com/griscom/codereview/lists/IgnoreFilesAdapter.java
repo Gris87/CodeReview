@@ -43,13 +43,13 @@ public class IgnoreFilesAdapter extends BaseAdapter
         mSelectionMode = false;
         mSelection     = new ArrayList<Integer>();
 
-        // -----------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------- -
 
-        String[] files=ApplicationSettings.ignoreFiles(mContext);
+        String[] files = ApplicationSettings.ignoreFiles(mContext);
 
-        if (files!=null)
+        if (files != null)
         {
-            for (int i=0; i<files.length; ++i)
+            for (int i = 0; i < files.length; ++i)
             {
                 if (!TextUtils.isEmpty(files[i]))
                 {
@@ -70,7 +70,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
     @Override
     public Object getItem(int position)
     {
-        return position>=0 && position<mFiles.size() ? mFiles.get(position) : null;
+        return position >= 0 && position < mFiles.size() ? mFiles.get(position) : null;
     }
 
     @Override
@@ -83,9 +83,9 @@ public class IgnoreFilesAdapter extends BaseAdapter
     {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View resView=inflater.inflate(R.layout.list_item_ignore_files, parent, false);
+        View resView = inflater.inflate(R.layout.list_item_ignore_files, parent, false);
 
-        ViewHolder holder=new ViewHolder();
+        ViewHolder holder = new ViewHolder();
 
         holder.mCheckBox = (CheckBox)resView.findViewById(R.id.checkbox);
         holder.mFileName = (TextView)resView.findViewById(R.id.fileNameTextView);
@@ -97,9 +97,9 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
     private void bindView(int position, View view)
     {
-        String fileName=mFiles.get(position);
+        String fileName = mFiles.get(position);
 
-        ViewHolder holder=(ViewHolder)view.getTag();
+        ViewHolder holder = (ViewHolder)view.getTag();
 
         if (mSelectionMode)
         {
@@ -119,15 +119,15 @@ public class IgnoreFilesAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view=null;
+        View view = null;
 
-        if (convertView!=null)
+        if (convertView != null)
         {
-            view=convertView;
+            view = convertView;
         }
         else
         {
-            view=newView(mContext, parent);
+            view = newView(mContext, parent);
         }
 
         bindView(position, view);
@@ -137,7 +137,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
     public void addFile(String fileName)
     {
-        fileName=removeIncorrectChars(fileName);
+        fileName = removeIncorrectChars(fileName);
 
         if (!TextUtils.isEmpty(fileName) && !mFiles.contains(fileName))
         {
@@ -149,7 +149,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
     public void renameFile(int index, String fileName)
     {
-        fileName=removeIncorrectChars(fileName);
+        fileName = removeIncorrectChars(fileName);
 
         mFiles.remove(index);
 
@@ -172,7 +172,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
     {
         Collections.sort(mSelection);
 
-        for (int i=mSelection.size()-1; i>=0; --i)
+        for (int i = mSelection.size() - 1; i >= 0; --i)
         {
             mFiles.remove(mSelection.get(i).intValue());
         }
@@ -184,13 +184,13 @@ public class IgnoreFilesAdapter extends BaseAdapter
     {
         Collections.sort(mFiles);
 
-        // -----------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------- -
 
-        StringBuilder res=new StringBuilder();
+        StringBuilder res = new StringBuilder();
 
-        for (int i=0; i<mFiles.size(); ++i)
+        for (int i = 0; i < mFiles.size(); ++i)
         {
-            if (i>0)
+            if (i > 0)
             {
                 res.append('|');
             }
@@ -198,14 +198,14 @@ public class IgnoreFilesAdapter extends BaseAdapter
             res.append(mFiles.get(i));
         }
 
-        SharedPreferences prefs=mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=prefs.edit();
+        SharedPreferences prefs = mContext.getSharedPreferences(ApplicationPreferences.FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
 
         editor.putString(ApplicationPreferences.IGNORE_FILES, res.toString());
 
         editor.commit();
 
-        // -----------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------- -
 
         notifyDataSetChanged();
     }
@@ -240,9 +240,9 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
     public void setSelectionMode(boolean enable)
     {
-        if (mSelectionMode!=enable)
+        if (mSelectionMode != enable)
         {
-            mSelectionMode=enable;
+            mSelectionMode = enable;
             mSelection.clear();
 
             notifyDataSetChanged();
@@ -255,7 +255,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         public CheckedChangedListener(int position)
         {
-            mPosition=Integer.valueOf(position);
+            mPosition = Integer.valueOf(position);
         }
 
         @Override

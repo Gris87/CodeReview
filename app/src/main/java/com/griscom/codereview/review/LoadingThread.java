@@ -54,30 +54,30 @@ public class LoadingThread extends Thread
     @Override
     public void run()
     {
-        SQLiteDatabase db=null;
+        SQLiteDatabase db = null;
 
         try
         {
-            TextDocument document=mSyntaxParser.parseFile(mFileName);
+            TextDocument document = mSyntaxParser.parseFile(mFileName);
 
             document.setParent(mParent);
 
-            if (mFileId<=0)
+            if (mFileId <= 0)
             {
-                MainDatabase helper=new MainDatabase(mSyntaxParser.getContext());
-                db=helper.getReadableDatabase();
+                MainDatabase helper = new MainDatabase(mSyntaxParser.getContext());
+                db = helper.getReadableDatabase();
 
-                mFileId=helper.getFile(db, mFileName);
+                mFileId = helper.getFile(db, mFileName);
 
                 db.close();
-                db=null;
+                db = null;
             }
 
-            ArrayList<TextRow> rows=document.getRows();
+            ArrayList<TextRow> rows = document.getRows();
 
-            if (mFileId>0)
+            if (mFileId > 0)
             {
-                SingleFileDatabase helper=new SingleFileDatabase(mSyntaxParser.getContext(), mFileId);
+                SingleFileDatabase helper = new SingleFileDatabase(mSyntaxParser.getContext(), mFileId);
 
                 db            = helper.getReadableDatabase();
                 Cursor cursor = helper.getRows(db);
@@ -89,7 +89,7 @@ public class LoadingThread extends Thread
 
                 while (!cursor.isAfterLast())
                 {
-                    int  row  = cursor.getInt(rowIndex)-1;
+                    int  row  = cursor.getInt(rowIndex) - 1;
                     char type = cursor.getString(typeIndex).charAt(0);
 
                     switch (type)
@@ -101,7 +101,7 @@ public class LoadingThread extends Thread
                             rows.get(row).setSelectionColor(SelectionColor.INVALID);
                         break;
                         default:
-                            Log.e(TAG, "Unknown row type \""+String.valueOf(type)+"\" in database \""+helper.getDbName()+"\"");
+                            Log.e(TAG, "Unknown row type \"" + String.valueOf(type) + "\" in database \"" + helper.getDbName() + "\"");
                         break;
                     }
 
@@ -113,9 +113,9 @@ public class LoadingThread extends Thread
             int invalidCount  = 0;
             int noteCount     = 0;
 
-            for (int i=0; i<rows.size(); ++i)
+            for (int i = 0; i < rows.size(); ++i)
             {
-                TextRow row=rows.get(i);
+                TextRow row = rows.get(i);
 
                 row.checkForComment(mSyntaxParser);
 
@@ -134,7 +134,7 @@ public class LoadingThread extends Thread
                         // Nothing
                     break;
                     default:
-                        Log.e(TAG, "Unknown selection color: "+String.valueOf(row.getSelectionColor()));
+                        Log.e(TAG, "Unknown selection color: " + String.valueOf(row.getSelectionColor()));
                     break;
                 }
             }
@@ -148,7 +148,7 @@ public class LoadingThread extends Thread
             Log.e(TAG, "Exception occured during parsing", e);
         }
 
-        if (db!=null)
+        if (db != null)
         {
             db.close();
         }

@@ -46,18 +46,18 @@ public class MainDatabase extends SQLiteOpenHelper
 
 
     public  static final String FILES_TABLE_NAME   = "files";
-    private static final String FILES_TABLE_CREATE = "CREATE TABLE " + FILES_TABLE_NAME + " " +
-                                                     "(" +
-                                                          COLUMN_ID                + " INTEGER PRIMARY KEY, " +
-                                                          COLUMN_PATH              + " TEXT, "                +
-                                                          COLUMN_NAME              + " TEXT, "                +
-                                                          COLUMN_MD5               + " TEXT, "                +
-                                                          COLUMN_MODIFICATION_TIME + " INTEGER, "             +
-                                                          COLUMN_REVIEWED_COUNT    + " INTEGER, "             +
-                                                          COLUMN_INVALID_COUNT     + " INTEGER, "             +
-                                                          COLUMN_NOTE_COUNT        + " INTEGER, "             +
-                                                          COLUMN_ROW_COUNT         + " INTEGER, "             +
-                                                          COLUMN_NOTE              + " TEXT"                  +
+    private static final String FILES_TABLE_CREATE = "CREATE TABLE " + FILES_TABLE_NAME + " "  +
+                                                     "("  +
+                                                          COLUMN_ID                + " INTEGER PRIMARY KEY, "  +
+                                                          COLUMN_PATH              + " TEXT, "                 +
+                                                          COLUMN_NAME              + " TEXT, "                 +
+                                                          COLUMN_MD5               + " TEXT, "                 +
+                                                          COLUMN_MODIFICATION_TIME + " INTEGER, "              +
+                                                          COLUMN_REVIEWED_COUNT    + " INTEGER, "              +
+                                                          COLUMN_INVALID_COUNT     + " INTEGER, "              +
+                                                          COLUMN_NOTE_COUNT        + " INTEGER, "              +
+                                                          COLUMN_ROW_COUNT         + " INTEGER, "              +
+                                                          COLUMN_NOTE              + " TEXT"                   +
                                                      ");";
 
 
@@ -84,16 +84,16 @@ public class MainDatabase extends SQLiteOpenHelper
         String md5        = Utils.md5ForFile(fileName);
         long modifiedTime = new File(fileName).lastModified();
 
-        Cursor cursor=getFileByMD5(db, md5);
+        Cursor cursor = getFileByMD5(db, md5);
 
-        int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
-        int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
+        int idIndex = cursor.getColumnIndexOrThrow(COLUMN_ID);
+        int modificationIndex = cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
 
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast())
         {
-            if (cursor.getLong(modificationIndex)==modifiedTime)
+            if (cursor.getLong(modificationIndex) == modifiedTime)
             {
                 return cursor.getInt(idIndex);
             }
@@ -109,16 +109,16 @@ public class MainDatabase extends SQLiteOpenHelper
         String md5        = Utils.md5ForFile(fileName);
         long modifiedTime = new File(fileName).lastModified();
 
-        Cursor cursor=getFileByMD5(db, md5);
+        Cursor cursor = getFileByMD5(db, md5);
 
-        int idIndex=cursor.getColumnIndexOrThrow(COLUMN_ID);
-        int modificationIndex=cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
+        int idIndex = cursor.getColumnIndexOrThrow(COLUMN_ID);
+        int modificationIndex = cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
 
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast())
         {
-            if (cursor.getLong(modificationIndex)==modifiedTime)
+            if (cursor.getLong(modificationIndex) == modifiedTime)
             {
                 return cursor.getInt(idIndex);
             }
@@ -126,20 +126,20 @@ public class MainDatabase extends SQLiteOpenHelper
             cursor.moveToNext();
         }
 
-        //----------------------------------------------------------------
+        //-------------------------------------------------------------- -  -
         // Create new
 
-        ContentValues values=new ContentValues();
+        ContentValues values = new ContentValues();
 
-        String folder=fileName.substring(0, fileName.lastIndexOf('/'));
+        String folder = fileName.substring(0, fileName.lastIndexOf('/'));
 
         if (folder.equals(""))
         {
-            folder="/";
+            folder = "/";
         }
 
         values.put(COLUMN_PATH,              folder);
-        values.put(COLUMN_NAME,              fileName.substring(fileName.lastIndexOf('/')+1));
+        values.put(COLUMN_NAME,              fileName.substring(fileName.lastIndexOf('/') + 1));
         values.put(COLUMN_MD5,               md5);
         values.put(COLUMN_MODIFICATION_TIME, modifiedTime);
         values.put(COLUMN_REVIEWED_COUNT,    0);
@@ -153,19 +153,19 @@ public class MainDatabase extends SQLiteOpenHelper
 
     public void updateFilePath(SQLiteDatabase db, int fileId, String fileName)
     {
-        ContentValues values=new ContentValues();
+        ContentValues values = new ContentValues();
 
-        String folder=fileName.substring(0, fileName.lastIndexOf('/'));
+        String folder = fileName.substring(0, fileName.lastIndexOf('/'));
 
         if (folder.equals(""))
         {
-            folder="/";
+            folder = "/";
         }
 
         values.put(COLUMN_PATH, folder);
-        values.put(COLUMN_NAME, fileName.substring(fileName.lastIndexOf('/')+1));
+        values.put(COLUMN_NAME, fileName.substring(fileName.lastIndexOf('/') + 1));
 
-        db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
+        db.update(FILES_TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(fileId)});
     }
 
     public void updateFileMeta(SQLiteDatabase db, int fileId, String fileName)
@@ -175,47 +175,47 @@ public class MainDatabase extends SQLiteOpenHelper
 
 
 
-        ContentValues values=new ContentValues();
+        ContentValues values = new ContentValues();
 
         values.put(COLUMN_MD5,               md5);
         values.put(COLUMN_MODIFICATION_TIME, modifiedTime);
 
-        db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
+        db.update(FILES_TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(fileId)});
     }
 
     public void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount, int rowCount)
     {
-        ContentValues values=new ContentValues();
+        ContentValues values = new ContentValues();
 
         values.put(COLUMN_REVIEWED_COUNT, reviewedCount);
         values.put(COLUMN_INVALID_COUNT,  invalidCount);
         values.put(COLUMN_NOTE_COUNT,     noteCount);
         values.put(COLUMN_ROW_COUNT,      rowCount);
 
-        db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
+        db.update(FILES_TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(fileId)});
     }
 
     public void updateFileNote(SQLiteDatabase db, int fileId, String note)
     {
-        ContentValues values=new ContentValues();
+        ContentValues values = new ContentValues();
 
         values.put(COLUMN_NOTE, note);
 
-        db.update(FILES_TABLE_NAME, values, COLUMN_ID+"=?", new String[]{String.valueOf(fileId)});
+        db.update(FILES_TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(fileId)});
     }
 
     public Cursor getFiles(SQLiteDatabase db, String path)
     {
-        return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH+"=?", new String[]{path}, null, null, null);
+        return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH + "=?", new String[]{path}, null, null, null);
     }
 
     public Cursor getFile(SQLiteDatabase db, String path, String name)
     {
-        return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH+"=? AND "+COLUMN_NAME+"=?", new String[]{path, name}, null, null, null);
+        return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH + "=? AND " + COLUMN_NAME + "=?", new String[]{path, name}, null, null, null);
     }
 
     public Cursor getFileByMD5(SQLiteDatabase db, String md5)
     {
-        return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_MD5+"=?", new String[]{md5}, null, null, null);
+        return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_MD5 + "=?", new String[]{md5}, null, null, null);
     }
 }

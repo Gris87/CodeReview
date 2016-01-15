@@ -28,11 +28,11 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
 
     public  static final String ROWS_TABLE_NAME   = "rows";
-    private static final String ROWS_TABLE_CREATE = "CREATE TABLE " + ROWS_TABLE_NAME + " " +
-                                                    "(" +
-                                                         COLUMN_ID       + " INTEGER PRIMARY KEY, " +
-                                                         COLUMN_ROW_ID   + " INTEGER, "             +
-                                                         COLUMN_ROW_TYPE + " TEXT"                  +
+    private static final String ROWS_TABLE_CREATE = "CREATE TABLE " + ROWS_TABLE_NAME + " "  +
+                                                    "("  +
+                                                         COLUMN_ID       + " INTEGER PRIMARY KEY, "  +
+                                                         COLUMN_ROW_ID   + " INTEGER, "              +
+                                                         COLUMN_ROW_TYPE + " TEXT"                   +
                                                     ");";
 
 
@@ -40,9 +40,9 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
     public SingleFileDatabase(Context context, int fileId)
     {
-        super(context, DB_NAME+String.valueOf(fileId)+".db", null, DB_VERSION);
+        super(context, DB_NAME + String.valueOf(fileId) + ".db", null, DB_VERSION);
 
-        mDbName=DB_NAME+String.valueOf(fileId)+".db";
+        mDbName = DB_NAME + String.valueOf(fileId) + ".db";
     }
 
     @Override
@@ -59,26 +59,26 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
     public void insertOrUpdateRow(SQLiteDatabase db, int row, char type)
     {
-        Cursor cursor=db.query(ROWS_TABLE_NAME, ROWS_COLUMNS, COLUMN_ROW_ID+"=?", new String[]{String.valueOf(row+1)}, null, null, null, null);
+        Cursor cursor = db.query(ROWS_TABLE_NAME, ROWS_COLUMNS, COLUMN_ROW_ID + "=?", new String[]{String.valueOf(row + 1)}, null, null, null, null);
 
-        if (cursor.getCount()==1)
+        if (cursor.getCount() == 1)
         {
             cursor.moveToFirst();
 
-            if (cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROW_TYPE)).charAt(0)!=type)
+            if (cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROW_TYPE)).charAt(0) != type)
             {
-                ContentValues values=new ContentValues();
+                ContentValues values = new ContentValues();
 
                 values.put(COLUMN_ROW_TYPE, String.valueOf(type));
 
-                db.update(ROWS_TABLE_NAME, values, COLUMN_ROW_ID+"=?", new String[]{String.valueOf(row+1)});
+                db.update(ROWS_TABLE_NAME, values, COLUMN_ROW_ID + "=?", new String[]{String.valueOf(row + 1)});
             }
         }
         else
         {
-            ContentValues values=new ContentValues();
+            ContentValues values = new ContentValues();
 
-            values.put(COLUMN_ROW_ID,   row+1);
+            values.put(COLUMN_ROW_ID,   row + 1);
             values.put(COLUMN_ROW_TYPE, String.valueOf(type));
 
             db.insert(ROWS_TABLE_NAME, null, values);
@@ -87,7 +87,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
     public void removeRow(SQLiteDatabase db, int row)
     {
-        db.delete(ROWS_TABLE_NAME, COLUMN_ROW_ID+"=?", new String[]{String.valueOf(row+1)});
+        db.delete(ROWS_TABLE_NAME, COLUMN_ROW_ID + "=?", new String[]{String.valueOf(row + 1)});
     }
 
     public Cursor getRows(SQLiteDatabase db)

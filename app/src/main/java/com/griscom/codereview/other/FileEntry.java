@@ -13,7 +13,7 @@ import com.griscom.codereview.db.MainDatabase;
 @SuppressLint("DefaultLocale")
 public class FileEntry
 {
-    private static final String TAG="FileEntry";
+    private static final String TAG = "FileEntry";
 
     private String  mFileName;
     private boolean mIsDirectory;
@@ -40,21 +40,21 @@ public class FileEntry
 
         if (!mIsDirectory)
         {
-            int index=mFileName.lastIndexOf('.');
+            int index = mFileName.lastIndexOf('.');
 
-            if (index>0)
+            if (index > 0)
             {
-                mType=mFileName.substring(index+1).toLowerCase();
-                mImageId=ExtensionToIcon.getIcon(mType);
+                mType = mFileName.substring(index + 1).toLowerCase();
+                mImageId = ExtensionToIcon.getIcon(mType);
             }
             else
             {
-                mImageId=R.drawable.__icon_file;
+                mImageId = R.drawable.__icon_file;
             }
         }
         else
         {
-            mImageId=R.drawable.__icon_folder;
+            mImageId = R.drawable.__icon_folder;
         }
 
         mDbFileId      = 0;
@@ -67,7 +67,7 @@ public class FileEntry
 
     public static FileEntry createParentFolder()
     {
-        FileEntry parentFolder=new FileEntry();
+        FileEntry parentFolder = new FileEntry();
 
         parentFolder.mFileName      = "..";
         parentFolder.mIsDirectory   = true;
@@ -86,7 +86,7 @@ public class FileEntry
 
     public boolean isLess(FileEntry another, SortType sortType)
     {
-        if (mIsDirectory!=another.mIsDirectory)
+        if (mIsDirectory != another.mIsDirectory)
         {
             return mIsDirectory;
         }
@@ -98,16 +98,16 @@ public class FileEntry
                 return true;
             }
 
-            return mFileName.compareToIgnoreCase(another.mFileName)<0;
+            return mFileName.compareToIgnoreCase(another.mFileName) < 0;
         }
 
         switch (sortType)
         {
-            case NAME: return mFileName.compareToIgnoreCase(another.mFileName)<0;
-            case TYPE: return mType.compareTo(another.mType)<0;
-            case SIZE: return mSize<another.mSize;
+            case NAME: return mFileName.compareToIgnoreCase(another.mFileName) < 0;
+            case TYPE: return mType.compareTo(another.mType) < 0;
+            case SIZE: return mSize < another.mSize;
             default:
-                Log.e(TAG, "Unknown sort type: "+String.valueOf(sortType));
+                Log.e(TAG, "Unknown sort type: " + String.valueOf(sortType));
             break;
         }
 
@@ -134,7 +134,7 @@ public class FileEntry
 
     public void setFileName(String filename)
     {
-        mFileName=filename;
+        mFileName = filename;
     }
 
     public boolean isDirectory()
@@ -209,15 +209,15 @@ public class FileEntry
     {
         synchronized(this)
         {
-            mFileNote=note;
+            mFileNote = note;
 
-            MainDatabase helper=new MainDatabase(context);
+            MainDatabase helper = new MainDatabase(context);
 
-            SQLiteDatabase db=helper.getWritableDatabase();
+            SQLiteDatabase db = helper.getWritableDatabase();
 
-            if (mDbFileId<=0)
+            if (mDbFileId <= 0)
             {
-                mDbFileId=helper.getOrCreateFile(db, filename);
+                mDbFileId = helper.getOrCreateFile(db, filename);
             }
 
             helper.updateFileNote(db, mDbFileId, note);

@@ -19,7 +19,7 @@ import com.griscom.codereview.review.TextRow;
 
 public class JavaSyntaxParser extends SyntaxParserBase
 {
-    private static final String TAG="JavaSyntaxParser";
+    private static final String TAG = "JavaSyntaxParser";
 
     public JavaSyntaxParser(Context context)
     {
@@ -29,11 +29,11 @@ public class JavaSyntaxParser extends SyntaxParserBase
     @Override
     public TextDocument parseFile(String fileName)
     {
-        TextDocument res=new TextDocument(this);
+        TextDocument res = new TextDocument(this);
 
         try
         {
-            Paint basePaint=new Paint();
+            Paint basePaint = new Paint();
 
             basePaint.setColor(Color.BLACK);
             basePaint.setTypeface(Typeface.MONOSPACE);
@@ -60,9 +60,9 @@ public class JavaSyntaxParser extends SyntaxParserBase
             colorsMap.put(Prettify.PR_STRING,      stringPaint);
             colorsMap.put(Prettify.PR_PUNCTUATION, punctuationPaint);
 
-            // ---------------------------------------------------------------
+            // -------------------------------------------------------------- -
 
-            StringBuilder codeBuilder=new StringBuilder();
+            StringBuilder codeBuilder = new StringBuilder();
 
             createReader(fileName);
 
@@ -74,74 +74,74 @@ public class JavaSyntaxParser extends SyntaxParserBase
 
             closeReader();
 
-            // ---------------------------------------------------------------
+            // -------------------------------------------------------------- -
 
-            int tabSize=getTabSize();
+            int tabSize = getTabSize();
 
-            String sourceCode=codeBuilder.toString();
-            List<ParseResult> results=new PrettifyParser().parse("java", sourceCode);
+            String sourceCode = codeBuilder.toString();
+            List<ParseResult> results = new PrettifyParser().parse("java", sourceCode);
 
-            TextRow row=null;
-            int curColumn=0;
+            TextRow row = null;
+            int curColumn = 0;
 
             for (ParseResult result : results)
             {
-                if (row==null)
+                if (row == null)
                 {
-                    row=new TextRow();
+                    row = new TextRow();
                 }
 
                 String type    = result.getStyleKeys().get(0);
                 String content = sourceCode.substring(result.getOffset(), result.getOffset() + result.getLength());
 
-                Paint selectedPaint=colorsMap.get(type);
+                Paint selectedPaint = colorsMap.get(type);
 
-                if (selectedPaint==null)
+                if (selectedPaint == null)
                 {
                     if (!type.equals(Prettify.PR_PLAIN))
                     {
-                        Log.e(TAG, "Unhandled syntax type: "+type);
+                        Log.e(TAG, "Unhandled syntax type: " + type);
                     }
 
-                    selectedPaint=basePaint;
+                    selectedPaint = basePaint;
                 }
 
-                boolean lastEnter=content.endsWith("\n");
+                boolean lastEnter = content.endsWith("\n");
 
                 do
                 {
-                    int index=content.indexOf('\n');
+                    int index = content.indexOf('\n');
 
-                    if (index<0)
+                    if (index < 0)
                     {
                         break;
                     }
 
-                    String contentPart=content.substring(0, index);
-                    content=content.substring(index+1);
+                    String contentPart = content.substring(0, index);
+                    content = content.substring(index + 1);
 
                     row.addTextRegion(new TextRegion(contentPart, selectedPaint, curColumn, tabSize));
                     res.addTextRow(row);
 
-                    row=new TextRow();
-                    curColumn=0;
+                    row = new TextRow();
+                    curColumn = 0;
                 } while (true);
 
                 if (lastEnter || !content.equals(""))
                 {
                     row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));
-                    curColumn+=content.length();
+                    curColumn + = content.length();
                 }
             }
 
-            if (row!=null && row.hasRegions())
+            if (row != null && row.hasRegions())
             {
                 res.addTextRow(row);
             }
         }
         catch (Exception e)
         {
-            Log.e(TAG, "Impossible to read file: "+fileName, e);
+            Log.e(TAG, "Impossible to read file: " + fileName, e);
         }
 
         return res;
