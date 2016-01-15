@@ -116,7 +116,7 @@ public class TextRow
     {
         region.setX(mWidth);
 
-        mWidth + = region.getWidth();
+        mWidth += region.getWidth();
 
         if (region.getHeight() > mHeight)
         {

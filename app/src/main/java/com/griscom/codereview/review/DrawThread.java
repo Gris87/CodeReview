@@ -56,7 +56,7 @@ class DrawThread extends Thread
 
                 if (
                     !needRepaint
-                     ||
+                    ||
                     !mSurfaceHolder.getSurface().isValid()
                    )
                 {

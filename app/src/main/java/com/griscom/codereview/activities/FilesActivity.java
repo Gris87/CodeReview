@@ -73,13 +73,7 @@ public class FilesActivity extends AppCompatActivity
 
 
 
-    /**
-     * Called when the activity is starting. This is where most initialization should go: calling setContentView(int) to inflate the activity's UI, using findViewById(int) to programmatically interact with widgets in the UI, calling managedQuery(android.net.Uri, String[], String, String[], String) to retrieve cursors for data being displayed, etc.
-     * You can call finish() from within this function, in which case onDestroy() will be immediately called without any of the rest of the activity lifecycle (onStart(), onResume(), onPause(), etc) executing.
-     * Derived classes must call through to the super class's implementation of this method. If they do not, an exception will be thrown.
-     *
-     * @param savedInstanceState    If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
-     */
+    /** {@inheritDoc} */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -97,11 +91,7 @@ public class FilesActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Called after onRestoreInstanceState(Bundle), onRestart(), or onPause(), for your activity to start interacting with the user. This is a good place to begin animations, open exclusive-access devices (such as the camera), etc.
-     * Keep in mind that onResume is not the best indicator that your activity is visible to the user; a system window such as the keyguard may be in front. Use onWindowFocusChanged(boolean) to know for certain that your activity is visible to the user (for example, to resume a game).
-     * Derived classes must call through to the super class's implementation of this method. If they do not, an exception will be thrown.
-     */
+    /** {@inheritDoc} */
     @Override
     protected void onResume()
     {
@@ -114,11 +104,7 @@ public class FilesActivity extends AppCompatActivity
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    /**
-     * Perform any final cleanup before an activity is destroyed. This can happen either because the activity is finishing (someone called finish() on it, or because the system is temporarily destroying this instance of the activity to save space. You can distinguish between these two scenarios with the isFinishing() method.
-     * Note: do not count on this method being called as a place for saving data! For example, if an activity is editing data in a content provider, those edits should be committed in either onPause() or onSaveInstanceState(Bundle), not here. This method is usually implemented to free resources like threads that are associated with an activity, so that a destroyed activity does not leave such things around while the rest of its application is still running. There are situations where the system will simply kill the activity's hosting process without calling this method (or any others) in it, so it should not be used to do things that are intended to remain around after the process goes away.
-     * Derived classes must call through to the super class's implementation of this method. If they do not, an exception will be thrown.
-     */
+    /** {@inheritDoc} */
     @Override
     protected void onDestroy()
     {
@@ -127,16 +113,7 @@ public class FilesActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    /**
-     * Initialize the contents of the Activity's standard options menu. You should place your menu items in to menu.
-     * This is only called once, the first time the options menu is displayed. To update the menu every time it is displayed, see onPrepareOptionsMenu(Menu).
-     * The default implementation populates the menu with standard system menu items. These are placed in the CATEGORY_SYSTEM group so that they will be correctly ordered with application-defined menu items. Deriving classes should always call through to the base implementation.
-     * You can safely hold on to menu (and any items created from it), making modifications to it as desired, until the next time onCreateOptionsMenu() is called.
-     * When you add items to the menu, you can implement the Activity's onOptionsItemSelected(MenuItem) method to handle them there.
-     *
-     * @param menu  The options menu in which you place your items.
-     * @return      You must return true for the menu to be displayed; if you return false it will not be shown.
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -145,13 +122,7 @@ public class FilesActivity extends AppCompatActivity
         return true;
     }
 
-    /**
-     * This hook is called whenever an item in your options menu is selected. The default implementation simply returns false to have the normal processing happen (calling the item's Runnable or sending a message to its Handler as appropriate). You can use this method for any items for which you would like to do processing without those other facilities.
-     * Derived classes should call through to the base class for it to perform the default menu handling.
-     *
-     * @param item  The menu item that was selected.
-     * @return      Return false to allow normal menu processing to proceed, true to consume it here.
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -243,15 +214,7 @@ public class FilesActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Called when an activity you launched exits, giving you the requestCode you started it with, the resultCode it returned, and any additional data from it. The resultCode will be RESULT_CANCELED if the activity explicitly returned that, didn't return any result, or crashed during its operation.
-     * You will receive this call immediately before onResume() when your activity is re-starting.
-     * This method is never invoked if your activity sets noHistory to true.
-     *
-     * @param requestCode   The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
-     * @param resultCode    The integer result code returned by the child activity through its setResult().
-     * @param data          An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
-     */
+    /** {@inheritDoc} */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -266,9 +229,7 @@ public class FilesActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * Called when the activity has detected the user's press of the back key. The default implementation simply finishes the current activity, but you can override this to do whatever you want.
-     */
+    /** {@inheritDoc} */
     @Override
     public void onBackPressed()
     {
@@ -665,7 +626,7 @@ public class FilesActivity extends AppCompatActivity
                                 String currentFilename = editText.getText().toString();
                                 int index = -1;
 
-                                for (int i = 0; i < filenames.size(); i++)
+                                for (int i = 0; i < filenames.size(); ++i)
                                 {
                                     String oneFilename = (String)filenames.get(i);
 
@@ -723,7 +684,7 @@ public class FilesActivity extends AppCompatActivity
                                 filenames.add(0, filename);
                                 saveLastFileNames(filenames);
 
-                                // -------------------------------- -  -
+                                // ----------------------------------
 
                                 mAdapter.assignNote(items, getString(R.string.rename_to, filename));
                                 hideActionMode();
@@ -793,7 +754,7 @@ public class FilesActivity extends AppCompatActivity
                             String currentFilenote = editText.getText().toString();
                             int index = -1;
 
-                            for (int i = 0; i < filenotes.size(); i++)
+                            for (int i = 0; i < filenotes.size(); ++i)
                             {
                                 String oneFilenote = (String)filenotes.get(i);
 
@@ -898,7 +859,7 @@ public class FilesActivity extends AppCompatActivity
                             String currentFilename = editText.getText().toString();
                             int index = -1;
 
-                            for (int i = 0; i < filenames.size(); i++)
+                            for (int i = 0; i < filenames.size(); ++i)
                             {
                                 String oneFilename = (String)filenames.get(i);
 

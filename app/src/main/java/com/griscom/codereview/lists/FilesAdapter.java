@@ -211,38 +211,38 @@ public class FilesAdapter extends BaseAdapter
                 {
                     if (
                         reviewedPercent > invalidPercent
-                         &&
+                        &&
                         reviewedPercent > notePercent
-                         &&
+                        &&
                         reviewedPercent > clearPercent
                        )
                     {
-                        reviewedPercent  - = totalPercent - 100;
+                        reviewedPercent -= totalPercent - 100;
                     }
                     if (
                         invalidPercent > reviewedPercent
-                         &&
+                        &&
                         invalidPercent > notePercent
-                         &&
+                        &&
                         invalidPercent > clearPercent
                        )
                     {
-                        invalidPercent   - = totalPercent - 100;
+                        invalidPercent  -= totalPercent - 100;
                     }
 
                     if (
                         notePercent > reviewedPercent
-                         &&
+                        &&
                         notePercent > invalidPercent
-                         &&
+                        &&
                         notePercent > clearPercent
                        )
                     {
-                        notePercent      - = totalPercent - 100;
+                        notePercent     -= totalPercent - 100;
                     }
                     else
                     {
-                        clearPercent     - = totalPercent - 100;
+                        clearPercent    -= totalPercent - 100;
                     }
                 }
 
@@ -262,7 +262,7 @@ public class FilesAdapter extends BaseAdapter
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + reviewedPercent, 0, paint);
-                    curPercent  + = reviewedPercent;
+                    curPercent += reviewedPercent;
                 }
 
                 if (invalidPercent > 0)
@@ -273,7 +273,7 @@ public class FilesAdapter extends BaseAdapter
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + invalidPercent, 0, paint);
-                    curPercent  + = invalidPercent;
+                    curPercent += invalidPercent;
                 }
 
                 if (notePercent > 0)
@@ -284,7 +284,7 @@ public class FilesAdapter extends BaseAdapter
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + notePercent, 0, paint);
-                    curPercent  + = notePercent;
+                    curPercent += notePercent;
                 }
 
                 if (clearPercent > 0)
@@ -295,7 +295,7 @@ public class FilesAdapter extends BaseAdapter
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + clearPercent, 0, paint);
-                    curPercent  + = clearPercent;
+                    curPercent += clearPercent;
                 }
 
                 view.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
@@ -325,12 +325,12 @@ public class FilesAdapter extends BaseAdapter
 
         if (
             mSelectionMode
-             &&
+            &&
             (
              position > 0
-              ||
+             ||
              !file.isDirectory()
-              ||
+             ||
              !file.getFileName().equals("..")
             )
            )
@@ -520,7 +520,7 @@ public class FilesAdapter extends BaseAdapter
             }
         }
 
-        return  - 1;
+        return -1;
     }
 
     public void assignNote(int files[], String note)
@@ -537,7 +537,7 @@ public class FilesAdapter extends BaseAdapter
     {
         if (
             filename.contains("/")
-             ||
+            ||
             filename.contains("\\")
            )
         {
@@ -714,7 +714,7 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
-    private class DbReaderTask extends AsyncTask < Void, Void, Void >
+    private class DbReaderTask extends AsyncTask<Void, Void, Void>
     {
         @Override
         protected Void doInBackground(Void... arg0)
@@ -790,7 +790,7 @@ public class FilesAdapter extends BaseAdapter
                     {
                         if (
                             !entry.isDirectory()
-                             &&
+                            &&
                             entry.getDbFileId() <= 0
                             )
                         {

@@ -130,7 +130,7 @@ public class XqSyntaxParser extends SyntaxParserBase
                 if (lastEnter || !content.equals(""))
                 {
                     row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));
-                    curColumn + = content.length();
+                    curColumn += content.length();
                 }
             }
 

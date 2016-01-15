@@ -46,18 +46,18 @@ public class MainDatabase extends SQLiteOpenHelper
 
 
     public  static final String FILES_TABLE_NAME   = "files";
-    private static final String FILES_TABLE_CREATE = "CREATE TABLE " + FILES_TABLE_NAME + " "  +
-                                                     "("  +
-                                                          COLUMN_ID                + " INTEGER PRIMARY KEY, "  +
-                                                          COLUMN_PATH              + " TEXT, "                 +
-                                                          COLUMN_NAME              + " TEXT, "                 +
-                                                          COLUMN_MD5               + " TEXT, "                 +
-                                                          COLUMN_MODIFICATION_TIME + " INTEGER, "              +
-                                                          COLUMN_REVIEWED_COUNT    + " INTEGER, "              +
-                                                          COLUMN_INVALID_COUNT     + " INTEGER, "              +
-                                                          COLUMN_NOTE_COUNT        + " INTEGER, "              +
-                                                          COLUMN_ROW_COUNT         + " INTEGER, "              +
-                                                          COLUMN_NOTE              + " TEXT"                   +
+    private static final String FILES_TABLE_CREATE = "CREATE TABLE " + FILES_TABLE_NAME + " " +
+                                                     "(" +
+                                                          COLUMN_ID                + " INTEGER PRIMARY KEY, " +
+                                                          COLUMN_PATH              + " TEXT, "                +
+                                                          COLUMN_NAME              + " TEXT, "                +
+                                                          COLUMN_MD5               + " TEXT, "                +
+                                                          COLUMN_MODIFICATION_TIME + " INTEGER, "             +
+                                                          COLUMN_REVIEWED_COUNT    + " INTEGER, "             +
+                                                          COLUMN_INVALID_COUNT     + " INTEGER, "             +
+                                                          COLUMN_NOTE_COUNT        + " INTEGER, "             +
+                                                          COLUMN_ROW_COUNT         + " INTEGER, "             +
+                                                          COLUMN_NOTE              + " TEXT"                  +
                                                      ");";
 
 
@@ -126,7 +126,7 @@ public class MainDatabase extends SQLiteOpenHelper
             cursor.moveToNext();
         }
 
-        //-------------------------------------------------------------- -  -
+        //----------------------------------------------------------------
         // Create new
 
         ContentValues values = new ContentValues();

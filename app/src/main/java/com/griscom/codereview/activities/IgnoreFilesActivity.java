@@ -36,7 +36,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
 
 
     private PlaceholderFragment mPlaceholderFragment = null;
-    private Tracker             mTracker;
+    private Tracker             mTracker             = null;
 
 
 
@@ -147,7 +147,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
 
     /**
      * A placeholder fragment containing a simple view.
-      */
+     */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener
     {
         private IgnoreFilesActivity mActivity;

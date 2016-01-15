@@ -172,7 +172,7 @@ public class TextDocument implements OnTouchListener
         mY = mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin);
 
         mIndexWidth = mRowPaint.measureText(String.valueOf(mRows.size() + 1));
-        mX + = mIndexWidth;
+        mX += mIndexWidth;
 
         onConfigurationChanged(mContext.getResources().getConfiguration());
         showBars();
@@ -188,9 +188,9 @@ public class TextDocument implements OnTouchListener
 
             if (
                 mY - mOffsetY >= 0
-                 ||
+                ||
                 mY - mOffsetY + mHeight <= mViewHeight / mScale
-                 ||
+                ||
                 mX - mOffsetX >= 0
                 )
             {
@@ -225,11 +225,11 @@ public class TextDocument implements OnTouchListener
                 else
                 if (
                     mSelectionEnd >= 0
-                     &&
+                    &&
                     (
-                    (i >= mHighlightedRow && i <= mSelectionEnd)
+                     (i >= mHighlightedRow && i <= mSelectionEnd)
                      ||
-                    (i >= mSelectionEnd   && i <= mHighlightedRow)
+                     (i >= mSelectionEnd   && i <= mHighlightedRow)
                     )
                    )
                 {
@@ -377,7 +377,7 @@ public class TextDocument implements OnTouchListener
             {
                 if (
                     mTouchMode == TouchMode.NONE
-                     ||
+                    ||
                     mTouchMode == TouchMode.ZOOM
                    )
                 {
@@ -405,7 +405,7 @@ public class TextDocument implements OnTouchListener
 
                     if (
                         mTouchY < mViewHeight / 8
-                         ||
+                        ||
                         mTouchY > mViewHeight * 7 / 8
                         )
                     {
@@ -551,7 +551,7 @@ public class TextDocument implements OnTouchListener
                                         String currentComment = editText.getText().toString();
                                         int index = -1;
 
-                                        for (int i = 0; i < comments.size(); i++)
+                                        for (int i = 0; i < comments.size(); ++i)
                                         {
                                             String oneComment = (String)comments.get(i);
 
@@ -886,7 +886,7 @@ public class TextDocument implements OnTouchListener
         {
             if (mTouchY / mScale <= mY - mOffsetY + mRows.get(selectionEnd - 1).getBottom())
             {
-                selectionEnd--;
+                --selectionEnd;
             }
             else
             {
@@ -898,7 +898,7 @@ public class TextDocument implements OnTouchListener
         {
             if (mTouchY / mScale >= mY - mOffsetY + mRows.get(selectionEnd + 1).getY())
             {
-                selectionEnd++;
+                ++selectionEnd;
             }
             else
             {
@@ -997,7 +997,7 @@ public class TextDocument implements OnTouchListener
         {
             if (mY - mOffsetY + mRows.get(visibleBegin - 1).getBottom() >= 0)
             {
-                visibleBegin--;
+                --visibleBegin;
             }
             else
             {
@@ -1009,7 +1009,7 @@ public class TextDocument implements OnTouchListener
         {
             if (mY - mOffsetY + mRows.get(visibleBegin).getBottom() < 0)
             {
-                visibleBegin++;
+                ++visibleBegin;
             }
             else
             {
@@ -1017,7 +1017,7 @@ public class TextDocument implements OnTouchListener
             }
         }
 
-        visibleEnd--;
+        --visibleEnd;
 
         if (visibleEnd < visibleBegin)
         {
@@ -1028,7 +1028,7 @@ public class TextDocument implements OnTouchListener
         {
             if (mY - mOffsetY + mRows.get(visibleEnd).getY() >= mViewHeight / mScale)
             {
-                visibleEnd--;
+                --visibleEnd;
             }
             else
             {
@@ -1040,7 +1040,7 @@ public class TextDocument implements OnTouchListener
         {
             if (mY - mOffsetY + mRows.get(visibleEnd + 1).getY() < mViewHeight / mScale)
             {
-                visibleEnd++;
+                ++visibleEnd;
             }
             else
             {
@@ -1050,7 +1050,7 @@ public class TextDocument implements OnTouchListener
 
         if (visibleEnd < mRows.size())
         {
-            visibleEnd++;
+            ++visibleEnd;
         }
         else
         {
@@ -1110,7 +1110,7 @@ public class TextDocument implements OnTouchListener
     {
         row.setY(mHeight);
 
-        mHeight + = row.getHeight();
+        mHeight += row.getHeight();
 
         if (row.getWidth() > mWidth)
         {
@@ -1172,8 +1172,8 @@ public class TextDocument implements OnTouchListener
     {
         if (mFontSize != fontSize)
         {
-            mOffsetX  * = (float)fontSize / (float)mFontSize;
-            mOffsetY  * = (float)fontSize / (float)mFontSize;
+            mOffsetX *= (float)fontSize / (float)mFontSize;
+            mOffsetY *= (float)fontSize / (float)mFontSize;
 
             mFontSize = fontSize;
             float textSize = Utils.spToPixels(mFontSize, mContext);
@@ -1185,9 +1185,9 @@ public class TextDocument implements OnTouchListener
 
             mRowPaint.setTextSize(textSize);
 
-            mX -  = mIndexWidth;
+            mX -= mIndexWidth;
             mIndexWidth = mRowPaint.measureText(String.valueOf(mRows.size() + 1));
-            mX + = mIndexWidth;
+            mX += mIndexWidth;
 
             updateSizes();
         }
@@ -1385,7 +1385,7 @@ public class TextDocument implements OnTouchListener
 
             if (selectionMakeLight)
             {
-                selectionBrighness  + = SELECTION_SPEED;
+                selectionBrighness += SELECTION_SPEED;
 
                 if (selectionBrighness >= 1)
                 {
@@ -1395,7 +1395,7 @@ public class TextDocument implements OnTouchListener
             }
             else
             {
-                selectionBrighness  - = SELECTION_SPEED;
+                selectionBrighness -= SELECTION_SPEED;
 
                 if (selectionBrighness <= SELECTION_LOW_LIGHT)
                 {

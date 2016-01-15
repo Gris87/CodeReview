@@ -52,7 +52,7 @@ public class ReviewActivity extends FragmentActivity
 
 
     private PlaceholderFragment mPlaceholderFragment = null;
-    private Tracker             mTracker;
+    private Tracker             mTracker             = null;
 
 
 
@@ -166,7 +166,7 @@ public class ReviewActivity extends FragmentActivity
 
     /**
      * A placeholder fragment containing a simple view.
-      */
+     */
     public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnProgressChangedListener
     {
         private ReviewActivity    mActivity;
@@ -200,7 +200,7 @@ public class ReviewActivity extends FragmentActivity
             mSelectedColor = mActivity.getResources().getColor(R.color.selected);
             mHoverColor    = mActivity.getResources().getColor(R.color.hover);
 
-            // -------------------------------------------------------------------------------------- -
+            // ---------------------------------------------------------------------------------------
 
             Intent intent   = mActivity.getIntent();
             String fileName = intent.getStringExtra(ApplicationExtras.FILE_NAME);
@@ -220,7 +220,7 @@ public class ReviewActivity extends FragmentActivity
             mNoteButton       = (Button)rootView.findViewById(R.id.note_button);
             mClearButton      = (Button)rootView.findViewById(R.id.clear_button);
 
-            // -------------------------------------------------------------------------------------- -
+            // ---------------------------------------------------------------------------------------
 
             mContent.setFileName(fileName, fileId);
             mContent.setOnTouchListener(this);
@@ -265,7 +265,7 @@ public class ReviewActivity extends FragmentActivity
             mNoteButton.setOnClickListener    (this);
             mClearButton.setOnClickListener   (this);
 
-            // -------------------------------------------------------------------------------------- -
+            // ---------------------------------------------------------------------------------------
 
             mControlsVisible = true;
             delayedHide(1000);
@@ -438,7 +438,9 @@ public class ReviewActivity extends FragmentActivity
         /**
          * Schedules a call to hide() in [delay] milliseconds, canceling any
          * previously scheduled calls.
-          */
+         *
+         * @param delayMillis   Delay in milliseconds
+         */
         private void delayedHide(int delayMillis)
         {
             mHideHandler.removeCallbacks(mHideRunnable);
