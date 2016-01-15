@@ -2,10 +2,8 @@ package com.griscom.codereview.activities;
 
 import java.util.List;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
@@ -146,8 +144,6 @@ public class SettingsActivity extends PreferenceActivity
     {
         return ALWAYS_SIMPLE_PREFS
                ||
-               Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
-               ||
                (
                 !ALWAYS_MULTIPAN
                 &&
@@ -157,7 +153,6 @@ public class SettingsActivity extends PreferenceActivity
 
     /** {@inheritDoc} */
     @Override
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target)
     {
         if (!isSimplePreferences(this))
@@ -170,7 +165,6 @@ public class SettingsActivity extends PreferenceActivity
      * This fragment shows file manager preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class FileManagerPreferenceFragment extends PreferenceFragment
     {
         @Override
@@ -191,7 +185,6 @@ public class SettingsActivity extends PreferenceActivity
      * This fragment shows colors preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class ColorsPreferenceFragment extends PreferenceFragment
     {
         @Override
@@ -212,7 +205,6 @@ public class SettingsActivity extends PreferenceActivity
      * This fragment shows editor preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class EditorPreferenceFragment extends PreferenceFragment
     {
         @Override

@@ -1,15 +1,12 @@
 package com.griscom.codereview.activities;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -29,6 +25,9 @@ import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
 
+/**
+ * Activity that allow to choose files for ignoring
+ */
 public class IgnoreFilesActivity extends AppCompatActivity
 {
     private static final String TAG = "IgnoreFilesActivity";
@@ -40,6 +39,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
 
 
 
+    /** {@inheritDoc} */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -57,6 +57,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onResume()
     {
@@ -69,6 +70,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onDestroy()
     {
@@ -77,21 +79,24 @@ public class IgnoreFilesActivity extends AppCompatActivity
         super.onDestroy();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_ignore_files, menu);
+
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch(item.getItemId())
+        switch (item.getItemId())
         {
             case R.id.action_add:
             {
@@ -104,6 +109,12 @@ public class IgnoreFilesActivity extends AppCompatActivity
                     .setPositiveButton(android.R.string.ok,
                                        new DialogInterface.OnClickListener()
                                        {
+                                            /**
+                                             * Handler for click event
+                                             *
+                                             * @param dialog        Dialog
+                                             * @param whichButton   Selected option
+                                             */
                                             @Override
                                             public void onClick(DialogInterface dialog, int whichButton)
                                             {
@@ -118,6 +129,12 @@ public class IgnoreFilesActivity extends AppCompatActivity
                     .setNegativeButton(android.R.string.cancel,
                                        new DialogInterface.OnClickListener()
                                        {
+                                            /**
+                                             * Handler for click event
+                                             *
+                                             * @param dialog        Dialog
+                                             * @param whichButton   Selected option
+                                             */
                                             @Override
                                             public void onClick(DialogInterface dialog, int whichButton)
                                             {
@@ -135,11 +152,21 @@ public class IgnoreFilesActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Returns placeholder fragment
+     *
+     * @return  Placeholder fragment
+     */
     public PlaceholderFragment getPlaceholderFragment()
     {
         return mPlaceholderFragment;
     }
 
+    /**
+     * Sets placeholder fragment
+     *
+     * @param fragment  Placeholder fragment
+     */
     public void setPlaceholderFragment(PlaceholderFragment fragment)
     {
         mPlaceholderFragment = fragment;
@@ -150,15 +177,13 @@ public class IgnoreFilesActivity extends AppCompatActivity
      */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener
     {
-        private IgnoreFilesActivity mActivity;
-        private ListView            mIgnoreFilesListView;
-        private IgnoreFilesAdapter  mAdapter;
-        private int                 mLastSelectedItem;
+        private IgnoreFilesActivity mActivity            = null;
+        private ListView            mIgnoreFilesListView = null;
+        private IgnoreFilesAdapter  mAdapter             = null;
 
-        public PlaceholderFragment()
-        {
-        }
 
+
+        /** {@inheritDoc} */
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -174,24 +199,19 @@ public class IgnoreFilesActivity extends AppCompatActivity
             mIgnoreFilesListView.setAdapter(mAdapter);
             mIgnoreFilesListView.setOnItemClickListener(this);
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-            {
-                registerForContextMenu(mIgnoreFilesListView);
-            }
-            else
-            {
-                setChoiceListener();
-            }
+            setChoiceListener();
 
             mActivity.setPlaceholderFragment(this);
 
             return rootView;
         }
 
+        /** {@inheritDoc} */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
         {
             final EditText editText = new EditText(mActivity);
+
             editText.setText((String)parent.getItemAtPosition(position));
             editText.selectAll();
 
@@ -202,6 +222,12 @@ public class IgnoreFilesActivity extends AppCompatActivity
                 .setPositiveButton(android.R.string.ok,
                                    new DialogInterface.OnClickListener()
                                    {
+                                        /**
+                                         * Handler for click event
+                                         *
+                                         * @param dialog        Dialog
+                                         * @param whichButton   Selected option
+                                         */
                                         @Override
                                         public void onClick(DialogInterface dialog, int whichButton)
                                         {
@@ -213,6 +239,12 @@ public class IgnoreFilesActivity extends AppCompatActivity
                 .setNegativeButton(android.R.string.cancel,
                                    new DialogInterface.OnClickListener()
                                    {
+                                        /**
+                                         * Handler for click event
+                                         *
+                                         * @param dialog        Dialog
+                                         * @param whichButton   Selected option
+                                         */
                                         @Override
                                         public void onClick(DialogInterface dialog, int whichButton)
                                         {
@@ -224,34 +256,15 @@ public class IgnoreFilesActivity extends AppCompatActivity
             dialog.show();
         }
 
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-        {
-            mLastSelectedItem = ((AdapterContextMenuInfo)menuInfo).position;
-
-            mActivity.getMenuInflater().inflate(R.menu.context_menu_ignore_files, menu);
-            super.onCreateContextMenu(menu, v, menuInfo);
-        }
-
-        @Override
-        public boolean onContextItemSelected(MenuItem item)
-        {
-            switch (item.getItemId())
-            {
-                case R.id.action_delete:
-                    mAdapter.removeFile(mLastSelectedItem);
-                break;
-            }
-
-            return true;
-        }
-
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        /**
+         * Sets choice listener on ActionMode
+         */
         private void setChoiceListener()
         {
             mIgnoreFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
             mIgnoreFilesListView.setMultiChoiceModeListener(new MultiChoiceModeListener()
             {
+                /** {@inheritDoc} */
                 @Override
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
                 {
@@ -261,6 +274,7 @@ public class IgnoreFilesActivity extends AppCompatActivity
                     mAdapter.setSelected(position, checked);
                 }
 
+                /** {@inheritDoc} */
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu)
                 {
@@ -272,27 +286,32 @@ public class IgnoreFilesActivity extends AppCompatActivity
                     return true;
                 }
 
+                /** {@inheritDoc} */
                 @Override
                 public boolean onPrepareActionMode(ActionMode mode, Menu menu)
                 {
                     return false;
                 }
 
+                /** {@inheritDoc} */
                 @Override
                 public boolean onActionItemClicked(ActionMode mode, MenuItem item)
                 {
-                    switch(item.getItemId())
+                    switch (item.getItemId())
                     {
                         case R.id.action_delete:
+                        {
                             mAdapter.removeSelectedFiles();
 
                             mode.finish();
+                        }
                         break;
                     }
 
                     return true;
                 }
 
+                /** {@inheritDoc} */
                 @Override
                 public void onDestroyActionMode(ActionMode mode)
                 {
@@ -301,6 +320,11 @@ public class IgnoreFilesActivity extends AppCompatActivity
             });
         }
 
+        /**
+         * Gets adapter for ignore files list
+         *
+         * @return  Ignore files adapter
+         */
         public IgnoreFilesAdapter getAdapter()
         {
             return mAdapter;

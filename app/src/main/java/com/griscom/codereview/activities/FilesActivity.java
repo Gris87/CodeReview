@@ -6,14 +6,12 @@ import java.util.ArrayList;
 
 import junit.framework.Assert;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -21,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +28,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -119,6 +115,7 @@ public class FilesActivity extends AppCompatActivity
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_files, menu);
+
         return true;
     }
 
@@ -303,21 +300,13 @@ public class FilesActivity extends AppCompatActivity
      */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener
     {
-        private FilesActivity mActivity;
-        private ActionBar     mActionBar;
-        private ActionMode    mActionMode;
-        private ListView      mFilesListView;
-        private FilesAdapter  mAdapter;
-        private int           mLastSelectedItem;
+        private FilesActivity mActivity         = null;
+        private ActionBar     mActionBar        = null;
+        private ActionMode    mActionMode       = null;
+        private ListView      mFilesListView    = null;
+        private FilesAdapter  mAdapter          = null;
 
 
-
-        /**
-         * PlaceholderFragment constructor
-         */
-        public PlaceholderFragment()
-        {
-        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -348,14 +337,7 @@ public class FilesActivity extends AppCompatActivity
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-            {
-                registerForContextMenu(mFilesListView);
-            }
-            else
-            {
-                setChoiceListener();
-            }
+            setChoiceListener();
 
             mActionBar = mActivity.getSupportActionBar();
             mActionBar.setDisplayShowHomeEnabled(false);
@@ -422,70 +404,9 @@ public class FilesActivity extends AppCompatActivity
             }
         }
 
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-        {
-            mLastSelectedItem = ((AdapterContextMenuInfo)menuInfo).position;
-
-            if (mLastSelectedItem == 0)
-            {
-                FileEntry file = (FileEntry)mAdapter.getItem(mLastSelectedItem);
-
-                if (
-                    file.isDirectory()
-                    &&
-                    file.getFileName().equals("..")
-                   )
-                {
-                    return;
-                }
-            }
-
-            mActivity.getMenuInflater().inflate(R.menu.context_menu_files, menu);
-            super.onCreateContextMenu(menu, v, menuInfo);
-        }
-
-        @Override
-        public boolean onContextItemSelected(MenuItem item)
-        {
-            switch (item.getItemId())
-            {
-                case R.id.action_mark_to_rename:
-                {
-                    markToRename(new int[]{mLastSelectedItem});
-                }
-                break;
-                case R.id.action_mark_to_delete:
-                {
-                    markToDelete(new int[]{mLastSelectedItem});
-                }
-                break;
-                case R.id.action_note:
-                {
-                    assignNote(new int[]{mLastSelectedItem});
-                }
-                break;
-                 case R.id.action_rename:
-                {
-                    rename(mLastSelectedItem);
-                }
-                break;
-                case R.id.action_delete:
-                {
-                    delete(new int[]{mLastSelectedItem});
-                }
-                break;
-                default:
-                {
-                    Log.e(TAG, "Unknown action: " + String.valueOf(item));
-                }
-                break;
-            }
-
-            return super.onContextItemSelected(item);
-        }
-
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        /**
+         * Sets choice listener on ActionMode
+         */
         private void setChoiceListener()
         {
             mFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -994,7 +915,6 @@ public class FilesActivity extends AppCompatActivity
             return false;
         }
 
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void hideActionMode()
         {
             if (mActionMode != null)

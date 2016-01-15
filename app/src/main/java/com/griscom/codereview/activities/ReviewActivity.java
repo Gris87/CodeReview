@@ -103,7 +103,7 @@ public class ReviewActivity extends FragmentActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(item.getItemId())
+        switch (item.getItemId())
         {
             case R.id.action_reload:
             {
@@ -169,25 +169,23 @@ public class ReviewActivity extends FragmentActivity
      */
     public static class PlaceholderFragment extends Fragment implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnProgressChangedListener
     {
-        private ReviewActivity    mActivity;
-        private ReviewSurfaceView mContent;
-        private View              mTitle;
-        private TextView          mTitleTextView;
-        private TextView          mProgressTextView;
-        private View              mControls;
-        private Button            mReviewedButton;
-        private Button            mInvalidButton;
-        private Button            mNoteButton;
-        private Button            mClearButton;
-        private boolean           mControlsVisible;
-        private Button            mLastSelectedButton;
-        private int               mDefaultColor;
-        private int               mSelectedColor;
-        private int               mHoverColor;
+        private ReviewActivity    mActivity           = null;
+        private ReviewSurfaceView mContent            = null;
+        private View              mTitle              = null;
+        private TextView          mTitleTextView      = null;
+        private TextView          mProgressTextView   = null;
+        private View              mControls           = null;
+        private Button            mReviewedButton     = null;
+        private Button            mInvalidButton      = null;
+        private Button            mNoteButton         = null;
+        private Button            mClearButton        = null;
+        private boolean           mControlsVisible    = false;
+        private Button            mLastSelectedButton = null;
+        private int               mDefaultColor       = -1;
+        private int               mSelectedColor      = -1;
+        private int               mHoverColor         = -1;
 
-        public PlaceholderFragment()
-        {
-        }
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
