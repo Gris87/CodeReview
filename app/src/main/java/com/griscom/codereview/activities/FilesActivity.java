@@ -300,11 +300,11 @@ public class FilesActivity extends AppCompatActivity
      */
     public static class PlaceholderFragment extends Fragment implements OnItemClickListener
     {
-        private FilesActivity mActivity         = null;
-        private ActionBar     mActionBar        = null;
-        private ActionMode    mActionMode       = null;
-        private ListView      mFilesListView    = null;
-        private FilesAdapter  mAdapter          = null;
+        private FilesActivity mActivity      = null;
+        private ActionBar     mActionBar     = null;
+        private ActionMode    mActionMode    = null;
+        private ListView      mFilesListView = null;
+        private FilesAdapter  mAdapter       = null;
 
 
 
