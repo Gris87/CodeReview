@@ -1,7 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/review_vertical_margin"
+    android:paddingLeft="@dimen/review_horizontal_margin"
+    android:paddingRight="@dimen/review_horizontal_margin"
+    android:paddingTop="@dimen/review_vertical_margin"
     tools:context="com.griscom.codereview.activities.ReviewActivity$PlaceholderFragment" >
 
     <com.griscom.codereview.review.ReviewSurfaceView
