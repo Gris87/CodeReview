@@ -1,5 +1,3 @@
-Remove margin in control panel
-Change title color to white in viewer
 Syntax Highlight in menu
 Select all in ActionMode
 Mark as correct file in ActionMode

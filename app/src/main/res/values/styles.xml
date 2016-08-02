@@ -22,28 +22,29 @@
         <item name="android:windowBackground">@null</item>
         <item name="metaTitleBarStyle">@style/TitleBar</item>
         <item name="metaTitleBarTextStyle">@style/TitleBarText</item>
+        <item name="metaTitleBarSubTextStyle">@style/TitleBarSubText</item>
         <item name="metaButtonBarStyle">@style/ButtonBar</item>
         <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
     </style>
 
     <style name="TitleBar">
-        <item name="android:paddingLeft">4dp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingRight">4dp</item>
-        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">@dimen/common_margin</item>
+        <item name="android:paddingTop">@dimen/common_margin</item>
+        <item name="android:paddingRight">@dimen/common_margin</item>
+        <item name="android:paddingBottom">@dimen/common_margin</item>
         <item name="android:background">@android:drawable/bottom_bar</item>
     </style>
 
     <style name="TitleBarText">
-        <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TitleBarSubText">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
     <style name="ButtonBar">
-        <item name="android:paddingLeft">2dp</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingRight">2dp</item>
-        <item name="android:paddingBottom">0dp</item>
         <item name="android:background">@android:drawable/bottom_bar</item>
     </style>
 

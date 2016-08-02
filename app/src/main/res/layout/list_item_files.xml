@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="@dimen/common_margin"
         android:focusable="false"
         android:visibility="gone" />
 
@@ -20,7 +20,7 @@
         android:layout_toRightOf="@+id/checkbox"
         android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginLeft="@dimen/common_margin" />
 
     <TextView
         android:id="@+id/fileNoteTextView"
@@ -29,8 +29,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/extensionImageView"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
         android:singleLine="true"
         android:gravity="right"
         android:textColor="@android:color/darker_gray"
@@ -44,8 +44,8 @@
         android:layout_toLeftOf="@+id/fileSizeTextView"
         android:layout_below="@+id/fileNoteTextView"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
         android:singleLine="true"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -57,8 +57,8 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/fileNoteTextView"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginBottom="@dimen/common_margin"
         android:singleLine="true"
         android:gravity="bottom"
         android:textColor="@android:color/darker_gray"
