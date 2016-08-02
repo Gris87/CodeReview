@@ -1,13 +1,20 @@
+Удалить %d файлов/папок
+Remove margin in control panel
+Change title color to white in viewer
+Syntax Highlight in menu
 Select all in ActionMode
 Mark as correct file in ActionMode
 Mark as invalid file in ActionMode
 Colorize files after using actions above
 Hide Done/Back button in ActionMode
 Make usage of last comments looks better
+Use standard combobox
 Smooth movement
+Auto-speed on scrolling with selection
 Code folding
 Save/load dialogs state
 
 -----------------------------------
 
+Release keys
 Publish

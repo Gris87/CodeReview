@@ -27,13 +27,13 @@
     <string name="action_rename">Переименовать</string>
 
     <!-- Mark to rename -->
-    <string name="action_mark_to_rename">Отметить переименовывание</string>
+    <string name="action_mark_to_rename">Заметка о переименовании</string>
 
     <!-- Delete -->
     <string name="action_delete">Удалить</string>
 
     <!-- Mark to delete -->
-    <string name="action_mark_to_delete">Отметить удаление</string>
+    <string name="action_mark_to_delete">Заметка об удалении</string>
 
     <!-- Note -->
     <string name="action_note">Заметка</string>
