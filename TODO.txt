@@ -13,6 +13,7 @@ Smooth movement
 Auto-speed on scrolling with selection
 Code folding
 Save/load dialogs state
+Verify that modification time not in use if MD5 hash is the same
 
 -----------------------------------
 
