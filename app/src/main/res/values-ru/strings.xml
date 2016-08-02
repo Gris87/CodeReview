@@ -16,7 +16,7 @@
 
     <!-- Settings -->
     <string name="action_settings">Настройки</string>
-    
+
     <!-- Donate -->
     <string name="action_donate">Пожертвовать</string>
 
@@ -44,74 +44,122 @@
     <!-- Close -->
     <string name="action_close">Закрыть</string>
 
+    <!-- Plurals for selecting folders -->
+    <plurals name="selected_folders_plurals">
+        <item quantity="one">%1$d папка</item>
+        <!-- <item quantity="two">%1$d папки</item> Not used -->
+        <item quantity="few">%1$d папки</item>
+        <item quantity="many">%1$d папок</item>
+        <item quantity="other">%1$d папок</item>
+    </plurals>
+
+    <!-- Plurals for selecting files -->
+    <plurals name="selected_files_plurals">
+        <item quantity="one">%1$d файл</item>
+        <!-- <item quantity="two">%1$d файла</item> Not used -->
+        <item quantity="few">%1$d файла</item>
+        <item quantity="many">%1$d файлов</item>
+        <item quantity="other">%1$d файлов</item>
+    </plurals>
+
+    <!-- Plurals for deleting folders -->
+    <plurals name="delete_folders_plurals">
+        <item quantity="one">%1$d папку</item>
+        <!-- <item quantity="two">%1$d папки</item> Not used -->
+        <item quantity="few">%1$d папки</item>
+        <item quantity="many">%1$d папок</item>
+        <item quantity="other">%1$d папок</item>
+    </plurals>
+
+    <!-- Plurals for deleting files -->
+    <plurals name="delete_files_plurals">
+        <item quantity="one">%1$d файл</item>
+        <!-- <item quantity="two">%1$d файла</item> Not used -->
+        <item quantity="few">%1$d файла</item>
+        <item quantity="many">%1$d файлов</item>
+        <item quantity="other">%1$d файлов</item>
+    </plurals>
+
     <!-- Select files title in ActionMode -->
     <string name="select_files">Выберите файлы</string>
 
-    <!-- Files selected subtitle in ActionMode -->
-    <plurals name="files_selected">
-        <item quantity="one">%d файл выбран</item>
-        <!-- <item quantity="two">%d files selected</item> Not used -->
-        <item quantity="few">%d файла выбрано</item>
-        <item quantity="many">%d файлов выбрано</item>
-        <item quantity="other">%d файлов выбрано</item>
+    <!-- Folders selected subtitle in ActionMode -->
+    <plurals name="folders_selected">
+        <item quantity="one">%1$s выбрана</item>
+        <!-- <item quantity="two">%1$s выбрано</item> Not used -->
+        <item quantity="few">%1$s выбрано</item>
+        <item quantity="many">%1$s выбрано</item>
+        <item quantity="other">%1$s выбрано</item>
     </plurals>
 
-    <!-- Title for filename dialog in files activity -->
-    <string name="dialog_input_filename_title">Имя файла</string>
+    <!-- Files selected subtitle in ActionMode -->
+    <plurals name="files_selected">
+        <item quantity="one">%1$s выбран</item>
+        <!-- <item quantity="two">%1$s выбрано</item> Not used -->
+        <item quantity="few">%1$s выбрано</item>
+        <item quantity="many">%1$s выбрано</item>
+        <item quantity="other">%1$s выбрано</item>
+    </plurals>
 
-    <!-- Message for filename dialog in files activity -->
-    <string name="dialog_input_filename_message">Введите имя файла:</string>
+    <!-- Folders and files selected subtitle in ActionMode -->
+    <string name="folders_and_files_selected">%1$s and %2$s выбраны</string>
 
-    <!-- Show message if there is no last filenames -->
-    <string name="no_last_filenames">Введите хотя бы одно имя файла, чтобы в дальнейшем использовать его</string>
+    <!-- Title for rename dialog in files activity -->
+    <string name="dialog_rename_title">Имя</string>
 
-    <!-- Show message if filename is empty -->
-    <string name="empty_filename">Пожалуйста введите имя файла</string>
+    <!-- Message for rename dialog in files activity -->
+    <string name="dialog_rename_message">Введите имя:</string>
 
-    <!-- Title for filenote dialog in files activity -->
-    <string name="dialog_input_filenote_title">Заметка файла</string>
+    <!-- Show message if there is no last names -->
+    <string name="no_last_names">Введите хотя бы одно имя, чтобы в дальнейшем использовать его</string>
 
-    <!-- Message for filenote dialog in files activity -->
-    <string name="dialog_input_filenote_message">Введите заметку:</string>
+    <!-- Show message if name is empty -->
+    <string name="empty_name">Пожалуйста, введите имя</string>
 
-    <!-- Show message if there is no last filenotes -->
-    <string name="no_last_filenotes">Введите хотя бы одну заметку, чтобы в дальнейшем использовать ее</string>
+    <!-- Title for note dialog in files activity -->
+    <string name="dialog_input_note_title">Заметка</string>
+
+    <!-- Message for note dialog in files activity -->
+    <string name="dialog_input_note_message">Введите заметку:</string>
+
+    <!-- Show message if there is no last notes -->
+    <string name="no_last_notes">Введите хотя бы одну заметку, чтобы в дальнейшем использовать ее</string>
 
     <!-- Need to rename -->
     <string name="need_to_rename">Нужно переименовать</string>
 
-    <!-- Rename to %s -->
-    <string name="rename_to">Переименовать в %s</string>
+    <!-- Rename to %1$s -->
+    <string name="rename_to">Переименовать в %1$s</string>
 
     <!-- Need to delete -->
     <string name="need_to_delete">Нужно удалить</string>
+
+    <!-- Can't rename folder -->
+    <string name="can_not_rename_folder">Не удалось переименовать папку</string>
 
     <!-- Can't rename file -->
     <string name="can_not_rename_file">Не удалось переименовать файл</string>
 
     <!-- Title for delete dialog in files activity -->
-    <string name="dialog_delete_files_title">Удалить</string>
+    <string name="dialog_delete_title">Удалить</string>
 
     <!-- Message for delete dialog in files activity -->
-    <plurals name="dialog_delete_files_message">
-        <item quantity="one">Вы хотите удалить %d файл?</item>
-        <!-- <item quantity="two">Do you want to delete %d files?</item> Not used -->
-        <item quantity="few">Вы хотите удалить %d файла?</item>
-        <item quantity="many">Вы хотите удалить %d файлов?</item>
-        <item quantity="other">Вы хотите удалить %d файлов?</item>
-    </plurals>
+    <string name="dialog_delete_folders_or_files_message">Вы хотите удалить %1$s?</string>
+
+    <!-- Message for delete dialog in files activity -->
+    <string name="dialog_delete_folders_and_files_message">Вы хотите удалить %1$s и %2$s?</string>
+
+    <!-- Can't delete folder -->
+    <string name="can_not_delete_folder">Не удалось удалить папку: %1$s</string>
 
     <!-- Can't delete file -->
-    <string name="can_not_delete_file">Не удалось удалить файл: %s</string>
+    <string name="can_not_delete_file">Не удалось удалить файл: %1$s</string>
 
-    <!-- Can't delete files -->
-    <plurals name="can_not_delete_files">
-        <item quantity="one">Не удалось удалить %d файл</item>
-        <!-- <item quantity="two">Can not delete %d files</item> Not used -->
-        <item quantity="few">Не удалось удалить %d файла</item>
-        <item quantity="many">Не удалось удалить %d файлов</item>
-        <item quantity="other">Не удалось удалить %d файлов</item>
-    </plurals>
+    <!-- Can't delete folders/files -->
+    <string name="can_not_delete_folders_or_files">Не удалось удалить %1$s</string>
+
+    <!-- Can't delete folders and files -->
+    <string name="can_not_delete_folders_and_files">Не удалось удалить %1$s и %2$s</string>
 
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Нажмите снова для выхода</string>
@@ -135,21 +183,21 @@
     <string name="title_activity_ignore_files">Игнорирование файлов</string>
 
     <!-- Title for dialog in ignore files activity -->
-    <string name="dialog_add_file_title">Игнорирование файла</string>
+    <string name="dialog_add_ignore_file_title">Игнорирование файла</string>
 
     <!-- Message for dialog in ignore files activity -->
-    <string name="dialog_add_file_message">Введите имя файла или шаблон\n(разрешены символы \'*\' и \'?\'):</string>
+    <string name="dialog_add_ignore_file_message">Введите имя файла или шаблон\n(разрешены символы \'*\' и \'?\'):</string>
 
     <!-- Select items title in ActionMode -->
     <string name="select_items">Выберите элементы</string>
 
     <!-- Items selected subtitle in ActionMode -->
     <plurals name="items_selected">
-        <item quantity="one">%d элемент выбран</item>
-        <!-- <item quantity="two">%d items selected</item> Not used -->
-        <item quantity="few">%d элемента выбрано</item>
-        <item quantity="many">%d элементов выбрано</item>
-        <item quantity="other">%d элементов выбрано</item>
+        <item quantity="one">%1$d элемент выбран</item>
+        <!-- <item quantity="two">%1$d items выбрано</item> Not used -->
+        <item quantity="few">%1$d элемента выбрано</item>
+        <item quantity="many">%1$d элементов выбрано</item>
+        <item quantity="other">%1$d элементов выбрано</item>
     </plurals>
 
 </resources>

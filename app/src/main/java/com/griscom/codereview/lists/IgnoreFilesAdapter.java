@@ -1,8 +1,5 @@
 package com.griscom.codereview.lists;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,6 +15,9 @@ import android.widget.TextView;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class IgnoreFilesAdapter extends BaseAdapter
 {
@@ -105,7 +105,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
         {
             holder.mCheckBox.setVisibility(View.VISIBLE);
             holder.mCheckBox.setOnCheckedChangeListener(null);
-            holder.mCheckBox.setChecked(mSelection.contains(Integer.valueOf(position)));
+            holder.mCheckBox.setChecked(mSelection.contains(position));
             holder.mCheckBox.setOnCheckedChangeListener(new CheckedChangedListener(position));
         }
         else
@@ -227,7 +227,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
         {
             if (checked)
             {
-                mSelection.add(Integer.valueOf(index));
+                mSelection.add(index);
             }
             else
             {
@@ -255,7 +255,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         public CheckedChangedListener(int position)
         {
-            mPosition = Integer.valueOf(position);
+            mPosition = position;
         }
 
         @Override

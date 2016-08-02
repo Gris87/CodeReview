@@ -1,13 +1,5 @@
 package com.griscom.codereview.lists;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-import junit.framework.Assert;
-
-import org.apache.commons.io.filefilter.WildcardFileFilter;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -38,6 +30,14 @@ import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.other.SortType;
 import com.griscom.codereview.util.Utils;
+
+import junit.framework.Assert;
+
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class FilesAdapter extends BaseAdapter
 {
@@ -337,7 +337,7 @@ public class FilesAdapter extends BaseAdapter
         {
             holder.mCheckBox.setVisibility(View.VISIBLE);
             holder.mCheckBox.setOnCheckedChangeListener(null);
-            holder.mCheckBox.setChecked(mSelection.contains(Integer.valueOf(position)));
+            holder.mCheckBox.setChecked(mSelection.contains(position));
             holder.mCheckBox.setOnCheckedChangeListener(new CheckedChangedListener(position));
         }
         else
@@ -525,9 +525,11 @@ public class FilesAdapter extends BaseAdapter
 
     public void assignNote(int files[], String note)
     {
-        for (int i = 0; i < files.length; ++i)
+        for (int fileIndex : files)
         {
-            mFiles.get(files[i]).setFileNote(mContext, pathToFile(mFiles.get(files[i]).getFileName()), note);
+            FileEntry file = mFiles.get(fileIndex);
+
+            file.setFileNote(mContext, pathToFile(file.getFileName()), note);
         }
 
         notifyDataSetChanged();
@@ -559,10 +561,8 @@ public class FilesAdapter extends BaseAdapter
         return false;
     }
 
-    public ArrayList<String> deleteFiles(int files[])
+    public void deleteFiles(int files[], ArrayList<String> keepFolders, ArrayList<String> keepFiles)
     {
-        ArrayList<String> res = new ArrayList<String>();
-
         for (int e = 0; e < files.length - 1; ++e)
         {
             int max = files[e];
@@ -582,29 +582,36 @@ public class FilesAdapter extends BaseAdapter
             files[maxIndex] = temp;
         }
 
-        for (int i = 0; i < files.length; ++i)
+        for (int fileIndex : files)
         {
-            String filename = mFiles.get(files[i]).getFileName();
+            FileEntry file = mFiles.get(fileIndex);
+
+            String filename = file.getFileName();
 
             if (Utils.deleteFileOrFolder(pathToFile(filename)))
             {
                 synchronized (this)
                 {
-                    mFiles.remove(files[i]);
+                    mFiles.remove(fileIndex);
                 }
             }
             else
             {
-                res.add(filename);
+                if (file.isDirectory())
+                {
+                    keepFolders.add(filename);
+                }
+                else
+                {
+                    keepFiles.add(filename);
+                }
             }
         }
 
-        if (res.size() < files.length)
+        if (keepFolders.size() + keepFiles.size() < files.length)
         {
             notifyDataSetChanged();
         }
-
-        return res;
     }
 
     public void setCurrentPathBacktrace(String newPath)
@@ -664,7 +671,7 @@ public class FilesAdapter extends BaseAdapter
         {
             if (checked)
             {
-                mSelection.add(Integer.valueOf(index));
+                mSelection.add(index);
             }
             else
             {
@@ -697,7 +704,7 @@ public class FilesAdapter extends BaseAdapter
 
         public CheckedChangedListener(int position)
         {
-            mPosition = Integer.valueOf(position);
+            mPosition = position;
         }
 
         @Override

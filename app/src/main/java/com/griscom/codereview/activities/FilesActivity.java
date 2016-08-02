@@ -1,16 +1,11 @@
 package com.griscom.codereview.activities;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-import junit.framework.Assert;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,6 +40,12 @@ import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
+
+import junit.framework.Assert;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 /**
  * Activity for displaying files
@@ -426,14 +427,55 @@ public class FilesActivity extends AppCompatActivity
                            )
                         {
                             mFilesListView.setItemChecked(position, false);
+
                             return;
                         }
                     }
 
-                    int selectedCount = mFilesListView.getCheckedItemCount();
-                    mode.setSubtitle(mActivity.getResources().getQuantityString(R.plurals.files_selected, selectedCount, selectedCount));
-
                     mAdapter.setSelected(position, checked);
+
+
+
+                    ArrayList<Integer> items = mAdapter.getSelection();
+
+                    int foldersCount = 0;
+                    int filesCount   = 0;
+
+                    for (int item : items)
+                    {
+                        if (((FileEntry)mAdapter.getItem(item)).isDirectory())
+                        {
+                            ++foldersCount;
+                        }
+                        else
+                        {
+                            ++filesCount;
+                        }
+                    }
+
+                    Resources resources = getResources();
+
+                    String folders = foldersCount > 0 ? resources.getQuantityString(R.plurals.selected_folders_plurals, foldersCount, foldersCount) : null;
+                    String files   = filesCount   > 0 ? resources.getQuantityString(R.plurals.selected_files_plurals,   filesCount,   filesCount)   : null;
+
+                    if (foldersCount == 0 && filesCount == 0)
+                    {
+                        mode.setSubtitle(null);
+                    }
+                    else
+                    if (foldersCount > 0 && filesCount == 0)
+                    {
+                        mode.setSubtitle(resources.getQuantityString(R.plurals.folders_selected, foldersCount, folders));
+                    }
+                    else
+                    if (foldersCount == 0 && filesCount > 0)
+                    {
+                        mode.setSubtitle(resources.getQuantityString(R.plurals.files_selected, filesCount, files));
+                    }
+                    else
+                    {
+                        mode.setSubtitle(resources.getString(R.string.folders_and_files_selected, folders, files));
+                    }
                 }
 
                 @Override
@@ -465,7 +507,7 @@ public class FilesActivity extends AppCompatActivity
 
                     for (int i = 0; i < tempList.size(); ++i)
                     {
-                        items[i] = tempList.get(i).intValue();
+                        items[i] = tempList.get(i);
                     }
 
                     boolean res = true;
@@ -580,14 +622,14 @@ public class FilesActivity extends AppCompatActivity
                             }
                             else
                             {
-                                Toast.makeText(mActivity, R.string.no_last_filenames, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mActivity, R.string.no_last_names, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
                 AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                    .setTitle(R.string.dialog_input_filename_title)
-                    .setMessage(R.string.dialog_input_filename_message)
+                    .setTitle(R.string.dialog_rename_title)
+                    .setMessage(R.string.dialog_rename_message)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok,
                     new DialogInterface.OnClickListener()
@@ -614,7 +656,7 @@ public class FilesActivity extends AppCompatActivity
                             }
                             else
                             {
-                                Toast.makeText(mActivity, R.string.empty_filename, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mActivity, R.string.empty_name, Toast.LENGTH_SHORT).show();
                             }
                         }
                     })
@@ -708,14 +750,14 @@ public class FilesActivity extends AppCompatActivity
                         }
                         else
                         {
-                            Toast.makeText(mActivity, R.string.no_last_filenotes, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.no_last_notes, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
             AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.dialog_input_filenote_title)
-                .setMessage(R.string.dialog_input_filenote_message)
+                .setTitle(R.string.dialog_input_note_title)
+                .setMessage(R.string.dialog_input_note_message)
                 .setView(view)
                 .setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener()
@@ -813,14 +855,14 @@ public class FilesActivity extends AppCompatActivity
                         }
                         else
                         {
-                            Toast.makeText(mActivity, R.string.no_last_filenames, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.no_last_names, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
             AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.dialog_input_filename_title)
-                .setMessage(R.string.dialog_input_filename_message)
+                .setTitle(R.string.dialog_rename_title)
+                .setMessage(R.string.dialog_rename_message)
                 .setView(view)
                 .setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener()
@@ -851,7 +893,7 @@ public class FilesActivity extends AppCompatActivity
                         }
                         else
                         {
-                            Toast.makeText(mActivity, R.string.empty_filename, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.empty_name, Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -873,25 +915,84 @@ public class FilesActivity extends AppCompatActivity
 
         private boolean delete(final int items[])
         {
+            int foldersCount = 0;
+            int filesCount   = 0;
+
+            for (int item : items)
+            {
+                if (((FileEntry)mAdapter.getItem(item)).isDirectory())
+                {
+                    ++foldersCount;
+                }
+                else
+                {
+                    ++filesCount;
+                }
+            }
+
+            final Resources resources = getResources();
+
+            String folders = foldersCount > 0 ? resources.getQuantityString(R.plurals.delete_folders_plurals, foldersCount, foldersCount) : null;
+            String files   = filesCount   > 0 ? resources.getQuantityString(R.plurals.delete_files_plurals,   filesCount,   filesCount)   : null;
+
+            String message;
+
+            if (foldersCount > 0 && filesCount == 0)
+            {
+                message = resources.getString(R.string.dialog_delete_folders_or_files_message, folders);
+            }
+            else
+            if (foldersCount == 0 && filesCount > 0)
+            {
+                message = resources.getString(R.string.dialog_delete_folders_or_files_message, files);
+            }
+            else
+            {
+                message = resources.getString(R.string.dialog_delete_folders_and_files_message, folders, files);
+            }
+
             AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.dialog_delete_files_title)
-                .setMessage(mActivity.getResources().getQuantityString(R.plurals.dialog_delete_files_message, items.length, items.length, items.length))
+                .setTitle(R.string.dialog_delete_title)
+                .setMessage(message)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int index)
                     {
-                        ArrayList<String> keep = mAdapter.deleteFiles(items);
+                        ArrayList<String> keepFolders = new ArrayList<>();
+                        ArrayList<String> keepFiles   = new ArrayList<>();
 
-                        if (keep.size() > 0)
+                        mAdapter.deleteFiles(items, keepFolders, keepFiles);
+
+                        if (keepFolders.size() > 0 || keepFiles.size() > 0)
                         {
-                            if (keep.size() == 1)
+                            if (keepFolders.size() == 1 && keepFiles.size() == 0)
                             {
-                                Toast.makeText(mActivity, getResources().getString(R.string.can_not_delete_file, keep.get(0)), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mActivity, resources.getString(R.string.can_not_delete_folder, keepFolders.get(0)), Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            if (keepFolders.size() == 0 && keepFiles.size() == 1)
+                            {
+                                Toast.makeText(mActivity, resources.getString(R.string.can_not_delete_file, keepFiles.get(0)), Toast.LENGTH_SHORT).show();
                             }
                             else
                             {
-                                Toast.makeText(mActivity, getResources().getQuantityString(R.plurals.can_not_delete_files, keep.size(), keep.size()), Toast.LENGTH_SHORT).show();
+                                String folders = keepFolders.size() > 0 ? resources.getQuantityString(R.plurals.delete_folders_plurals, keepFolders.size(), keepFolders.size()) : null;
+                                String files   = keepFiles.size()   > 0 ? resources.getQuantityString(R.plurals.delete_files_plurals,   keepFiles.size(),   keepFiles.size())   : null;
+
+                                if (keepFolders.size() > 1 && keepFiles.size() == 0)
+                                {
+                                    Toast.makeText(mActivity, resources.getString(R.string.can_not_delete_folders_or_files, folders), Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                if (keepFolders.size() == 0 && keepFiles.size() > 1)
+                                {
+                                    Toast.makeText(mActivity, resources.getString(R.string.can_not_delete_folders_or_files, files), Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(mActivity, resources.getString(R.string.can_not_delete_folders_and_files, folders, files), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
 
