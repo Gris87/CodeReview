@@ -1,5 +1,5 @@
 include ':app', ':ColorPickerPreference', ':JavaPrettify', ':NumberPickerDialogPreference', ':NumberPicker'
-project(':ColorPickerPreference').projectDir = new File('app/libs/ColorPickerPreference')
-project(':JavaPrettify').projectDir = new File('app/libs/JavaPrettify')
+project(':ColorPickerPreference').projectDir        = new File('app/libs/ColorPickerPreference')
+project(':JavaPrettify').projectDir                 = new File('app/libs/JavaPrettify')
 project(':NumberPickerDialogPreference').projectDir = new File('app/libs/NumberPickerDialogPreference')
-project(':NumberPicker').projectDir = new File('app/libs/NumberPickerDialogPreference/libs/NumberPicker')
+project(':NumberPicker').projectDir                 = new File('app/libs/NumberPickerDialogPreference/libs/NumberPicker')
