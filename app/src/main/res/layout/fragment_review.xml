@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.griscom.codereview.activities.ReviewActivity$PlaceholderFragment" >
+    tools:context="com.griscom.codereview.activities.ReviewActivity$PlaceholderFragment">
 
     <com.griscom.codereview.review.ReviewSurfaceView
         android:id="@+id/fullscreen_content"
@@ -22,7 +22,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true" >
+        android:fitsSystemWindows="true">
 
         <LinearLayout
             android:id="@+id/fullscreen_content_title"
@@ -32,7 +32,7 @@
             android:background="@color/black_overlay"
             android:orientation="vertical"
             tools:ignore="UselessParent"
-            style="?metaTitleBarStyle" >
+            style="?metaTitleBarStyle">
 
             <TextView
                 android:id="@+id/noteTextView"
@@ -51,7 +51,7 @@
                 android:layout_marginTop="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
                 android:layout_marginBottom="@dimen/common_margin"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/titleTextView"
@@ -82,7 +82,7 @@
             android:background="@color/black_overlay"
             android:orientation="horizontal"
             tools:ignore="UselessParent"
-            style="?metaButtonBarStyle" >
+            style="?metaButtonBarStyle">
 
             <Button
                 android:id="@+id/reviewed_button"

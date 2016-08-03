@@ -6,7 +6,7 @@
     android:paddingBottom="@dimen/dialog_vertical_margin"
     android:paddingLeft="@dimen/dialog_horizontal_margin"
     android:paddingRight="@dimen/dialog_horizontal_margin"
-    android:paddingTop="@dimen/dialog_vertical_margin" >
+    android:paddingTop="@dimen/dialog_vertical_margin">
 
     <EditText
         android:id="@+id/inputEditText"

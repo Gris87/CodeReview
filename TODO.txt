@@ -1,18 +1,19 @@
-Syntax Highlight in menu
 Select all in ActionMode
 Mark as correct file in ActionMode
 Mark as invalid file in ActionMode
 Colorize files after using actions above
 Hide Done/Back button in ActionMode
+Failed to get notes on folders after setting it up
 Make usage of last comments looks better
 Use standard combobox
-Smooth movement
-Auto-speed on scrolling with selection
-Show note in title in viewer
-Code folding
-Save/load dialogs state
-Verify that modification time not in use if MD5 hash is the same
 Do not auto open big files
+Show note in title in viewer
+Syntax Highlight in menu
+Auto-speed on scrolling with selection
+Save/load dialogs state
+Smooth movement
+Code folding
+Verify that modification time not in use if MD5 hash is the same
 
 -----------------------------------
 
