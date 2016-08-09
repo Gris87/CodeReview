@@ -10,6 +10,11 @@ import com.google.android.gms.analytics.Tracker;
  */
 public class CodeReviewApplication extends Application
 {
+    @SuppressWarnings("unused")
+    private static final String TAG = "CodeReviewApplication";
+
+
+
     private Tracker mTracker = null;
 
 
@@ -17,7 +22,7 @@ public class CodeReviewApplication extends Application
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
      *
-     * @return  Google Analytics tracker
+     * @return Google Analytics tracker
      */
     synchronized public Tracker getDefaultTracker()
     {

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android
 {
@@ -35,3 +34,5 @@ dependencies
     compile project(":JavaPrettify")
     compile project(":NumberPickerDialogPreference")
 }
+
+apply plugin: 'com.google.gms.google-services'

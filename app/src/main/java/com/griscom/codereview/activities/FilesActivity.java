@@ -341,7 +341,7 @@ public class FilesActivity extends AppCompatActivity
 
             View rootView = inflater.inflate(R.layout.fragment_files, container, false);
 
-            mFilesListView = (ListView)rootView.findViewById(R.id.fileslistView);
+            mFilesListView = (ListView)rootView.findViewById(R.id.filesListView);
             mFilesListView.setAdapter(mAdapter);
             mFilesListView.setOnItemClickListener(this);
 
