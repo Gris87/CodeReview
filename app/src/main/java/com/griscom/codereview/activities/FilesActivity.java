@@ -52,13 +52,20 @@ import java.util.ArrayList;
  */
 public class FilesActivity extends AppCompatActivity
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "FilesActivity";
+
+
 
     private static final String FILE_NAMES_SHARED_PREFERENCES = "FileNames";
     private static final String FILE_NOTES_SHARED_PREFERENCES = "FileNotes";
 
+
+
     private static final int REQUEST_SETTINGS = 1;
     private static final int REQUEST_REVIEW   = 2;
+
+
 
     private static final int TIME_FOR_CLOSE   = 1000;
 
