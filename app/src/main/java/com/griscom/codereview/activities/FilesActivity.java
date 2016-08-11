@@ -977,6 +977,9 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         return false;
     }
 
+    /**
+     * Hides ActionMode
+     */
     private void hideActionMode()
     {
         if (mActionMode != null)
