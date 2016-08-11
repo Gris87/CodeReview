@@ -1,7 +1,5 @@
 package com.griscom.codereview.activities;
 
-import java.util.List;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,13 +7,11 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
+
+import java.util.List;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -47,31 +43,12 @@ public class SettingsActivity extends PreferenceActivity
 
 
 
-    private Tracker mTracker = null;
-
-
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {
         super.onPostCreate(savedInstanceState);
 
-        CodeReviewApplication application = (CodeReviewApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
         setupSimplePreferencesScreen();
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        String name = "SettingsActivity";
-
-        Log.i(TAG, "Setting screen name: " + name);
-        mTracker.setScreenName(name);
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     /**

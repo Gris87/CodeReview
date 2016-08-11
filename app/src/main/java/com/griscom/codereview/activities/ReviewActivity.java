@@ -1,6 +1,5 @@
 package com.griscom.codereview.activities;
 
-import junit.framework.Assert;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -22,10 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.griscom.codereview.BuildConfig;
-import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
@@ -34,6 +30,8 @@ import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.ReviewSurfaceView;
+
+import junit.framework.Assert;
 
 public class ReviewActivity extends FragmentActivity
 {
@@ -52,7 +50,6 @@ public class ReviewActivity extends FragmentActivity
 
 
     private PlaceholderFragment mPlaceholderFragment = null;
-    private Tracker             mTracker             = null;
 
 
 
@@ -62,27 +59,12 @@ public class ReviewActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
 
-        CodeReviewApplication application = (CodeReviewApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
         if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction()
                                        .add(R.id.container, new PlaceholderFragment())
                                        .commit();
         }
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        String name = "ReviewActivity";
-
-        Log.i(TAG, "Setting screen name: " + name);
-        mTracker.setScreenName(name);
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+
+    <string  name="ga_trackingId"              >UA-51133429-1</string>
+    <string  name="ga_logLevel"                >warning</string>
+    <integer name="ga_dispatchPeriod"          >1800</integer>
+    <string  name="ga_sampleFrequency"         >100.0</string>
+    <bool    name="ga_autoActivityTracking"    >true</bool>
+    <bool    name="ga_anonymizeIp"             >false</bool>
+    <bool    name="ga_reportUncaughtExceptions">true</bool>
+    <integer name="ga_sessionTimeout"          >1800</integer>
+
+    <screenName name="com.griscom.codereview.activities.FilesActivity"      >FilesActivity</screenName>
+    <screenName name="com.griscom.codereview.activities.IgnoreFilesActivity">IgnoreFilesActivity</screenName>
+    <screenName name="com.griscom.codereview.activities.ReviewActivity"     >ReviewActivity</screenName>
+    <screenName name="com.griscom.codereview.activities.SettingsActivity"   >SettingsActivity</screenName>
+
+</resources>

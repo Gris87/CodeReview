@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.lists.FilesAdapter;
@@ -140,12 +139,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     protected void onResume()
     {
         super.onResume();
-
-        String name = "FilesActivity";
-
-        Log.i(TAG, "Setting screen name: " + name);
-        mTracker.setScreenName(name);
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         if (!mAdapter.rescan())
         {
@@ -261,12 +254,19 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 {
                     case ReviewActivity.RESULT_CANCELED:
                     {
-                        saveLastFile("");
+                        clearLastFile();
                     }
                     break;
+
                     case ReviewActivity.RESULT_CLOSE:
                     {
                         finish();
+                    }
+                    break;
+
+                    default:
+                    {
+                        Log.e(TAG, "Unexpected result code: " + String.valueOf(resultCode));
                     }
                     break;
                 }
@@ -276,6 +276,12 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             case REQUEST_SETTINGS:
             {
                 ColorCache.update(this);
+            }
+            break;
+
+            default:
+            {
+                Log.e(TAG, "Unexpected request code: " + String.valueOf(requestCode));
             }
             break;
         }
@@ -290,6 +296,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         if (!mAdapter.getCurrentPath().equals("/"))
         {
             mAdapter.goUp();
+
             savePath();
             updateCurrentPath();
         }
@@ -312,12 +319,13 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
         if (parent == mFilesListView)
         {
-            FileEntry file = (FileEntry)mFilesListView.getItemAtPosition(position);
+            FileEntry file = (FileEntry)mAdapter.getItem(position);
 
             String fileName = file.getFileName();
 
@@ -351,6 +359,10 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                     updateCurrentPath();
                 }
             }
+        }
+        else
+        {
+            Log.e(TAG, "Unexpected parent: " + String.valueOf(parent));
         }
     }
 
@@ -973,26 +985,23 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
     }
 
+    /**
+     * Updates title in action bar and selects previous folder if possible
+     */
     private void updateCurrentPath()
     {
         String oldPath = (String)mActionBar.getTitle();
         String newPath = mAdapter.getCurrentPath();
 
-        if (newPath.length() < oldPath.length())
+        if (oldPath != null && newPath.length() < oldPath.length())
         {
-            if (BuildConfig.DEBUG)
-            {
-                Assert.assertTrue(oldPath.startsWith(newPath));
-            }
+            Assert.assertTrue(oldPath.startsWith(newPath));
 
             String tail = oldPath.substring(newPath.length());
 
             if (tail.startsWith("/"))
             {
-                if (BuildConfig.DEBUG)
-                {
-                    Assert.assertTrue(tail.length() > 1);
-                }
+                Assert.assertTrue(tail.length() > 1);
 
                 tail = tail.substring(1);
             }
@@ -1035,7 +1044,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
     /**
      * Opens specified file in ReviewActivity
-     * @param fileName    path to file
+     * @param fileName    file name
      * @param fileId      file ID in database
      * @throws FileNotFoundException if file not found
      */
@@ -1131,6 +1140,19 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             openFile(fileName, 0);
         }
+    }
+
+    /**
+     * Clears last opened file
+     */
+    private void clearLastFile()
+    {
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString(ApplicationPreferences.LAST_FILE, "");
+
+        editor.apply();
     }
 
     /**

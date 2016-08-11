@@ -28,7 +28,7 @@ public class CodeReviewApplication extends Application
     {
         if (mTracker == null)
         {
-            mTracker = GoogleAnalytics.getInstance(this).newTracker(R.xml.global_tracker);
+            mTracker = GoogleAnalytics.getInstance(this).newTracker(R.xml.tracker_config);
         }
 
         return mTracker;

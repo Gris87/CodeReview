@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,9 +18,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
 
@@ -35,7 +31,6 @@ public class IgnoreFilesActivity extends AppCompatActivity
 
 
     private PlaceholderFragment mPlaceholderFragment = null;
-    private Tracker             mTracker             = null;
 
 
 
@@ -46,28 +41,12 @@ public class IgnoreFilesActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ignore_files);
 
-        CodeReviewApplication application = (CodeReviewApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-
         if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction()
                                        .add(R.id.container, new PlaceholderFragment())
                                        .commit();
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        String name = "IgnoreFilesActivity";
-
-        Log.i(TAG, "Setting screen name: " + name);
-        mTracker.setScreenName(name);
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     /** {@inheritDoc} */
