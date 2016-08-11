@@ -82,7 +82,7 @@
             android:background="@color/black_overlay"
             android:orientation="horizontal"
             tools:ignore="UselessParent"
-            style="?metaButtonBarStyle">
+            style="?metaControlsBarStyle">
 
             <Button
                 android:id="@+id/reviewed_button"
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:gravity="center"
-                style="?metaButtonBarButtonStyle" />
+                style="?metaControlsBarButtonStyle" />
 
             <Button
                 android:id="@+id/invalid_button"
@@ -98,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:gravity="center"
-                style="?metaButtonBarButtonStyle" />
+                style="?metaControlsBarButtonStyle" />
 
             <Button
                 android:id="@+id/note_button"
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:gravity="center"
-                style="?metaButtonBarButtonStyle" />
+                style="?metaControlsBarButtonStyle" />
 
             <Button
                 android:id="@+id/clear_button"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:gravity="center"
-                style="?metaButtonBarButtonStyle" />
+                style="?metaControlsBarButtonStyle" />
         </LinearLayout>
 
     </FrameLayout>
