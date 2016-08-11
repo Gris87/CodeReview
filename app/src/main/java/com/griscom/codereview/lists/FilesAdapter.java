@@ -49,7 +49,7 @@ public class FilesAdapter extends BaseAdapter
     private DbReaderTask         mDbReaderTask;
     private String               mCurrentPath;
     private ArrayList<FileEntry> mFiles;
-    private SortType             mSortType;
+    private int                  mSortType;
     private boolean              mSelectionMode;
     private ArrayList<Integer>   mSelection;
 
@@ -454,12 +454,19 @@ public class FilesAdapter extends BaseAdapter
         return true;
     }
 
+    /**
+     * Sorts files list with selected sort type
+     */
     public void sort()
     {
         sort(SortType.NONE);
     }
 
-    public void sort(SortType sortType)
+    /**
+     * Sorts files list with specified sort type
+     * @param sortType    sort type
+     */
+    public void sort(int sortType)
     {
         if (sortType != SortType.NONE)
         {
@@ -660,7 +667,7 @@ public class FilesAdapter extends BaseAdapter
         return mCurrentPath;
     }
 
-    public SortType getSortType()
+    public int getSortType()
     {
         return mSortType;
     }

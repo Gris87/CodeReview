@@ -1,7 +1,5 @@
 package com.griscom.codereview.other;
 
-import java.io.File;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,6 +7,8 @@ import android.util.Log;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.db.MainDatabase;
+
+import java.io.File;
 
 @SuppressLint("DefaultLocale")
 public class FileEntry
@@ -84,7 +84,7 @@ public class FileEntry
         return parentFolder;
     }
 
-    public boolean isLess(FileEntry another, SortType sortType)
+    public boolean isLess(FileEntry another, int sortType)
     {
         if (mIsDirectory != another.mIsDirectory)
         {
@@ -93,19 +93,15 @@ public class FileEntry
 
         if (mIsDirectory)
         {
-            if (mFileName.equals(".."))
-            {
-                return true;
-            }
-
-            return mFileName.compareToIgnoreCase(another.mFileName) < 0;
+            return mFileName.equals("..") || mFileName.compareToIgnoreCase(another.mFileName) < 0;
         }
 
         switch (sortType)
         {
-            case NAME: return mFileName.compareToIgnoreCase(another.mFileName) < 0;
-            case TYPE: return mType.compareTo(another.mType) < 0;
-            case SIZE: return mSize < another.mSize;
+            case SortType.NAME: return mFileName.compareToIgnoreCase(another.mFileName) < 0;
+            case SortType.TYPE: return mType.compareTo(another.mType) < 0;
+            case SortType.SIZE: return mSize < another.mSize;
+
             default:
                 Log.e(TAG, "Unknown sort type: " + String.valueOf(sortType));
             break;

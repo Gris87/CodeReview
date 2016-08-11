@@ -1,3 +1,4 @@
+Add AppLog
 Select all in ActionMode
 Mark as correct file in ActionMode
 Mark as invalid file in ActionMode

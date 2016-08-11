@@ -24,11 +24,10 @@ public class CodeReviewApplication extends Application
      *
      * @return Google Analytics tracker
      */
-    synchronized public Tracker getDefaultTracker()
+    public Tracker getDefaultTracker()
     {
         if (mTracker == null)
         {
-            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
             mTracker = GoogleAnalytics.getInstance(this).newTracker(R.xml.global_tracker);
         }
 

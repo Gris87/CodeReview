@@ -66,7 +66,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
 
 
-    private static final int TIME_FOR_CLOSE   = 1000;
+    private static final int TIME_FOR_CLOSE = 1000;
 
 
 
@@ -112,6 +112,8 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         mFilesListView.setAdapter(mAdapter);
         mFilesListView.setOnItemClickListener(this);
 
+        setChoiceListener();
+
         if (mActionBar != null)
         {
             mActionBar.setDisplayShowHomeEnabled(false);
@@ -131,8 +133,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
 
         loadSortType();
-
-        setChoiceListener();
     }
 
     /** {@inheritDoc} */
@@ -174,7 +174,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle(R.string.action_sort)
                         .setSingleChoiceItems(R.array.sort_types,
-                                mAdapter.getSortType().ordinal() - 1,
+                                mAdapter.getSortType() - 1,
                                 new DialogInterface.OnClickListener()
                                 {
                                     /**
@@ -186,13 +186,13 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                                     @Override
                                     public void onClick(DialogInterface dialog, int which)
                                     {
-                                        SortType selectedType = SortType.values()[which + 1];
+                                        int selectedType = which + 1;
 
                                         mTracker.send(
                                                 new HitBuilders.EventBuilder()
                                                         .setCategory("Action")
                                                         .setAction("Sort")
-                                                        .setLabel("By" + selectedType.toString())
+                                                        .setLabel("By " + String.valueOf(selectedType))
                                                         .build()
                                         );
 
@@ -1033,6 +1033,12 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         mActionBar.setTitle(newPath);
     }
 
+    /**
+     * Opens specified file in ReviewActivity
+     * @param fileName    path to file
+     * @param fileId      file ID in database
+     * @throws FileNotFoundException if file not found
+     */
     private void openFile(String fileName, int fileId) throws FileNotFoundException
     {
         String filePath = mAdapter.pathToFile(fileName);
@@ -1043,11 +1049,16 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
 
         Intent intent = new Intent(this, ReviewActivity.class);
+
         intent.putExtra(ApplicationExtras.FILE_NAME, filePath);
         intent.putExtra(ApplicationExtras.FILE_ID,   fileId);
+
         startActivityForResult(intent, REQUEST_REVIEW);
     }
 
+    /**
+     * Saves last opened path
+     */
     private void savePath()
     {
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
@@ -1058,6 +1069,10 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         editor.apply();
     }
 
+    /**
+     * Loads last opened path
+     * @throws FileNotFoundException if path not found
+     */
     private void loadPath() throws FileNotFoundException
     {
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
@@ -1075,6 +1090,23 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
     }
 
+    /**
+     * Clears last opened path
+     */
+    private void clearPath()
+    {
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString(ApplicationPreferences.LAST_PATH, "");
+
+        editor.apply();
+    }
+
+    /**
+     * Saves last opened file
+     * @param fileName    last opened file
+     */
     private void saveLastFile(String fileName)
     {
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
@@ -1085,6 +1117,10 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         editor.apply();
     }
 
+    /**
+     * Loads last opened file
+     * @throws FileNotFoundException if file not found
+     */
     private void loadLastFile() throws FileNotFoundException
     {
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
@@ -1097,17 +1133,47 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
     }
 
+    /**
+     * Saves sort type
+     */
+    private void saveSortType()
+    {
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putInt(ApplicationPreferences.SORT_TYPE, mAdapter.getSortType());
+
+        editor.apply();
+    }
+
+    /**
+     * Loads sort type
+     */
     private void loadSortType()
     {
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
 
-        int sortType = prefs.getInt(ApplicationPreferences.SORT_TYPE, SortType.NAME.ordinal());
-        SortType sortTypes[] = SortType.values();
+        int sortType = prefs.getInt(ApplicationPreferences.SORT_TYPE, SortType.NAME);
 
-        if (sortType >= 1 && sortType < sortTypes.length && mAdapter.getSortType().ordinal() != sortType)
+        if (sortType >= SortType.MIN && sortType <= SortType.MAX && mAdapter.getSortType() != sortType)
         {
-            mAdapter.sort(sortTypes[sortType]);
+            mAdapter.sort(sortType);
         }
+    }
+
+    public void saveLastFileNames(ArrayList<CharSequence> fileNames)
+    {
+        SharedPreferences prefs = getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putInt(ApplicationPreferences.LAST_FILENAMES, fileNames.size());
+
+        for (int i = 0; i < fileNames.size(); ++i)
+        {
+            editor.putString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1), fileNames.get(i).toString());
+        }
+
+        editor.apply();
     }
 
     public ArrayList<CharSequence> loadLastFileNames()
@@ -1135,16 +1201,16 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         return res;
     }
 
-    public void saveLastFileNames(ArrayList<CharSequence> fileNames)
+    public void saveLastFileNotes(ArrayList<CharSequence> filenotes)
     {
-        SharedPreferences prefs = getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putInt(ApplicationPreferences.LAST_FILENAMES, fileNames.size());
+        editor.putInt(ApplicationPreferences.LAST_FILENOTES, filenotes.size());
 
-        for (int i = 0; i < fileNames.size(); ++i)
+        for (int i = 0; i < filenotes.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1), fileNames.get(i).toString());
+            editor.putString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1), filenotes.get(i).toString());
         }
 
         editor.apply();
@@ -1173,46 +1239,5 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
 
         return res;
-    }
-
-    public void saveLastFileNotes(ArrayList<CharSequence> filenotes)
-    {
-        SharedPreferences prefs = getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putInt(ApplicationPreferences.LAST_FILENOTES, filenotes.size());
-
-        for (int i = 0; i < filenotes.size(); ++i)
-        {
-            editor.putString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1), filenotes.get(i).toString());
-        }
-
-        editor.apply();
-    }
-
-    /**
-     * Clears LAST_PATH preference
-     */
-    private void clearPath()
-    {
-        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString(ApplicationPreferences.LAST_PATH, "");
-
-        editor.apply();
-    }
-
-    /**
-     * Saves sort type
-     */
-    private void saveSortType()
-    {
-        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putInt(ApplicationPreferences.SORT_TYPE, mAdapter.getSortType().ordinal());
-
-        editor.apply();
     }
 }
