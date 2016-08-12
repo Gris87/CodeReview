@@ -87,10 +87,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
 
 
-        ColorCache.update(this);
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mFilesListView  = (ListView)findViewById(R.id.filesListView);
 
@@ -113,11 +109,8 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
         setChoiceListener();
 
-        if (mActionBar != null)
-        {
-            mActionBar.setDisplayShowHomeEnabled(false);
-            mActionBar.setTitle(mAdapter.getCurrentPath());
-        }
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setTitle(mAdapter.getCurrentPath());
 
 
 
@@ -982,10 +975,9 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      */
     private void hideActionMode()
     {
-        if (mActionMode != null)
-        {
-            mActionMode.finish();
-        }
+        Assert.assertNotNull(mActionMode);
+
+        mActionMode.finish();
     }
 
     /**
@@ -996,7 +988,9 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         String oldPath = (String)mActionBar.getTitle();
         String newPath = mAdapter.getCurrentPath();
 
-        if (oldPath != null && newPath.length() < oldPath.length())
+        Assert.assertNotNull(oldPath);
+
+        if (newPath.length() < oldPath.length())
         {
             Assert.assertTrue(oldPath.startsWith(newPath));
 
@@ -1013,7 +1007,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             String prevFolder;
 
-            int index = tail.lastIndexOf("/");
+            int index = tail.indexOf("/");
 
             if (index >= 0)
             {
