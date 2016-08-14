@@ -32,6 +32,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
+import com.griscom.codereview.dialogs.SortDialog;
 import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
@@ -48,7 +49,7 @@ import java.util.ArrayList;
 /**
  * Activity for displaying files
  */
-public class FilesActivity extends AppCompatActivity implements OnItemClickListener
+public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "FilesActivity";
@@ -157,39 +158,8 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             case R.id.action_sort:
             {
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle(R.string.action_sort)
-                        .setSingleChoiceItems(R.array.sort_types,
-                                mAdapter.getSortType() - 1,
-                                new DialogInterface.OnClickListener()
-                                {
-                                    /**
-                                     * Handler for click event
-                                     *
-                                     * @param dialog    Dialog
-                                     * @param which     Selected option
-                                     */
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which)
-                                    {
-                                        int selectedType = which + 1;
-
-                                        mTracker.send(
-                                                new HitBuilders.EventBuilder()
-                                                        .setCategory("Action")
-                                                        .setAction("Sort")
-                                                        .setLabel("By " + String.valueOf(selectedType))
-                                                        .build()
-                                        );
-
-                                        mAdapter.sort(selectedType);
-                                        saveSortType();
-
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-
-                dialog.show();
+                SortDialog dialog = SortDialog.newInstance(mAdapter.getSortType());
+                dialog.show(getSupportFragmentManager(), "SortDialog");
 
                 return true;
             }
@@ -204,15 +174,15 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             case R.id.action_donate:
             {
+                mTracker.send(
+                        new HitBuilders.EventBuilder()
+                                .setCategory("Action")
+                                .setAction("Donate")
+                                .build()
+                );
+
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=68VPVB8SNFHJ4"));
                 startActivity(intent);
-
-                mTracker.send(
-                              new HitBuilders.EventBuilder()
-                                                            .setCategory("Action")
-                                                            .setAction("Donate")
-                                                            .build()
-                             );
 
                 return true;
             }
@@ -230,6 +200,12 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                 return true;
             }
+
+            default:
+            {
+                Log.e(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
+            }
+            break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -357,6 +333,22 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             Log.e(TAG, "Unexpected parent: " + String.valueOf(parent));
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSortTypeSelected(int sortType)
+    {
+        mTracker.send(
+                new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("Sort")
+                        .setLabel("By " + String.valueOf(sortType))
+                        .build()
+        );
+
+        mAdapter.sort(sortType);
+        saveSortType();
     }
 
     /**
