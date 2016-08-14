@@ -1,4 +1,5 @@
 Add AppLog
+Keep note on file renaming
 Select all in ActionMode
 Mark as correct file in ActionMode
 Mark as invalid file in ActionMode

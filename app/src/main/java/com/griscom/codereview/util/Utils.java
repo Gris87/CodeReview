@@ -1,11 +1,11 @@
 package com.griscom.codereview.util;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
-
-import android.content.Context;
-import android.util.Log;
 
 /**
  * Class for useful functions
@@ -111,14 +111,14 @@ public class Utils
     /**
      * Deletes specified file or specified folder recursively
      *
-     * @param filename  Path to file or path to folder
+     * @param fileName  Path to file or path to folder
      * @return          True if deletion successful, otherwise false
      */
-    public static boolean deleteFileOrFolder(String filename)
+    public static boolean deleteFileOrFolder(String fileName)
     {
         boolean res = true;
 
-        File file = new File(filename);
+        File file = new File(fileName);
 
         if (file.isDirectory())
         {
@@ -126,7 +126,7 @@ public class Utils
 
             for (String oneFile : files)
             {
-                if (!deleteFileOrFolder(filename + "/" + oneFile))
+                if (!deleteFileOrFolder(fileName + "/" + oneFile))
                 {
                     res = false;
                 }

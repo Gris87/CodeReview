@@ -542,22 +542,22 @@ public class FilesAdapter extends BaseAdapter
         notifyDataSetChanged();
     }
 
-    public boolean renameFile(int index, String filename)
+    public boolean renameFile(int index, String fileName)
     {
         if (
-            filename.contains("/")
+            fileName.contains("/")
             ||
-            filename.contains("\\")
+            fileName.contains("\\")
            )
         {
             return false;
         }
 
-        if (new File(pathToFile(mFiles.get(index).getFileName())).renameTo(new File(pathToFile(filename))))
+        if (new File(pathToFile(mFiles.get(index).getFileName())).renameTo(new File(pathToFile(fileName))))
         {
             synchronized (this)
             {
-                mFiles.get(index).setFileName(filename);
+                mFiles.get(index).setFileName(fileName);
             }
 
             rescan();
@@ -593,9 +593,9 @@ public class FilesAdapter extends BaseAdapter
         {
             FileEntry file = mFiles.get(fileIndex);
 
-            String filename = file.getFileName();
+            String fileName = file.getFileName();
 
-            if (Utils.deleteFileOrFolder(pathToFile(filename)))
+            if (Utils.deleteFileOrFolder(pathToFile(fileName)))
             {
                 synchronized (this)
                 {
@@ -606,11 +606,11 @@ public class FilesAdapter extends BaseAdapter
             {
                 if (file.isDirectory())
                 {
-                    keepFolders.add(filename);
+                    keepFolders.add(fileName);
                 }
                 else
                 {
-                    keepFiles.add(filename);
+                    keepFiles.add(fileName);
                 }
             }
         }

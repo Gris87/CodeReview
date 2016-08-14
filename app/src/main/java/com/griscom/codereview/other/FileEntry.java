@@ -128,9 +128,9 @@ public class FileEntry
         return mFileName;
     }
 
-    public void setFileName(String filename)
+    public void setFileName(String fileName)
     {
-        mFileName = filename;
+        mFileName = fileName;
     }
 
     public boolean isDirectory()
@@ -201,7 +201,7 @@ public class FileEntry
         }
     }
 
-    public void setFileNote(Context context, String filename, String note)
+    public void setFileNote(Context context, String fileName, String note)
     {
         synchronized(this)
         {
@@ -213,7 +213,7 @@ public class FileEntry
 
             if (mDbFileId <= 0)
             {
-                mDbFileId = helper.getOrCreateFile(db, filename);
+                mDbFileId = helper.getOrCreateFile(db, fileName);
             }
 
             helper.updateFileNote(db, mDbFileId, note);

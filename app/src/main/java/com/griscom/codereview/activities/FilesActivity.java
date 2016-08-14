@@ -32,6 +32,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
+import com.griscom.codereview.dialogs.RenameDialog;
 import com.griscom.codereview.dialogs.SortDialog;
 import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
@@ -49,14 +50,13 @@ import java.util.ArrayList;
 /**
  * Activity for displaying files
  */
-public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener
+public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener, RenameDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "FilesActivity";
 
 
 
-    private static final String FILE_NAMES_SHARED_PREFERENCES = "FileNames";
     private static final String FILE_NOTES_SHARED_PREFERENCES = "FileNotes";
 
 
@@ -351,6 +351,34 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         saveSortType();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onFileRenamed(boolean mark, int item, String fileName)
+    {
+        String oldFileName = ((FileEntry)mAdapter.getItem(item)).getFileName();
+
+        if (mark)
+        {
+            if (!fileName.equals(oldFileName))
+            {
+                mAdapter.assignNote(new int[] { item }, getString(R.string.rename_to, fileName));
+            }
+            else
+            {
+                mAdapter.assignNote(new int[] { item }, "");
+            }
+        }
+        else
+        {
+            if (!fileName.equals(oldFileName) && !mAdapter.renameFile(item, fileName))
+            {
+                Toast.makeText(this, R.string.can_not_rename_file, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        hideActionMode();
+    }
+
     /**
      * Sets choice listener on ActionMode
      */
@@ -359,6 +387,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         mFilesListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mFilesListView.setMultiChoiceModeListener(new MultiChoiceModeListener()
         {
+            /** {@inheritDoc} */
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
             {
@@ -367,10 +396,10 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                     FileEntry file = (FileEntry)mAdapter.getItem(position);
 
                     if (
-                            file.isDirectory()
-                                    &&
-                                    file.getFileName().equals("..")
-                            )
+                        file.isDirectory()
+                        &&
+                        file.getFileName().equals("..")
+                       )
                     {
                         mFilesListView.setItemChecked(position, false);
 
@@ -424,6 +453,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 }
             }
 
+            /** {@inheritDoc} */
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu)
             {
@@ -437,6 +467,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 return true;
             }
 
+            /** {@inheritDoc} */
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu)
             {
@@ -445,6 +476,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 return true;
             }
 
+            /** {@inheritDoc} */
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item)
             {
@@ -465,26 +497,31 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                         res = markToRename(items);
                     }
                     break;
+
                     case R.id.action_mark_to_delete:
                     {
                         res = markToDelete(items);
                     }
                     break;
+
                     case R.id.action_note:
                     {
                         res = assignNote(items);
                     }
                     break;
+
                     case R.id.action_rename:
                     {
                         res = rename(items[0]);
                     }
                     break;
+
                     case R.id.action_delete:
                     {
                         res = delete(items);
                     }
                     break;
+
                     default:
                     {
                         Log.e(TAG, "Unknown action: " + String.valueOf(item));
@@ -500,124 +537,30 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 return true;
             }
 
+            /** {@inheritDoc} */
             @Override
             public void onDestroyActionMode(ActionMode mode)
             {
                 mActionMode = null;
+
                 mAdapter.setSelectionMode(false);
             }
         });
     }
 
+    /**
+     * Marks selected files for renaming
+     * @param items    selected files
+     * @return true, if need to close ActionMode
+     */
     private boolean markToRename(final int items[])
     {
         if (items.length == 1)
         {
-            LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            int item = items[0];
 
-            View view = inflater.inflate(R.layout.dialog_input, null);
-
-            final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
-            ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
-
-            editText.setText(((FileEntry)mAdapter.getItem(items[0])).getFileName());
-
-            chooseButton.setOnClickListener(new OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    ArrayList<CharSequence> filenames = loadLastFileNames();
-
-                    if (filenames.size() > 0)
-                    {
-                        final CharSequence items[] = new CharSequence[filenames.size()];
-                        String currentFilename = editText.getText().toString();
-                        int index = -1;
-
-                        for (int i = 0; i < filenames.size(); ++i)
-                        {
-                            String oneFilename = (String)filenames.get(i);
-
-                            if (index < 0 && oneFilename.equals(currentFilename))
-                            {
-                                index = i;
-                            }
-
-                            items[i] = oneFilename;
-                        }
-
-                        if (index < 0)
-                        {
-                            index = 0;
-                        }
-
-                        AlertDialog chooseDialog = new AlertDialog.Builder(FilesActivity.this)
-                                .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
-                                {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int index)
-                                    {
-                                        editText.setText(items[index]);
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .create();
-
-                        chooseDialog.show();
-                    }
-                    else
-                    {
-                        Toast.makeText(FilesActivity.this, R.string.no_last_names, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle(R.string.dialog_rename_title)
-                    .setMessage(R.string.dialog_rename_message)
-                    .setView(view)
-                    .setPositiveButton(android.R.string.ok,
-                            new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int whichButton)
-                                {
-                                    String filename = editText.getText().toString();
-
-                                    if (!filename.equals(""))
-                                    {
-                                        ArrayList<CharSequence> filenames = loadLastFileNames();
-
-                                        filenames.remove(filename);
-                                        filenames.add(0, filename);
-                                        saveLastFileNames(filenames);
-
-                                        // ----------------------------------
-
-                                        mAdapter.assignNote(items, getString(R.string.rename_to, filename));
-                                        hideActionMode();
-
-                                        dialog.dismiss();
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(FilesActivity.this, R.string.empty_name, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            })
-                    .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int whichButton)
-                                {
-                                    dialog.dismiss();
-                                }
-                            }).create();
-
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            dialog.show();
+            RenameDialog dialog = RenameDialog.newInstance(true, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
+            dialog.show(getSupportFragmentManager(), "RenameDialog");
 
             return false;
         }
@@ -629,6 +572,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         return true;
     }
 
+    /**
+     * Marks selected files for deleting
+     * @param items    selected files
+     * @return true, if need to close ActionMode
+     */
     private boolean markToDelete(final int items[])
     {
         mAdapter.assignNote(items, getString(R.string.need_to_delete));
@@ -655,17 +603,17 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             @Override
             public void onClick(View view)
             {
-                ArrayList<CharSequence> filenotes = loadLastFileNotes();
+                ArrayList<CharSequence> fileNotes = loadLastFileNotes();
 
-                if (filenotes.size() > 0)
+                if (fileNotes.size() > 0)
                 {
-                    final CharSequence items[] = new CharSequence[filenotes.size()];
+                    final CharSequence items[] = new CharSequence[fileNotes.size()];
                     String currentFilenote = editText.getText().toString();
                     int index = -1;
 
-                    for (int i = 0; i < filenotes.size(); ++i)
+                    for (int i = 0; i < fileNotes.size(); ++i)
                     {
-                        String oneFilenote = (String)filenotes.get(i);
+                        String oneFilenote = (String)fileNotes.get(i);
 
                         if (index < 0 && oneFilenote.equals(currentFilenote))
                         {
@@ -711,18 +659,18 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                             @Override
                             public void onClick(DialogInterface dialog, int whichButton)
                             {
-                                String filenote = editText.getText().toString();
+                                String fileNote = editText.getText().toString();
 
-                                if (!filenote.equals(""))
+                                if (!fileNote.equals(""))
                                 {
-                                    ArrayList<CharSequence> filenotes = loadLastFileNotes();
+                                    ArrayList<CharSequence> fileNotes = loadLastFileNotes();
 
-                                    filenotes.remove(filenote);
-                                    filenotes.add(0, filenote);
-                                    saveLastFileNotes(filenotes);
+                                    fileNotes.remove(fileNote);
+                                    fileNotes.add(0, fileNote);
+                                    saveLastFileNotes(fileNotes);
                                 }
 
-                                mAdapter.assignNote(items, filenote);
+                                mAdapter.assignNote(items, fileNote);
                                 hideActionMode();
 
                                 dialog.dismiss();
@@ -744,117 +692,15 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         return false;
     }
 
+    /**
+     * Rename selected file
+     * @param item    selected file
+     * @return true, if need to close ActionMode
+     */
     private boolean rename(final int item)
     {
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.dialog_input, null);
-
-        final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
-        ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
-
-        editText.setText(((FileEntry)mAdapter.getItem(item)).getFileName());
-
-        chooseButton.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ArrayList<CharSequence> filenames = loadLastFileNames();
-
-                if (filenames.size() > 0)
-                {
-                    final CharSequence items[] = new CharSequence[filenames.size()];
-                    String currentFilename = editText.getText().toString();
-                    int index = -1;
-
-                    for (int i = 0; i < filenames.size(); ++i)
-                    {
-                        String oneFilename = (String)filenames.get(i);
-
-                        if (index < 0 && oneFilename.equals(currentFilename))
-                        {
-                            index = i;
-                        }
-
-                        items[i] = oneFilename;
-                    }
-
-                    if (index < 0)
-                    {
-                        index = 0;
-                    }
-
-                    AlertDialog chooseDialog = new AlertDialog.Builder(FilesActivity.this)
-                            .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int index)
-                                {
-                                    editText.setText(items[index]);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .create();
-
-                    chooseDialog.show();
-                }
-                else
-                {
-                    Toast.makeText(FilesActivity.this, R.string.no_last_names, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_rename_title)
-                .setMessage(R.string.dialog_rename_message)
-                .setView(view)
-                .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton)
-                            {
-                                String filename = editText.getText().toString();
-
-                                if (!filename.equals(""))
-                                {
-                                    ArrayList<CharSequence> filenames = loadLastFileNames();
-
-                                    filenames.remove(filename);
-                                    filenames.add(0, filename);
-                                    saveLastFileNames(filenames);
-
-                                    // ----------------------------------
-
-                                    if (!mAdapter.renameFile(item, filename))
-                                    {
-                                        Toast.makeText(FilesActivity.this, R.string.can_not_rename_file, Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    hideActionMode();
-
-                                    dialog.dismiss();
-                                }
-                                else
-                                {
-                                    Toast.makeText(FilesActivity.this, R.string.empty_name, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                .setNegativeButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton)
-                            {
-                                dialog.dismiss();
-                            }
-                        }).create();
-
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        dialog.show();
+        RenameDialog dialog = RenameDialog.newInstance(false, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
+        dialog.show(getSupportFragmentManager(), "RenameDialog");
 
         return false;
     }
@@ -1172,56 +1018,16 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
     }
 
-    public void saveLastFileNames(ArrayList<CharSequence> fileNames)
-    {
-        SharedPreferences prefs = getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putInt(ApplicationPreferences.LAST_FILENAMES, fileNames.size());
-
-        for (int i = 0; i < fileNames.size(); ++i)
-        {
-            editor.putString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1), fileNames.get(i).toString());
-        }
-
-        editor.apply();
-    }
-
-    public ArrayList<CharSequence> loadLastFileNames()
-    {
-        SharedPreferences prefs = getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-
-        int fileNameCount = prefs.getInt(ApplicationPreferences.LAST_FILENAMES, 0);
-
-        ArrayList<CharSequence> res = new ArrayList<CharSequence>();
-
-        for (int i = 0; i < fileNameCount; ++i)
-        {
-            String fileName = prefs.getString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1),"");
-
-            if (
-                    !TextUtils.isEmpty(fileName)
-                            &&
-                            !res.contains(fileName)
-                    )
-            {
-                res.add(fileName);
-            }
-        }
-
-        return res;
-    }
-
-    public void saveLastFileNotes(ArrayList<CharSequence> filenotes)
+    public void saveLastFileNotes(ArrayList<CharSequence> fileNotes)
     {
         SharedPreferences prefs = getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putInt(ApplicationPreferences.LAST_FILENOTES, filenotes.size());
+        editor.putInt(ApplicationPreferences.LAST_FILENOTES, fileNotes.size());
 
-        for (int i = 0; i < filenotes.size(); ++i)
+        for (int i = 0; i < fileNotes.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1), filenotes.get(i).toString());
+            editor.putString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1), fileNotes.get(i).toString());
         }
 
         editor.apply();
@@ -1231,11 +1037,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     {
         SharedPreferences prefs = getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
-        int filenoteCount = prefs.getInt(ApplicationPreferences.LAST_FILENOTES, 0);
+        int fileNoteCount = prefs.getInt(ApplicationPreferences.LAST_FILENOTES, 0);
 
         ArrayList<CharSequence> res = new ArrayList<CharSequence>();
 
-        for (int i = 0; i < filenoteCount; ++i)
+        for (int i = 0; i < fileNoteCount; ++i)
         {
             String fileNote = prefs.getString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1),"");
 
