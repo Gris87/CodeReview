@@ -1,8 +1,6 @@
 package com.griscom.codereview.activities;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -27,6 +25,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
+import com.griscom.codereview.dialogs.DeleteDialog;
 import com.griscom.codereview.dialogs.NoteDialog;
 import com.griscom.codereview.dialogs.RenameDialog;
 import com.griscom.codereview.dialogs.SortDialog;
@@ -46,7 +45,7 @@ import java.util.ArrayList;
 /**
  * Activity for displaying files
  */
-public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener, RenameDialog.OnFragmentInteractionListener, NoteDialog.OnFragmentInteractionListener
+public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener, RenameDialog.OnFragmentInteractionListener, NoteDialog.OnFragmentInteractionListener, DeleteDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "FilesActivity";
@@ -413,6 +412,52 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         hideActionMode();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onDeleteConfirmed(int[] items)
+    {
+        ArrayList<String> keepFolders = new ArrayList<>();
+        ArrayList<String> keepFiles   = new ArrayList<>();
+
+        mAdapter.deleteFiles(items, keepFolders, keepFiles);
+
+        if (keepFolders.size() > 0 || keepFiles.size() > 0)
+        {
+            Resources resources = getResources();
+
+            if (keepFolders.size() == 1 && keepFiles.size() == 0)
+            {
+                Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folder, keepFolders.get(0)), Toast.LENGTH_SHORT).show();
+            }
+            else
+            if (keepFolders.size() == 0 && keepFiles.size() == 1)
+            {
+                Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_file, keepFiles.get(0)), Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                String folders = keepFolders.size() > 0 ? resources.getQuantityString(R.plurals.delete_folders_plurals, keepFolders.size(), keepFolders.size()) : null;
+                String files   = keepFiles.size()   > 0 ? resources.getQuantityString(R.plurals.delete_files_plurals,   keepFiles.size(),   keepFiles.size())   : null;
+
+                if (keepFolders.size() > 1 && keepFiles.size() == 0)
+                {
+                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_or_files, folders), Toast.LENGTH_SHORT).show();
+                }
+                else
+                if (keepFolders.size() == 0 && keepFiles.size() > 1)
+                {
+                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_or_files, files), Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_and_files, folders, files), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        hideActionMode();
+    }
+
     /**
      * Sets choice listener on ActionMode
      */
@@ -587,7 +632,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean markToRename(final int items[])
+    private boolean markToRename(int items[])
     {
         if (items.length == 1)
         {
@@ -611,7 +656,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean markToDelete(final int items[])
+    private boolean markToDelete(int items[])
     {
         mAdapter.assignNote(items, getString(R.string.need_to_delete));
 
@@ -623,7 +668,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean assignNote(final int items[])
+    private boolean assignNote(int items[])
     {
         String note = ((FileEntry)mAdapter.getItem(items[0])).getFileNote();
 
@@ -648,7 +693,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param item    selected file
      * @return true, if need to close ActionMode
      */
-    private boolean rename(final int item)
+    private boolean rename(int item)
     {
         RenameDialog dialog = RenameDialog.newInstance(false, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
         dialog.show(getSupportFragmentManager(), "RenameDialog");
@@ -656,7 +701,12 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         return false;
     }
 
-    private boolean delete(final int items[])
+    /**
+     * Deletes selected files
+     * @param items    selected files
+     * @return true, if need to close ActionMode
+     */
+    private boolean delete(int items[])
     {
         int foldersCount = 0;
         int filesCount   = 0;
@@ -673,88 +723,8 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             }
         }
 
-        final Resources resources = getResources();
-
-        String folders = foldersCount > 0 ? resources.getQuantityString(R.plurals.delete_folders_plurals, foldersCount, foldersCount) : null;
-        String files   = filesCount   > 0 ? resources.getQuantityString(R.plurals.delete_files_plurals,   filesCount,   filesCount)   : null;
-
-        String message;
-
-        if (foldersCount > 0 && filesCount == 0)
-        {
-            message = resources.getString(R.string.dialog_delete_folders_or_files_message, folders);
-        }
-        else
-        if (foldersCount == 0 && filesCount > 0)
-        {
-            message = resources.getString(R.string.dialog_delete_folders_or_files_message, files);
-        }
-        else
-        {
-            message = resources.getString(R.string.dialog_delete_folders_and_files_message, folders, files);
-        }
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_delete_title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int index)
-                    {
-                        ArrayList<String> keepFolders = new ArrayList<>();
-                        ArrayList<String> keepFiles   = new ArrayList<>();
-
-                        mAdapter.deleteFiles(items, keepFolders, keepFiles);
-
-                        if (keepFolders.size() > 0 || keepFiles.size() > 0)
-                        {
-                            if (keepFolders.size() == 1 && keepFiles.size() == 0)
-                            {
-                                Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folder, keepFolders.get(0)), Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            if (keepFolders.size() == 0 && keepFiles.size() == 1)
-                            {
-                                Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_file, keepFiles.get(0)), Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                String folders = keepFolders.size() > 0 ? resources.getQuantityString(R.plurals.delete_folders_plurals, keepFolders.size(), keepFolders.size()) : null;
-                                String files   = keepFiles.size()   > 0 ? resources.getQuantityString(R.plurals.delete_files_plurals,   keepFiles.size(),   keepFiles.size())   : null;
-
-                                if (keepFolders.size() > 1 && keepFiles.size() == 0)
-                                {
-                                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_or_files, folders), Toast.LENGTH_SHORT).show();
-                                }
-                                else
-                                if (keepFolders.size() == 0 && keepFiles.size() > 1)
-                                {
-                                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_or_files, files), Toast.LENGTH_SHORT).show();
-                                }
-                                else
-                                {
-                                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_and_files, folders, files), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-
-                        hideActionMode();
-
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int index)
-                    {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-
-        dialog.show();
+        DeleteDialog dialog = DeleteDialog.newInstance(items, foldersCount, filesCount);
+        dialog.show(getSupportFragmentManager(), "DeleteDialog");
 
         return false;
     }
