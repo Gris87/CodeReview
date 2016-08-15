@@ -1,4 +1,6 @@
 Add AppLog
+Think about app color scheme
+Send exceptions to Google Analytics
 Keep note on file renaming
 Select all in ActionMode
 Mark as correct file in ActionMode

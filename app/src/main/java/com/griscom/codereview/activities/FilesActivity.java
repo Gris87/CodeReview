@@ -14,17 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +27,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
+import com.griscom.codereview.dialogs.NoteDialog;
 import com.griscom.codereview.dialogs.RenameDialog;
 import com.griscom.codereview.dialogs.SortDialog;
 import com.griscom.codereview.lists.FilesAdapter;
@@ -50,14 +46,10 @@ import java.util.ArrayList;
 /**
  * Activity for displaying files
  */
-public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener, RenameDialog.OnFragmentInteractionListener
+public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener, RenameDialog.OnFragmentInteractionListener, NoteDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "FilesActivity";
-
-
-
-    private static final String FILE_NOTES_SHARED_PREFERENCES = "FileNotes";
 
 
 
@@ -339,11 +331,41 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     @Override
     public void onSortTypeSelected(int sortType)
     {
+        String typeName;
+
+        switch (sortType)
+        {
+            case SortType.NAME:
+            {
+                typeName = "name";
+            }
+            break;
+
+            case SortType.TYPE:
+            {
+                typeName = "type";
+            }
+            break;
+
+            case SortType.SIZE:
+            {
+                typeName = "size";
+            }
+            break;
+
+            default:
+            {
+                typeName = "UNKNOWN";
+                Log.e(TAG, "Unknown sort type: " + String.valueOf(sortType));
+            }
+            break;
+        }
+
         mTracker.send(
                 new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("Sort")
-                        .setLabel("By " + String.valueOf(sortType))
+                        .setLabel("By " + typeName)
                         .build()
         );
 
@@ -370,11 +392,23 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
         else
         {
-            if (!fileName.equals(oldFileName) && !mAdapter.renameFile(item, fileName))
+            if (!fileName.equals(oldFileName))
             {
-                Toast.makeText(this, R.string.can_not_rename_file, Toast.LENGTH_SHORT).show();
+                if (!mAdapter.renameFile(item, fileName))
+                {
+                    Toast.makeText(this, R.string.can_not_rename_file, Toast.LENGTH_SHORT).show();
+                }
             }
         }
+
+        hideActionMode();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onNoteEntered(int[] items, String note)
+    {
+        mAdapter.assignNote(items, note);
 
         hideActionMode();
     }
@@ -481,7 +515,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             public boolean onActionItemClicked(ActionMode mode, MenuItem item)
             {
                 ArrayList<Integer> tempList = mAdapter.getSelection();
-                int items[] = new int[tempList.size()];
+                int items[] = new int[tempList.size()]; // TODO: Why do we need to have array?
 
                 for (int i = 0; i < tempList.size(); ++i)
                 {
@@ -531,7 +565,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                 if (res)
                 {
-                    mActionMode.finish();
+                    hideActionMode();
                 }
 
                 return true;
@@ -584,110 +618,27 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         return true;
     }
 
+    /**
+     * Assign note for selected files
+     * @param items    selected files
+     * @return true, if need to close ActionMode
+     */
     private boolean assignNote(final int items[])
     {
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        String note = ((FileEntry)mAdapter.getItem(items[0])).getFileNote();
 
-        View view = inflater.inflate(R.layout.dialog_input, null);
-
-        final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
-        ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
-
-        if (items.length == 1)
+        for (int i = 1; i < items.length; ++i)
         {
-            editText.setText(((FileEntry)mAdapter.getItem(items[0])).getFileNote());
+            if (!note.equals(((FileEntry)mAdapter.getItem(items[i])).getFileNote()))
+            {
+                note = "";
+
+                break;
+            }
         }
 
-        chooseButton.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ArrayList<CharSequence> fileNotes = loadLastFileNotes();
-
-                if (fileNotes.size() > 0)
-                {
-                    final CharSequence items[] = new CharSequence[fileNotes.size()];
-                    String currentFilenote = editText.getText().toString();
-                    int index = -1;
-
-                    for (int i = 0; i < fileNotes.size(); ++i)
-                    {
-                        String oneFilenote = (String)fileNotes.get(i);
-
-                        if (index < 0 && oneFilenote.equals(currentFilenote))
-                        {
-                            index = i;
-                        }
-
-                        items[i] = oneFilenote;
-                    }
-
-                    if (index < 0)
-                    {
-                        index = 0;
-                    }
-
-                    AlertDialog chooseDialog = new AlertDialog.Builder(FilesActivity.this)
-                            .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int index)
-                                {
-                                    editText.setText(items[index]);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .create();
-
-                    chooseDialog.show();
-                }
-                else
-                {
-                    Toast.makeText(FilesActivity.this, R.string.no_last_notes, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_input_note_title)
-                .setMessage(R.string.dialog_input_note_message)
-                .setView(view)
-                .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton)
-                            {
-                                String fileNote = editText.getText().toString();
-
-                                if (!fileNote.equals(""))
-                                {
-                                    ArrayList<CharSequence> fileNotes = loadLastFileNotes();
-
-                                    fileNotes.remove(fileNote);
-                                    fileNotes.add(0, fileNote);
-                                    saveLastFileNotes(fileNotes);
-                                }
-
-                                mAdapter.assignNote(items, fileNote);
-                                hideActionMode();
-
-                                dialog.dismiss();
-                            }
-                        })
-                .setNegativeButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton)
-                            {
-                                dialog.dismiss();
-                            }
-                        }).create();
-
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        dialog.show();
+        NoteDialog dialog = NoteDialog.newInstance(items, note);
+        dialog.show(getSupportFragmentManager(), "NoteDialog");
 
         return false;
     }
@@ -1016,45 +967,5 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             mAdapter.sort(sortType);
         }
-    }
-
-    public void saveLastFileNotes(ArrayList<CharSequence> fileNotes)
-    {
-        SharedPreferences prefs = getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putInt(ApplicationPreferences.LAST_FILENOTES, fileNotes.size());
-
-        for (int i = 0; i < fileNotes.size(); ++i)
-        {
-            editor.putString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1), fileNotes.get(i).toString());
-        }
-
-        editor.apply();
-    }
-
-    public ArrayList<CharSequence> loadLastFileNotes()
-    {
-        SharedPreferences prefs = getSharedPreferences(FILE_NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-
-        int fileNoteCount = prefs.getInt(ApplicationPreferences.LAST_FILENOTES, 0);
-
-        ArrayList<CharSequence> res = new ArrayList<CharSequence>();
-
-        for (int i = 0; i < fileNoteCount; ++i)
-        {
-            String fileNote = prefs.getString(ApplicationPreferences.ONE_FILENOTE + "_" + String.valueOf(i + 1),"");
-
-            if (
-                    !TextUtils.isEmpty(fileNote)
-                            &&
-                            !res.contains(fileNote)
-                    )
-            {
-                res.add(fileNote);
-            }
-        }
-
-        return res;
     }
 }

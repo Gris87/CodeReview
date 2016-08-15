@@ -13,8 +13,8 @@ public class ApplicationPreferences
     public static final String LAST_FILENAMES = "LastFileNames";
     public static final String ONE_FILENAME   = "FileName";
 
-    public static final String LAST_FILENOTES = "LastFileNotes";
-    public static final String ONE_FILENOTE   = "Filenote";
+    public static final String LAST_NOTES     = "LastNotes";
+    public static final String ONE_NOTE       = "Note";
 
     public static final String LAST_COMMENTS  = "LastComments";
     public static final String ONE_COMMENT    = "Comment";

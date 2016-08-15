@@ -24,50 +24,46 @@ import com.griscom.codereview.other.ApplicationPreferences;
 import java.util.ArrayList;
 
 /**
- * Dialog for renaming file
+ * Dialog for creating notes
  */
-public class RenameDialog extends DialogFragment implements View.OnClickListener
+public class NoteDialog extends DialogFragment implements View.OnClickListener
 {
     @SuppressWarnings("unused")
-    private static final String TAG = "RenameDialog";
+    private static final String TAG = "NoteDialog";
 
 
 
-    private static final String FILE_NAMES_SHARED_PREFERENCES = "FileNames";
+    private static final String NOTES_SHARED_PREFERENCES = "Notes";
 
 
 
-    private static final String ARG_MARK      = "MARK";
-    private static final String ARG_ITEM      = "ITEM";
-    private static final String ARG_FILE_NAME = "FILE_NAME";
+    private static final String ARG_ITEMS = "ITEMS";
+    private static final String ARG_NOTE  = "NOTE";
 
 
 
     private OnFragmentInteractionListener mListener      = null;
     private EditText                      mInputEditText = null;
     private ImageButton                   mChooseButton  = null;
-    private boolean                       mMark          = false;
-    private int                           mItem          = 0;
-    private String                        mFileName      = null;
-    private ArrayList<CharSequence>       mFileNames     = null;
+    private int[]                         mItems         = null;
+    private String                        mNote          = null;
+    private ArrayList<CharSequence>       mNotes         = null;
 
 
 
     /**
-     * Creates new instance of RenameDialog with pre-entered file name
-     * @param mark      true, if we need to mark this file for renaming
-     * @param item      file index in the list
-     * @param fileName  file name
-     * @return RenameDialog instance
+     * Creates new instance of NoteDialog with pre-entered note
+     * @param items     indices in the list
+     * @param note      note
+     * @return NoteDialog instance
      */
-    public static RenameDialog newInstance(boolean mark, int item, String fileName)
+    public static NoteDialog newInstance(int[] items, String note)
     {
-        RenameDialog fragment = new RenameDialog();
+        NoteDialog fragment = new NoteDialog();
 
         Bundle args = new Bundle();
-        args.putBoolean(ARG_MARK,      mark);
-        args.putInt(    ARG_ITEM,      item);
-        args.putString( ARG_FILE_NAME, fileName);
+        args.putIntArray(ARG_ITEMS, items);
+        args.putString(  ARG_NOTE,  note);
         fragment.setArguments(args);
 
         return fragment;
@@ -79,11 +75,10 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     {
         super.onCreate(savedInstanceState);
 
-        mMark     = getArguments().getBoolean(ARG_MARK);
-        mItem     = getArguments().getInt(    ARG_ITEM);
-        mFileName = getArguments().getString( ARG_FILE_NAME);
+        mItems = getArguments().getIntArray(ARG_ITEMS);
+        mNote  = getArguments().getString(  ARG_NOTE);
 
-        loadLastFileNames();
+        loadLastNotes();
     }
 
     /** {@inheritDoc} */
@@ -102,7 +97,7 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
 
 
 
-        mInputEditText.setText(mFileName);
+        mInputEditText.setText(mNote);
 
         mChooseButton.setOnClickListener(this);
 
@@ -110,8 +105,8 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.dialog_rename_title)
-                .setMessage(R.string.dialog_rename_message)
+        builder.setTitle(R.string.dialog_input_note_title)
+                .setMessage(R.string.dialog_input_note_message)
                 .setCancelable(true)
                 .setView(rootView)
                 .setPositiveButton(android.R.string.ok,
@@ -120,22 +115,19 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
                             @Override
                             public void onClick(DialogInterface dialog, int whichButton)
                             {
-                                String fileName = mInputEditText.getText().toString();
+                                String note = mInputEditText.getText().toString();
 
-                                if (!fileName.equals(""))
+                                if (!note.equals(""))
                                 {
-                                    mFileNames.remove(fileName);
-                                    mFileNames.add(0, fileName);
-                                    saveLastFileNames();
+                                    mNotes.remove(note);
+                                    mNotes.add(0, note);
 
-                                    onFileRenamed(fileName);
+                                    saveLastNotes();
+                                }
 
-                                    dialog.dismiss();
-                                }
-                                else
-                                {
-                                    Toast.makeText(getActivity(), R.string.empty_name, Toast.LENGTH_SHORT).show();
-                                }
+                                onNoteEntered(note);
+
+                                dialog.dismiss();
                             }
                         })
                 .setNegativeButton(android.R.string.cancel,
@@ -160,22 +152,22 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     {
         if (view == mChooseButton)
         {
-            if (mFileNames.size() > 0)
+            if (mNotes.size() > 0)
             {
-                final CharSequence items[] = new CharSequence[mFileNames.size()];
-                String currentFilename = mInputEditText.getText().toString();
+                final CharSequence items[] = new CharSequence[mNotes.size()];
+                String currentNote = mInputEditText.getText().toString();
                 int index = -1;
 
-                for (int i = 0; i < mFileNames.size(); ++i)
+                for (int i = 0; i < mNotes.size(); ++i)
                 {
-                    String oneFilename = (String)mFileNames.get(i);
+                    String oneNote = (String)mNotes.get(i);
 
-                    if (index < 0 && oneFilename.equals(currentFilename))
+                    if (index < 0 && oneNote.equals(currentNote))
                     {
                         index = i;
                     }
 
-                    items[i] = oneFilename;
+                    items[i] = oneNote;
                 }
 
                 if (index < 0)
@@ -199,7 +191,7 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
             }
             else
             {
-                Toast.makeText(getActivity(), R.string.no_last_names, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.no_last_notes, Toast.LENGTH_SHORT).show();
             }
         }
         else
@@ -209,14 +201,14 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     }
 
     /**
-     * Handler for file rename event
-     * @param fileName    file name
+     * Handler for note entered event
+     * @param note    note
      */
-    public void onFileRenamed(String fileName)
+    public void onNoteEntered(String note)
     {
         if (mListener != null)
         {
-            mListener.onFileRenamed(mMark, mItem, fileName);
+            mListener.onNoteEntered(mItems, note);
         }
     }
 
@@ -246,44 +238,44 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     }
 
     /**
-     * Saves last entered file names
+     * Saves last entered notes
      */
-    public void saveLastFileNames()
+    public void saveLastNotes()
     {
-        SharedPreferences prefs = getActivity().getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putInt(ApplicationPreferences.LAST_FILENAMES, mFileNames.size());
+        editor.putInt(ApplicationPreferences.LAST_NOTES, mNotes.size());
 
-        for (int i = 0; i < mFileNames.size(); ++i)
+        for (int i = 0; i < mNotes.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1), mFileNames.get(i).toString());
+            editor.putString(ApplicationPreferences.ONE_NOTE + "_" + String.valueOf(i + 1), mNotes.get(i).toString());
         }
 
         editor.apply();
     }
 
     /**
-     * Loads last entered file names
+     * Loads last entered notes
      */
-    public void loadLastFileNames()
+    public void loadLastNotes()
     {
-        mFileNames = new ArrayList<>();
+        mNotes = new ArrayList<>();
 
-        SharedPreferences prefs = getActivity().getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        int fileNameCount = prefs.getInt(ApplicationPreferences.LAST_FILENAMES, 0);
+        SharedPreferences prefs = getActivity().getSharedPreferences(NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        int noteCount = prefs.getInt(ApplicationPreferences.LAST_NOTES, 0);
 
-        for (int i = 0; i < fileNameCount; ++i)
+        for (int i = 0; i < noteCount; ++i)
         {
-            String fileName = prefs.getString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1),"");
+            String note = prefs.getString(ApplicationPreferences.ONE_NOTE + "_" + String.valueOf(i + 1),"");
 
             if (
-                !TextUtils.isEmpty(fileName)
+                !TextUtils.isEmpty(note)
                 &&
-                !mFileNames.contains(fileName)
+                !mNotes.contains(note)
                )
             {
-                mFileNames.add(fileName);
+                mNotes.add(note);
             }
         }
     }
@@ -296,11 +288,10 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     public interface OnFragmentInteractionListener
     {
         /**
-         * Handler for file rename event
-         * @param mark        true, if we need to mark this file for renaming
-         * @param item        file index in the list
-         * @param fileName    file name
+         * Handler for note entered event
+         * @param items   indices in the list
+         * @param note    note
          */
-        void onFileRenamed(boolean mark, int item, String fileName);
+        void onNoteEntered(int[] items, String note);
     }
 }
