@@ -42,7 +42,8 @@
 
         <activity
             android:name=".activities.IgnoreFilesActivity"
-            android:label="@string/title_activity_ignore_files">
+            android:label="@string/title_activity_ignore_files"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
     </application>

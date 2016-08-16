@@ -603,7 +603,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                     default:
                     {
-                        Log.e(TAG, "Unknown action: " + String.valueOf(item));
+                        Log.e(TAG, "Unknown action ID: " + String.valueOf(item));
                     }
                     break;
                 }
