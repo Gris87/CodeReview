@@ -1,7 +1,5 @@
 package com.griscom.codereview.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,23 +8,31 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.griscom.codereview.R;
+import com.griscom.codereview.dialogs.InputDialog;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
 
 /**
  * Activity that allow to choose files for ignoring
  */
-public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClickListener
+public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClickListener, InputDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "IgnoreFilesActivity";
+
+
+
+    private static final int INPUT_DIALOG_ID_ADD  = 1;
+    private static final int INPUT_DIALOG_ID_EDIT = 2;
+
+
+
+    private static final String DATA_POSITION = "POSITION";
 
 
 
@@ -78,47 +84,8 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
         {
             case R.id.action_add:
             {
-                final EditText editText = new EditText(this);
-
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle(R.string.dialog_add_file_title)
-                    .setMessage(R.string.dialog_add_file_message)
-                    .setView(editText)
-                    .setPositiveButton(android.R.string.ok,
-                                       new DialogInterface.OnClickListener()
-                                       {
-                                            /**
-                                             * Handler for click event
-                                             *
-                                             * @param dialog        Dialog
-                                             * @param whichButton   Selected option
-                                             */
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int whichButton)
-                                            {
-                                                mAdapter.addFile(editText.getText().toString());
-
-                                                dialog.dismiss();
-                                            }
-                                       })
-                    .setNegativeButton(android.R.string.cancel,
-                                       new DialogInterface.OnClickListener()
-                                       {
-                                            /**
-                                             * Handler for click event
-                                             *
-                                             * @param dialog        Dialog
-                                             * @param whichButton   Selected option
-                                             */
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int whichButton)
-                                            {
-                                                dialog.dismiss();
-                                            }
-                                       }).create();
-
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                dialog.show();
+                InputDialog dialog = InputDialog.newInstance(INPUT_DIALOG_ID_ADD, R.string.dialog_add_file_title, R.string.dialog_add_file_message, null, null);
+                dialog.show(getSupportFragmentManager(), "InputDialog");
 
                 return true;
             }
@@ -137,50 +104,38 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
     {
-        final EditText editText = new EditText(this);
+        Bundle data = new Bundle();
+        data.putInt(DATA_POSITION, position);
 
-        editText.setText((String)parent.getItemAtPosition(position));
-        editText.selectAll();
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_add_file_title)
-                .setMessage(R.string.dialog_add_file_message)
-                .setView(editText)
-                .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener()
-                        {
-                            /**
-                             * Handler for click event
-                             *
-                             * @param dialog        Dialog
-                             * @param whichButton   Selected option
-                             */
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton)
-                            {
-                                mAdapter.renameFile(position, editText.getText().toString());
+        InputDialog dialog = InputDialog.newInstance(INPUT_DIALOG_ID_EDIT, R.string.dialog_add_file_title, R.string.dialog_add_file_message, (String)mAdapter.getItem(position), data);
+        dialog.show(getSupportFragmentManager(), "InputDialog");
+    }
 
-                                dialog.dismiss();
-                            }
-                        })
-                .setNegativeButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener()
-                        {
-                            /**
-                             * Handler for click event
-                             *
-                             * @param dialog        Dialog
-                             * @param whichButton   Selected option
-                             */
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton)
-                            {
-                                dialog.dismiss();
-                            }
-                        }).create();
+    /** {@inheritDoc} */
+    @Override
+    public void onTextEntered(int id, String text, Bundle data)
+    {
+        switch (id)
+        {
+            case INPUT_DIALOG_ID_ADD:
+            {
+                mAdapter.addFile(text);
+            }
+            break;
 
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        dialog.show();
+            case INPUT_DIALOG_ID_EDIT:
+            {
+                mAdapter.renameFile(data.getInt(DATA_POSITION), text);
+            }
+            break;
+
+            default:
+            {
+                Log.e(TAG, "Unknown id: " + String.valueOf(id));
+            }
+            break;
+        }
     }
 
     /**

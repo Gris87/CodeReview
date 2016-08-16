@@ -103,6 +103,7 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
 
 
         mInputEditText.setText(mFileName);
+        mInputEditText.selectAll();
 
         mChooseButton.setOnClickListener(this);
 

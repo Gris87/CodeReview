@@ -92,6 +92,8 @@ public class DeleteDialog extends DialogFragment
             message = resources.getString(R.string.dialog_delete_folders_and_files_message, folders, files);
         }
 
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(R.string.dialog_delete_title)

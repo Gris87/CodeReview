@@ -98,6 +98,7 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
 
 
         mInputEditText.setText(mNote);
+        mInputEditText.selectAll();
 
         mChooseButton.setOnClickListener(this);
 
