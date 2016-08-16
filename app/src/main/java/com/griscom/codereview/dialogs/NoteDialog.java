@@ -33,10 +33,6 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
 
 
 
-    private static final String NOTES_SHARED_PREFERENCES = "Notes";
-
-
-
     private static final String ARG_ITEMS = "ITEMS";
     private static final String ARG_NOTE  = "NOTE";
 
@@ -243,7 +239,7 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
      */
     public void saveLastNotes()
     {
-        SharedPreferences prefs = getActivity().getSharedPreferences(NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         editor.putInt(ApplicationPreferences.LAST_NOTES, mNotes.size());
@@ -263,7 +259,7 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
     {
         mNotes = new ArrayList<>();
 
-        SharedPreferences prefs = getActivity().getSharedPreferences(NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         int noteCount = prefs.getInt(ApplicationPreferences.LAST_NOTES, 0);
 
         for (int i = 0; i < noteCount; ++i)

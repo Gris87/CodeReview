@@ -1,8 +1,5 @@
 package com.griscom.codereview.review;
 
-import java.util.ArrayList;
-
-import junit.framework.Assert;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -48,11 +45,19 @@ import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
 
+import junit.framework.Assert;
+
+import java.util.ArrayList;
+
+/**
+ * Text document
+ */
 public class TextDocument implements OnTouchListener
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "TextDocument";
 
-    private static final String COMMENTS_SHARED_PREFERENCES = "Comments";
+
 
     private static final int   HIDE_BARS_MESSAGE   = 1;
     private static final int   HIGHLIGHT_MESSAGE   = 2;
@@ -1120,7 +1125,7 @@ public class TextDocument implements OnTouchListener
 
     public ArrayList<CharSequence> loadLastComments()
     {
-        SharedPreferences prefs = mContext.getSharedPreferences(COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = mContext.getSharedPreferences(ApplicationPreferences.COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
         int commentCount = prefs.getInt(ApplicationPreferences.LAST_COMMENTS, 0);
 
@@ -1145,7 +1150,7 @@ public class TextDocument implements OnTouchListener
 
     public void saveLastComments(ArrayList<CharSequence> comments)
     {
-        SharedPreferences prefs = mContext.getSharedPreferences(COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = mContext.getSharedPreferences(ApplicationPreferences.COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         editor.putInt(ApplicationPreferences.LAST_COMMENTS, comments.size());

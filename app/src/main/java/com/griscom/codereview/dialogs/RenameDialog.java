@@ -33,10 +33,6 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
 
 
 
-    private static final String FILE_NAMES_SHARED_PREFERENCES = "FileNames";
-
-
-
     private static final String ARG_MARK      = "MARK";
     private static final String ARG_ITEM      = "ITEM";
     private static final String ARG_FILE_NAME = "FILE_NAME";
@@ -251,7 +247,7 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
      */
     public void saveLastFileNames()
     {
-        SharedPreferences prefs = getActivity().getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         editor.putInt(ApplicationPreferences.LAST_FILENAMES, mFileNames.size());
@@ -271,7 +267,7 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     {
         mFileNames = new ArrayList<>();
 
-        SharedPreferences prefs = getActivity().getSharedPreferences(FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         int fileNameCount = prefs.getInt(ApplicationPreferences.LAST_FILENAMES, 0);
 
         for (int i = 0; i < fileNameCount; ++i)

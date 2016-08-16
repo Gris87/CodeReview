@@ -863,7 +863,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putString(ApplicationPreferences.LAST_PATH, "");
+        editor.remove(ApplicationPreferences.LAST_PATH);
 
         editor.apply();
     }
@@ -906,7 +906,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putString(ApplicationPreferences.LAST_FILE, "");
+        editor.remove(ApplicationPreferences.LAST_FILE);
 
         editor.apply();
     }

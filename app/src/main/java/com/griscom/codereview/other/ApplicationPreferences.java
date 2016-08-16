@@ -1,8 +1,21 @@
 package com.griscom.codereview.other;
 
+/**
+ * Application preferences
+ */
 public class ApplicationPreferences
 {
-    public static final String FILE_NAME      = "Application";
+    @SuppressWarnings("unused")
+    private static final String TAG = "ApplicationPreferences";
+
+
+
+    public static final String MAIN_SHARED_PREFERENCES       = "Application";
+    public static final String FILE_NAMES_SHARED_PREFERENCES = "FileNames";
+    public static final String NOTES_SHARED_PREFERENCES      = "Notes";
+    public static final String COMMENTS_SHARED_PREFERENCES   = "Comments";
+
+
 
     public static final String LAST_PATH      = "LastPath";
     public static final String LAST_FILE      = "LastFile";

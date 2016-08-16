@@ -46,7 +46,7 @@ public class SettingsActivity extends PreferenceActivity
 
             // Change preference file name
             PreferenceManager prefManager = getPreferenceManager();
-            prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
+            prefManager.setSharedPreferencesName(ApplicationPreferences.MAIN_SHARED_PREFERENCES);
             prefManager.setSharedPreferencesMode(MODE_PRIVATE);
 
             // Create empty PreferenceScreen
@@ -137,7 +137,7 @@ public class SettingsActivity extends PreferenceActivity
 
             // Change preference file name
             PreferenceManager prefManager = getPreferenceManager();
-            prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
+            prefManager.setSharedPreferencesName(ApplicationPreferences.MAIN_SHARED_PREFERENCES);
             prefManager.setSharedPreferencesMode(MODE_PRIVATE);
 
             addPreferencesFromResource(R.xml.pref_file_manager);
@@ -157,7 +157,7 @@ public class SettingsActivity extends PreferenceActivity
 
             // Change preference file name
             PreferenceManager prefManager = getPreferenceManager();
-            prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
+            prefManager.setSharedPreferencesName(ApplicationPreferences.MAIN_SHARED_PREFERENCES);
             prefManager.setSharedPreferencesMode(MODE_PRIVATE);
 
             addPreferencesFromResource(R.xml.pref_colors);
@@ -177,7 +177,7 @@ public class SettingsActivity extends PreferenceActivity
 
             // Change preference file name
             PreferenceManager prefManager = getPreferenceManager();
-            prefManager.setSharedPreferencesName(ApplicationPreferences.FILE_NAME);
+            prefManager.setSharedPreferencesName(ApplicationPreferences.MAIN_SHARED_PREFERENCES);
             prefManager.setSharedPreferencesMode(MODE_PRIVATE);
 
             addPreferencesFromResource(R.xml.pref_editor);

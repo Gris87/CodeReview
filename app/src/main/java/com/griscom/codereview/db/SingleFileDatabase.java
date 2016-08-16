@@ -6,8 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Single file database helper
+ */
 public class SingleFileDatabase extends SQLiteOpenHelper
 {
+    @SuppressWarnings("unused")
+    private static final String TAG = "SingleFileDatabase";
+
+
+
     private static final String DB_NAME    = "file";
     private static final int    DB_VERSION = 1;
 

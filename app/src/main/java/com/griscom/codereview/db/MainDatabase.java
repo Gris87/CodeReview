@@ -1,7 +1,5 @@
 package com.griscom.codereview.db;
 
-import java.io.File;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,8 +8,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.griscom.codereview.util.Utils;
 
+import java.io.File;
+
+/**
+ * Main database helper
+ */
 public class MainDatabase extends SQLiteOpenHelper
 {
+    @SuppressWarnings("unused")
+    private static final String TAG = "MainDatabase";
+
+
+
     private static final String DB_NAME    = "main.db";
     private static final int    DB_VERSION = 1;
 
