@@ -27,6 +27,7 @@ import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.dialogs.DeleteDialog;
 import com.griscom.codereview.dialogs.NoteDialog;
+import com.griscom.codereview.dialogs.OpenBigFileDialog;
 import com.griscom.codereview.dialogs.RenameDialog;
 import com.griscom.codereview.dialogs.SortDialog;
 import com.griscom.codereview.lists.FilesAdapter;
@@ -45,7 +46,7 @@ import java.util.ArrayList;
 /**
  * Activity for displaying files
  */
-public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener, RenameDialog.OnFragmentInteractionListener, NoteDialog.OnFragmentInteractionListener, DeleteDialog.OnFragmentInteractionListener
+public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener, RenameDialog.OnFragmentInteractionListener, NoteDialog.OnFragmentInteractionListener, DeleteDialog.OnFragmentInteractionListener, OpenBigFileDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "FilesActivity";
@@ -458,6 +459,12 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         hideActionMode();
     }
 
+    @Override
+    public void onBigFileOpeningConfirmed(String filePath, int fileId)
+    {
+        openFileAtPath(filePath, fileId);
+    }
+
     /**
      * Sets choice listener on ActionMode
      */
@@ -799,7 +806,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     }
 
     /**
-     * Opens specified file in ReviewActivity
+     * Opens specified file in ReviewActivity if allowed
      * @param fileName    file name
      * @param fileId      file ID in database
      * @throws FileNotFoundException if file not found
@@ -808,11 +815,35 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     {
         String filePath = mAdapter.pathToFile(fileName);
 
-        if (!(new File(filePath).exists()))
+        File file = new File(filePath);
+
+        if (!file.exists())
         {
             throw new FileNotFoundException();
         }
 
+        if (
+            ApplicationSettings.getBigFileSize() == 0
+            ||
+            file.length() <= ApplicationSettings.getBigFileSize() * 1024
+           )
+        {
+            openFileAtPath(filePath, fileId);
+        }
+        else
+        {
+            OpenBigFileDialog dialog = OpenBigFileDialog.newInstance(filePath, fileId);
+            dialog.show(getSupportFragmentManager(), "OpenBigFileDialog");
+        }
+    }
+
+    /**
+     * Opens specified file in ReviewActivity
+     * @param filePath    path to file
+     * @param fileId      file ID in database
+     */
+    private void openFileAtPath(String filePath, int fileId)
+    {
         Intent intent = new Intent(this, ReviewActivity.class);
 
         intent.putExtra(ApplicationExtras.FILE_PATH, filePath);

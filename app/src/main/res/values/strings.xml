@@ -7,13 +7,6 @@
     <!-- Sort -->
     <string name="action_sort">Sort</string>
 
-    <!-- Sort types -->
-    <string-array name="sort_types">
-        <item>By name</item>
-        <item>By type</item>
-        <item>By size</item>
-    </string-array>
-
     <!-- Settings -->
     <string name="action_settings">Settings</string>
 
@@ -43,6 +36,13 @@
 
     <!-- Close -->
     <string name="action_close">Close</string>
+
+    <!-- Sort types -->
+    <string-array name="sort_types">
+        <item>By name</item>
+        <item>By type</item>
+        <item>By size</item>
+    </string-array>
 
     <!-- Plurals for selecting folders -->
     <plurals name="selected_folders_plurals">
@@ -124,6 +124,12 @@
 
     <!-- Show message if there is no last notes -->
     <string name="no_last_notes">Please input at least one note to use it later</string>
+
+    <!-- Title for dialog asking opening big file in files activity -->
+    <string name="dialog_open_big_file_title">Big file</string>
+
+    <!-- Message for dialog asking opening big file in files activity -->
+    <string name="dialog_open_big_file_message">Size of file %1$s is too big. Do you want to open it?</string>
 
     <!-- Need to rename -->
     <string name="need_to_rename">Need to rename</string>

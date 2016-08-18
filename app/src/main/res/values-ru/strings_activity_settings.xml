@@ -39,4 +39,8 @@
     <string name="pref_title_tab_size">Размер табуляции</string>
     <string name="pref_desc_tab_size">Отображаемая ширина табуляции в пробелах.</string>
 
+    <string name="pref_title_big_file_size">Большие файлы</string>
+    <string name="pref_desc_big_file_size">Спрашивать об открытии большого файла.</string>
+    <string name="pref_dialog_big_file_size">Укажите размер файла в KB (0 - безгранично).</string>
+
 </resources>

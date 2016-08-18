@@ -9,6 +9,7 @@
 
     <string name="pref_key_font_size">FontSize</string>
     <string name="pref_key_tab_size">TabSize</string>
+    <string name="pref_key_big_file_size">BigFileSize</string>
 
 
 
@@ -20,5 +21,6 @@
 
     <integer name="pref_default_font_size">14</integer>
     <integer name="pref_default_tab_size">4</integer>
+    <integer name="pref_default_big_file_size">50</integer>
 
 </resources>

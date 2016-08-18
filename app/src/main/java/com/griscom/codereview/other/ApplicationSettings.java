@@ -22,6 +22,7 @@ public class ApplicationSettings
     private static int      mSelectionColor = 0;
     private static int      mFontSize       = 0;
     private static int      mTabSize        = 0;
+    private static int      mBigFileSize    = 0;
 
 
 
@@ -40,6 +41,7 @@ public class ApplicationSettings
         mSelectionColor = prefs.getInt(context.getString(R.string.pref_key_selection_color), context.getResources().getInteger(R.integer.pref_default_selection_color));
         mFontSize       = prefs.getInt(context.getString(R.string.pref_key_font_size),       context.getResources().getInteger(R.integer.pref_default_font_size));
         mTabSize        = prefs.getInt(context.getString(R.string.pref_key_tab_size),        context.getResources().getInteger(R.integer.pref_default_tab_size));
+        mBigFileSize    = prefs.getInt(context.getString(R.string.pref_key_big_file_size),   context.getResources().getInteger(R.integer.pref_default_big_file_size));
 
         ColorCache.update();
     }
@@ -105,5 +107,14 @@ public class ApplicationSettings
     public static int getTabSize()
     {
         return mTabSize;
+    }
+
+    /**
+     * Gets big file size
+     * @return big file size
+     */
+    public static int getBigFileSize()
+    {
+        return mBigFileSize;
     }
 }

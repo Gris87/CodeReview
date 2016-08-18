@@ -7,13 +7,6 @@
     <!-- Sort -->
     <string name="action_sort">Сортировка</string>
 
-    <!-- Sort types -->
-    <string-array name="sort_types">
-        <item>По имени</item>
-        <item>По типу</item>
-        <item>По размеру</item>
-    </string-array>
-
     <!-- Settings -->
     <string name="action_settings">Настройки</string>
 
@@ -43,6 +36,13 @@
 
     <!-- Close -->
     <string name="action_close">Закрыть</string>
+
+    <!-- Sort types -->
+    <string-array name="sort_types">
+        <item>По имени</item>
+        <item>По типу</item>
+        <item>По размеру</item>
+    </string-array>
 
     <!-- Plurals for selecting folders -->
     <plurals name="selected_folders_plurals">
@@ -124,6 +124,12 @@
 
     <!-- Show message if there is no last notes -->
     <string name="no_last_notes">Введите хотя бы одну заметку, чтобы в дальнейшем использовать ее</string>
+
+    <!-- Title for dialog asking opening big file in files activity -->
+    <string name="dialog_open_big_file_title">Большой файл</string>
+
+    <!-- Message for dialog asking opening big file in files activity -->
+    <string name="dialog_open_big_file_message">Размер файла %1$s слишком большой. Вы хотите открыть его?</string>
 
     <!-- Need to rename -->
     <string name="need_to_rename">Нужно переименовать</string>

@@ -39,4 +39,8 @@
     <string name="pref_title_tab_size">Tab size</string>
     <string name="pref_desc_tab_size">Displayed width of tabs in the editor.</string>
 
+    <string name="pref_title_big_file_size">Big file size</string>
+    <string name="pref_desc_big_file_size">Ask for opening big file.</string>
+    <string name="pref_dialog_big_file_size">Specify file size in KB (0 - unlimited).</string>
+
 </resources>

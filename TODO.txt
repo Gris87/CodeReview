@@ -13,7 +13,6 @@ Hide Done/Back button in ActionMode
 Failed to get notes on folders after setting it up
 Make usage of last comments looks better
 Use standard combobox
-Do not auto open big files
 Show note in title in viewer
 Syntax Highlight in menu
 Auto-speed on scrolling with selection
