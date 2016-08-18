@@ -125,12 +125,18 @@ public class FileEntry
 
     public String getFileName()
     {
-        return mFileName;
+        synchronized(this)
+        {
+            return mFileName;
+        }
     }
 
     public void setFileName(String fileName)
     {
-        mFileName = fileName;
+        synchronized(this)
+        {
+            mFileName = fileName;
+        }
     }
 
     public boolean isDirectory()

@@ -11,7 +11,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.other.ApplicationSettings;
@@ -38,6 +36,8 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Adapter that used in FilesActivity
@@ -50,19 +50,22 @@ public class FilesAdapter extends BaseAdapter
 
 
     private Context              mContext;
-    private DbReaderTask         mDbReaderTask;
     private String               mCurrentPath;
     private ArrayList<FileEntry> mFiles;
     private int                  mSortType;
     private boolean              mSelectionMode;
     private ArrayList<Integer>   mSelection;
+    private DbReaderTask         mDbReaderTask;
 
 
 
+    /**
+     * View holder
+     */
     private static class ViewHolder
     {
         CheckBox  mCheckBox;
-        ImageView mExtenstion;
+        ImageView mExtensionImage;
         TextView  mFileNote;
         TextView  mFileName;
         TextView  mFileSize;
@@ -70,57 +73,73 @@ public class FilesAdapter extends BaseAdapter
 
 
 
+    /**
+     * Creates instance of FilesAdapter
+     * @param context    context
+     */
     public FilesAdapter(Context context)
     {
         mContext       = context;
-        mDbReaderTask  = null;
         mCurrentPath   = Environment.getExternalStorageDirectory().getPath();
-        mFiles         = new ArrayList<FileEntry>();
+        mFiles         = new ArrayList<>();
         mSortType      = SortType.NAME;
         mSelectionMode = false;
-        mSelection     = new ArrayList<Integer>();
+        mSelection     = new ArrayList<>();
+        mDbReaderTask  = null;
 
         rescan();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getCount()
     {
         return mFiles.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object getItem(int position)
     {
         return position >= 0 && position < mFiles.size() ? mFiles.get(position) : null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getItemId(int position)
     {
         return position;
     }
 
-    private View newView(Context context, ViewGroup parent)
+    /**
+     * Creates new view for adapter item
+     * @param parent     parent view
+     * @return view for adapter item
+     */
+    private View newView(ViewGroup parent)
     {
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View resView = inflater.inflate(R.layout.list_item_files, parent, false);
 
         ViewHolder holder = new ViewHolder();
 
-        holder.mCheckBox   = (CheckBox) resView.findViewById(R.id.checkbox);
-        holder.mExtenstion = (ImageView)resView.findViewById(R.id.extensionImageView);
-        holder.mFileNote   = (TextView) resView.findViewById(R.id.fileNoteTextView);
-        holder.mFileName   = (TextView) resView.findViewById(R.id.fileNameTextView);
-        holder.mFileSize   = (TextView) resView.findViewById(R.id.fileSizeTextView);
+        holder.mCheckBox       = (CheckBox) resView.findViewById(R.id.checkbox);
+        holder.mExtensionImage = (ImageView)resView.findViewById(R.id.extensionImageView);
+        holder.mFileNote       = (TextView) resView.findViewById(R.id.fileNoteTextView);
+        holder.mFileName       = (TextView) resView.findViewById(R.id.fileNameTextView);
+        holder.mFileSize       = (TextView) resView.findViewById(R.id.fileSizeTextView);
 
         resView.setTag(holder);
 
         return resView;
     }
 
-    @SuppressWarnings("deprecation")
+    /**
+     * Binds item data to the view
+     * @param position    item position
+     * @param view        item view
+     */
     private void bindView(int position, View view)
     {
         FileEntry file = mFiles.get(position);
@@ -194,7 +213,7 @@ public class FilesAdapter extends BaseAdapter
 
                 if (clearPercent <= 0)
                 {
-                    if (reviewedCount + invalidCount + noteCount != rowCount)
+                    if (reviewedCount + invalidCount + noteCount < rowCount)
                     {
                         clearPercent = 1;
                     }
@@ -299,33 +318,24 @@ public class FilesAdapter extends BaseAdapter
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + clearPercent, 0, paint);
-                    curPercent += clearPercent;
                 }
 
+                //noinspection deprecation
                 view.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
             }
             else
             {
+                //noinspection deprecation
                 view.setBackgroundDrawable(null);
             }
         }
         else
         {
+            //noinspection deprecation
             view.setBackgroundDrawable(null);
         }
 
 
-        String note = file.getFileNote();
-
-        if (!TextUtils.isEmpty(note))
-        {
-            holder.mFileNote.setVisibility(View.VISIBLE);
-            holder.mFileNote.setText(note);
-        }
-        else
-        {
-            holder.mFileNote.setVisibility(View.GONE);
-        }
 
         if (
             mSelectionMode
@@ -349,10 +359,26 @@ public class FilesAdapter extends BaseAdapter
             holder.mCheckBox.setVisibility(View.GONE);
         }
 
-        holder.mExtenstion.setImageResource(file.getImageId());
+
+
+        String note = file.getFileNote();
+
+        if (!TextUtils.isEmpty(note))
+        {
+            holder.mFileNote.setVisibility(View.VISIBLE);
+            holder.mFileNote.setText(note);
+        }
+        else
+        {
+            holder.mFileNote.setVisibility(View.GONE);
+        }
+
+
+
+        holder.mExtensionImage.setImageResource(file.getImageId());
         holder.mFileName.setText(file.getFileName());
 
-        if (!mSelectionMode && !file.isDirectory())
+        if (!file.isDirectory())
         {
             holder.mFileSize.setVisibility(View.VISIBLE);
             holder.mFileSize.setText(Utils.bytesToString(file.getSize()));
@@ -363,10 +389,11 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view = null;
+        View view;
 
         if (convertView != null)
         {
@@ -374,7 +401,7 @@ public class FilesAdapter extends BaseAdapter
         }
         else
         {
-            view = newView(mContext, parent);
+            view = newView(parent);
         }
 
         bindView(position, view);
@@ -382,70 +409,59 @@ public class FilesAdapter extends BaseAdapter
         return view;
     }
 
+    /**
+     * Go to the parent folder
+     */
     public void goUp()
     {
-        if (BuildConfig.DEBUG)
-        {
-            Assert.assertTrue(!mCurrentPath.equals("/"));
-        }
+        Assert.assertTrue(!mCurrentPath.equals("/"));
 
         setCurrentPathBacktrace(mCurrentPath.substring(0, mCurrentPath.lastIndexOf('/')));
     }
 
+    /**
+     * Rescans current folder
+     * @return true, if successful
+     */
     public boolean rescan()
     {
         if (!(new File(mCurrentPath).exists()))
         {
             setCurrentPathBacktrace(pathToFile("."));
+
             return false;
         }
 
-        synchronized (this)
+
+
+        mFiles.clear();
+
+        if (!mCurrentPath.equals("/"))
         {
-            mFiles.clear();
+            mFiles.add(FileEntry.createParentFolder());
+        }
 
-            if (!mCurrentPath.equals("/"))
+        File folder = new File(mCurrentPath);
+        File[] files = folder.listFiles();
+
+        if (files != null)
+        {
+            ArrayList<String> ignoreFiles = ApplicationSettings.getIgnoreFiles();
+
+            WildcardFileFilter filter = new WildcardFileFilter(ignoreFiles);
+
+            for (File file : files)
             {
-                mFiles.add(FileEntry.createParentFolder());
-            }
-
-
-
-            File folder = new File(mCurrentPath);
-            File[] files = folder.listFiles();
-
-            if (files != null)
-            {
-                ArrayList<String> ignoreFiles = new ArrayList<String>();
-
-                String[] filterFiles = ApplicationSettings.getIgnoreFiles();
-
-                if (filterFiles != null)
+                if (!filter.accept(file))
                 {
-                    for (int i = 0; i < filterFiles.length; ++i)
-                    {
-                        if (!TextUtils.isEmpty(filterFiles[i]))
-                        {
-                            ignoreFiles.add(filterFiles[i]);
-                        }
-                    }
-                }
-
-                WildcardFileFilter filter = new WildcardFileFilter(ignoreFiles);
-
-                for (int i = 0; i < files.length; ++i)
-                {
-                    if (!filter.accept(files[i]))
-                    {
-                        FileEntry newEntry = new FileEntry(files[i]);
-
-                        mFiles.add(newEntry);
-                    }
+                    mFiles.add(new FileEntry(file));
                 }
             }
         }
 
         sort();
+
+
 
         if (mDbReaderTask != null)
         {
@@ -454,6 +470,8 @@ public class FilesAdapter extends BaseAdapter
 
         mDbReaderTask = new DbReaderTask();
         mDbReaderTask.execute();
+
+
 
         return true;
     }
@@ -477,68 +495,68 @@ public class FilesAdapter extends BaseAdapter
             mSortType = sortType;
         }
 
-        synchronized (this)
+        Collections.sort(mFiles, new Comparator<FileEntry>()
         {
-            for (int e = 0; e < mFiles.size() - 1; ++e)
+            @Override
+            public int compare(FileEntry file1, FileEntry file2)
             {
-                int minIndex = e;
-
-                for (int i = e + 1; i < mFiles.size(); ++i)
+                if (file1.isLess(file2, mSortType))
                 {
-                    if (mFiles.get(i).isLess(mFiles.get(minIndex), mSortType))
-                    {
-                        minIndex = i;
-                    }
+                    return -1;
                 }
 
-                if (e != minIndex)
-                {
-                    FileEntry temp = mFiles.get(e);
-                    mFiles.set(e, mFiles.get(minIndex));
-                    mFiles.set(minIndex, temp);
-                }
+                return 0;
             }
-        }
+        });
 
         notifyDataSetChanged();
     }
 
+    /**
+     * Gets absolute path to specified file name
+     * @param fileName    file name
+     * @return absolute path to specified file name
+     */
     public String pathToFile(String fileName)
     {
-        synchronized (this)
+        if (mCurrentPath.endsWith("/"))
         {
-            if (mCurrentPath.endsWith("/"))
-            {
-                return mCurrentPath + fileName;
-            }
-            else
-            {
-                return mCurrentPath + "/" + fileName;
-            }
+            return mCurrentPath + fileName;
+        }
+        else
+        {
+            return mCurrentPath + "/" + fileName;
         }
     }
 
+    /**
+     * Search index of specified file name in the file list
+     * @param fileName    file name
+     * @return index of specified file name in the file list or -1 if not found
+     */
     public int indexOf(String fileName)
     {
-        synchronized (this)
+        for (int i = 0; i < mFiles.size(); ++i)
         {
-            for (int i = 0; i < mFiles.size(); ++i)
+            if (mFiles.get(i).getFileName().equals(fileName))
             {
-                if (mFiles.get(i).getFileName().equals(fileName))
-                {
-                    return i;
-                }
+                return i;
             }
         }
 
         return -1;
     }
 
-    public void assignNote(int files[], String note)
+    /**
+     * Assigns note for files in specified indices
+     * @param items    file indices
+     * @param note     note
+     */
+    public void assignNote(ArrayList<Integer> items, String note)
     {
-        for (int fileIndex : files)
+        for (int item : items)
         {
-            FileEntry file = mFiles.get(fileIndex);
+            FileEntry file = mFiles.get(item);
 
             file.setFileNote(mContext, pathToFile(file.getFileName()), note);
         }
@@ -546,7 +564,13 @@ public class FilesAdapter extends BaseAdapter
         notifyDataSetChanged();
     }
 
-    public boolean renameFile(int index, String fileName)
+    /**
+     * Renames file at specified index in the file list
+     * @param item        index of file
+     * @param fileName    new file name
+     * @return true, if successful
+     */
+    public boolean renameFile(int item, String fileName)
     {
         if (
             fileName.contains("/")
@@ -557,14 +581,11 @@ public class FilesAdapter extends BaseAdapter
             return false;
         }
 
-        if (new File(pathToFile(mFiles.get(index).getFileName())).renameTo(new File(pathToFile(fileName))))
+        if (new File(pathToFile(mFiles.get(item).getFileName())).renameTo(new File(pathToFile(fileName))))
         {
-            synchronized (this)
-            {
-                mFiles.get(index).setFileName(fileName);
-            }
+            mFiles.get(item).setFileName(fileName);
 
-            rescan();
+            sort();
 
             return true;
         }
@@ -572,39 +593,26 @@ public class FilesAdapter extends BaseAdapter
         return false;
     }
 
-    public void deleteFiles(int files[], ArrayList<String> keepFolders, ArrayList<String> keepFiles)
+    /**
+     * Deletes files at specified indices
+     * @param items          file indices
+     * @param keepFolders    list of folders that were not deleted
+     * @param keepFiles      list of files that were not deleted
+     */
+    public void deleteFiles(ArrayList<Integer> items, ArrayList<String> keepFolders, ArrayList<String> keepFiles)
     {
-        for (int e = 0; e < files.length - 1; ++e)
+        Collections.sort(items);
+
+        for (int i = items.size() - 1; i >= 0; --i)
         {
-            int max = files[e];
-            int maxIndex = e;
-
-            for (int i = e + 1; i < files.length; ++i)
-            {
-                if (files[i] > max)
-                {
-                    max = files[i];
-                    maxIndex = i;
-                }
-            }
-
-            int temp        = files[e];
-            files[e]        = files[maxIndex];
-            files[maxIndex] = temp;
-        }
-
-        for (int fileIndex : files)
-        {
-            FileEntry file = mFiles.get(fileIndex);
+            int item = items.get(i);
+            FileEntry file = mFiles.get(item);
 
             String fileName = file.getFileName();
 
             if (Utils.deleteFileOrFolder(pathToFile(fileName)))
             {
-                synchronized (this)
-                {
-                    mFiles.remove(fileIndex);
-                }
+                mFiles.remove(item);
             }
             else
             {
@@ -619,12 +627,17 @@ public class FilesAdapter extends BaseAdapter
             }
         }
 
-        if (keepFolders.size() + keepFiles.size() < files.length)
+        if (keepFolders.size() + keepFiles.size() < items.size())
         {
             notifyDataSetChanged();
         }
     }
 
+    /**
+     * Trying to set current path to the specified path.
+     * If it's impossible to change current path then it will move upper recursively
+     * @param newPath    new path
+     */
     public void setCurrentPathBacktrace(String newPath)
     {
         do
@@ -632,21 +645,24 @@ public class FilesAdapter extends BaseAdapter
             try
             {
                 setCurrentPath(newPath);
+
                 return;
             }
             catch (FileNotFoundException e)
             {
-                if (BuildConfig.DEBUG)
-                {
-                    Assert.assertTrue(!TextUtils.isEmpty(newPath) && !newPath.equals("/"));
-                }
+                Assert.assertTrue(!TextUtils.isEmpty(newPath) && !newPath.equals("/"));
 
                 newPath = newPath.substring(0, newPath.lastIndexOf('/'));
             }
         } while (true);
     }
 
-    public void setCurrentPath(String newPath) throws FileNotFoundException
+    /**
+     * Sets current path to the specified path
+     * @param newPath    new path
+     * @throws FileNotFoundException if specified path is not exist
+     */
+    private void setCurrentPath(String newPath) throws FileNotFoundException
     {
         if (TextUtils.isEmpty(newPath))
         {
@@ -658,24 +674,49 @@ public class FilesAdapter extends BaseAdapter
             throw new FileNotFoundException();
         }
 
-        synchronized (this)
-        {
-            mCurrentPath = newPath;
-        }
+        mCurrentPath = newPath;
 
         rescan();
     }
 
+    /**
+     * Gets current path
+     * @return current path
+     */
     public String getCurrentPath()
     {
         return mCurrentPath;
     }
 
+    /**
+     * Gets selected sort type
+     * @return selected sort type
+     */
     public int getSortType()
     {
         return mSortType;
     }
 
+    /**
+     * Enables or disables selection mode
+     * @param enable    true, if need to enable
+     */
+    public void setSelectionMode(boolean enable)
+    {
+        if (mSelectionMode != enable)
+        {
+            mSelectionMode = enable;
+            mSelection.clear();
+
+            notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Selects or deselects item at specified index
+     * @param index      item index
+     * @param checked    true, if need to select
+     */
     public void setSelected(int index, boolean checked)
     {
         if (mSelectionMode)
@@ -693,31 +734,36 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
-    public void setSelectionMode(boolean enable)
-    {
-        if (mSelectionMode != enable)
-        {
-            mSelectionMode = enable;
-            mSelection.clear();
-
-            notifyDataSetChanged();
-        }
-    }
-
+    /**
+     * Gets selection
+     * @return selection
+     */
     public ArrayList<Integer> getSelection()
     {
         return mSelection;
     }
 
+
+
+    /**
+     * Listener for checked changed event
+     */
     private class CheckedChangedListener implements CompoundButton.OnCheckedChangeListener
     {
         private Integer mPosition;
 
+
+
+        /**
+         * Creates instance of CheckedChangedListener
+         * @param position    item position
+         */
         public CheckedChangedListener(int position)
         {
             mPosition = position;
         }
 
+        /** {@inheritDoc} */
         @Override
         public void onCheckedChanged(CompoundButton button, boolean checked)
         {
@@ -732,22 +778,32 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
-    private class DbReaderTask extends AsyncTask<Void, Void, Void>
+    /**
+     * DB reader task
+     */
+    private class DbReaderTask extends AsyncTask<Void, Void, Boolean>
     {
+        private String               mStoredPath;
+        private ArrayList<FileEntry> mStoredFiles;
+
+
+
+        /** {@inheritDoc} */
         @Override
-        protected Void doInBackground(Void... arg0)
+        protected void onPreExecute()
+        {
+            mStoredPath  = mCurrentPath;
+            mStoredFiles = new ArrayList<>(mFiles);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected Boolean doInBackground(Void... arg0)
         {
             MainDatabase helper = new MainDatabase(mContext);
             SQLiteDatabase db = helper.getReadableDatabase();
 
-            String path;
-
-            synchronized (FilesAdapter.this)
-            {
-                path = mCurrentPath;
-            }
-
-            Cursor cursor = helper.getFiles(db, path);
+            Cursor cursor = helper.getFiles(db, mStoredPath);
 
             int idIndex            = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_ID);
             int nameIndex          = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_NAME);
@@ -766,19 +822,30 @@ public class FilesAdapter extends BaseAdapter
 
                 FileEntry entry = null;
 
-                synchronized (FilesAdapter.this)
+                for (int i = 0; i < mStoredFiles.size() && !isCancelled(); ++i)
                 {
-                    int index = indexOf(fileName);
+                    FileEntry fileEntry = mStoredFiles.get(i);
 
-                    if (index >= 0)
+                    if (fileEntry.getFileName().equals(fileName))
                     {
-                        entry = mFiles.get(index);
+                        entry = fileEntry;
+
+                        break;
                     }
                 }
 
                 if (entry != null)
                 {
-                    String filePath = pathToFile(entry.getFileName());
+                    String filePath;
+
+                    if (mStoredPath.endsWith("/"))
+                    {
+                        filePath = mStoredPath + fileName;
+                    }
+                    else
+                    {
+                        filePath = mStoredPath + "/" + fileName;
+                    }
 
                     long modifiedTime = new File(filePath).lastModified();
 
@@ -798,55 +865,54 @@ public class FilesAdapter extends BaseAdapter
                 cursor.moveToNext();
             }
 
-            synchronized (FilesAdapter.this)
+            for (int i = 0; i < mStoredFiles.size() && !isCancelled(); ++i)
             {
-                for (int i = 0; i < mFiles.size() && !isCancelled(); ++i)
+                FileEntry entry = mStoredFiles.get(i);
+
+                if (
+                    !entry.isDirectory()
+                    &&
+                    entry.getDbFileId() <= 0
+                    &&
+                    entry.getSize() > 0
+                    &&
+                    (
+                     ApplicationSettings.getBigFileSize() == 0
+                     ||
+                     entry.getSize() <= ApplicationSettings.getBigFileSize() * 1024
+                    )
+                   )
                 {
-                    FileEntry entry = mFiles.get(i);
+                    String filePath;
 
-                    try
+                    if (mStoredPath.endsWith("/"))
                     {
-                        if (
-                            !entry.isDirectory()
-                            &&
-                            entry.getDbFileId() <= 0
-                            )
-                        {
-                            String filePath = pathToFile(entry.getFileName());
-
-                            String md5        = Utils.md5ForFile(filePath);
-                            long modifiedTime = new File(filePath).lastModified();
-
-                            cursor = helper.getFileByMD5(db, md5);
-
-                            cursor.moveToFirst();
-
-                            while (!cursor.isAfterLast())
-                            {
-                                if (cursor.getLong(modificationIndex) == modifiedTime)
-                                {
-                                    String fileName = cursor.getString(nameIndex);
-
-                                    if (entry.getFileName().equals(fileName))
-                                    {
-                                        entry.updateFromDb(
-                                                           cursor.getInt(idIndex),
-                                                           cursor.getInt(reviewedCountIndex),
-                                                           cursor.getInt(invalidCountIndex),
-                                                           cursor.getInt(noteCountIndex),
-                                                           cursor.getInt(rowCountIndex),
-                                                           cursor.getString(noteIndex)
-                                                          );
-                                    }
-                                }
-
-                                cursor.moveToNext();
-                            }
-                        }
+                        filePath = mStoredPath + entry.getFileName();
                     }
-                    catch (Exception e)
+                    else
                     {
-                        Log.e(TAG, "Impossible to get file id by MD5 for file: " + entry.getFileName(), e);
+                        filePath = mStoredPath + "/" + entry.getFileName();
+                    }
+
+                    String md5 = Utils.md5ForFile(filePath);
+
+                    if (!TextUtils.isEmpty(md5))
+                    {
+                        cursor = helper.getFileByMD5(db, md5);
+
+                        cursor.moveToFirst();
+
+                        if (!cursor.isAfterLast())
+                        {
+                            entry.updateFromDb(
+                                    cursor.getInt(idIndex),
+                                    cursor.getInt(reviewedCountIndex),
+                                    cursor.getInt(invalidCountIndex),
+                                    cursor.getInt(noteCountIndex),
+                                    cursor.getInt(rowCountIndex),
+                                    cursor.getString(noteIndex)
+                            );
+                        }
                     }
                 }
             }
@@ -855,14 +921,19 @@ public class FilesAdapter extends BaseAdapter
 
             db.close();
 
-            return null;
+            return !isCancelled();
         }
 
+        /** {@inheritDoc} */
         @Override
-        protected void onPostExecute(Void result)
+        protected void onPostExecute(Boolean result)
         {
-            notifyDataSetChanged();
-            mDbReaderTask = null;
+            if (result)
+            {
+                mDbReaderTask = null;
+
+                notifyDataSetChanged();
+            }
         }
     }
 }

@@ -2,8 +2,13 @@ package com.griscom.codereview.other;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.griscom.codereview.R;
+import com.griscom.codereview.util.Utils;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Application settings
@@ -15,14 +20,14 @@ public class ApplicationSettings
 
 
 
-    private static String[] mIgnoreFiles    = null;
-    private static int      mReviewedColor  = 0;
-    private static int      mInvalidColor   = 0;
-    private static int      mNoteColor      = 0;
-    private static int      mSelectionColor = 0;
-    private static int      mFontSize       = 0;
-    private static int      mTabSize        = 0;
-    private static int      mBigFileSize    = 0;
+    private static ArrayList<String> mIgnoreFiles    = null;
+    private static int               mReviewedColor  = 0;
+    private static int               mInvalidColor   = 0;
+    private static int               mNoteColor      = 0;
+    private static int               mSelectionColor = 0;
+    private static int               mFontSize       = 0;
+    private static int               mTabSize        = 0;
+    private static int               mBigFileSize    = 0;
 
 
 
@@ -34,14 +39,30 @@ public class ApplicationSettings
     {
         SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
-        mIgnoreFiles    = prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
-        mReviewedColor  = prefs.getInt(context.getString(R.string.pref_key_reviewed_color),  context.getResources().getInteger(R.integer.pref_default_reviewed_color));
-        mInvalidColor   = prefs.getInt(context.getString(R.string.pref_key_invalid_color),   context.getResources().getInteger(R.integer.pref_default_invalid_color));
-        mNoteColor      = prefs.getInt(context.getString(R.string.pref_key_note_color),      context.getResources().getInteger(R.integer.pref_default_note_color));
-        mSelectionColor = prefs.getInt(context.getString(R.string.pref_key_selection_color), context.getResources().getInteger(R.integer.pref_default_selection_color));
-        mFontSize       = prefs.getInt(context.getString(R.string.pref_key_font_size),       context.getResources().getInteger(R.integer.pref_default_font_size));
-        mTabSize        = prefs.getInt(context.getString(R.string.pref_key_tab_size),        context.getResources().getInteger(R.integer.pref_default_tab_size));
-        mBigFileSize    = prefs.getInt(context.getString(R.string.pref_key_big_file_size),   context.getResources().getInteger(R.integer.pref_default_big_file_size));
+        String[] ignoreFiles = prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
+        mReviewedColor       = prefs.getInt(context.getString(R.string.pref_key_reviewed_color),  context.getResources().getInteger(R.integer.pref_default_reviewed_color));
+        mInvalidColor        = prefs.getInt(context.getString(R.string.pref_key_invalid_color),   context.getResources().getInteger(R.integer.pref_default_invalid_color));
+        mNoteColor           = prefs.getInt(context.getString(R.string.pref_key_note_color),      context.getResources().getInteger(R.integer.pref_default_note_color));
+        mSelectionColor      = prefs.getInt(context.getString(R.string.pref_key_selection_color), context.getResources().getInteger(R.integer.pref_default_selection_color));
+        mFontSize            = prefs.getInt(context.getString(R.string.pref_key_font_size),       context.getResources().getInteger(R.integer.pref_default_font_size));
+        mTabSize             = prefs.getInt(context.getString(R.string.pref_key_tab_size),        context.getResources().getInteger(R.integer.pref_default_tab_size));
+        mBigFileSize         = prefs.getInt(context.getString(R.string.pref_key_big_file_size),   context.getResources().getInteger(R.integer.pref_default_big_file_size));
+
+
+
+        mIgnoreFiles = new ArrayList<>();
+
+        for (String file : ignoreFiles)
+        {
+            if (!TextUtils.isEmpty(file))
+            {
+                mIgnoreFiles.add(Utils.replaceIncorrectIgnoreFileName(file));
+            }
+        }
+
+        Collections.sort(mIgnoreFiles);
+
+
 
         ColorCache.update();
     }
@@ -50,7 +71,7 @@ public class ApplicationSettings
      * Gets list of ignorable files
      * @return list of ignorable files
      */
-    public static String[] getIgnoreFiles()
+    public static ArrayList<String> getIgnoreFiles()
     {
         return mIgnoreFiles;
     }

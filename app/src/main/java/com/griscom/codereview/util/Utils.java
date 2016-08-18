@@ -135,4 +135,20 @@ public class Utils
 
         return file.delete() && res;
     }
+
+    /**
+     * Replaces incorrect characters to underscore in ignore file name
+     * @param fileName    file name
+     * @return specified text without incorrect characters
+     */
+    public static String replaceIncorrectIgnoreFileName(String fileName)
+    {
+        return fileName.replace("\\", "_")
+                .replace("/",  "_")
+                .replace(":",  "_")
+                .replace("\"", "_")
+                .replace("<",  "_")
+                .replace(">",  "_")
+                .replace("|",  "_");
+    }
 }

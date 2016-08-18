@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
+import com.griscom.codereview.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,23 +55,9 @@ public class IgnoreFilesAdapter extends BaseAdapter
     public IgnoreFilesAdapter(Activity context)
     {
         mContext       = context;
-        mFiles         = new ArrayList<>();
+        mFiles         = ApplicationSettings.getIgnoreFiles();
         mSelectionMode = false;
         mSelection     = new ArrayList<>();
-
-        // -----------------------------------------------------------------------------------
-
-        String[] files = ApplicationSettings.getIgnoreFiles();
-
-        for (String file : files)
-        {
-            if (!TextUtils.isEmpty(file))
-            {
-                mFiles.add(replaceIncorrectChars(file));
-            }
-        }
-
-        Collections.sort(mFiles);
     }
 
     /** {@inheritDoc} */
@@ -167,7 +154,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
      */
     public void add(String fileName)
     {
-        fileName = replaceIncorrectChars(fileName);
+        fileName = Utils.replaceIncorrectIgnoreFileName(fileName);
 
         if (!TextUtils.isEmpty(fileName) && !mFiles.contains(fileName))
         {
@@ -184,7 +171,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
      */
     public void replace(int index, String fileName)
     {
-        fileName = replaceIncorrectChars(fileName);
+        fileName = Utils.replaceIncorrectIgnoreFileName(fileName);
 
         mFiles.remove(index);
 
@@ -279,22 +266,6 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
             notifyDataSetChanged();
         }
-    }
-
-    /**
-     * Replaces incorrect characters to underscore
-     * @param text    text
-     * @return specified text without incorrect characters
-     */
-    private String replaceIncorrectChars(String text)
-    {
-        return text.replace("\\", "_")
-                   .replace("/",  "_")
-                   .replace(":",  "_")
-                   .replace("\"", "_")
-                   .replace("<",  "_")
-                   .replace(">",  "_")
-                   .replace("|",  "_");
     }
 
 
