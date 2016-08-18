@@ -133,8 +133,8 @@ public class TextDocument implements OnTouchListener
         mReviewedCount           = 0;
         mInvalidCount            = 0;
         mNoteCount               = 0;
-        mFontSize                = ApplicationSettings.fontSize(mContext);
-        mTabSize                 = ApplicationSettings.tabSize(mContext);
+        mFontSize                = ApplicationSettings.getFontSize();
+        mTabSize                 = ApplicationSettings.getTabSize();
         mRowPaint                = new Paint();
         mRowPaint.setColor(Color.LTGRAY);
         mRowPaint.setTypeface(Typeface.MONOSPACE);
@@ -749,7 +749,7 @@ public class TextDocument implements OnTouchListener
 
         if (fileId <= 0)
         {
-            fileId = helper.getOrCreateFile(db, mParent.getFileName());
+            fileId = helper.getOrCreateFile(db, mParent.getFilePath());
             mParent.setFileId(fileId);
         }
 
@@ -835,7 +835,7 @@ public class TextDocument implements OnTouchListener
                 MainDatabase helper = new MainDatabase(mContext);
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                helper.updateFileMeta(db, mParent.getFileId(), mParent.getFileName());
+                helper.updateFileMeta(db, mParent.getFileId(), mParent.getFilePath());
 
                 db.close();
             }
@@ -1245,7 +1245,7 @@ public class TextDocument implements OnTouchListener
 
             if (fileId <= 0)
             {
-                fileId = helper.getOrCreateFile(db, mParent.getFileName());
+                fileId = helper.getOrCreateFile(db, mParent.getFilePath());
                 mParent.setFileId(fileId);
             }
 

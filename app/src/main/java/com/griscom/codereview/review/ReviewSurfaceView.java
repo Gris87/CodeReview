@@ -1,9 +1,5 @@
 package com.griscom.codereview.review;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -32,6 +28,10 @@ import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
     private static final String TAG = "ReviewSurfaceView";
@@ -45,7 +45,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private SurfaceHolder             mSurfaceHolder;
     private LoadingThread             mLoadingThread;
     private DrawThread                mDrawThread;
-    private String                    mFileName;
+    private String                    mFilePath;
     private int                       mFileId;
     private long                      mModifiedTime;
     private SyntaxParserBase          mSyntaxParser;
@@ -89,7 +89,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             mLastLoadedDocument.setSelectionColor(mSelectionColor);
             mLastLoadedDocument.setOnProgressChangedListener(mProgressChangedListener);
 
-            long modifiedTime = new File(mFileName).lastModified();
+            long modifiedTime = new File(mFilePath).lastModified();
 
             synchronized(this)
             {
@@ -144,8 +144,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mModifiedTime            = 0;
         mSyntaxParser            = null;
         mDocument                = null;
-        mFontSize                = ApplicationSettings.fontSize(mContext);
-        mTabSize                 = ApplicationSettings.tabSize(mContext);
+        mFontSize                = ApplicationSettings.getFontSize();
+        mTabSize                 = ApplicationSettings.getTabSize();
         mSelectionColor          = SelectionColor.REVIEWED;
         mNoteSupportListener     = null;
         mProgressChangedListener = null;
@@ -250,7 +250,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             try
             {
                 ArrayList<TextRow> rows   = mDocument.getRows();
-                PrintWriter        writer = new PrintWriter(mFileName);
+                PrintWriter        writer = new PrintWriter(mFilePath);
 
                 for (int i = 0; i < rows.size() - 1; ++i)
                 {
@@ -264,7 +264,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
                 writer.close();
 
-                long modifiedTime = new File(mFileName).lastModified();
+                long modifiedTime = new File(mFilePath).lastModified();
 
                 synchronized(this)
                 {
@@ -273,7 +273,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             }
             catch(Exception e)
             {
-                Log.e(TAG, "Impossible to save file: " + mFileName, e);
+                Log.e(TAG, "Impossible to save file: " + mFilePath, e);
             }
         }
     }
@@ -297,7 +297,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     public void reload()
     {
-        File file = new File(mFileName);
+        File file = new File(mFilePath);
 
         if (!file.exists() || mModifiedTime != file.lastModified())
         {
@@ -317,7 +317,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             if (file.exists())
             {
-                mLoadingThread = new LoadingThread(this, mSyntaxParser, this, mFileName, mFileId);
+                mLoadingThread = new LoadingThread(this, mSyntaxParser, this, mFilePath, mFileId);
                 mLoadingThread.start();
             }
         }
@@ -365,22 +365,12 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
-    public String getFileName()
+    public void setFilePath(String filePath, int fileId)
     {
-        return mFileName;
-    }
-
-    public int getFileId()
-    {
-        return mFileId;
-    }
-
-    public void setFileName(String fileName, int fileId)
-    {
-        mFileName = fileName;
+        mFilePath = filePath;
         mFileId   = fileId;
 
-        mSyntaxParser = SyntaxParserBase.createParserByFileName(mFileName, mContext);
+        mSyntaxParser = SyntaxParserBase.createParserByFileName(mFilePath, mContext);
 
         if (mNoteSupportListener != null && mSyntaxParser != null)
         {
@@ -391,9 +381,19 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         // reload();
     }
 
+    public String getFilePath()
+    {
+        return mFilePath;
+    }
+
     public void setFileId(int fileId)
     {
         mFileId = fileId;
+    }
+
+    public int getFileId()
+    {
+        return mFileId;
     }
 
     public void setFontSize(int fontSize)

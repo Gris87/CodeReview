@@ -5,47 +5,105 @@ import android.content.SharedPreferences;
 
 import com.griscom.codereview.R;
 
+/**
+ * Application settings
+ */
 public class ApplicationSettings
 {
-    public static String[] ignoreFiles(Context context)
+    @SuppressWarnings("unused")
+    private static final String TAG = "ApplicationSettings";
+
+
+
+    private static String[] mIgnoreFiles    = null;
+    private static int      mReviewedColor  = 0;
+    private static int      mInvalidColor   = 0;
+    private static int      mNoteColor      = 0;
+    private static int      mSelectionColor = 0;
+    private static int      mFontSize       = 0;
+    private static int      mTabSize        = 0;
+
+
+
+    /**
+     * Updates application settings from SharedPreferences
+     * @param context    context
+     */
+    public static void update(Context context)
     {
         SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
+
+        mIgnoreFiles    = prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
+        mReviewedColor  = prefs.getInt(context.getString(R.string.pref_key_reviewed_color),  context.getResources().getInteger(R.integer.pref_default_reviewed_color));
+        mInvalidColor   = prefs.getInt(context.getString(R.string.pref_key_invalid_color),   context.getResources().getInteger(R.integer.pref_default_invalid_color));
+        mNoteColor      = prefs.getInt(context.getString(R.string.pref_key_note_color),      context.getResources().getInteger(R.integer.pref_default_note_color));
+        mSelectionColor = prefs.getInt(context.getString(R.string.pref_key_selection_color), context.getResources().getInteger(R.integer.pref_default_selection_color));
+        mFontSize       = prefs.getInt(context.getString(R.string.pref_key_font_size),       context.getResources().getInteger(R.integer.pref_default_font_size));
+        mTabSize        = prefs.getInt(context.getString(R.string.pref_key_tab_size),        context.getResources().getInteger(R.integer.pref_default_tab_size));
+
+        ColorCache.update();
     }
 
-    public static int reviewedColor(Context context)
+    /**
+     * Gets list of ignorable files
+     * @return list of ignorable files
+     */
+    public static String[] getIgnoreFiles()
     {
-        SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return prefs.getInt(context.getString(R.string.pref_key_reviewed_color),  context.getResources().getInteger(R.integer.pref_default_reviewed_color));
+        return mIgnoreFiles;
     }
 
-    public static int invalidColor(Context context)
+    /**
+     * Gets reviewed color
+     * @return reviewed color
+     */
+    public static int getReviewedColor()
     {
-        SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return prefs.getInt(context.getString(R.string.pref_key_invalid_color),   context.getResources().getInteger(R.integer.pref_default_invalid_color));
+        return mReviewedColor;
     }
 
-    public static int noteColor(Context context)
+    /**
+     * Gets invalid color
+     * @return invalid color
+     */
+    public static int getInvalidColor()
     {
-        SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return prefs.getInt(context.getString(R.string.pref_key_note_color),      context.getResources().getInteger(R.integer.pref_default_note_color));
+        return mInvalidColor;
     }
 
-    public static int selectionColor(Context context)
+    /**
+     * Gets note color
+     * @return note color
+     */
+    public static int getNoteColor()
     {
-        SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return prefs.getInt(context.getString(R.string.pref_key_selection_color), context.getResources().getInteger(R.integer.pref_default_selection_color));
+        return mNoteColor;
     }
 
-    public static int fontSize(Context context)
+    /**
+     * Gets selection color
+     * @return selection color
+     */
+    public static int getSelectionColor()
     {
-        SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return prefs.getInt(context.getString(R.string.pref_key_font_size),       context.getResources().getInteger(R.integer.pref_default_font_size));
+        return mSelectionColor;
     }
 
-    public static int tabSize(Context context)
+    /**
+     * Gets font size
+     * @return font size
+     */
+    public static int getFontSize()
     {
-        SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return prefs.getInt(context.getString(R.string.pref_key_tab_size),        context.getResources().getInteger(R.integer.pref_default_tab_size));
+        return mFontSize;
+    }
+
+    /**
+     * Gets tab size
+     * @return tab size
+     */
+    public static int getTabSize()
+    {
+        return mTabSize;
     }
 }

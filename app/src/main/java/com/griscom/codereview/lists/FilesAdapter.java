@@ -418,7 +418,7 @@ public class FilesAdapter extends BaseAdapter
             {
                 ArrayList<String> ignoreFiles = new ArrayList<String>();
 
-                String[] filterFiles = ApplicationSettings.ignoreFiles(mContext);
+                String[] filterFiles = ApplicationSettings.getIgnoreFiles();
 
                 if (filterFiles != null)
                 {

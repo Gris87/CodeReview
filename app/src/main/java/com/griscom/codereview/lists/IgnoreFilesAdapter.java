@@ -60,7 +60,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         // -----------------------------------------------------------------------------------
 
-        String[] files = ApplicationSettings.ignoreFiles(mContext);
+        String[] files = ApplicationSettings.getIgnoreFiles();
 
         for (String file : files)
         {

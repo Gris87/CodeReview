@@ -1,7 +1,15 @@
 package com.griscom.codereview.other;
 
+/**
+ * Application extras
+ */
 public class ApplicationExtras
 {
-    public static final String FILE_NAME = "FileName";
+    @SuppressWarnings("unused")
+    private static final String TAG = "ApplicationExtras";
+
+
+
+    public static final String FILE_PATH = "FilePath";
     public static final String FILE_ID   = "FileId";
 }

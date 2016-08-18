@@ -1,11 +1,5 @@
 package com.griscom.codereview.review.syntax;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
@@ -13,6 +7,12 @@ import android.graphics.Paint;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.review.TextDocument;
 import com.griscom.codereview.util.Utils;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 @SuppressLint("DefaultLocale")
 public abstract class SyntaxParserBase
@@ -372,12 +372,12 @@ public abstract class SyntaxParserBase
 
     protected float getFontSize()
     {
-        return Utils.spToPixels(ApplicationSettings.fontSize(mContext), mContext);
+        return Utils.spToPixels(ApplicationSettings.getFontSize(), mContext);
     }
 
     protected int getTabSize()
     {
-        return ApplicationSettings.tabSize(mContext);
+        return ApplicationSettings.getTabSize();
     }
 
     public String getCommentLine()

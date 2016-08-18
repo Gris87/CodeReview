@@ -27,7 +27,6 @@ import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationSettings;
-import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionColor;
 import com.griscom.codereview.review.ReviewSurfaceView;
 
@@ -130,10 +129,10 @@ public class ReviewActivity extends FragmentActivity
         {
             case REQUEST_SETTINGS:
             {
-                ColorCache.update(this);
+                ApplicationSettings.update(this);
 
-                mPlaceholderFragment.getContent().setFontSize(ApplicationSettings.fontSize(this));
-                mPlaceholderFragment.getContent().setTabSize (ApplicationSettings.tabSize(this));
+                mPlaceholderFragment.getContent().setFontSize(ApplicationSettings.getFontSize());
+                mPlaceholderFragment.getContent().setTabSize (ApplicationSettings.getTabSize());
             }
         }
 
@@ -178,8 +177,6 @@ public class ReviewActivity extends FragmentActivity
         {
             mActivity = (ReviewActivity)getActivity();
 
-            ColorCache.update(mActivity);
-
             mDefaultColor  = mActivity.getResources().getColor(R.color.black_overlay);
             mSelectedColor = mActivity.getResources().getColor(R.color.selected);
             mHoverColor    = mActivity.getResources().getColor(R.color.hover);
@@ -187,7 +184,7 @@ public class ReviewActivity extends FragmentActivity
             // ---------------------------------------------------------------------------------------
 
             Intent intent   = mActivity.getIntent();
-            String fileName = intent.getStringExtra(ApplicationExtras.FILE_NAME);
+            String filePath = intent.getStringExtra(ApplicationExtras.FILE_PATH);
             int    fileId   = intent.getIntExtra   (ApplicationExtras.FILE_ID, 0);
 
 
@@ -206,12 +203,12 @@ public class ReviewActivity extends FragmentActivity
 
             // ---------------------------------------------------------------------------------------
 
-            mContent.setFileName(fileName, fileId);
+            mContent.setFilePath(filePath, fileId);
             mContent.setOnTouchListener(this);
             mContent.setOnNoteSupportListener(this);
             mContent.setOnProgressChangedListener(this);
 
-            mTitleTextView.setText(fileName.substring(fileName.lastIndexOf('/') + 1));
+            mTitleTextView.setText(filePath.substring(filePath.lastIndexOf('/') + 1));
             mProgressTextView.setText("0 %");
 
 

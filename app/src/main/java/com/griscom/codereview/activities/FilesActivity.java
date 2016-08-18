@@ -32,7 +32,7 @@ import com.griscom.codereview.dialogs.SortDialog;
 import com.griscom.codereview.lists.FilesAdapter;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationPreferences;
-import com.griscom.codereview.other.ColorCache;
+import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
 
@@ -235,7 +235,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             case REQUEST_SETTINGS:
             {
-                ColorCache.update(this);
+                ApplicationSettings.update(this);
             }
             break;
 
@@ -815,7 +815,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
         Intent intent = new Intent(this, ReviewActivity.class);
 
-        intent.putExtra(ApplicationExtras.FILE_NAME, filePath);
+        intent.putExtra(ApplicationExtras.FILE_PATH, filePath);
         intent.putExtra(ApplicationExtras.FILE_ID,   fileId);
 
         startActivityForResult(intent, REQUEST_REVIEW);

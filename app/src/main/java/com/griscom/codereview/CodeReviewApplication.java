@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.griscom.codereview.other.ColorCache;
+import com.griscom.codereview.other.ApplicationSettings;
 
 /**
  * CodeReview application
@@ -26,7 +26,7 @@ public class CodeReviewApplication extends Application
     {
         super.onCreate();
 
-        ColorCache.update(this);
+        ApplicationSettings.update(this);
     }
 
     /**
