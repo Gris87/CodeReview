@@ -33,13 +33,13 @@ import android.widget.Toast;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
-import com.griscom.codereview.db.DbRowType;
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
+import com.griscom.codereview.other.RowType;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
@@ -777,11 +777,11 @@ public class TextDocument implements OnTouchListener
                 {
                     case SelectionType.REVIEWED:
                         ++reviewedCount;
-                        fileHelper.insertOrUpdateRow(db, i, DbRowType.REVIEWED);
+                        fileHelper.insertOrUpdateRow(db, i, RowType.REVIEWED);
                     break;
                     case SelectionType.INVALID:
                         ++invalidCount;
-                        fileHelper.insertOrUpdateRow(db, i, DbRowType.INVALID);
+                        fileHelper.insertOrUpdateRow(db, i, RowType.INVALID);
                     break;
                     case SelectionType.NOTE:
                         ++noteCount;

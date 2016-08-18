@@ -4,10 +4,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.griscom.codereview.db.DbRowType;
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
+import com.griscom.codereview.other.RowType;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 
@@ -94,10 +94,10 @@ public class LoadingThread extends Thread
 
                     switch (type)
                     {
-                        case DbRowType.REVIEWED:
+                        case RowType.REVIEWED:
                             rows.get(row).setSelectionType(SelectionType.REVIEWED);
                         break;
-                        case DbRowType.INVALID:
+                        case RowType.INVALID:
                             rows.get(row).setSelectionType(SelectionType.INVALID);
                         break;
                         default:
