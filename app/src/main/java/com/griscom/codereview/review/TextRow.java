@@ -1,22 +1,23 @@
 package com.griscom.codereview.review;
 
-import java.util.ArrayList;
-
-import junit.framework.Assert;
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.TextUtils;
 
 import com.griscom.codereview.BuildConfig;
-import com.griscom.codereview.other.SelectionColor;
+import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
+
+import junit.framework.Assert;
+
+import java.util.ArrayList;
 
 @SuppressLint("DefaultLocale")
 public class TextRow
 {
     private ArrayList<TextRegion> mRegions;
-    private SelectionColor        mSelectionColor;
+    private int                   mSelectionType;
     private float                 mY;
     private float                 mWidth;
     private float                 mHeight;
@@ -26,14 +27,14 @@ public class TextRow
 
     public TextRow()
     {
-        mRegions = new ArrayList<TextRegion>();
+        mRegions = new ArrayList<>();
 
-        mSelectionColor = SelectionColor.CLEAR;
-        mY              = 0;
-        mWidth          = 0;
-        mHeight         = 0;
+        mSelectionType = SelectionType.CLEAR;
+        mY             = 0;
+        mWidth         = 0;
+        mHeight        = 0;
 
-        mCommentIndex   = -1;
+        mCommentIndex  = -1;
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
@@ -93,7 +94,7 @@ public class TextRow
                    )
                 {
                     mCommentIndex = i;
-                    mSelectionColor = SelectionColor.NOTE;
+                    mSelectionType = SelectionType.NOTE;
 
                     return;
                 }
@@ -151,7 +152,7 @@ public class TextRow
                 mRegions.remove(mCommentIndex);
                 mCommentIndex = -1;
 
-                mSelectionColor = SelectionColor.CLEAR;
+                mSelectionType = SelectionType.CLEAR;
             }
         }
         else
@@ -187,7 +188,7 @@ public class TextRow
             {
                 addTextRegion(new TextRegion(comment, paint, 0, 4));
                 mCommentIndex = mRegions.size() - 1;
-                mSelectionColor = SelectionColor.NOTE;
+                mSelectionType = SelectionType.NOTE;
             }
         }
     }
@@ -212,17 +213,17 @@ public class TextRow
         updateSizes();
     }
 
-    public void setSelectionColor(SelectionColor selectionColor)
+    public void setSelectionType(int selectionType)
     {
-        if (mSelectionColor != SelectionColor.NOTE)
+        if (mSelectionType != SelectionType.NOTE)
         {
-            mSelectionColor = selectionColor;
+            mSelectionType = selectionType;
         }
     }
 
-    public SelectionColor getSelectionColor()
+    public int getSelectionType()
     {
-        return mSelectionColor;
+        return mSelectionType;
     }
 
     public void setY(float y)

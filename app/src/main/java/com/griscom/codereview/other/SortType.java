@@ -5,6 +5,11 @@ package com.griscom.codereview.other;
  */
 public class SortType
 {
+    @SuppressWarnings("unused")
+    private static final String TAG = "SortType";
+
+
+
     public static final int NONE = 0;
     public static final int NAME = 1;
     public static final int TYPE = 2;

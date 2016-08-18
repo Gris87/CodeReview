@@ -12,11 +12,7 @@ public class ColorCache
 
 
 
-    private static final int SELECTION_COLOR = 4;
-
-
-
-    private static int mCache[] = new int[5];
+    private static final int mCache[] = new int[SelectionType.MAX + 1];
 
 
 
@@ -25,32 +21,19 @@ public class ColorCache
      */
     public static void update()
     {
-        mCache[SelectionColor.REVIEWED.ordinal()] = ApplicationSettings.getReviewedColor();
-        mCache[SelectionColor.INVALID.ordinal()]  = ApplicationSettings.getInvalidColor();
-        mCache[SelectionColor.NOTE.ordinal()]     = ApplicationSettings.getNoteColor();
-        mCache[SelectionColor.CLEAR.ordinal()]    = Color.WHITE;
-
-        mCache[SELECTION_COLOR]                   = ApplicationSettings.getSelectionColor();
+        mCache[SelectionType.REVIEWED] = ApplicationSettings.getReviewedColor();
+        mCache[SelectionType.INVALID]  = ApplicationSettings.getInvalidColor();
+        mCache[SelectionType.NOTE]     = ApplicationSettings.getNoteColor();
+        mCache[SelectionType.CLEAR]    = Color.WHITE;
     }
 
-    // TODO: SelectionColor? Maybe SelectionType
     /**
-     * Gets color for specified selection color
-     * @param selectionColor    selection color
-     * @return color for specified selection color
+     * Gets color for specified selection type
+     * @param selectionType    selection type
+     * @return color for specified selection type
      */
-    public static int get(SelectionColor selectionColor)
+    public static int get(int selectionType)
     {
-        return mCache[selectionColor.ordinal()];
-    }
-
-    // TODO: Need to remove it and use ApplicationSettings.getSelectionColor();
-    /**
-     * Gets selection color
-     * @return selection color
-     */
-    public static int getSelectionColor()
-    {
-        return mCache[SELECTION_COLOR];
+        return mCache[selectionType];
     }
 }

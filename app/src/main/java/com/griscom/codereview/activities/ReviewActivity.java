@@ -27,7 +27,7 @@ import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationSettings;
-import com.griscom.codereview.other.SelectionColor;
+import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.ReviewSurfaceView;
 
 import junit.framework.Assert;
@@ -304,7 +304,7 @@ public class ReviewActivity extends FragmentActivity
         {
             if (v == mReviewedButton)
             {
-                mContent.setSelectionColor(SelectionColor.REVIEWED);
+                mContent.setSelectionType(SelectionType.REVIEWED);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton = mReviewedButton;
@@ -313,7 +313,7 @@ public class ReviewActivity extends FragmentActivity
             else
             if (v == mInvalidButton)
             {
-                mContent.setSelectionColor(SelectionColor.INVALID);
+                mContent.setSelectionType(SelectionType.INVALID);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton = mInvalidButton;
@@ -322,7 +322,7 @@ public class ReviewActivity extends FragmentActivity
             else
             if (v == mNoteButton)
             {
-                mContent.setSelectionColor(SelectionColor.NOTE);
+                mContent.setSelectionType(SelectionType.NOTE);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton = mNoteButton;
@@ -331,7 +331,7 @@ public class ReviewActivity extends FragmentActivity
             else
             if (v == mClearButton)
             {
-                mContent.setSelectionColor(SelectionColor.CLEAR);
+                mContent.setSelectionType(SelectionType.CLEAR);
 
                 mLastSelectedButton.setBackgroundColor(mDefaultColor);
                 mLastSelectedButton = mClearButton;

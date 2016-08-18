@@ -1,7 +1,5 @@
 package com.griscom.codereview.review;
 
-import java.util.ArrayList;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -10,8 +8,10 @@ import com.griscom.codereview.db.DbRowType;
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
-import com.griscom.codereview.other.SelectionColor;
+import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
+
+import java.util.ArrayList;
 
 public class LoadingThread extends Thread
 {
@@ -95,10 +95,10 @@ public class LoadingThread extends Thread
                     switch (type)
                     {
                         case DbRowType.REVIEWED:
-                            rows.get(row).setSelectionColor(SelectionColor.REVIEWED);
+                            rows.get(row).setSelectionType(SelectionType.REVIEWED);
                         break;
                         case DbRowType.INVALID:
-                            rows.get(row).setSelectionColor(SelectionColor.INVALID);
+                            rows.get(row).setSelectionType(SelectionType.INVALID);
                         break;
                         default:
                             Log.e(TAG, "Unknown row type \"" + String.valueOf(type) + "\" in database \"" + helper.getDbName() + "\"");
@@ -119,22 +119,22 @@ public class LoadingThread extends Thread
 
                 row.checkForComment(mSyntaxParser);
 
-                switch (row.getSelectionColor())
+                switch (row.getSelectionType())
                 {
-                    case REVIEWED:
+                    case SelectionType.REVIEWED:
                         ++reviewedCount;
                     break;
-                    case INVALID:
+                    case SelectionType.INVALID:
                         ++invalidCount;
                     break;
-                    case NOTE:
+                    case SelectionType.NOTE:
                         ++noteCount;
                     break;
-                    case CLEAR:
+                    case SelectionType.CLEAR:
                         // Nothing
                     break;
                     default:
-                        Log.e(TAG, "Unknown selection color: " + String.valueOf(row.getSelectionColor()));
+                        Log.e(TAG, "Unknown selection type: " + String.valueOf(row.getSelectionType()));
                     break;
                 }
             }

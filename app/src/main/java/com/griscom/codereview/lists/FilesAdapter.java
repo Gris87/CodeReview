@@ -27,7 +27,7 @@ import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.FileEntry;
-import com.griscom.codereview.other.SelectionColor;
+import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.other.SortType;
 import com.griscom.codereview.util.Utils;
 
@@ -262,7 +262,7 @@ public class FilesAdapter extends BaseAdapter
                 {
                     Paint paint = new Paint();
 
-                    paint.setColor(ColorCache.get(SelectionColor.REVIEWED));
+                    paint.setColor(ColorCache.get(SelectionType.REVIEWED));
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + reviewedPercent, 0, paint);
@@ -273,7 +273,7 @@ public class FilesAdapter extends BaseAdapter
                 {
                     Paint paint = new Paint();
 
-                    paint.setColor(ColorCache.get(SelectionColor.INVALID));
+                    paint.setColor(ColorCache.get(SelectionType.INVALID));
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + invalidPercent, 0, paint);
@@ -284,7 +284,7 @@ public class FilesAdapter extends BaseAdapter
                 {
                     Paint paint = new Paint();
 
-                    paint.setColor(ColorCache.get(SelectionColor.NOTE));
+                    paint.setColor(ColorCache.get(SelectionType.NOTE));
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + notePercent, 0, paint);
@@ -295,7 +295,7 @@ public class FilesAdapter extends BaseAdapter
                 {
                     Paint paint = new Paint();
 
-                    paint.setColor(ColorCache.get(SelectionColor.CLEAR));
+                    paint.setColor(ColorCache.get(SelectionType.CLEAR));
                     paint.setAlpha(220);
 
                     canvas.drawLine(curPercent, 0, curPercent + clearPercent, 0, paint);

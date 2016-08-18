@@ -24,7 +24,7 @@ import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.other.ApplicationSettings;
-import com.griscom.codereview.other.SelectionColor;
+import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
 
@@ -52,7 +52,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private TextDocument              mDocument;
     private int                       mFontSize;
     private int                       mTabSize;
-    private SelectionColor            mSelectionColor;
+    private int                       mSelectionType;
     private OnNoteSupportListener     mNoteSupportListener;
     private OnProgressChangedListener mProgressChangedListener;
 
@@ -86,7 +86,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             mLastLoadedDocument.setFontSize(mFontSize);
             mLastLoadedDocument.setTabSize(mTabSize);
-            mLastLoadedDocument.setSelectionColor(mSelectionColor);
+            mLastLoadedDocument.setSelectionType(mSelectionType);
             mLastLoadedDocument.setOnProgressChangedListener(mProgressChangedListener);
 
             long modifiedTime = new File(mFilePath).lastModified();
@@ -146,7 +146,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mDocument                = null;
         mFontSize                = ApplicationSettings.getFontSize();
         mTabSize                 = ApplicationSettings.getTabSize();
-        mSelectionColor          = SelectionColor.REVIEWED;
+        mSelectionType           = SelectionType.REVIEWED;
         mNoteSupportListener     = null;
         mProgressChangedListener = null;
         mLastLoadedDocument      = null;
@@ -422,15 +422,15 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
-    public void setSelectionColor(SelectionColor selectionColor)
+    public void setSelectionType(int selectionType)
     {
-        if (mSelectionColor != selectionColor)
+        if (mSelectionType != selectionType)
         {
-            mSelectionColor = selectionColor;
+            mSelectionType = selectionType;
 
             if (mDocument != null)
             {
-                mDocument.setSelectionColor(mSelectionColor);
+                mDocument.setSelectionType(mSelectionType);
             }
         }
     }

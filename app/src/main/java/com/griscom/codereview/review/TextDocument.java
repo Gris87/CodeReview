@@ -40,7 +40,7 @@ import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
-import com.griscom.codereview.other.SelectionColor;
+import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
@@ -109,7 +109,7 @@ public class TextDocument implements OnTouchListener
     private float                     mTouchMiddleX;
     private float                     mTouchMiddleY;
     private int                       mSelectionEnd;
-    private SelectionColor            mSelectionColor;
+    private int                       mSelectionType;
 
     // USED IN HANDLER [
     private int                       mBarsAlpha;
@@ -160,7 +160,7 @@ public class TextDocument implements OnTouchListener
         mTouchMiddleX            = -1;
         mTouchMiddleY            = -1;
         mSelectionEnd            = -1;
-        mSelectionColor          = SelectionColor.REVIEWED;
+        mSelectionType           = SelectionType.REVIEWED;
 
         mBarsAlpha               = 0;
         mHighlightedRow          = -1;
@@ -224,7 +224,7 @@ public class TextDocument implements OnTouchListener
 
                 if (mHighlightAlpha > 0 && i == mHighlightedRow)
                 {
-                    color = ColorCache.getSelectionColor();
+                    color = ApplicationSettings.getSelectionColor();
                     color = Color.argb(mHighlightAlpha, Color.red(color), Color.green(color), Color.blue(color));
                 }
                 else
@@ -239,13 +239,13 @@ public class TextDocument implements OnTouchListener
                    )
                 {
                     float selectionHSV[] = new float[3];
-                    Color.colorToHSV(ColorCache.get(mSelectionColor), selectionHSV);
+                    Color.colorToHSV(ColorCache.get(mSelectionType), selectionHSV);
                     selectionHSV[2] = mSelectionBrighness;
                     color = Color.HSVToColor(selectionHSV);
                 }
                 else
                 {
-                    color = ColorCache.get(mRows.get(i).getSelectionColor());
+                    color = ColorCache.get(mRows.get(i).getSelectionType());
                 }
 
                 Paint backgroundPaint = new Paint();
@@ -534,7 +534,7 @@ public class TextDocument implements OnTouchListener
                         lastRow  = mHighlightedRow;
                     }
 
-                    if (mSelectionColor == SelectionColor.NOTE)
+                    if (mSelectionType == SelectionType.NOTE)
                     {
                         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -722,22 +722,22 @@ public class TextDocument implements OnTouchListener
 
         for (int i = firstRow; i <= lastRow; ++i)
         {
-            switch (mRows.get(i).getSelectionColor())
+            switch (mRows.get(i).getSelectionType())
             {
-                case REVIEWED:
+                case SelectionType.REVIEWED:
                     --reviewedCount;
                 break;
-                case INVALID:
+                case SelectionType.INVALID:
                     --invalidCount;
                 break;
-                case NOTE:
+                case SelectionType.NOTE:
                     --noteCount;
                 break;
-                case CLEAR:
+                case SelectionType.CLEAR:
                     // Nothing
                 break;
                 default:
-                    Log.e(TAG, "Unknown selection color: " + String.valueOf(mRows.get(i).getSelectionColor()));
+                    Log.e(TAG, "Unknown selection type: " + String.valueOf(mRows.get(i).getSelectionType()));
                 break;
             }
         }
@@ -770,28 +770,28 @@ public class TextDocument implements OnTouchListener
                 }
                 else
                 {
-                    row.setSelectionColor(mSelectionColor);
+                    row.setSelectionType(mSelectionType);
                 }
 
-                switch (mRows.get(i).getSelectionColor())
+                switch (mRows.get(i).getSelectionType())
                 {
-                    case REVIEWED:
+                    case SelectionType.REVIEWED:
                         ++reviewedCount;
                         fileHelper.insertOrUpdateRow(db, i, DbRowType.REVIEWED);
                     break;
-                    case INVALID:
+                    case SelectionType.INVALID:
                         ++invalidCount;
                         fileHelper.insertOrUpdateRow(db, i, DbRowType.INVALID);
                     break;
-                    case NOTE:
+                    case SelectionType.NOTE:
                         ++noteCount;
                         fileHelper.removeRow(db, i);
                     break;
-                    case CLEAR:
+                    case SelectionType.CLEAR:
                         fileHelper.removeRow(db, i);
                     break;
                     default:
-                        Log.e(TAG, "Unknown selection color: " + String.valueOf(mRows.get(i).getSelectionColor()));
+                        Log.e(TAG, "Unknown selection type: " + String.valueOf(mRows.get(i).getSelectionType()));
                     break;
                 }
             }
@@ -1213,9 +1213,9 @@ public class TextDocument implements OnTouchListener
         }
     }
 
-    public void setSelectionColor(SelectionColor selectionColor)
+    public void setSelectionType(int selectionType)
     {
-        mSelectionColor = selectionColor;
+        mSelectionType = selectionType;
     }
 
     public void setOnProgressChangedListener(OnProgressChangedListener listener)
