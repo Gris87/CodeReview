@@ -33,8 +33,12 @@ import com.griscom.codereview.review.ReviewSurfaceView;
 
 import junit.framework.Assert;
 
+/**
+ * Activity for performing code review
+ */
 public class ReviewActivity extends FragmentActivity
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "ReviewActivity";
 
 

@@ -19,8 +19,16 @@ import com.griscom.codereview.other.ApplicationSettings;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Adapter that used in IgnoreFilesActivity
+ */
 public class IgnoreFilesAdapter extends BaseAdapter
 {
+    @SuppressWarnings("unused")
+    private static final String TAG = "IgnoreFilesAdapter";
+
+
+
     private Activity           mContext;
     private ArrayList<String>  mFiles;
     private boolean            mSelectionMode;
@@ -28,6 +36,9 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
 
 
+    /**
+     * View holder
+     */
     private static class ViewHolder
     {
         CheckBox mCheckBox;
@@ -36,52 +47,61 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
 
 
+    /**
+     * Creates instance of IgnoreFilesAdapter
+     * @param context    context
+     */
     public IgnoreFilesAdapter(Activity context)
     {
         mContext       = context;
-        mFiles         = new ArrayList<String>();
+        mFiles         = new ArrayList<>();
         mSelectionMode = false;
-        mSelection     = new ArrayList<Integer>();
+        mSelection     = new ArrayList<>();
 
         // -----------------------------------------------------------------------------------
 
         String[] files = ApplicationSettings.ignoreFiles(mContext);
 
-        if (files != null)
+        for (String file : files)
         {
-            for (int i = 0; i < files.length; ++i)
+            if (!TextUtils.isEmpty(file))
             {
-                if (!TextUtils.isEmpty(files[i]))
-                {
-                    mFiles.add(removeIncorrectChars(files[i]));
-                }
+                mFiles.add(replaceIncorrectChars(file));
             }
-
-            Collections.sort(mFiles);
         }
+
+        Collections.sort(mFiles);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getCount()
     {
         return mFiles.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object getItem(int position)
     {
         return position >= 0 && position < mFiles.size() ? mFiles.get(position) : null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getItemId(int position)
     {
         return position;
     }
 
-    private View newView(Context context, ViewGroup parent)
+    /**
+     * Creates new view for adapter item
+     * @param parent     parent view
+     * @return view for adapter item
+     */
+    private View newView(ViewGroup parent)
     {
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View resView = inflater.inflate(R.layout.list_item_ignore_files, parent, false);
 
@@ -95,6 +115,11 @@ public class IgnoreFilesAdapter extends BaseAdapter
         return resView;
     }
 
+    /**
+     * Binds item data to the view
+     * @param position    item position
+     * @param view        item view
+     */
     private void bindView(int position, View view)
     {
         String fileName = mFiles.get(position);
@@ -116,10 +141,11 @@ public class IgnoreFilesAdapter extends BaseAdapter
         holder.mFileName.setText(fileName);
     }
 
+    /** {@inheritDoc} */
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view = null;
+        View view;
 
         if (convertView != null)
         {
@@ -127,7 +153,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
         }
         else
         {
-            view = newView(mContext, parent);
+            view = newView(parent);
         }
 
         bindView(position, view);
@@ -135,9 +161,13 @@ public class IgnoreFilesAdapter extends BaseAdapter
         return view;
     }
 
-    public void addFile(String fileName)
+    /**
+     * Adds file name to the list
+     * @param fileName    file name
+     */
+    public void add(String fileName)
     {
-        fileName = removeIncorrectChars(fileName);
+        fileName = replaceIncorrectChars(fileName);
 
         if (!TextUtils.isEmpty(fileName) && !mFiles.contains(fileName))
         {
@@ -147,9 +177,14 @@ public class IgnoreFilesAdapter extends BaseAdapter
         }
     }
 
-    public void renameFile(int index, String fileName)
+    /**
+     * Replaces item at specified index
+     * @param index       item index
+     * @param fileName    file name
+     */
+    public void replace(int index, String fileName)
     {
-        fileName = removeIncorrectChars(fileName);
+        fileName = replaceIncorrectChars(fileName);
 
         mFiles.remove(index);
 
@@ -161,14 +196,10 @@ public class IgnoreFilesAdapter extends BaseAdapter
         updateList();
     }
 
-    public void removeFile(int index)
-    {
-        mFiles.remove(index);
-
-        updateList();
-    }
-
-    public void removeSelectedFiles()
+    /**
+     * Removes selected items
+     */
+    public void removeSelected()
     {
         Collections.sort(mSelection);
 
@@ -180,6 +211,9 @@ public class IgnoreFilesAdapter extends BaseAdapter
         updateList();
     }
 
+    /**
+     * Updates list in UI and in SharedPreferences
+     */
     private void updateList()
     {
         Collections.sort(mFiles);
@@ -203,24 +237,33 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         editor.putString(ApplicationPreferences.IGNORE_FILES, res.toString());
 
-        editor.commit();
+        editor.apply();
 
         // -----------------------------------------------------------------------------------
 
         notifyDataSetChanged();
     }
 
-    private String removeIncorrectChars(String st)
+    /**
+     * Enables or disables selection mode
+     * @param enable    true, if need to enable
+     */
+    public void setSelectionMode(boolean enable)
     {
-        return st.replace("\\", "_")
-                 .replace("/",  "_")
-                 .replace(":",  "_")
-                 .replace("\"", "_")
-                 .replace("<",  "_")
-                 .replace(">",  "_")
-                 .replace("|",  "_");
+        if (mSelectionMode != enable)
+        {
+            mSelectionMode = enable;
+            mSelection.clear();
+
+            notifyDataSetChanged();
+        }
     }
 
+    /**
+     * Selects or deselects item at specified index
+     * @param index      item index
+     * @param checked    true, if need to select
+     */
     public void setSelected(int index, boolean checked)
     {
         if (mSelectionMode)
@@ -238,26 +281,43 @@ public class IgnoreFilesAdapter extends BaseAdapter
         }
     }
 
-    public void setSelectionMode(boolean enable)
+    /**
+     * Replaces incorrect characters to underscore
+     * @param text    text
+     * @return specified text without incorrect characters
+     */
+    private String replaceIncorrectChars(String text)
     {
-        if (mSelectionMode != enable)
-        {
-            mSelectionMode = enable;
-            mSelection.clear();
-
-            notifyDataSetChanged();
-        }
+        return text.replace("\\", "_")
+                   .replace("/",  "_")
+                   .replace(":",  "_")
+                   .replace("\"", "_")
+                   .replace("<",  "_")
+                   .replace(">",  "_")
+                   .replace("|",  "_");
     }
 
+
+
+    /**
+     * Listener for checked changed event
+     */
     private class CheckedChangedListener implements CompoundButton.OnCheckedChangeListener
     {
         private Integer mPosition;
 
+
+
+        /**
+         * Creates instance of CheckedChangedListener
+         * @param position    item position
+         */
         public CheckedChangedListener(int position)
         {
             mPosition = position;
         }
 
+        /** {@inheritDoc} */
         @Override
         public void onCheckedChanged(CompoundButton button, boolean checked)
         {

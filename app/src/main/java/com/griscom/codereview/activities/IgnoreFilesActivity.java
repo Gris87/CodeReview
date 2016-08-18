@@ -120,13 +120,13 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
         {
             case INPUT_DIALOG_ID_ADD:
             {
-                mAdapter.addFile(text);
+                mAdapter.add(text);
             }
             break;
 
             case INPUT_DIALOG_ID_EDIT:
             {
-                mAdapter.renameFile(data.getInt(DATA_POSITION), text);
+                mAdapter.replace(data.getInt(DATA_POSITION), text);
             }
             break;
 
@@ -183,7 +183,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
                 {
                     case R.id.action_delete:
                     {
-                        mAdapter.removeSelectedFiles();
+                        mAdapter.removeSelected();
 
                         mode.finish();
                     }

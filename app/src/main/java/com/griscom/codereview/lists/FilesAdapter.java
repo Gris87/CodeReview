@@ -39,8 +39,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+/**
+ * Adapter that used in FilesActivity
+ */
 public class FilesAdapter extends BaseAdapter
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "FilesAdapter";
 
 
