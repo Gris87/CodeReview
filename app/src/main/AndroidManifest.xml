@@ -30,8 +30,8 @@
 
         <activity
             android:name=".activities.ReviewActivity"
-            android:immersive="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:immersive="true"
             android:theme="@style/FullscreenTheme">
         </activity>
 
