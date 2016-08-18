@@ -1,9 +1,17 @@
 package com.griscom.codereview.other;
 
-public enum TouchMode
+/**
+ * Touch mode
+ */
+public class TouchMode
 {
-    NONE,
-    DRAG,
-    SELECT,
-    ZOOM
+    @SuppressWarnings("unused")
+    private static final String TAG = "TouchMode";
+
+
+
+    public static final int NONE   = 0;
+    public static final int DRAG   = 1;
+    public static final int SELECT = 2;
+    public static final int ZOOM   = 3;
 }

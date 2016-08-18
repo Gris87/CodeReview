@@ -102,7 +102,7 @@ public class TextDocument implements OnTouchListener
     private int                       mVisibleBegin;
     private int                       mVisibleEnd;
 
-    private TouchMode                 mTouchMode;
+    private int                       mTouchMode;
     private float                     mTouchX;
     private float                     mTouchY;
     private float                     mFingerDistance;

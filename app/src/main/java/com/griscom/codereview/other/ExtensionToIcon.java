@@ -1,33 +1,41 @@
 package com.griscom.codereview.other;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.util.Log;
 
 import com.griscom.codereview.R;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Extension to icon conversion
+ */
 public class ExtensionToIcon
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "ExtensionToIcon";
 
-    private static Map<String, Integer> map = new HashMap<String, Integer>();
+
+
+    private static final Map<String, Integer> sMap = new HashMap<>();
+
+
 
     static
     {
         Field[] drawables = R.drawable.class.getFields();
 
-        for (int i = 0; i < drawables.length; ++i)
+        for (Field drawable : drawables)
         {
             try
             {
-                String drawableName = drawables[i].getName();
+                String drawableName = drawable.getName();
 
                 if (drawableName.startsWith("_icon_"))
                 {
                     String extension = drawableName.substring(6);
-                    map.put(extension, drawables[i].getInt(null));
+                    sMap.put(extension, drawable.getInt(null));
                 }
             }
             catch (Exception e)
@@ -37,13 +45,18 @@ public class ExtensionToIcon
         }
     }
 
+    /**
+     * Gets icon resource ID for specified extension
+     * @param extension    extension
+     * @return icon resource ID
+     */
     public static int getIcon(String extension)
     {
-        Integer res = map.get(extension);
+        Integer res = sMap.get(extension);
 
         if (res != null)
         {
-            return res.intValue();
+            return res;
         }
 
         return R.drawable.__icon_file;
