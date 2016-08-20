@@ -1,5 +1,3 @@
-Keep state on rotation
-Remove activity_*_margin
 UltraHD images
 Add AppLog
 Think about app color scheme
