@@ -41,7 +41,7 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
     private OnFragmentInteractionListener mListener      = null;
     private EditText                      mInputEditText = null;
     private ImageButton                   mChooseButton  = null;
-    private int[]                         mItems         = null;
+    private ArrayList<Integer>            mItems         = null;
     private String                        mNote          = null;
     private ArrayList<CharSequence>       mNotes         = null;
 
@@ -53,13 +53,13 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
      * @param note      note
      * @return NoteDialog instance
      */
-    public static NoteDialog newInstance(int[] items, String note)
+    public static NoteDialog newInstance(ArrayList<Integer> items, String note)
     {
         NoteDialog fragment = new NoteDialog();
 
         Bundle args = new Bundle();
-        args.putIntArray(ARG_ITEMS, items);
-        args.putString(  ARG_NOTE,  note);
+        args.putIntegerArrayList(ARG_ITEMS, items);
+        args.putString(          ARG_NOTE,  note);
         fragment.setArguments(args);
 
         return fragment;
@@ -71,8 +71,8 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
     {
         super.onCreate(savedInstanceState);
 
-        mItems = getArguments().getIntArray(ARG_ITEMS);
-        mNote  = getArguments().getString(  ARG_NOTE);
+        mItems = getArguments().getIntegerArrayList(ARG_ITEMS);
+        mNote  = getArguments().getString(          ARG_NOTE);
 
         loadLastNotes();
     }
@@ -289,6 +289,6 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
          * @param items   indices in the list
          * @param note    note
          */
-        void onNoteEntered(int[] items, String note);
+        void onNoteEntered(ArrayList<Integer> items, String note);
     }
 }

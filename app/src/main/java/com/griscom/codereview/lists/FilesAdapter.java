@@ -446,9 +446,7 @@ public class FilesAdapter extends BaseAdapter
 
         if (files != null)
         {
-            ArrayList<String> ignoreFiles = ApplicationSettings.getIgnoreFiles();
-
-            WildcardFileFilter filter = new WildcardFileFilter(ignoreFiles);
+            WildcardFileFilter filter = new WildcardFileFilter(ApplicationSettings.getIgnoreFiles());
 
             for (File file : files)
             {
@@ -497,6 +495,7 @@ public class FilesAdapter extends BaseAdapter
 
         Collections.sort(mFiles, new Comparator<FileEntry>()
         {
+            /** {@inheritDoc} */
             @Override
             public int compare(FileEntry file1, FileEntry file2)
             {
@@ -778,6 +777,8 @@ public class FilesAdapter extends BaseAdapter
         }
     }
 
+
+
     /**
      * DB reader task
      */
@@ -872,8 +873,6 @@ public class FilesAdapter extends BaseAdapter
                 if (
                     !entry.isDirectory()
                     &&
-                    entry.getDbFileId() <= 0
-                    &&
                     entry.getSize() > 0
                     &&
                     (
@@ -881,6 +880,8 @@ public class FilesAdapter extends BaseAdapter
                      ||
                      entry.getSize() <= ApplicationSettings.getBigFileSize() * 1024
                     )
+                    &&
+                    entry.getDbFileId() <= 0
                    )
                 {
                     String filePath;

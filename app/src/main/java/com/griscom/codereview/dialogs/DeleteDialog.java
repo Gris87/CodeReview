@@ -12,6 +12,8 @@ import android.support.v4.app.DialogFragment;
 
 import com.griscom.codereview.R;
 
+import java.util.ArrayList;
+
 /**
  * Dialog for confirming deletion
  */
@@ -29,7 +31,7 @@ public class DeleteDialog extends DialogFragment
 
 
     private OnFragmentInteractionListener mListener     = null;
-    private int[]                         mItems        = null;
+    private ArrayList<Integer>            mItems        = null;
     private int                           mFoldersCount = 0;
     private int                           mFilesCount   = 0;
 
@@ -42,14 +44,14 @@ public class DeleteDialog extends DialogFragment
      * @param filesCount      amount of files
      * @return DeleteDialog instance
      */
-    public static DeleteDialog newInstance(int[] items, int foldersCount, int filesCount)
+    public static DeleteDialog newInstance(ArrayList<Integer> items, int foldersCount, int filesCount)
     {
         DeleteDialog fragment = new DeleteDialog();
 
         Bundle args = new Bundle();
-        args.putIntArray(ARG_ITEMS,         items);
-        args.putInt(     ARG_FOLDERS_COUNT, foldersCount);
-        args.putInt(     ARG_FILES_COUNT,   filesCount);
+        args.putIntegerArrayList(ARG_ITEMS,         items);
+        args.putInt(             ARG_FOLDERS_COUNT, foldersCount);
+        args.putInt(             ARG_FILES_COUNT,   filesCount);
         fragment.setArguments(args);
 
         return fragment;
@@ -61,9 +63,9 @@ public class DeleteDialog extends DialogFragment
     {
         super.onCreate(savedInstanceState);
 
-        mItems        = getArguments().getIntArray(ARG_ITEMS);
-        mFoldersCount = getArguments().getInt(     ARG_FOLDERS_COUNT);
-        mFilesCount   = getArguments().getInt(     ARG_FILES_COUNT);
+        mItems        = getArguments().getIntegerArrayList(ARG_ITEMS);
+        mFoldersCount = getArguments().getInt(             ARG_FOLDERS_COUNT);
+        mFilesCount   = getArguments().getInt(             ARG_FILES_COUNT);
     }
 
     /** {@inheritDoc} */
@@ -168,6 +170,6 @@ public class DeleteDialog extends DialogFragment
          * Handler for delete confirmed event
          * @param items    file indices in the list
          */
-        void onDeleteConfirmed(int[] items);
+        void onDeleteConfirmed(ArrayList<Integer> items);
     }
 }

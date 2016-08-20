@@ -381,13 +381,17 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
         if (mark)
         {
+            ArrayList<Integer> items = new ArrayList<>();
+
+            items.add(item);
+
             if (!fileName.equals(oldFileName))
             {
-                mAdapter.assignNote(new int[] { item }, getString(R.string.rename_to, fileName));
+                mAdapter.assignNote(items, getString(R.string.rename_to, fileName));
             }
             else
             {
-                mAdapter.assignNote(new int[] { item }, "");
+                mAdapter.assignNote(items, "");
             }
         }
         else
@@ -406,7 +410,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
     /** {@inheritDoc} */
     @Override
-    public void onNoteEntered(int[] items, String note)
+    public void onNoteEntered(ArrayList<Integer> items, String note)
     {
         mAdapter.assignNote(items, note);
 
@@ -415,7 +419,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
     /** {@inheritDoc} */
     @Override
-    public void onDeleteConfirmed(int[] items)
+    public void onDeleteConfirmed(ArrayList<Integer> items)
     {
         ArrayList<String> keepFolders = new ArrayList<>();
         ArrayList<String> keepFiles   = new ArrayList<>();
@@ -566,13 +570,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item)
             {
-                ArrayList<Integer> tempList = mAdapter.getSelection();
-                int items[] = new int[tempList.size()]; // TODO: Why do we need to have array?
-
-                for (int i = 0; i < tempList.size(); ++i)
-                {
-                    items[i] = tempList.get(i);
-                }
+                ArrayList<Integer> items = mAdapter.getSelection();
 
                 boolean res = true;
 
@@ -598,7 +596,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                     case R.id.action_rename:
                     {
-                        res = rename(items[0]);
+                        res = rename(items.get(0));
                     }
                     break;
 
@@ -639,11 +637,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean markToRename(int items[])
+    private boolean markToRename(ArrayList<Integer> items)
     {
-        if (items.length == 1)
+        if (items.size() == 1)
         {
-            int item = items[0];
+            int item = items.get(0);
 
             RenameDialog dialog = RenameDialog.newInstance(true, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
             dialog.show(getSupportFragmentManager(), "RenameDialog");
@@ -663,7 +661,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean markToDelete(int items[])
+    private boolean markToDelete(ArrayList<Integer> items)
     {
         mAdapter.assignNote(items, getString(R.string.need_to_delete));
 
@@ -675,13 +673,13 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean assignNote(int items[])
+    private boolean assignNote(ArrayList<Integer> items)
     {
-        String note = ((FileEntry)mAdapter.getItem(items[0])).getFileNote();
+        String note = ((FileEntry)mAdapter.getItem(items.get(0))).getFileNote();
 
-        for (int i = 1; i < items.length; ++i)
+        for (int i = 1; i < items.size(); ++i)
         {
-            if (!note.equals(((FileEntry)mAdapter.getItem(items[i])).getFileNote()))
+            if (!note.equals(((FileEntry)mAdapter.getItem(items.get(i))).getFileNote()))
             {
                 note = "";
 
@@ -713,7 +711,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean delete(int items[])
+    private boolean delete(ArrayList<Integer> items)
     {
         int foldersCount = 0;
         int filesCount   = 0;
