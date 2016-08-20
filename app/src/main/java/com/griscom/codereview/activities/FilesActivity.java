@@ -62,6 +62,10 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
 
 
+    private static final String SAVED_STATE_SELECTION = "SELECTION";
+
+
+
     private ListView     mFilesListView = null;
     private FilesAdapter mAdapter       = null;
     private ActionBar    mActionBar     = null;
@@ -130,6 +134,35 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             savePath();
             updateCurrentPath();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putIntegerArrayList(SAVED_STATE_SELECTION, mAdapter.getSelection());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        ArrayList<Integer> selection = savedInstanceState.getIntegerArrayList(SAVED_STATE_SELECTION);
+        Assert.assertNotNull(selection);
+
+        if (selection.size() > 0)
+        {
+            mAdapter.setSelectionMode(true);
+
+            for (int i = 0; i < selection.size(); ++i)
+            {
+                mAdapter.setSelected(selection.get(i), true);
+            }
         }
     }
 

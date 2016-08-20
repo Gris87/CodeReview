@@ -17,6 +17,10 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.dialogs.InputDialog;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
 
+import junit.framework.Assert;
+
+import java.util.ArrayList;
+
 /**
  * Activity that allow to choose files for ignoring
  */
@@ -33,6 +37,10 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
 
     private static final String DATA_POSITION = "POSITION";
+
+
+
+    private static final String SAVED_STATE_SELECTION = "SELECTION";
 
 
 
@@ -65,6 +73,35 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
         mIgnoreFilesListView.setOnItemClickListener(this);
 
         setChoiceListener();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putIntegerArrayList(SAVED_STATE_SELECTION, mAdapter.getSelection());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        ArrayList<Integer> selection = savedInstanceState.getIntegerArrayList(SAVED_STATE_SELECTION);
+        Assert.assertNotNull(selection);
+
+        if (selection.size() > 0)
+        {
+            mAdapter.setSelectionMode(true);
+
+            for (int i = 0; i < selection.size(); ++i)
+            {
+                mAdapter.setSelected(selection.get(i), true);
+            }
+        }
     }
 
     /** {@inheritDoc} */

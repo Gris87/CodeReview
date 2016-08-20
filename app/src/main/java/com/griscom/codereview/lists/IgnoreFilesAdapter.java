@@ -268,6 +268,15 @@ public class IgnoreFilesAdapter extends BaseAdapter
         }
     }
 
+    /**
+     * Gets selection
+     * @return selection
+     */
+    public ArrayList<Integer> getSelection()
+    {
+        return mSelection;
+    }
+
 
 
     /**
