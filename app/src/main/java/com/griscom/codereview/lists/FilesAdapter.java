@@ -582,7 +582,19 @@ public class FilesAdapter extends BaseAdapter
 
         if (new File(pathToFile(mFiles.get(item).getFileName())).renameTo(new File(pathToFile(fileName))))
         {
-            mFiles.get(item).setFileName(fileName);
+            FileEntry file = mFiles.get(item);
+
+            file.setFileName(fileName);
+
+            if (file.getDbFileId() > 0)
+            {
+                MainDatabase helper = new MainDatabase(mContext);
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                helper.updateFilePath(db, file.getDbFileId(), pathToFile(fileName));
+
+                db.close();
+            }
 
             sort();
 
@@ -804,6 +816,8 @@ public class FilesAdapter extends BaseAdapter
             MainDatabase helper = new MainDatabase(mContext);
             SQLiteDatabase db = helper.getReadableDatabase();
 
+
+
             Cursor cursor = helper.getFiles(db, mStoredPath);
 
             int idIndex            = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_ID);
@@ -866,6 +880,10 @@ public class FilesAdapter extends BaseAdapter
                 cursor.moveToNext();
             }
 
+            cursor.close();
+
+
+
             for (int i = 0; i < mStoredFiles.size() && !isCancelled(); ++i)
             {
                 FileEntry entry = mStoredFiles.get(i);
@@ -914,6 +932,8 @@ public class FilesAdapter extends BaseAdapter
                                     cursor.getString(noteIndex)
                             );
                         }
+
+                        cursor.close();
                     }
                 }
             }

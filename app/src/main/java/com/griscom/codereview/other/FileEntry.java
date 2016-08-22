@@ -38,6 +38,7 @@ public class FileEntry
      */
     private FileEntry()
     {
+        // Nothing
     }
 
     /**
