@@ -112,10 +112,10 @@ public class MainDatabase extends SQLiteOpenHelper
         return 0;
     }
 
-    public int getOrCreateFile(SQLiteDatabase db, String fileName)
+    public int getOrCreateFile(SQLiteDatabase db, String filePath)
     {
-        String md5        = Utils.md5ForFile(fileName);
-        long modifiedTime = new File(fileName).lastModified();
+        String md5        = Utils.md5ForFile(filePath);
+        long modifiedTime = new File(filePath).lastModified();
 
         Cursor cursor = getFileByMD5(db, md5);
 
@@ -139,7 +139,7 @@ public class MainDatabase extends SQLiteOpenHelper
 
         ContentValues values = new ContentValues();
 
-        String folder = fileName.substring(0, fileName.lastIndexOf('/'));
+        String folder = filePath.substring(0, filePath.lastIndexOf('/'));
 
         if (folder.equals(""))
         {
@@ -147,7 +147,7 @@ public class MainDatabase extends SQLiteOpenHelper
         }
 
         values.put(COLUMN_PATH,              folder);
-        values.put(COLUMN_NAME,              fileName.substring(fileName.lastIndexOf('/') + 1));
+        values.put(COLUMN_NAME,              filePath.substring(filePath.lastIndexOf('/') + 1));
         values.put(COLUMN_MD5,               md5);
         values.put(COLUMN_MODIFICATION_TIME, modifiedTime);
         values.put(COLUMN_REVIEWED_COUNT,    0);

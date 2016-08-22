@@ -1,6 +1,5 @@
 package com.griscom.codereview.other;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -10,10 +9,15 @@ import com.griscom.codereview.db.MainDatabase;
 
 import java.io.File;
 
-@SuppressLint("DefaultLocale")
+/**
+ * File entry in files list
+ */
 public class FileEntry
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "FileEntry";
+
+
 
     private String  mFileName;
     private boolean mIsDirectory;
@@ -27,10 +31,19 @@ public class FileEntry
     private int     mRowCount;
     private String  mFileNote;
 
+
+
+    /**
+     * Default constructor. Used locally
+     */
     private FileEntry()
     {
     }
 
+    /**
+     * Creates FileEntry instance based on File object
+     * @param file    file
+     */
     public FileEntry(File file)
     {
         mFileName    = file.getName();
@@ -65,6 +78,10 @@ public class FileEntry
         mFileNote      = "";
     }
 
+    /**
+     * Creates FileEntry instance for parent folder ".."
+     * @return FileEntry instance
+     */
     public static FileEntry createParentFolder()
     {
         FileEntry parentFolder = new FileEntry();
@@ -84,6 +101,12 @@ public class FileEntry
         return parentFolder;
     }
 
+    /**
+     * Compares current FileEntry instance with another instance and returns true if it's less than another instance according to specified sort type
+     * @param another     another FileEntry instance
+     * @param sortType    sort type
+     * @return true if it's less than another instance according to specified sort type
+     */
     public boolean isLess(FileEntry another, int sortType)
     {
         if (mIsDirectory != another.mIsDirectory)
@@ -103,13 +126,24 @@ public class FileEntry
             case SortType.SIZE: return mSize < another.mSize;
 
             default:
+            {
                 Log.e(TAG, "Unknown sort type: " + String.valueOf(sortType));
+            }
             break;
         }
 
         return false;
     }
 
+    /**
+     * Updates data received from DB
+     * @param dbFileId         file ID in DB
+     * @param reviewedCount    reviewed count
+     * @param invalidCount     invalid count
+     * @param noteCount        note count
+     * @param rowCount         row count
+     * @param note             note
+     */
     public void updateFromDb(int dbFileId, int reviewedCount, int invalidCount, int noteCount, int rowCount, String note)
     {
         synchronized(this)
@@ -123,6 +157,10 @@ public class FileEntry
         }
     }
 
+    /**
+     * Gets file name
+     * @return file name
+     */
     public String getFileName()
     {
         synchronized(this)
@@ -131,6 +169,10 @@ public class FileEntry
         }
     }
 
+    /**
+     * Sets file name
+     * @param fileName    file name
+     */
     public void setFileName(String fileName)
     {
         synchronized(this)
@@ -139,26 +181,46 @@ public class FileEntry
         }
     }
 
+    /**
+     * Returns true if it's directory
+     * @return true if it's directory
+     */
     public boolean isDirectory()
     {
         return mIsDirectory;
     }
 
+    /**
+     * Gets file type
+     * @return file type
+     */
     public String getType()
     {
         return mType;
     }
 
+    /**
+     * Gets file size
+     * @return file size
+     */
     public long getSize()
     {
         return mSize;
     }
 
+    /**
+     * Gets image resource
+     * @return image resource
+     */
     public int getImageId()
     {
         return mImageId;
     }
 
+    /**
+     * Gets file ID in DB
+     * @return file ID in DB
+     */
     public int getDbFileId()
     {
         synchronized(this)
@@ -167,6 +229,10 @@ public class FileEntry
         }
     }
 
+    /**
+     * Gets reviewed count
+     * @return reviewed count
+     */
     public int getReviewedCount()
     {
         synchronized(this)
@@ -175,6 +241,10 @@ public class FileEntry
         }
     }
 
+    /**
+     * Gets invalid count
+     * @return invalid count
+     */
     public int getInvalidCount()
     {
         synchronized(this)
@@ -183,6 +253,10 @@ public class FileEntry
         }
     }
 
+    /**
+     * Gets note count
+     * @return note count
+     */
     public int getNoteCount()
     {
         synchronized(this)
@@ -191,6 +265,10 @@ public class FileEntry
         }
     }
 
+    /**
+     * Gets row count
+     * @return row count
+     */
     public int getRowCount()
     {
         synchronized(this)
@@ -199,6 +277,10 @@ public class FileEntry
         }
     }
 
+    /**
+     * Gets file note
+     * @return file note
+     */
     public String getFileNote()
     {
         synchronized(this)
@@ -207,24 +289,32 @@ public class FileEntry
         }
     }
 
-    public void setFileNote(Context context, String fileName, String note)
+    /**
+     * Sets file note
+     * @param context     context
+     * @param filePath    path to file
+     * @param note        note
+     */
+    public void setFileNote(Context context, String filePath, String note)
     {
         synchronized(this)
         {
-            mFileNote = note;
-
-            MainDatabase helper = new MainDatabase(context);
-
-            SQLiteDatabase db = helper.getWritableDatabase();
-
-            if (mDbFileId <= 0)
+            if (!mFileNote.equals(note))
             {
-                mDbFileId = helper.getOrCreateFile(db, fileName);
+                mFileNote = note;
+
+                MainDatabase helper = new MainDatabase(context);
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                if (mDbFileId <= 0)
+                {
+                    mDbFileId = helper.getOrCreateFile(db, filePath);
+                }
+
+                helper.updateFileNote(db, mDbFileId, note);
+
+                db.close();
             }
-
-            helper.updateFileNote(db, mDbFileId, note);
-
-            db.close();
         }
     }
 }

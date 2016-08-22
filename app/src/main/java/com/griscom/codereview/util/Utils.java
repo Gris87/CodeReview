@@ -1,7 +1,6 @@
 package com.griscom.codereview.util;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +11,12 @@ import java.security.MessageDigest;
  */
 public class Utils
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "Utils";
+
+
+
+    private static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 
 
@@ -58,9 +62,35 @@ public class Utils
         return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " PB";
     }
 
-    // TODO: Need to verify it
-    public static String md5ForFile(String fileName)
+    /**
+     * Converts byte array to hex string
+     * @param bytes    byte array
+     * @return hex string
+     */
+    public static String bytesToHex(byte[] bytes)
     {
+        char[] hexChars = new char[bytes.length * 2];
+
+        for (int i = 0; i < bytes.length; ++i)
+        {
+            int v = bytes[i] & 0xFF;
+
+            hexChars[i * 2]     = HEX_CHARS[v >>> 4];
+            hexChars[i * 2 + 1] = HEX_CHARS[v & 0x0F];
+        }
+
+        return new String(hexChars);
+    }
+
+    /**
+     * Calculates MD5 hash for specified file
+     * @param filePath    path to file
+     * @return string with MD5 hash for specified file
+     */
+    public static String md5ForFile(String filePath)
+    {
+        String res = "";
+
         FileInputStream in = null;
 
         try
@@ -68,29 +98,27 @@ public class Utils
             MessageDigest md = MessageDigest.getInstance("MD5");
 
             byte buffer[] = new byte[4096];
-            in = new FileInputStream(fileName);
+            in = new FileInputStream(filePath);
 
-            while (in.available() > 0)
+            do
             {
-                in.read(buffer);
-                md.update(buffer);
-            }
+                int len = in.read(buffer);
 
-            in.close();
+                if (len > 0)
+                {
+                    md.update(buffer, 0, len);
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
 
-            byte[] hash = md.digest();
-            StringBuilder sb = new StringBuilder(2 * hash.length);
-
-            for (int i = 0; i < hash.length; ++i)
-            {
-                sb.append(String.format("%02x", hash[i]));
-            }
-
-            return sb.toString().toUpperCase();
+            res = bytesToHex(md.digest());
         }
         catch (Exception e)
         {
-            Log.e(TAG, "Impossible to get MD5 for file: " + fileName, e);
+            // Nothing
         }
 
         if (in != null)
@@ -101,24 +129,24 @@ public class Utils
             }
             catch (Exception e)
             {
-                Log.e(TAG, "Impossible to close file: " + fileName, e);
+                // Nothing;
             }
         }
 
-        return "";
+        return res;
     }
 
     /**
      * Deletes specified file or specified folder recursively
      *
-     * @param fileName  Path to file or path to folder
+     * @param filePath  Path to file or path to folder
      * @return          True if deletion successful, otherwise false
      */
-    public static boolean deleteFileOrFolder(String fileName)
+    public static boolean deleteFileOrFolder(String filePath)
     {
         boolean res = true;
 
-        File file = new File(fileName);
+        File file = new File(filePath);
 
         if (file.isDirectory())
         {
@@ -126,14 +154,14 @@ public class Utils
 
             for (String oneFile : files)
             {
-                if (!deleteFileOrFolder(fileName + "/" + oneFile))
+                if (!deleteFileOrFolder(filePath + "/" + oneFile))
                 {
                     res = false;
                 }
             }
         }
 
-        return file.delete() && res;
+        return res && file.delete();
     }
 
     /**
