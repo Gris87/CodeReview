@@ -2,6 +2,7 @@ package com.griscom.codereview.review;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.griscom.codereview.db.MainDatabase;
@@ -82,31 +83,51 @@ public class LoadingThread extends Thread
                 db            = helper.getReadableDatabase();
                 Cursor cursor = helper.getRows(db);
 
-                int rowIndex  = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ROW_ID);
-                int typeIndex = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ROW_TYPE);
+                int idIndex   = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ID);
+                int typeIndex = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_TYPE);
 
                 cursor.moveToFirst();
 
                 while (!cursor.isAfterLast())
                 {
-                    int  row  = cursor.getInt(rowIndex) - 1;
-                    char type = cursor.getString(typeIndex).charAt(0);
+                    int row = cursor.getInt(idIndex) - 1;
 
-                    switch (type)
+                    if (row >= 0 && row < rows.size())
                     {
-                        case RowType.REVIEWED:
-                            rows.get(row).setSelectionType(SelectionType.REVIEWED);
-                        break;
-                        case RowType.INVALID:
-                            rows.get(row).setSelectionType(SelectionType.INVALID);
-                        break;
-                        default:
-                            Log.e(TAG, "Unknown row type \"" + String.valueOf(type) + "\" in database \"" + helper.getDbName() + "\"");
-                        break;
+                        String typeStr = cursor.getString(typeIndex);
+
+                        char type = !TextUtils.isEmpty(typeStr) ? typeStr.charAt(0) : '-';
+
+                        switch (type)
+                        {
+                            case RowType.REVIEWED:
+                            {
+                                rows.get(row).setSelectionType(SelectionType.REVIEWED);
+                            }
+                            break;
+
+                            case RowType.INVALID:
+                            {
+                                rows.get(row).setSelectionType(SelectionType.INVALID);
+                            }
+                            break;
+
+                            default:
+                            {
+                                Log.e(TAG, "Unknown row type \"" + String.valueOf(type) + "\" in database \"" + helper.getDbName() + "\"");
+                            }
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Log.e(TAG, "Unexpected row id (" + String.valueOf(row) + ") with row count (" + String.valueOf(rows.size()) + ")");
                     }
 
                     cursor.moveToNext();
                 }
+
+                cursor.close();
             }
 
             int reviewedCount = 0;
