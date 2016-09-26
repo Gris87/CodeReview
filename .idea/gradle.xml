@@ -16,16 +16,7 @@
             <option value="$PROJECT_DIR$/app/libs/NumberPickerDialogPreference/libs/NumberPicker" />
           </set>
         </option>
-        <option name="myModules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/app/libs/ColorPickerPreference" />
-            <option value="$PROJECT_DIR$/app/libs/JavaPrettify" />
-            <option value="$PROJECT_DIR$/app/libs/NumberPickerDialogPreference" />
-            <option value="$PROJECT_DIR$/app/libs/NumberPickerDialogPreference/libs/NumberPicker" />
-          </set>
-        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>
