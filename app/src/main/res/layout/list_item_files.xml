@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="@dimen/list_item_files_height">
 
     <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
         android:layout_marginLeft="@dimen/common_margin"
-        android:focusable="false"
+        android:layout_marginStart="@dimen/common_margin"
+        android:layout_centerVertical="true"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/extensionImageView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/extension_image_size"
+        android:layout_height="@dimen/extension_image_size"
         android:layout_toRightOf="@+id/checkbox"
+        android:layout_toEndOf="@+id/checkbox"
         android:layout_alignWithParentIfMissing="true"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginStart="@dimen/common_margin"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/common_margin" />
+        android:contentDescription="@string/extension_image"
+        android:scaleType="centerInside" />
 
     <TextView
         android:id="@+id/fileNoteTextView"
@@ -28,40 +33,51 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/extensionImageView"
+        android:layout_toEndOf="@+id/extensionImageView"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
-        android:singleLine="true"
-        android:gravity="right"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="12sp" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:maxLines="1"
+        android:gravity="end|top"
+        android:textColor="@color/subtitle" />
 
     <TextView
         android:id="@+id/fileNameTextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/extensionImageView"
+        android:layout_toEndOf="@+id/extensionImageView"
         android:layout_toLeftOf="@+id/fileSizeTextView"
+        android:layout_toStartOf="@+id/fileSizeTextView"
         android:layout_below="@+id/fileNoteTextView"
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
-        android:singleLine="true"
-        android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_marginBottom="@dimen/common_margin"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:maxLines="1"
+        android:gravity="start|center_vertical" />
 
     <TextView
         android:id="@+id/fileSizeTextView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/fileNoteTextView"
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginEnd="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
         android:layout_marginBottom="@dimen/common_margin"
-        android:singleLine="true"
-        android:gravity="bottom"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="12sp" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:maxLines="1"
+        android:gravity="end|bottom"
+        android:textColor="@color/subtitle" />
 
 </RelativeLayout>

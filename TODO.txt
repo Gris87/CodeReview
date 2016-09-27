@@ -1,6 +1,7 @@
 Code analysis in all files
 list item layouts
 Review layout => ImageButtons
+Remove paddings
 UltraHD images
 Add AppLog
 Think about app color scheme

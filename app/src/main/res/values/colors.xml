@@ -9,6 +9,9 @@
     <color name="textColorPrimary">#FFFFFFFF</color>
     <color name="textColor">#FF000000</color>
 
+    <!-- Colors in files activity -->
+    <color name="subtitle">#FF808080</color>
+
     <!-- Button colors in review activity -->
     <color name="black_overlay">#40000000</color>
     <color name="selected">#4000B0FF</color>

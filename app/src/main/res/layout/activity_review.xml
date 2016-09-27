@@ -35,7 +35,8 @@
                 android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginTop="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
-                android:singleLine="true"
+                android:maxLines="1"
+                android:gravity="start|center_vertical"
                 style="?metaTitleBarSubTextStyle" />
 
             <LinearLayout
@@ -54,14 +55,16 @@
                     android:layout_weight="100"
                     android:layout_marginRight="@dimen/common_margin"
                     android:layout_marginEnd="@dimen/common_margin"
-                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:gravity="start|center_vertical"
                     style="?metaTitleBarTextStyle" />
 
                 <TextView
                     android:id="@+id/progressTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:gravity="start|center_vertical"
                     style="?metaTitleBarTextStyle" />
 
             </LinearLayout>
