@@ -144,7 +144,6 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
         Bundle data = new Bundle();
         data.putInt(DATA_POSITION, position);
 
-
         InputDialog dialog = InputDialog.newInstance(INPUT_DIALOG_ID_EDIT, R.string.dialog_add_file_title, R.string.dialog_add_file_message, (String)mAdapter.getItem(position), data);
         dialog.show(getSupportFragmentManager(), "InputDialog");
     }

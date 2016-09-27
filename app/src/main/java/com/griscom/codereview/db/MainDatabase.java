@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.griscom.codereview.util.Utils;
 
+import junit.framework.Assert;
+
 import java.io.File;
 
 /**
@@ -105,14 +107,16 @@ public class MainDatabase extends SQLiteOpenHelper
 
         long modifiedTime = new File(filePath).lastModified();
 
-        String folder = filePath.substring(0, filePath.lastIndexOf('/'));
+        int index = filePath.lastIndexOf('/');
+        Assert.assertTrue(index >= 0);
+
+        String folder   = filePath.substring(0, index);
+        String fileName = filePath.substring(index + 1);
 
         if (folder.equals(""))
         {
             folder = "/";
         }
-
-        String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
 
 
 
@@ -143,7 +147,7 @@ public class MainDatabase extends SQLiteOpenHelper
         {
             String md5 = Utils.md5ForFile(filePath);
 
-            cursor = getFileByMD5(db, md5);
+            cursor  = getFileByMD5(db, md5);
 
             cursor.moveToFirst();
 
@@ -173,14 +177,16 @@ public class MainDatabase extends SQLiteOpenHelper
         String md5 = null;
         long modifiedTime = new File(filePath).lastModified();
 
-        String folder = filePath.substring(0, filePath.lastIndexOf('/'));
+        int index = filePath.lastIndexOf('/');
+        Assert.assertTrue(index >= 0);
+
+        String folder   = filePath.substring(0, index);
+        String fileName = filePath.substring(index + 1);
 
         if (folder.equals(""))
         {
             folder = "/";
         }
-
-        String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
 
 
 
@@ -211,7 +217,7 @@ public class MainDatabase extends SQLiteOpenHelper
         {
             md5 = Utils.md5ForFile(filePath);
 
-            cursor = getFileByMD5(db, md5);
+            cursor  = getFileByMD5(db, md5);
 
             cursor.moveToFirst();
 
@@ -257,7 +263,11 @@ public class MainDatabase extends SQLiteOpenHelper
     {
         ContentValues values = new ContentValues();
 
-        String folder = filePath.substring(0, filePath.lastIndexOf('/'));
+        int index = filePath.lastIndexOf('/');
+        Assert.assertTrue(index >= 0);
+
+        String folder   = filePath.substring(0, index);
+        String fileName = filePath.substring(index + 1);
 
         if (folder.equals(""))
         {
@@ -265,7 +275,7 @@ public class MainDatabase extends SQLiteOpenHelper
         }
 
         values.put(COLUMN_PATH, folder);
-        values.put(COLUMN_NAME, filePath.substring(filePath.lastIndexOf('/') + 1));
+        values.put(COLUMN_NAME, fileName);
 
         db.update(FILES_TABLE_NAME, values, COLUMN_ID + "=?", new String[]{ String.valueOf(fileId) });
     }
