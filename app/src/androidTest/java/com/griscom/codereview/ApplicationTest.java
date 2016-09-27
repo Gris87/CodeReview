@@ -8,6 +8,11 @@ import android.test.ApplicationTestCase;
  */
 public class ApplicationTest extends ApplicationTestCase<Application>
 {
+    @SuppressWarnings("unused")
+    private static final String TAG = "ApplicationTest";
+
+
+
     public ApplicationTest()
     {
         super(Application.class);

@@ -9,6 +9,11 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest
 {
+    @SuppressWarnings("unused")
+    private static final String TAG = "ExampleUnitTest";
+
+
+
     @Test
     public void addition_isCorrect() throws Exception
     {
