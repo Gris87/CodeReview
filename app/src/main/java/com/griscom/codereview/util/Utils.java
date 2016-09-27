@@ -90,8 +90,9 @@ public class Utils
     public static String md5ForFile(String filePath)
     {
         String res = "";
-
         FileInputStream in = null;
+
+
 
         try
         {
@@ -120,6 +121,8 @@ public class Utils
         {
             // Nothing
         }
+
+
 
         if (in != null)
         {

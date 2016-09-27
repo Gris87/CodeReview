@@ -52,11 +52,13 @@ public class ApplicationSettings
 
         mIgnoreFiles = new ArrayList<>();
 
-        for (String file : ignoreFiles)
+        for (String fileName : ignoreFiles)
         {
-            if (!TextUtils.isEmpty(file))
+            fileName = Utils.replaceIncorrectIgnoreFileName(fileName);
+
+            if (!TextUtils.isEmpty(fileName) && !mIgnoreFiles.contains(fileName))
             {
-                mIgnoreFiles.add(Utils.replaceIncorrectIgnoreFileName(file));
+                mIgnoreFiles.add(fileName);
             }
         }
 

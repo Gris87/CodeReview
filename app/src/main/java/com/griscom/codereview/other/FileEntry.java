@@ -123,7 +123,7 @@ public class FileEntry
         switch (sortType)
         {
             case SortType.NAME: return mFileName.compareToIgnoreCase(another.mFileName) < 0;
-            case SortType.TYPE: return mType.compareTo(another.mType) < 0;
+            case SortType.TYPE: return mType.compareToIgnoreCase(another.mType) < 0;
             case SortType.SIZE: return mSize < another.mSize;
 
             default:
