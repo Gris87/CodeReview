@@ -1,3 +1,6 @@
+Code analysis in all files
+list item layouts
+Review layout => ImageButtons
 UltraHD images
 Add AppLog
 Think about app color scheme

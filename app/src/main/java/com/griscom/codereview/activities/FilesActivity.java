@@ -418,7 +418,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             items.add(item);
 
-            if (!fileName.equals(oldFileName))
+            if (!oldFileName.equals(fileName))
             {
                 mAdapter.assignNote(items, getString(R.string.rename_to, fileName));
             }
@@ -429,7 +429,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
         else
         {
-            if (!fileName.equals(oldFileName))
+            if (!oldFileName.equals(fileName))
             {
                 if (!mAdapter.renameFile(item, fileName))
                 {
@@ -496,6 +496,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         hideActionMode();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onBigFileOpeningConfirmed(String filePath, int fileId)
     {
