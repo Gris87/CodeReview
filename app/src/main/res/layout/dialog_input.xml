@@ -3,10 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:paddingBottom="@dimen/dialog_vertical_margin"
-    android:paddingLeft="@dimen/dialog_horizontal_margin"
-    android:paddingRight="@dimen/dialog_horizontal_margin"
-    android:paddingTop="@dimen/dialog_vertical_margin">
+    tools:context="com.griscom.codereview.dialogs.InputDialog">
 
     <EditText
         android:id="@+id/inputEditText"
