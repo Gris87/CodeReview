@@ -9,7 +9,7 @@
 
     <dimen name="common_margin">4dp</dimen>
 
-    <dimen name="list_item_files_height">56dp</dimen>
+    <dimen name="list_item_files_height">50dp</dimen>
     <dimen name="list_item_ignore_files_height">50dp</dimen>
     <dimen name="extension_image_size">48dp</dimen>
 
