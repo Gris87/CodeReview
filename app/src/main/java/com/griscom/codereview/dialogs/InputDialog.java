@@ -90,6 +90,7 @@ public class InputDialog extends DialogFragment
 
         builder.setTitle(mTitle)
                 .setMessage(mMessage)
+                .setCancelable(true)
                 .setView(editText)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener()

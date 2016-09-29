@@ -13,8 +13,6 @@ Mark as invalid file in ActionMode
 Colorize files after using actions above
 Hide Done/Back button in ActionMode
 Failed to get notes on folders after setting it up
-Make usage of last comments looks better
-Use standard combobox
 Show note in title in viewer
 Syntax Highlight in menu
 Auto-speed on scrolling with selection

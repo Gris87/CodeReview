@@ -110,9 +110,6 @@
     <!-- Message for rename dialog in files activity -->
     <string name="dialog_rename_message">Input name:</string>
 
-    <!-- Show message if there is no last names -->
-    <string name="no_last_names">Please input at least one name to use it later</string>
-
     <!-- Show message if name is empty -->
     <string name="empty_name">Please input name</string>
 
@@ -121,9 +118,6 @@
 
     <!-- Message for note dialog in files activity -->
     <string name="dialog_input_note_message">Input note:</string>
-
-    <!-- Show message if there is no last notes -->
-    <string name="no_last_notes">Please input at least one note to use it later</string>
 
     <!-- Title for dialog asking opening big file in files activity -->
     <string name="dialog_open_big_file_title">Big file</string>
@@ -184,9 +178,6 @@
 
     <!-- Message for comment dialog in review activity -->
     <string name="dialog_input_comment_message">Input comment (empty comment to remove it):</string>
-
-    <!-- Show message if there is no last comments -->
-    <string name="no_last_comment">Please input at least one comment to use it later</string>
 
     <!-- Ignore files activity title -->
     <string name="title_activity_ignore_files">Ignore files</string>

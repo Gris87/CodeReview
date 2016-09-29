@@ -29,7 +29,6 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
@@ -587,10 +586,13 @@ public class TextDocument implements OnTouchListener
 
                                         chooseDialog.show();
                                     }
+                                    // TODO: Remove it
+                                    /*
                                     else
                                     {
-                                         Toast.makeText(mContext, R.string.no_last_comment, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, R.string.no_last_comment, Toast.LENGTH_SHORT).show();
                                     }
+                                    */
                                 }
                             });
 

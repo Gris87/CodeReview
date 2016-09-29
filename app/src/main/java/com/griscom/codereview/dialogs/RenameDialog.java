@@ -10,12 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.griscom.codereview.R;
@@ -26,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Dialog for renaming file
  */
-public class RenameDialog extends DialogFragment implements View.OnClickListener
+public class RenameDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
     private static final String TAG = "RenameDialog";
@@ -40,12 +37,10 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
 
 
     private OnFragmentInteractionListener mListener      = null;
-    private EditText                      mInputEditText = null;
-    private ImageButton                   mChooseButton  = null;
     private boolean                       mMark          = false;
     private int                           mItem          = 0;
     private String                        mFileName      = null;
-    private ArrayList<CharSequence>       mFileNames     = null;
+    private ArrayList<String>             mFileNames     = null;
 
 
 
@@ -87,21 +82,11 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        View rootView = inflater.inflate(R.layout.dialog_input, null, false);
-
-
-
-        mInputEditText = (EditText)   rootView.findViewById(R.id.inputEditText);
-        mChooseButton  = (ImageButton)rootView.findViewById(R.id.chooseButton);
-
-
-
-        mInputEditText.setText(mFileName);
-        mInputEditText.selectAll();
-
-        mChooseButton.setOnClickListener(this);
+        final AutoCompleteTextView editText = new AutoCompleteTextView(getActivity());
+        editText.setText(mFileName);
+        editText.selectAll();
+        editText.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_dropdown_item_1line, mFileNames));
+        editText.setThreshold(0);
 
 
 
@@ -110,14 +95,14 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
         builder.setTitle(R.string.dialog_rename_title)
                 .setMessage(R.string.dialog_rename_message)
                 .setCancelable(true)
-                .setView(rootView)
+                .setView(editText)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener()
                         {
                             @Override
                             public void onClick(DialogInterface dialog, int whichButton)
                             {
-                                String fileName = mInputEditText.getText().toString();
+                                String fileName = editText.getText().toString();
 
                                 if (!fileName.equals(""))
                                 {
@@ -149,60 +134,6 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         return dialog;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onClick(View view)
-    {
-        if (view == mChooseButton)
-        {
-            if (mFileNames.size() > 0)
-            {
-                final CharSequence items[] = new CharSequence[mFileNames.size()];
-                String currentFilename = mInputEditText.getText().toString();
-                int index = -1;
-
-                for (int i = 0; i < mFileNames.size(); ++i)
-                {
-                    String oneFilename = (String)mFileNames.get(i);
-
-                    if (index < 0 && oneFilename.equals(currentFilename))
-                    {
-                        index = i;
-                    }
-
-                    items[i] = oneFilename;
-                }
-
-                if (index < 0)
-                {
-                    index = 0;
-                }
-
-                AlertDialog chooseDialog = new AlertDialog.Builder(getActivity())
-                        .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int index)
-                            {
-                                mInputEditText.setText(items[index]);
-
-                                dialog.dismiss();
-                            }
-                        }).create();
-
-                chooseDialog.show();
-            }
-            else
-            {
-                Toast.makeText(getActivity(), R.string.no_last_names, Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
-        {
-            Log.e(TAG, "Unknown view: " + String.valueOf(view));
-        }
     }
 
     /**
@@ -245,7 +176,7 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     /**
      * Saves last entered file names
      */
-    public void saveLastFileNames()
+    private void saveLastFileNames()
     {
         SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -254,7 +185,7 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
 
         for (int i = 0; i < mFileNames.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1), mFileNames.get(i).toString());
+            editor.putString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1), mFileNames.get(i));
         }
 
         editor.apply();
@@ -263,7 +194,7 @@ public class RenameDialog extends DialogFragment implements View.OnClickListener
     /**
      * Loads last entered file names
      */
-    public void loadLastFileNames()
+    private void loadLastFileNames()
     {
         mFileNames = new ArrayList<>();
 

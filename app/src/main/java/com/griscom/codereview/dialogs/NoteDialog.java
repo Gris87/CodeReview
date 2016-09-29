@@ -10,13 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.other.ApplicationPreferences;
@@ -26,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Dialog for creating notes
  */
-public class NoteDialog extends DialogFragment implements View.OnClickListener
+public class NoteDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
     private static final String TAG = "NoteDialog";
@@ -39,11 +35,9 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
 
 
     private OnFragmentInteractionListener mListener      = null;
-    private EditText                      mInputEditText = null;
-    private ImageButton                   mChooseButton  = null;
     private ArrayList<Integer>            mItems         = null;
     private String                        mNote          = null;
-    private ArrayList<CharSequence>       mNotes         = null;
+    private ArrayList<String>             mNotes         = null;
 
 
 
@@ -82,21 +76,11 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        View rootView = inflater.inflate(R.layout.dialog_input, null, false);
-
-
-
-        mInputEditText = (EditText)   rootView.findViewById(R.id.inputEditText);
-        mChooseButton  = (ImageButton)rootView.findViewById(R.id.chooseButton);
-
-
-
-        mInputEditText.setText(mNote);
-        mInputEditText.selectAll();
-
-        mChooseButton.setOnClickListener(this);
+        final AutoCompleteTextView editText = new AutoCompleteTextView(getActivity());
+        editText.setText(mNote);
+        editText.selectAll();
+        editText.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_dropdown_item_1line, mNotes));
+        editText.setThreshold(0);
 
 
 
@@ -105,14 +89,14 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
         builder.setTitle(R.string.dialog_input_note_title)
                 .setMessage(R.string.dialog_input_note_message)
                 .setCancelable(true)
-                .setView(rootView)
+                .setView(editText)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener()
                         {
                             @Override
                             public void onClick(DialogInterface dialog, int whichButton)
                             {
-                                String note = mInputEditText.getText().toString();
+                                String note = editText.getText().toString();
 
                                 if (!note.equals(""))
                                 {
@@ -141,60 +125,6 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         return dialog;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onClick(View view)
-    {
-        if (view == mChooseButton)
-        {
-            if (mNotes.size() > 0)
-            {
-                final CharSequence items[] = new CharSequence[mNotes.size()];
-                String currentNote = mInputEditText.getText().toString();
-                int index = -1;
-
-                for (int i = 0; i < mNotes.size(); ++i)
-                {
-                    String oneNote = (String)mNotes.get(i);
-
-                    if (index < 0 && oneNote.equals(currentNote))
-                    {
-                        index = i;
-                    }
-
-                    items[i] = oneNote;
-                }
-
-                if (index < 0)
-                {
-                    index = 0;
-                }
-
-                AlertDialog chooseDialog = new AlertDialog.Builder(getActivity())
-                        .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int index)
-                            {
-                                mInputEditText.setText(items[index]);
-
-                                dialog.dismiss();
-                            }
-                        }).create();
-
-                chooseDialog.show();
-            }
-            else
-            {
-                Toast.makeText(getActivity(), R.string.no_last_notes, Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
-        {
-            Log.e(TAG, "Unknown view: " + String.valueOf(view));
-        }
     }
 
     /**
@@ -237,7 +167,7 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
     /**
      * Saves last entered notes
      */
-    public void saveLastNotes()
+    private void saveLastNotes()
     {
         SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -246,7 +176,7 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
 
         for (int i = 0; i < mNotes.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_NOTE + "_" + String.valueOf(i + 1), mNotes.get(i).toString());
+            editor.putString(ApplicationPreferences.ONE_NOTE + "_" + String.valueOf(i + 1), mNotes.get(i));
         }
 
         editor.apply();
@@ -255,7 +185,7 @@ public class NoteDialog extends DialogFragment implements View.OnClickListener
     /**
      * Loads last entered notes
      */
-    public void loadLastNotes()
+    private void loadLastNotes()
     {
         mNotes = new ArrayList<>();
 
