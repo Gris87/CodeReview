@@ -1,7 +1,5 @@
 Code analysis in all files
-list item layouts
 Review layout => ImageButtons
-Remove paddings
 UltraHD images
 Add AppLog
 Think about app color scheme
@@ -19,7 +17,6 @@ Auto-speed on scrolling with selection
 Save/load dialogs state
 Smooth movement
 Code folding
-Verify that modification time not in use if MD5 hash is the same
 
 -----------------------------------
 
