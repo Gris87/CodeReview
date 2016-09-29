@@ -6,9 +6,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.griscom.codereview.BuildConfig;
@@ -54,12 +51,12 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
     private View              mTitle              = null;
     private TextView          mProgressTextView   = null;
     private View              mControls           = null;
-    private Button            mReviewedButton     = null;
-    private Button            mInvalidButton      = null;
-    private Button            mNoteButton         = null;
-    private Button            mClearButton        = null;
+    private ImageButton       mReviewedButton     = null;
+    private ImageButton       mInvalidButton      = null;
+    private ImageButton       mNoteButton         = null;
+    private ImageButton       mClearButton        = null;
     private boolean           mControlsVisible    = false;
-    private Button            mLastSelectedButton = null;
+    private ImageButton       mLastSelectedButton = null;
     private int               mDefaultColor       = -1;
     private int               mSelectedColor      = -1;
     private int               mHoverColor         = -1;
@@ -79,10 +76,10 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         TextView titleTextView = (TextView)         findViewById(R.id.titleTextView);
         mProgressTextView      = (TextView)         findViewById(R.id.progressTextView);
         mControls              =                    findViewById(R.id.fullScreenContentControls);
-        mReviewedButton        = (Button)           findViewById(R.id.reviewedButton);
-        mInvalidButton         = (Button)           findViewById(R.id.invalidButton);
-        mNoteButton            = (Button)           findViewById(R.id.noteButton);
-        mClearButton           = (Button)           findViewById(R.id.clearButton);
+        mReviewedButton        = (ImageButton)      findViewById(R.id.reviewedButton);
+        mInvalidButton         = (ImageButton)      findViewById(R.id.invalidButton);
+        mNoteButton            = (ImageButton)      findViewById(R.id.noteButton);
+        mClearButton           = (ImageButton)      findViewById(R.id.clearButton);
 
 
 
@@ -115,21 +112,6 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mProgressTextView.setText("0 %");
 
 
-
-        Spannable reviewedIcon = new SpannableString(" ");
-        Spannable invalidIcon  = new SpannableString(" ");
-        Spannable noteIcon     = new SpannableString(" ");
-        Spannable clearIcon    = new SpannableString(" ");
-
-        reviewedIcon.setSpan(new ImageSpan(this, R.drawable.reviewed, ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        invalidIcon.setSpan (new ImageSpan(this, R.drawable.invalid,  ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        noteIcon.setSpan    (new ImageSpan(this, R.drawable.note,     ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        clearIcon.setSpan   (new ImageSpan(this, R.drawable.clear,    ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mReviewedButton.setText(reviewedIcon);
-        mInvalidButton.setText (invalidIcon);
-        mNoteButton.setText    (noteIcon);
-        mClearButton.setText   (clearIcon);
 
         mReviewedButton.setBackgroundColor(mDefaultColor);
         mInvalidButton.setBackgroundColor (mDefaultColor);

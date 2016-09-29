@@ -1,5 +1,4 @@
 Code analysis in all files
-Review layout => ImageButtons
 UltraHD images
 Add AppLog
 Think about app color scheme

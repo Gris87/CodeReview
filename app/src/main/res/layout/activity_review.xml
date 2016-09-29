@@ -80,36 +80,44 @@
             android:background="@color/black_overlay"
             style="?metaControlsBarStyle">
 
-            <Button
+            <ImageButton
                 android:id="@+id/reviewedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
-                android:gravity="center"
+                android:contentDescription="@string/cnt_desc_reviewed"
+                android:src="@drawable/reviewed"
+                android:scaleType="centerInside"
                 style="?metaControlsBarButtonStyle" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/invalidButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
-                android:gravity="center"
+                android:contentDescription="@string/cnt_desc_invalid"
+                android:src="@drawable/invalid"
+                android:scaleType="centerInside"
                 style="?metaControlsBarButtonStyle" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/noteButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
-                android:gravity="center"
+                android:contentDescription="@string/cnt_desc_note"
+                android:src="@drawable/note"
+                android:scaleType="centerInside"
                 style="?metaControlsBarButtonStyle" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/clearButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
-                android:gravity="center"
+                android:contentDescription="@string/cnt_desc_clear"
+                android:src="@drawable/clear"
+                android:scaleType="centerInside"
                 style="?metaControlsBarButtonStyle" />
         </LinearLayout>
 

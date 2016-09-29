@@ -24,7 +24,7 @@
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginStart="@dimen/common_margin"
         android:layout_centerVertical="true"
-        android:contentDescription="@string/extension_image"
+        android:contentDescription="@string/cnt_desc_extension"
         android:scaleType="centerInside" />
 
     <TextView

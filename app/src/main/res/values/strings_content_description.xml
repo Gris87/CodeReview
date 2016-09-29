@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Extension image content description -->
+    <string name="cnt_desc_extension">Extension</string>
+
+    <!-- Reviewed tool content description -->
+    <string name="cnt_desc_reviewed">Reviewed</string>
+
+    <!-- Invalid tool content description -->
+    <string name="cnt_desc_invalid">Invalid</string>
+
+    <!-- Note tool content description -->
+    <string name="cnt_desc_note">Note</string>
+
+    <!-- Clear tool content description -->
+    <string name="cnt_desc_clear">Clear</string>
+
+</resources>

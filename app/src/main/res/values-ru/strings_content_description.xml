@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Extension image content description -->
+    <string name="cnt_desc_extension">Расширение</string>
+
+    <!-- Reviewed tool content description -->
+    <string name="cnt_desc_reviewed">Просмотрено</string>
+
+    <!-- Invalid tool content description -->
+    <string name="cnt_desc_invalid">Некорректно</string>
+
+    <!-- Note tool content description -->
+    <string name="cnt_desc_note">Заметка</string>
+
+    <!-- Clear tool content description -->
+    <string name="cnt_desc_clear">Очистка</string>
+
+</resources>

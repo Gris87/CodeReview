@@ -164,9 +164,6 @@
     <!-- Press back one more time in file explorer -->
     <string name="press_again_to_exit">Press again to exit</string>
 
-    <!-- Extension image content description -->
-    <string name="extension_image">Extension</string>
-
     <!-- Review loading message -->
     <string name="loading">Loading&#8230;</string>
 
