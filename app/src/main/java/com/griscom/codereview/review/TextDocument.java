@@ -2,9 +2,7 @@ package com.griscom.codereview.review;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,14 +19,10 @@ import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
@@ -535,6 +529,8 @@ public class TextDocument implements OnTouchListener
 
                     if (mSelectionType == SelectionType.NOTE)
                     {
+                        // TODO: Make dialog for it
+                        /*
                         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                         View view = inflater.inflate(R.layout.dialog_input, null);
@@ -586,13 +582,10 @@ public class TextDocument implements OnTouchListener
 
                                         chooseDialog.show();
                                     }
-                                    // TODO: Remove it
-                                    /*
                                     else
                                     {
                                         Toast.makeText(mContext, R.string.no_last_comment, Toast.LENGTH_SHORT).show();
                                     }
-                                    */
                                 }
                             });
 
@@ -673,6 +666,7 @@ public class TextDocument implements OnTouchListener
 
                         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                         dialog.show();
+                        */
                     }
                     else
                     {
