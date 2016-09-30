@@ -23,12 +23,14 @@ public class OpenBigFileDialog extends DialogFragment
 
     private static final String ARG_FILE_PATH = "FILE_PATH";
     private static final String ARG_FILE_ID   = "FILE_ID";
+    private static final String ARG_FILE_NOTE = "FILE_NOTE";
 
 
 
     private OnFragmentInteractionListener mListener = null;
     private String                        mFilePath = null;
     private int                           mFileId   = 0;
+    private String                        mFileNote = null;
 
 
 
@@ -36,15 +38,17 @@ public class OpenBigFileDialog extends DialogFragment
      * Creates new instance of OpenBigFileDialog
      * @param filePath    path to file
      * @param fileId      file ID in DB
+     * @param fileNote    file note
      * @return OpenBigFileDialog instance
      */
-    public static OpenBigFileDialog newInstance(String filePath, int fileId)
+    public static OpenBigFileDialog newInstance(String filePath, int fileId, String fileNote)
     {
         OpenBigFileDialog fragment = new OpenBigFileDialog();
 
         Bundle args = new Bundle();
         args.putString(ARG_FILE_PATH, filePath);
         args.putInt(   ARG_FILE_ID,   fileId);
+        args.putString(ARG_FILE_NOTE, fileNote);
         fragment.setArguments(args);
 
         return fragment;
@@ -58,6 +62,7 @@ public class OpenBigFileDialog extends DialogFragment
 
         mFilePath = getArguments().getString(ARG_FILE_PATH);
         mFileId   = getArguments().getInt(   ARG_FILE_ID);
+        mFileNote = getArguments().getString(ARG_FILE_NOTE);
     }
 
     /** {@inheritDoc} */
@@ -99,7 +104,7 @@ public class OpenBigFileDialog extends DialogFragment
     {
         if (mListener != null)
         {
-            mListener.onBigFileOpeningConfirmed(mFilePath, mFileId);
+            mListener.onBigFileOpeningConfirmed(mFilePath, mFileId, mFileNote);
         }
     }
 
@@ -139,7 +144,8 @@ public class OpenBigFileDialog extends DialogFragment
          * Handler for big file opening confirmed event
          * @param filePath    path to file
          * @param fileId      file ID in DB
+         * @param fileNote    file note
          */
-        void onBigFileOpeningConfirmed(String filePath, int fileId);
+        void onBigFileOpeningConfirmed(String filePath, int fileId, String fileNote);
     }
 }

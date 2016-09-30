@@ -36,7 +36,9 @@
                 android:layout_marginRight="@dimen/common_margin"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:maxLines="1"
-                android:gravity="start|center_vertical" />
+                android:gravity="start|center_vertical"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -12,4 +12,5 @@ public class ApplicationExtras
 
     public static final String FILE_PATH = "FilePath";
     public static final String FILE_ID   = "FileId";
+    public static final String FILE_NOTE = "FileNote";
 }

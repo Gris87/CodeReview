@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +52,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
     private ReviewSurfaceView mContent            = null;
     private View              mTitle              = null;
+    private TextView          mNoteTextView       = null;
     private TextView          mProgressTextView   = null;
     private View              mControls           = null;
     private ImageButton       mReviewedButton     = null;
@@ -77,6 +79,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
         mContent               = (ReviewSurfaceView)findViewById(R.id.fullScreenContent);
         mTitle                 =                    findViewById(R.id.fullScreenContentTitle);
+        mNoteTextView          = (TextView)         findViewById(R.id.noteTextView);
         TextView titleTextView = (TextView)         findViewById(R.id.titleTextView);
         mProgressTextView      = (TextView)         findViewById(R.id.progressTextView);
         mControls              =                    findViewById(R.id.fullScreenContentControls);
@@ -108,6 +111,22 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
         String filePath = intent.getStringExtra(ApplicationExtras.FILE_PATH);
         int    fileId   = intent.getIntExtra   (ApplicationExtras.FILE_ID, 0);
+        String fileNote = intent.getStringExtra(ApplicationExtras.FILE_NOTE);
+
+
+
+        if (!TextUtils.isEmpty(fileNote))
+        {
+            mNoteTextView.setVisibility(View.VISIBLE);
+            mNoteTextView.setText(fileNote);
+        }
+        else
+        {
+            mNoteTextView.setVisibility(View.GONE);
+        }
+
+        titleTextView.setText(filePath.substring(filePath.lastIndexOf('/') + 1));
+        mProgressTextView.setText("0 %");
 
 
 
@@ -115,11 +134,6 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.setOnTouchListener(this);
         mContent.setOnNoteSupportListener(this);
         mContent.setOnProgressChangedListener(this);
-
-
-
-        titleTextView.setText(filePath.substring(filePath.lastIndexOf('/') + 1));
-        mProgressTextView.setText("0 %");
 
 
 

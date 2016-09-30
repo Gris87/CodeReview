@@ -343,7 +343,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                 try
                 {
-                    openFile(fileName, file.getDbFileId());
+                    openFile(fileName, file.getDbFileId(), file.getFileNote());
                 }
                 catch (FileNotFoundException e)
                 {
@@ -498,9 +498,9 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
     /** {@inheritDoc} */
     @Override
-    public void onBigFileOpeningConfirmed(String filePath, int fileId)
+    public void onBigFileOpeningConfirmed(String filePath, int fileId, String fileNote)
     {
-        openFileAtPath(filePath, fileId);
+        openFileAtPath(filePath, fileId, fileNote);
     }
 
     /**
@@ -841,9 +841,10 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * Opens specified file in ReviewActivity if allowed
      * @param fileName    file name
      * @param fileId      file ID in database
+     * @param fileNote    file note
      * @throws FileNotFoundException if file not found
      */
-    private void openFile(String fileName, int fileId) throws FileNotFoundException
+    private void openFile(String fileName, int fileId, String fileNote) throws FileNotFoundException
     {
         String filePath = mAdapter.pathToFile(fileName);
 
@@ -860,11 +861,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             file.length() <= ApplicationSettings.getBigFileSize() * 1024
            )
         {
-            openFileAtPath(filePath, fileId);
+            openFileAtPath(filePath, fileId, fileNote);
         }
         else
         {
-            OpenBigFileDialog dialog = OpenBigFileDialog.newInstance(filePath, fileId);
+            OpenBigFileDialog dialog = OpenBigFileDialog.newInstance(filePath, fileId, fileNote);
             dialog.show(getSupportFragmentManager(), "OpenBigFileDialog");
         }
     }
@@ -873,13 +874,15 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * Opens specified file in ReviewActivity
      * @param filePath    path to file
      * @param fileId      file ID in database
+     * @param fileNote    file note
      */
-    private void openFileAtPath(String filePath, int fileId)
+    private void openFileAtPath(String filePath, int fileId, String fileNote)
     {
         Intent intent = new Intent(this, ReviewActivity.class);
 
         intent.putExtra(ApplicationExtras.FILE_PATH, filePath);
         intent.putExtra(ApplicationExtras.FILE_ID,   fileId);
+        intent.putExtra(ApplicationExtras.FILE_NOTE, fileNote);
 
         startActivityForResult(intent, REQUEST_REVIEW);
     }
@@ -957,7 +960,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
         if (!TextUtils.isEmpty(fileName))
         {
-            openFile(fileName, 0);
+            openFile(fileName, 0, "");
         }
     }
 
