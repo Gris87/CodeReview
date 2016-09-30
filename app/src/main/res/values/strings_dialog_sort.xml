@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title -->
+    <string name="dialog_sort_title">Sort</string>
+
+    <!-- Sort types -->
+    <string-array name="dialog_sort_types">
+        <item>By name</item>
+        <item>By type</item>
+        <item>By size</item>
+    </string-array>
+
+</resources>

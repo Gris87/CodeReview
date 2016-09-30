@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Files activity title -->
+    <string name="activity_files_title">Code review</string>
+
+    <!-- Sort -->
+    <string name="files_action_sort">Сортировка</string>
+
+    <!-- Settings -->
+    <string name="files_action_settings">Настройки</string>
+
+    <!-- Donate -->
+    <string name="files_action_donate">Пожертвовать</string>
+
+    <!-- Close -->
+    <string name="files_action_close">Закрыть</string>
+
+    <!-- Rename -->
+    <string name="files_action_rename">Переименовать</string>
+
+    <!-- Mark to rename -->
+    <string name="files_action_mark_to_rename">Заметка о переименовании</string>
+
+    <!-- Delete -->
+    <string name="files_action_delete">Удалить</string>
+
+    <!-- Mark to delete -->
+    <string name="files_action_mark_to_delete">Заметка об удалении</string>
+
+    <!-- Note -->
+    <string name="files_action_note">Заметка</string>
+
+    <!-- Plurals for selecting folders -->
+    <plurals name="files_selected_folders_plurals">
+        <item quantity="one">%1$d папка</item>
+        <!-- <item quantity="two">%1$d папки</item> Not used -->
+        <item quantity="few">%1$d папки</item>
+        <item quantity="many">%1$d папок</item>
+        <item quantity="other">%1$d папок</item>
+    </plurals>
+
+    <!-- Plurals for selecting files -->
+    <plurals name="files_selected_files_plurals">
+        <item quantity="one">%1$d файл</item>
+        <!-- <item quantity="two">%1$d файла</item> Not used -->
+        <item quantity="few">%1$d файла</item>
+        <item quantity="many">%1$d файлов</item>
+        <item quantity="other">%1$d файлов</item>
+    </plurals>
+
+    <!-- Plurals for deleting folders -->
+    <plurals name="files_delete_folders_plurals">
+        <item quantity="one">%1$d папку</item>
+        <!-- <item quantity="two">%1$d папки</item> Not used -->
+        <item quantity="few">%1$d папки</item>
+        <item quantity="many">%1$d папок</item>
+        <item quantity="other">%1$d папок</item>
+    </plurals>
+
+    <!-- Plurals for deleting files -->
+    <plurals name="files_delete_files_plurals">
+        <item quantity="one">%1$d файл</item>
+        <!-- <item quantity="two">%1$d файла</item> Not used -->
+        <item quantity="few">%1$d файла</item>
+        <item quantity="many">%1$d файлов</item>
+        <item quantity="other">%1$d файлов</item>
+    </plurals>
+
+    <!-- Select files title in ActionMode -->
+    <string name="files_select_files">Выберите файлы</string>
+
+    <!-- Folders selected subtitle in ActionMode -->
+    <plurals name="files_folders_selected">
+        <item quantity="one">%1$s выбрана</item>
+        <!-- <item quantity="two">%1$s выбрано</item> Not used -->
+        <item quantity="few">%1$s выбрано</item>
+        <item quantity="many">%1$s выбрано</item>
+        <item quantity="other">%1$s выбрано</item>
+    </plurals>
+
+    <!-- Files selected subtitle in ActionMode -->
+    <plurals name="files_files_selected">
+        <item quantity="one">%1$s выбран</item>
+        <!-- <item quantity="two">%1$s выбрано</item> Not used -->
+        <item quantity="few">%1$s выбрано</item>
+        <item quantity="many">%1$s выбрано</item>
+        <item quantity="other">%1$s выбрано</item>
+    </plurals>
+
+    <!-- Folders and files selected subtitle in ActionMode -->
+    <string name="files_folders_and_files_selected">%1$s and %2$s выбраны</string>
+
+    <!-- Need to rename -->
+    <string name="files_need_to_rename">Нужно переименовать</string>
+
+    <!-- Rename to %1$s -->
+    <string name="files_rename_to">Переименовать в %1$s</string>
+
+    <!-- Need to delete -->
+    <string name="files_need_to_delete">Нужно удалить</string>
+
+    <!-- Can't rename folder -->
+    <string name="files_can_not_rename_folder">Не удалось переименовать папку</string>
+
+    <!-- Can't rename file -->
+    <string name="files_can_not_rename_file">Не удалось переименовать файл</string>
+
+    <!-- Can't delete folder -->
+    <string name="files_can_not_delete_folder">Не удалось удалить папку: %1$s</string>
+
+    <!-- Can't delete file -->
+    <string name="files_can_not_delete_file">Не удалось удалить файл: %1$s</string>
+
+    <!-- Can't delete folders/files -->
+    <string name="files_can_not_delete_folders_or_files">Не удалось удалить %1$s</string>
+
+    <!-- Can't delete folders and files -->
+    <string name="files_can_not_delete_folders_and_files">Не удалось удалить %1$s и %2$s</string>
+
+    <!-- Press back one more time in file explorer -->
+    <string name="files_press_again_to_exit">Нажмите снова для выхода</string>
+
+</resources>

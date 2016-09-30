@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title for delete dialog in files activity -->
+    <string name="dialog_delete_title">Delete</string>
+
+    <!-- Message for delete dialog in files activity -->
+    <string name="dialog_delete_folders_or_files_message">Do you want to delete %1$s?</string>
+
+    <!-- Message for delete dialog in files activity -->
+    <string name="dialog_delete_folders_and_files_message">Do you want to delete %1$s and %2$s?</string>
+
+    <!-- Plurals for deleting folders -->
+    <plurals name="dialog_delete_folders_plurals">
+        <item quantity="one">%1$d folder</item>
+        <item quantity="two">%1$d folders</item>
+        <item quantity="few">%1$d folders</item>
+        <item quantity="many">%1$d folders</item>
+        <item quantity="other">%1$d folders</item>
+    </plurals>
+
+    <!-- Plurals for deleting files -->
+    <plurals name="dialog_delete_files_plurals">
+        <item quantity="one">%1$d file</item>
+        <item quantity="two">%1$d files</item>
+        <item quantity="few">%1$d files</item>
+        <item quantity="many">%1$d files</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
+
+</resources>

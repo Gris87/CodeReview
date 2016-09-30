@@ -63,9 +63,9 @@ public class SortDialog extends DialogFragment
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.action_sort)
+        builder.setTitle(R.string.dialog_sort_title)
                 .setCancelable(true)
-                .setSingleChoiceItems(R.array.sort_types,
+                .setSingleChoiceItems(R.array.dialog_sort_types,
                         mSortType - 1,
                         new DialogInterface.OnClickListener()
                         {

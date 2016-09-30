@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Reload -->
+    <string name="review_action_reload">Переоткрыть</string>
+
+    <!-- Settings -->
+    <string name="review_action_settings">Настройки</string>
+
+    <!-- Close -->
+    <string name="review_action_close">Закрыть</string>
+
+    <!-- Review loading message -->
+    <string name="review_loading">Загрузка&#8230;</string>
+
+    <!-- Review file not found message -->
+    <string name="review_file_not_found">Файл не найден</string>
+
+</resources>

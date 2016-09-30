@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title for note dialog in files activity -->
+    <string name="dialog_note_title">Note</string>
+
+    <!-- Message for note dialog in files activity -->
+    <string name="dialog_note_message">Input note:</string>
+
+</resources>

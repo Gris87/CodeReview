@@ -308,7 +308,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             {
                 mBackPressTime = curTime;
 
-                Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.files_press_again_to_exit, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -420,7 +420,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             if (!oldFileName.equals(fileName))
             {
-                mAdapter.assignNote(items, getString(R.string.rename_to, fileName));
+                mAdapter.assignNote(items, getString(R.string.files_rename_to, fileName));
             }
             else
             {
@@ -433,7 +433,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             {
                 if (!mAdapter.renameFile(item, fileName))
                 {
-                    Toast.makeText(this, R.string.can_not_rename_file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.files_can_not_rename_file, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -465,30 +465,30 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             if (keepFolders.size() == 1 && keepFiles.size() == 0)
             {
-                Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folder, keepFolders.get(0)), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_folder, keepFolders.get(0)), Toast.LENGTH_SHORT).show();
             }
             else
             if (keepFolders.size() == 0 && keepFiles.size() == 1)
             {
-                Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_file, keepFiles.get(0)), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_file, keepFiles.get(0)), Toast.LENGTH_SHORT).show();
             }
             else
             {
-                String folders = keepFolders.size() > 0 ? resources.getQuantityString(R.plurals.delete_folders_plurals, keepFolders.size(), keepFolders.size()) : null;
-                String files   = keepFiles.size()   > 0 ? resources.getQuantityString(R.plurals.delete_files_plurals,   keepFiles.size(),   keepFiles.size())   : null;
+                String folders = keepFolders.size() > 0 ? resources.getQuantityString(R.plurals.files_delete_folders_plurals, keepFolders.size(), keepFolders.size()) : null;
+                String files   = keepFiles.size()   > 0 ? resources.getQuantityString(R.plurals.files_delete_files_plurals,   keepFiles.size(),   keepFiles.size())   : null;
 
                 if (keepFolders.size() > 1 && keepFiles.size() == 0)
                 {
-                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_or_files, folders), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_folders_or_files, folders), Toast.LENGTH_SHORT).show();
                 }
                 else
                 if (keepFolders.size() == 0 && keepFiles.size() > 1)
                 {
-                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_or_files, files), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_folders_or_files, files), Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(FilesActivity.this, resources.getString(R.string.can_not_delete_folders_and_files, folders, files), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_folders_and_files, folders, files), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -554,8 +554,8 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                 Resources resources = getResources();
 
-                String folders = foldersCount > 0 ? resources.getQuantityString(R.plurals.selected_folders_plurals, foldersCount, foldersCount) : null;
-                String files   = filesCount   > 0 ? resources.getQuantityString(R.plurals.selected_files_plurals,   filesCount,   filesCount)   : null;
+                String folders = foldersCount > 0 ? resources.getQuantityString(R.plurals.files_selected_folders_plurals, foldersCount, foldersCount) : null;
+                String files   = filesCount   > 0 ? resources.getQuantityString(R.plurals.files_selected_files_plurals,   filesCount,   filesCount)   : null;
 
                 if (foldersCount == 0 && filesCount == 0)
                 {
@@ -564,16 +564,16 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 else
                 if (foldersCount > 0 && filesCount == 0)
                 {
-                    mode.setSubtitle(resources.getQuantityString(R.plurals.folders_selected, foldersCount, folders));
+                    mode.setSubtitle(resources.getQuantityString(R.plurals.files_folders_selected, foldersCount, folders));
                 }
                 else
                 if (foldersCount == 0 && filesCount > 0)
                 {
-                    mode.setSubtitle(resources.getQuantityString(R.plurals.files_selected, filesCount, files));
+                    mode.setSubtitle(resources.getQuantityString(R.plurals.files_files_selected, filesCount, files));
                 }
                 else
                 {
-                    mode.setSubtitle(resources.getString(R.string.folders_and_files_selected, folders, files));
+                    mode.setSubtitle(resources.getString(R.string.files_folders_and_files_selected, folders, files));
                 }
             }
 
@@ -583,7 +583,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             {
                 mActionMode = mode;
 
-                mActionMode.setTitle(R.string.select_files);
+                mActionMode.setTitle(R.string.files_select_files);
                 mActionMode.getMenuInflater().inflate(R.menu.context_menu_files, menu);
 
                 mAdapter.setSelectionMode(true);
@@ -684,7 +684,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
         else
         {
-            mAdapter.assignNote(items, getString(R.string.need_to_rename));
+            mAdapter.assignNote(items, getString(R.string.files_need_to_rename));
         }
 
         return true;
@@ -697,7 +697,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      */
     private boolean markToDelete(ArrayList<Integer> items)
     {
-        mAdapter.assignNote(items, getString(R.string.need_to_delete));
+        mAdapter.assignNote(items, getString(R.string.files_need_to_delete));
 
         return true;
     }

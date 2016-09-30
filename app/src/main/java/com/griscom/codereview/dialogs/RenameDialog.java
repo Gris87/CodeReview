@@ -116,7 +116,7 @@ public class RenameDialog extends DialogFragment
                                 }
                                 else
                                 {
-                                    Toast.makeText(getActivity(), R.string.empty_name, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), R.string.dialog_rename_empty_name, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })

@@ -75,8 +75,8 @@ public class DeleteDialog extends DialogFragment
     {
         Resources resources = getResources();
 
-        String folders = mFoldersCount > 0 ? resources.getQuantityString(R.plurals.delete_folders_plurals, mFoldersCount, mFoldersCount) : null;
-        String files   = mFilesCount   > 0 ? resources.getQuantityString(R.plurals.delete_files_plurals,   mFilesCount,   mFilesCount)   : null;
+        String folders = mFoldersCount > 0 ? resources.getQuantityString(R.plurals.dialog_delete_folders_plurals, mFoldersCount, mFoldersCount) : null;
+        String files   = mFilesCount   > 0 ? resources.getQuantityString(R.plurals.dialog_delete_files_plurals,   mFilesCount,   mFilesCount)   : null;
 
         String message;
 

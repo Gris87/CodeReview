@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Ignore files activity title -->
+    <string name="activity_ignore_files_title">Игнорирование файлов</string>
+
+    <!-- Add -->
+    <string name="ignore_files_action_add">Добавить</string>
+
+    <!-- Delete -->
+    <string name="ignore_files_action_delete">Удалить</string>
+
+    <!-- Select items title in ActionMode -->
+    <string name="ignore_files_select_items">Выберите элементы</string>
+
+    <!-- Items selected subtitle in ActionMode -->
+    <plurals name="ignore_files_items_selected">
+        <item quantity="one">%1$d элемент выбран</item>
+        <!-- <item quantity="two">%1$d items выбрано</item> Not used -->
+        <item quantity="few">%1$d элемента выбрано</item>
+        <item quantity="many">%1$d элементов выбрано</item>
+        <item quantity="other">%1$d элементов выбрано</item>
+    </plurals>
+
+    <!-- Title for dialog in ignore files activity -->
+    <string name="ignore_files_dialog_title">Игнорирование файла</string>
+
+    <!-- Message for dialog in ignore files activity -->
+    <string name="ignore_files_dialog_message">Введите имя файла или шаблон\n(разрешены символы \'*\' и \'?\'):</string>
+
+</resources>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Files activity title -->
+    <string name="activity_files_title">Code review</string>
+
+    <!-- Sort -->
+    <string name="files_action_sort">Sort</string>
+
+    <!-- Settings -->
+    <string name="files_action_settings">Settings</string>
+
+    <!-- Donate -->
+    <string name="files_action_donate">Donate</string>
+
+    <!-- Close -->
+    <string name="files_action_close">Close</string>
+
+    <!-- Rename -->
+    <string name="files_action_rename">Rename</string>
+
+    <!-- Mark to rename -->
+    <string name="files_action_mark_to_rename">Mark to rename</string>
+
+    <!-- Delete -->
+    <string name="files_action_delete">Delete</string>
+
+    <!-- Mark to delete -->
+    <string name="files_action_mark_to_delete">Mark to delete</string>
+
+    <!-- Note -->
+    <string name="files_action_note">Note</string>
+
+    <!-- Plurals for selecting folders -->
+    <plurals name="files_selected_folders_plurals">
+        <item quantity="one">%1$d folder</item>
+        <item quantity="two">%1$d folders</item>
+        <item quantity="few">%1$d folders</item>
+        <item quantity="many">%1$d folders</item>
+        <item quantity="other">%1$d folders</item>
+    </plurals>
+
+    <!-- Plurals for selecting files -->
+    <plurals name="files_selected_files_plurals">
+        <item quantity="one">%1$d file</item>
+        <item quantity="two">%1$d files</item>
+        <item quantity="few">%1$d files</item>
+        <item quantity="many">%1$d files</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
+
+    <!-- Plurals for deleting folders -->
+    <plurals name="files_delete_folders_plurals">
+        <item quantity="one">%1$d folder</item>
+        <item quantity="two">%1$d folders</item>
+        <item quantity="few">%1$d folders</item>
+        <item quantity="many">%1$d folders</item>
+        <item quantity="other">%1$d folders</item>
+    </plurals>
+
+    <!-- Plurals for deleting files -->
+    <plurals name="files_delete_files_plurals">
+        <item quantity="one">%1$d file</item>
+        <item quantity="two">%1$d files</item>
+        <item quantity="few">%1$d files</item>
+        <item quantity="many">%1$d files</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
+
+    <!-- Select files title in ActionMode -->
+    <string name="files_select_files">Select files</string>
+
+    <!-- Folders selected subtitle in ActionMode -->
+    <plurals name="files_folders_selected">
+        <item quantity="one">%1$s selected</item>
+        <item quantity="two">%1$s selected</item>
+        <item quantity="few">%1$s selected</item>
+        <item quantity="many">%1$s selected</item>
+        <item quantity="other">%1$s selected</item>
+    </plurals>
+
+    <!-- Files selected subtitle in ActionMode -->
+    <plurals name="files_files_selected">
+        <item quantity="one">%1$s selected</item>
+        <item quantity="two">%1$s selected</item>
+        <item quantity="few">%1$s selected</item>
+        <item quantity="many">%1$s selected</item>
+        <item quantity="other">%1$s selected</item>
+    </plurals>
+
+    <!-- Folders and files selected subtitle in ActionMode -->
+    <string name="files_folders_and_files_selected">%1$s and %2$s selected</string>
+
+    <!-- Need to rename -->
+    <string name="files_need_to_rename">Need to rename</string>
+
+    <!-- Rename to %1$s -->
+    <string name="files_rename_to">Rename to %1$s</string>
+
+    <!-- Need to delete -->
+    <string name="files_need_to_delete">Need to delete</string>
+
+    <!-- Can't rename folder -->
+    <string name="files_can_not_rename_folder">Can not rename folder</string>
+
+    <!-- Can't rename file -->
+    <string name="files_can_not_rename_file">Can not rename file</string>
+
+    <!-- Can't delete folder -->
+    <string name="files_can_not_delete_folder">Can not delete folder: %1$s</string>
+
+    <!-- Can't delete file -->
+    <string name="files_can_not_delete_file">Can not delete file: %1$s</string>
+
+    <!-- Can't delete folders/files -->
+    <string name="files_can_not_delete_folders_or_files">Can not delete %1$s</string>
+
+    <!-- Can't delete folders and files -->
+    <string name="files_can_not_delete_folders_and_files">Can not delete %1$s and %2$s</string>
+
+    <!-- Press back one more time in file explorer -->
+    <string name="files_press_again_to_exit">Press again to exit</string>
+
+</resources>

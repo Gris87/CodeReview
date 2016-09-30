@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Keys -->
-    <string name="pref_key_reviewed_color">ReviewedColor</string>
-    <string name="pref_key_invalid_color">InvalidColor</string>
-    <string name="pref_key_note_color">NoteColor</string>
-    <string name="pref_key_selection_color">SelectionColor</string>
+    <!-- Progress -->
+    <string name="progress" translatable="false">%1$d %%</string>
 
-    <string name="pref_key_font_size">FontSize</string>
-    <string name="pref_key_tab_size">TabSize</string>
-    <string name="pref_key_big_file_size">BigFileSize</string>
+
+
+    <!-- Keys -->
+    <string name="pref_key_reviewed_color"  translatable="false">ReviewedColor</string>
+    <string name="pref_key_invalid_color"   translatable="false">InvalidColor</string>
+    <string name="pref_key_note_color"      translatable="false">NoteColor</string>
+    <string name="pref_key_selection_color" translatable="false">SelectionColor</string>
+
+    <string name="pref_key_font_size"       translatable="false">FontSize</string>
+    <string name="pref_key_tab_size"        translatable="false">TabSize</string>
+    <string name="pref_key_big_file_size"   translatable="false">BigFileSize</string>
 
 
 

@@ -7,25 +7,25 @@
     <item
         android:id="@+id/action_sort"
         android:orderInCategory="100"
-        android:title="@string/action_sort"
+        android:title="@string/files_action_sort"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="200"
-        android:title="@string/action_settings"
+        android:title="@string/files_action_settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_donate"
         android:orderInCategory="300"
-        android:title="@string/action_donate"
+        android:title="@string/files_action_donate"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_close"
         android:orderInCategory="400"
-        android:title="@string/action_close"
+        android:title="@string/files_action_close"
         android:icon="@drawable/close"
         app:showAsAction="ifRoom" />
 

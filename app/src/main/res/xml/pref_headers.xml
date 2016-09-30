@@ -5,14 +5,14 @@
 
     <header
         android:fragment="com.griscom.codereview.activities.SettingsActivity$FileManagerPreferenceFragment"
-        android:title="@string/pref_header_file_manager" />
+        android:title="@string/settings_pref_header_file_manager" />
 
     <header
         android:fragment="com.griscom.codereview.activities.SettingsActivity$ColorsPreferenceFragment"
-        android:title="@string/pref_header_colors" />
+        android:title="@string/settings_pref_header_colors" />
 
     <header
         android:fragment="com.griscom.codereview.activities.SettingsActivity$EditorPreferenceFragment"
-        android:title="@string/pref_header_editor" />
+        android:title="@string/settings_pref_header_editor" />
 
 </preference-headers>

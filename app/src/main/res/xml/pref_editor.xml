@@ -4,30 +4,30 @@
     <!-- Font size -->
     <com.lukehorvat.NumberPickerDialogPreference
         android:key="@string/pref_key_font_size"
-        android:title="@string/pref_title_font_size"
-        android:summary="@string/pref_desc_font_size"
-        android:dialogMessage="@string/pref_desc_font_size"
         android:defaultValue="@integer/pref_default_font_size"
+        android:title="@string/settings_pref_title_font_size"
+        android:summary="@string/settings_pref_desc_font_size"
+        android:dialogMessage="@string/settings_pref_dialog_font_size"
         custom:minimum="5"
         custom:maximum="72" />
 
     <!-- Tab size -->
     <com.lukehorvat.NumberPickerDialogPreference
         android:key="@string/pref_key_tab_size"
-        android:title="@string/pref_title_tab_size"
-        android:summary="@string/pref_desc_tab_size"
-        android:dialogMessage="@string/pref_desc_tab_size"
         android:defaultValue="@integer/pref_default_tab_size"
+        android:title="@string/settings_pref_title_tab_size"
+        android:summary="@string/settings_pref_desc_tab_size"
+        android:dialogMessage="@string/settings_pref_dialog_tab_size"
         custom:minimum="1"
         custom:maximum="8" />
 
     <!-- Big file size -->
     <com.lukehorvat.NumberPickerDialogPreference
         android:key="@string/pref_key_big_file_size"
-        android:title="@string/pref_title_big_file_size"
-        android:summary="@string/pref_desc_big_file_size"
-        android:dialogMessage="@string/pref_dialog_big_file_size"
         android:defaultValue="@integer/pref_default_big_file_size"
+        android:title="@string/settings_pref_title_big_file_size"
+        android:summary="@string/settings_pref_desc_big_file_size"
+        android:dialogMessage="@string/settings_pref_dialog_big_file_size"
         custom:minimum="0"
         custom:maximum="100000" />
 

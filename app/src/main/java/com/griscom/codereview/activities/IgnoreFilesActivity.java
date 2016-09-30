@@ -121,7 +121,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
         {
             case R.id.action_add:
             {
-                InputDialog dialog = InputDialog.newInstance(INPUT_DIALOG_ID_ADD, R.string.dialog_add_file_title, R.string.dialog_add_file_message, null, null);
+                InputDialog dialog = InputDialog.newInstance(INPUT_DIALOG_ID_ADD, R.string.ignore_files_dialog_title, R.string.ignore_files_dialog_message, null, null);
                 dialog.show(getSupportFragmentManager(), "InputDialog");
 
                 return true;
@@ -144,7 +144,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
         Bundle data = new Bundle();
         data.putInt(DATA_POSITION, position);
 
-        InputDialog dialog = InputDialog.newInstance(INPUT_DIALOG_ID_EDIT, R.string.dialog_add_file_title, R.string.dialog_add_file_message, (String)mAdapter.getItem(position), data);
+        InputDialog dialog = InputDialog.newInstance(INPUT_DIALOG_ID_EDIT, R.string.ignore_files_dialog_title, R.string.ignore_files_dialog_message, (String)mAdapter.getItem(position), data);
         dialog.show(getSupportFragmentManager(), "InputDialog");
     }
 
@@ -189,14 +189,14 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
                 mAdapter.setSelected(position, checked);
 
                 int selectedCount = mIgnoreFilesListView.getCheckedItemCount();
-                mode.setSubtitle(getResources().getQuantityString(R.plurals.items_selected, selectedCount, selectedCount));
+                mode.setSubtitle(getResources().getQuantityString(R.plurals.ignore_files_items_selected, selectedCount, selectedCount));
             }
 
             /** {@inheritDoc} */
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu)
             {
-                mode.setTitle(R.string.select_items);
+                mode.setTitle(R.string.ignore_files_select_items);
                 mode.getMenuInflater().inflate(R.menu.context_menu_ignore_files, menu);
 
                 mAdapter.setSelectionMode(true);

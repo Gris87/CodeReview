@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title for dialog asking opening big file in files activity -->
+    <string name="dialog_open_big_file_title">Большой файл</string>
+
+    <!-- Message for dialog asking opening big file in files activity -->
+    <string name="dialog_open_big_file_message">Размер файла %1$s слишком большой. Вы хотите открыть его?</string>
+
+</resources>

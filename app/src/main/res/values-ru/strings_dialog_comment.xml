@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title for comment dialog in review activity -->
+    <string name="dialog_comment_title">Комментарий</string>
+
+    <!-- Message for comment dialog in review activity -->
+    <string name="dialog_comment_message">Введите комментарий (пустой для удаления):</string>
+
+</resources>

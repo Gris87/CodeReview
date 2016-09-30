@@ -86,8 +86,8 @@ public class NoteDialog extends DialogFragment
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.dialog_input_note_title)
-                .setMessage(R.string.dialog_input_note_message)
+        builder.setTitle(R.string.dialog_note_title)
+                .setMessage(R.string.dialog_note_message)
                 .setCancelable(true)
                 .setView(editText)
                 .setPositiveButton(android.R.string.ok,

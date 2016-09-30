@@ -2,45 +2,47 @@
 <resources>
 
     <!-- Settings title -->
-    <string name="title_activity_settings">Settings</string>
+    <string name="activity_settings_title">Settings</string>
 
 
 
     <!-- File manager settings -->
-    <string name="pref_header_file_manager">File manager</string>
+    <string name="settings_pref_header_file_manager">File manager</string>
 
-    <string name="pref_title_ignore_files">Ignore files</string>
+    <string name="settings_pref_title_ignore_files">Ignore files</string>
 
 
 
     <!-- Colors settings -->
-    <string name="pref_header_colors">Colors</string>
+    <string name="settings_pref_header_colors">Colors</string>
 
-    <string name="pref_title_reviewed_color">Reviewed</string>
-    <string name="pref_desc_reviewed_color">Color of the reviewed rows.</string>
+    <string name="settings_pref_title_reviewed_color">Reviewed</string>
+    <string name="settings_pref_desc_reviewed_color">Color of the reviewed rows.</string>
 
-    <string name="pref_title_invalid_color">Invalid</string>
-    <string name="pref_desc_invalid_color">Color of the invalid rows.</string>
+    <string name="settings_pref_title_invalid_color">Invalid</string>
+    <string name="settings_pref_desc_invalid_color">Color of the invalid rows.</string>
 
-    <string name="pref_title_note_color">Note</string>
-    <string name="pref_desc_note_color">Color of the rows with notes.</string>
+    <string name="settings_pref_title_note_color">Note</string>
+    <string name="settings_pref_desc_note_color">Color of the rows with notes.</string>
 
-    <string name="pref_title_selection_color">Selection</string>
-    <string name="pref_desc_selection_color">Color of selection.</string>
+    <string name="settings_pref_title_selection_color">Selection</string>
+    <string name="settings_pref_desc_selection_color">Color of selection.</string>
 
 
 
     <!-- Editor settings -->
-    <string name="pref_header_editor">Editor</string>
+    <string name="settings_pref_header_editor">Editor</string>
 
-    <string name="pref_title_font_size">Font size</string>
-    <string name="pref_desc_font_size">Specify default font size of the editor.</string>
+    <string name="settings_pref_title_font_size">Font size</string>
+    <string name="settings_pref_desc_font_size">Specify default font size of the editor.</string>
+    <string name="settings_pref_dialog_font_size">Specify default font size of the editor.</string>
 
-    <string name="pref_title_tab_size">Tab size</string>
-    <string name="pref_desc_tab_size">Displayed width of tabs in the editor.</string>
+    <string name="settings_pref_title_tab_size">Tab size</string>
+    <string name="settings_pref_desc_tab_size">Displayed width of tabs in the editor.</string>
+    <string name="settings_pref_dialog_tab_size">Displayed width of tabs in the editor.</string>
 
-    <string name="pref_title_big_file_size">Big file size</string>
-    <string name="pref_desc_big_file_size">Ask for opening big file.</string>
-    <string name="pref_dialog_big_file_size">Specify file size in KB (0 - unlimited).</string>
+    <string name="settings_pref_title_big_file_size">Big file size</string>
+    <string name="settings_pref_desc_big_file_size">Ask for opening big file.</string>
+    <string name="settings_pref_dialog_big_file_size">Specify file size in KB (0 - unlimited).</string>
 
 </resources>

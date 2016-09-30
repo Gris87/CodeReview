@@ -4,29 +4,29 @@
     <!-- Review color -->
     <net.margaritov.preference.colorpicker.ColorPickerPreference
         android:key="@string/pref_key_reviewed_color"
-        android:title="@string/pref_title_reviewed_color"
-        android:summary="@string/pref_desc_reviewed_color"
-        android:defaultValue="@integer/pref_default_reviewed_color" />
+        android:defaultValue="@integer/pref_default_reviewed_color"
+        android:title="@string/settings_pref_title_reviewed_color"
+        android:summary="@string/settings_pref_desc_reviewed_color" />
 
     <!-- Invalid color -->
     <net.margaritov.preference.colorpicker.ColorPickerPreference
         android:key="@string/pref_key_invalid_color"
-        android:title="@string/pref_title_invalid_color"
-        android:summary="@string/pref_desc_invalid_color"
-        android:defaultValue="@integer/pref_default_invalid_color" />
+        android:defaultValue="@integer/pref_default_invalid_color"
+        android:title="@string/settings_pref_title_invalid_color"
+        android:summary="@string/settings_pref_desc_invalid_color" />
 
     <!-- Note color -->
     <net.margaritov.preference.colorpicker.ColorPickerPreference
         android:key="@string/pref_key_note_color"
-        android:title="@string/pref_title_note_color"
-        android:summary="@string/pref_desc_note_color"
-        android:defaultValue="@integer/pref_default_note_color" />
+        android:defaultValue="@integer/pref_default_note_color"
+        android:title="@string/settings_pref_title_note_color"
+        android:summary="@string/settings_pref_desc_note_color" />
 
     <!-- Selection color -->
     <net.margaritov.preference.colorpicker.ColorPickerPreference
         android:key="@string/pref_key_selection_color"
-        android:title="@string/pref_title_selection_color"
-        android:summary="@string/pref_desc_selection_color"
-        android:defaultValue="@integer/pref_default_selection_color" />
+        android:defaultValue="@integer/pref_default_selection_color"
+        android:title="@string/settings_pref_title_selection_color"
+        android:summary="@string/settings_pref_desc_selection_color" />
 
 </PreferenceScreen>

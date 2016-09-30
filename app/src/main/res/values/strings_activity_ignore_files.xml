@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Ignore files activity title -->
+    <string name="activity_ignore_files_title">Ignore files</string>
+
+    <!-- Add -->
+    <string name="ignore_files_action_add">Add</string>
+
+    <!-- Delete -->
+    <string name="ignore_files_action_delete">Delete</string>
+
+    <!-- Select items title in ActionMode -->
+    <string name="ignore_files_select_items">Select items</string>
+
+    <!-- Items selected subtitle in ActionMode -->
+    <plurals name="ignore_files_items_selected">
+        <item quantity="one">%1$d item selected</item>
+        <item quantity="two">%1$d items selected</item>
+        <item quantity="few">%1$d items selected</item>
+        <item quantity="many">%1$d items selected</item>
+        <item quantity="other">%1$d items selected</item>
+    </plurals>
+
+    <!-- Title for dialog in ignore files activity -->
+    <string name="ignore_files_dialog_title">Ignore file</string>
+
+    <!-- Message for dialog in ignore files activity -->
+    <string name="ignore_files_dialog_message">Input name of file or pattern\n(\'*\' and \'?\' is allowed):</string>
+
+</resources>

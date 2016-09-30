@@ -54,19 +54,19 @@ public class SettingsActivity extends PreferenceActivity
 
             // Add 'file manager' preferences, and a corresponding header.
             PreferenceCategory fakeHeader = new PreferenceCategory(this);
-            fakeHeader.setTitle(R.string.pref_header_file_manager);
+            fakeHeader.setTitle(R.string.settings_pref_header_file_manager);
             getPreferenceScreen().addPreference(fakeHeader);
             addPreferencesFromResource(R.xml.pref_file_manager);
 
             // Add 'colors' preferences, and a corresponding header.
             fakeHeader = new PreferenceCategory(this);
-            fakeHeader.setTitle(R.string.pref_header_colors);
+            fakeHeader.setTitle(R.string.settings_pref_header_colors);
             getPreferenceScreen().addPreference(fakeHeader);
             addPreferencesFromResource(R.xml.pref_colors);
 
             // Add 'editor' preferences, and a corresponding header.
             fakeHeader = new PreferenceCategory(this);
-            fakeHeader.setTitle(R.string.pref_header_editor);
+            fakeHeader.setTitle(R.string.settings_pref_header_editor);
             getPreferenceScreen().addPreference(fakeHeader);
             addPreferencesFromResource(R.xml.pref_editor);
         }

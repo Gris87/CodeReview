@@ -25,8 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:orientation="vertical"
-            android:background="@color/black_overlay"
-            style="?metaTitleBarStyle">
+            android:background="@color/black_overlay">
 
             <TextView
                 android:id="@+id/noteTextView"
@@ -35,9 +34,9 @@
                 android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginTop="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:maxLines="1"
-                android:gravity="start|center_vertical"
-                style="?metaTitleBarSubTextStyle" />
+                android:gravity="start|center_vertical" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,17 +54,19 @@
                     android:layout_weight="100"
                     android:layout_marginRight="@dimen/common_margin"
                     android:layout_marginEnd="@dimen/common_margin"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
                     android:maxLines="1"
-                    android:gravity="start|center_vertical"
-                    style="?metaTitleBarTextStyle" />
+                    android:gravity="start|center_vertical" />
 
                 <TextView
                     android:id="@+id/progressTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
                     android:maxLines="1"
-                    android:gravity="start|center_vertical"
-                    style="?metaTitleBarTextStyle" />
+                    android:gravity="start|center_vertical" />
 
             </LinearLayout>
 
@@ -77,8 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="horizontal"
-            android:background="@color/black_overlay"
-            style="?metaControlsBarStyle">
+            android:background="@color/black_overlay">
 
             <ImageButton
                 android:id="@+id/reviewedButton"
@@ -87,8 +87,7 @@
                 android:layout_weight="25"
                 android:contentDescription="@string/cnt_desc_reviewed"
                 android:src="@drawable/reviewed"
-                android:scaleType="centerInside"
-                style="?metaControlsBarButtonStyle" />
+                android:scaleType="centerInside" />
 
             <ImageButton
                 android:id="@+id/invalidButton"
@@ -97,8 +96,7 @@
                 android:layout_weight="25"
                 android:contentDescription="@string/cnt_desc_invalid"
                 android:src="@drawable/invalid"
-                android:scaleType="centerInside"
-                style="?metaControlsBarButtonStyle" />
+                android:scaleType="centerInside" />
 
             <ImageButton
                 android:id="@+id/noteButton"
@@ -107,8 +105,7 @@
                 android:layout_weight="25"
                 android:contentDescription="@string/cnt_desc_note"
                 android:src="@drawable/note"
-                android:scaleType="centerInside"
-                style="?metaControlsBarButtonStyle" />
+                android:scaleType="centerInside" />
 
             <ImageButton
                 android:id="@+id/clearButton"
@@ -117,8 +114,7 @@
                 android:layout_weight="25"
                 android:contentDescription="@string/cnt_desc_clear"
                 android:src="@drawable/clear"
-                android:scaleType="centerInside"
-                style="?metaControlsBarButtonStyle" />
+                android:scaleType="centerInside" />
         </LinearLayout>
 
     </FrameLayout>

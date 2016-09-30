@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title -->
+    <string name="dialog_sort_title">Сортировка</string>
+
+    <!-- Sort types -->
+    <string-array name="dialog_sort_types">
+        <item>По имени</item>
+        <item>По типу</item>
+        <item>По размеру</item>
+    </string-array>
+
+</resources>
