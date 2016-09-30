@@ -1,4 +1,3 @@
-CommentDialog
 Add AppLog
 Send exceptions to Google Analytics
 Select all in ActionMode
@@ -6,8 +5,10 @@ Mark as correct file in ActionMode
 Mark as invalid file in ActionMode
 Colorize files after using actions above
 Hide Done/Back button in ActionMode
-Show note in title in viewer
+
 Syntax Highlight in menu
+CommentDialog
+Load file note on startup in review activity
 Auto-speed on scrolling with selection
 
 Code analysis in all files

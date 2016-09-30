@@ -33,6 +33,9 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+/**
+ * SurfaceView that used in Review activity
+ */
 public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
 {
     private static final String TAG = "ReviewSurfaceView";
