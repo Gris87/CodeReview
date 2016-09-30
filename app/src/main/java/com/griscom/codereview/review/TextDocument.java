@@ -193,7 +193,7 @@ public class TextDocument implements OnTouchListener
                 )
             {
                 Paint backgroundPaint = new Paint();
-                backgroundPaint.setColor(Color.WHITE);
+                backgroundPaint.setColor(ColorCache.get(SelectionType.CLEAR));
 
                 if (mY - mOffsetY >= 0)
                 {

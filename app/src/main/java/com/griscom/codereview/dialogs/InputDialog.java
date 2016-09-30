@@ -11,6 +11,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.griscom.codereview.R;
+
 /**
  * Dialog for inputting text
  */
@@ -80,8 +82,10 @@ public class InputDialog extends DialogFragment
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        final EditText editText = new EditText(getActivity());
+        final EditText editText = new EditText(getContext());
         editText.setText(mText);
+        //noinspection deprecation
+        editText.setTextColor(getResources().getColor(R.color.textColor));
         editText.selectAll();
 
 

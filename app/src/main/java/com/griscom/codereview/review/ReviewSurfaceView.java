@@ -24,6 +24,7 @@ import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.other.ApplicationSettings;
+import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.Utils;
@@ -217,7 +218,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
         else
         {
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(ColorCache.get(SelectionType.CLEAR));
 
             Paint paint = new Paint();
 

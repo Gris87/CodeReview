@@ -76,10 +76,12 @@ public class NoteDialog extends DialogFragment
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        final AutoCompleteTextView editText = new AutoCompleteTextView(getActivity());
+        final AutoCompleteTextView editText = new AutoCompleteTextView(getContext());
         editText.setText(mNote);
+        //noinspection deprecation
+        editText.setTextColor(getResources().getColor(R.color.textColor));
         editText.selectAll();
-        editText.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_dropdown_item_1line, mNotes));
+        editText.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, mNotes));
         editText.setThreshold(0);
 
 

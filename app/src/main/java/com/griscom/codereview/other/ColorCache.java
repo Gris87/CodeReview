@@ -1,6 +1,8 @@
 package com.griscom.codereview.other;
 
-import android.graphics.Color;
+import android.content.Context;
+
+import com.griscom.codereview.R;
 
 /**
  * Color cache
@@ -19,12 +21,14 @@ public class ColorCache
     /**
      * Updates color cache from ApplicationSettings
      */
-    public static void update()
+    public static void update(Context context)
     {
         mCache[SelectionType.REVIEWED] = ApplicationSettings.getReviewedColor();
         mCache[SelectionType.INVALID]  = ApplicationSettings.getInvalidColor();
         mCache[SelectionType.NOTE]     = ApplicationSettings.getNoteColor();
-        mCache[SelectionType.CLEAR]    = Color.WHITE;
+
+        //noinspection deprecation
+        mCache[SelectionType.CLEAR]    = context.getResources().getColor(R.color.windowBackground);
     }
 
     /**

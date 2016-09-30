@@ -82,10 +82,12 @@ public class RenameDialog extends DialogFragment
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        final AutoCompleteTextView editText = new AutoCompleteTextView(getActivity());
+        final AutoCompleteTextView editText = new AutoCompleteTextView(getContext());
         editText.setText(mFileName);
+        //noinspection deprecation
+        editText.setTextColor(getResources().getColor(R.color.textColor));
         editText.selectAll();
-        editText.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_dropdown_item_1line, mFileNames));
+        editText.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, mFileNames));
         editText.setThreshold(0);
 
 

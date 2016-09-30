@@ -66,7 +66,7 @@ public class ApplicationSettings
 
 
 
-        ColorCache.update();
+        ColorCache.update(context);
     }
 
     /**
