@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +35,7 @@ import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.FileEntry;
 import com.griscom.codereview.other.SortType;
+import com.griscom.codereview.util.AppLog;
 
 import junit.framework.Assert;
 
@@ -228,7 +228,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             default:
             {
-                Log.e(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
+                AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
             }
             break;
         }
@@ -260,7 +260,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                     default:
                     {
-                        Log.e(TAG, "Unexpected result code: " + String.valueOf(resultCode));
+                        AppLog.wtf(TAG, "Unexpected result code: " + String.valueOf(resultCode));
                     }
                     break;
                 }
@@ -275,7 +275,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             default:
             {
-                Log.e(TAG, "Unexpected request code: " + String.valueOf(requestCode));
+                AppLog.wtf(TAG, "Unexpected request code: " + String.valueOf(requestCode));
             }
             break;
         }
@@ -356,7 +356,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
         else
         {
-            Log.e(TAG, "Unexpected parent: " + String.valueOf(parent));
+            AppLog.wtf(TAG, "Unexpected parent: " + String.valueOf(parent));
         }
     }
 
@@ -389,7 +389,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             default:
             {
                 typeName = "UNKNOWN";
-                Log.e(TAG, "Unknown sort type: " + String.valueOf(sortType));
+                AppLog.wtf(TAG, "Unknown sort type: " + String.valueOf(sortType));
             }
             break;
         }
@@ -642,7 +642,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                     default:
                     {
-                        Log.e(TAG, "Unknown action ID: " + String.valueOf(item));
+                        AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item));
                     }
                     break;
                 }

@@ -17,7 +17,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +35,7 @@ import com.griscom.codereview.other.RowType;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.other.TouchMode;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
+import com.griscom.codereview.util.AppLog;
 import com.griscom.codereview.util.Utils;
 
 import junit.framework.Assert;
@@ -733,7 +733,7 @@ public class TextDocument implements OnTouchListener
                     // Nothing
                 break;
                 default:
-                    Log.e(TAG, "Unknown selection type: " + String.valueOf(mRows.get(i).getSelectionType()));
+                    AppLog.wtf(TAG, "Unknown selection type: " + String.valueOf(mRows.get(i).getSelectionType()));
                 break;
             }
         }
@@ -787,7 +787,7 @@ public class TextDocument implements OnTouchListener
                         fileHelper.removeRow(db, i);
                     break;
                     default:
-                        Log.e(TAG, "Unknown selection type: " + String.valueOf(mRows.get(i).getSelectionType()));
+                        AppLog.wtf(TAG, "Unknown selection type: " + String.valueOf(mRows.get(i).getSelectionType()));
                     break;
                 }
             }

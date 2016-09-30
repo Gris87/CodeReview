@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,6 +26,7 @@ import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
+import com.griscom.codereview.util.AppLog;
 import com.griscom.codereview.util.Utils;
 
 import java.io.File;
@@ -277,7 +277,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             }
             catch(Exception e)
             {
-                Log.e(TAG, "Impossible to save file: " + mFilePath, e);
+                AppLog.e(TAG, "Impossible to save file: " + mFilePath, e);
             }
         }
     }

@@ -1,8 +1,7 @@
 package com.griscom.codereview.other;
 
-import android.util.Log;
-
 import com.griscom.codereview.R;
+import com.griscom.codereview.util.AppLog;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class ExtensionToIcon
             }
             catch (Exception e)
             {
-                Log.e(TAG, "Impossible to get drawables", e);
+                AppLog.wtf(TAG, "Impossible to get drawables", e);
             }
         }
     }

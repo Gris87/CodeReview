@@ -3,7 +3,6 @@ package com.griscom.codereview.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +15,7 @@ import android.widget.ListView;
 import com.griscom.codereview.R;
 import com.griscom.codereview.dialogs.InputDialog;
 import com.griscom.codereview.lists.IgnoreFilesAdapter;
+import com.griscom.codereview.util.AppLog;
 
 import junit.framework.Assert;
 
@@ -129,7 +129,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
             default:
             {
-                Log.e(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
+                AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
             }
             break;
         }
@@ -168,7 +168,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
             default:
             {
-                Log.e(TAG, "Unknown id: " + String.valueOf(id));
+                AppLog.wtf(TAG, "Unknown id: " + String.valueOf(id));
             }
             break;
         }
@@ -227,7 +227,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
                     default:
                     {
-                        Log.e(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
+                        AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
                     }
                     break;
                 }

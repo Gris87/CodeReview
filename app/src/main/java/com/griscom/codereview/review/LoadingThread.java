@@ -3,7 +3,6 @@ package com.griscom.codereview.review;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
@@ -11,6 +10,7 @@ import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.other.RowType;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
+import com.griscom.codereview.util.AppLog;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,7 @@ public class LoadingThread extends Thread
         }
         catch (Exception e)
         {
-            Log.e(TAG, "Impossible to close parser", e);
+            AppLog.e(TAG, "Impossible to close parser", e);
         }
     }
 
@@ -114,14 +114,14 @@ public class LoadingThread extends Thread
 
                             default:
                             {
-                                Log.e(TAG, "Unknown row type \"" + String.valueOf(type) + "\" in database \"" + helper.getDbName() + "\"");
+                                AppLog.wtf(TAG, "Unknown row type \"" + String.valueOf(type) + "\" in database \"" + helper.getDbName() + "\"");
                             }
                             break;
                         }
                     }
                     else
                     {
-                        Log.e(TAG, "Unexpected row id (" + String.valueOf(row) + ") with row count (" + String.valueOf(rows.size()) + ")");
+                        AppLog.wtf(TAG, "Unexpected row id (" + String.valueOf(row) + ") with row count (" + String.valueOf(rows.size()) + ")");
                     }
 
                     cursor.moveToNext();
@@ -155,7 +155,7 @@ public class LoadingThread extends Thread
                         // Nothing
                     break;
                     default:
-                        Log.e(TAG, "Unknown selection type: " + String.valueOf(row.getSelectionType()));
+                        AppLog.wtf(TAG, "Unknown selection type: " + String.valueOf(row.getSelectionType()));
                     break;
                 }
             }
@@ -166,7 +166,7 @@ public class LoadingThread extends Thread
         }
         catch (Exception e)
         {
-            Log.e(TAG, "Exception occured during parsing", e);
+            AppLog.wtf(TAG, "Exception occured during parsing", e);
         }
 
         if (db != null)

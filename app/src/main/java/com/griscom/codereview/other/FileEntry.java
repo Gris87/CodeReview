@@ -2,10 +2,10 @@ package com.griscom.codereview.other;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.griscom.codereview.R;
 import com.griscom.codereview.db.MainDatabase;
+import com.griscom.codereview.util.AppLog;
 
 import java.io.File;
 
@@ -128,7 +128,7 @@ public class FileEntry
 
             default:
             {
-                Log.e(TAG, "Unknown sort type: " + String.valueOf(sortType));
+                AppLog.wtf(TAG, "Unknown sort type: " + String.valueOf(sortType));
             }
             break;
         }

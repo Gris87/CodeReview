@@ -4,11 +4,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.util.Log;
 
 import com.griscom.codereview.review.TextDocument;
 import com.griscom.codereview.review.TextRegion;
 import com.griscom.codereview.review.TextRow;
+import com.griscom.codereview.util.AppLog;
 
 public class PlainTextSyntaxParser extends SyntaxParserBase
 {
@@ -72,7 +72,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
         }
         catch (Exception e)
         {
-            Log.e(TAG, "Impossible to read file: " + fileName, e);
+            AppLog.e(TAG, "Impossible to read file: " + fileName, e);
         }
 
         return res;

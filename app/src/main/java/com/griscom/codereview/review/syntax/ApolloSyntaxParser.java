@@ -1,5 +1,15 @@
 package com.griscom.codereview.review.syntax;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+
+import com.griscom.codereview.review.TextDocument;
+import com.griscom.codereview.review.TextRegion;
+import com.griscom.codereview.review.TextRow;
+import com.griscom.codereview.util.AppLog;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,15 +17,6 @@ import java.util.Map;
 import prettify.PrettifyParser;
 import prettify.parser.Prettify;
 import syntaxhighlight.ParseResult;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.util.Log;
-
-import com.griscom.codereview.review.TextDocument;
-import com.griscom.codereview.review.TextRegion;
-import com.griscom.codereview.review.TextRow;
 
 public class ApolloSyntaxParser extends SyntaxParserBase
 {
@@ -100,7 +101,7 @@ public class ApolloSyntaxParser extends SyntaxParserBase
                 {
                     if (!type.equals(Prettify.PR_PLAIN))
                     {
-                        Log.e(TAG, "Unhandled syntax type: " + type);
+                        AppLog.wtf(TAG, "Unhandled syntax type: " + type);
                     }
 
                     selectedPaint = basePaint;
@@ -141,7 +142,7 @@ public class ApolloSyntaxParser extends SyntaxParserBase
         }
         catch (Exception e)
         {
-            Log.e(TAG, "Impossible to read file: " + fileName, e);
+            AppLog.e(TAG, "Impossible to read file: " + fileName, e);
         }
 
         return res;

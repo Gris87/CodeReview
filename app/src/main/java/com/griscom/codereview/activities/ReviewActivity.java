@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -27,6 +26,7 @@ import com.griscom.codereview.other.ApplicationExtras;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.ReviewSurfaceView;
+import com.griscom.codereview.util.AppLog;
 
 import junit.framework.Assert;
 
@@ -244,7 +244,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
             default:
             {
-                Log.e(TAG, "Unknown action ID: " + String.valueOf(item));
+                AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item));
             }
             break;
         }
@@ -269,7 +269,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
             default:
             {
-                Log.e(TAG, "Unexpected request code: " + String.valueOf(requestCode));
+                AppLog.wtf(TAG, "Unexpected request code: " + String.valueOf(requestCode));
             }
             break;
         }
@@ -330,7 +330,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         }
         else
         {
-            Log.e(TAG, "Unknown onClick receiver: " + String.valueOf(view));
+            AppLog.wtf(TAG, "Unknown onClick receiver: " + String.valueOf(view));
         }
     }
 
