@@ -215,11 +215,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             case R.id.action_close:
             {
                 mTracker.send(
-                              new HitBuilders.EventBuilder()
-                                                            .setCategory("Action")
-                                                            .setAction("Exit")
-                                                            .build()
-                             );
+                        new HitBuilders.EventBuilder()
+                                .setCategory("Action")
+                                .setAction("Exit")
+                                .build()
+                );
 
                 finish();
 

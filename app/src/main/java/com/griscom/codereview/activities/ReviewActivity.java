@@ -16,7 +16,9 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.griscom.codereview.BuildConfig;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
@@ -55,6 +57,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
     private ImageButton       mInvalidButton      = null;
     private ImageButton       mNoteButton         = null;
     private ImageButton       mClearButton        = null;
+    private Tracker           mTracker            = null;
     private boolean           mControlsVisible    = false;
     private ImageButton       mLastSelectedButton = null;
     private int               mDefaultColor       = -1;
@@ -63,6 +66,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
 
 
+    /** {@inheritDoc} */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -80,6 +84,10 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mInvalidButton         = (ImageButton)      findViewById(R.id.invalidButton);
         mNoteButton            = (ImageButton)      findViewById(R.id.noteButton);
         mClearButton           = (ImageButton)      findViewById(R.id.clearButton);
+
+
+
+        mTracker = ((CodeReviewApplication)getApplication()).getDefaultTracker();
 
 
 
@@ -107,6 +115,8 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.setOnTouchListener(this);
         mContent.setOnNoteSupportListener(this);
         mContent.setOnProgressChangedListener(this);
+
+
 
         titleTextView.setText(filePath.substring(filePath.lastIndexOf('/') + 1));
         mProgressTextView.setText("0 %");
@@ -137,6 +147,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         delayedHide(1000);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onDestroy()
     {
@@ -145,6 +156,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.onDestroy();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onPause()
     {
@@ -153,6 +165,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.onPause();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onResume()
     {
@@ -161,6 +174,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.onResume();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onConfigurationChanged(Configuration newConfig)
     {
@@ -169,6 +183,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.onConfigurationChanged(newConfig);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -177,6 +192,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -199,16 +215,30 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
             case R.id.action_close:
             {
+                mTracker.send(
+                        new HitBuilders.EventBuilder()
+                                .setCategory("Action")
+                                .setAction("Exit")
+                                .build()
+                );
+
                 setResult(RESULT_CLOSE, null);
                 finish();
 
                 return true;
             }
+
+            default:
+            {
+                Log.e(TAG, "Unknown action ID: " + String.valueOf(item));
+            }
+            break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -221,11 +251,19 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
                 mContent.setFontSize(ApplicationSettings.getFontSize());
                 mContent.setTabSize (ApplicationSettings.getTabSize());
             }
+            break;
+
+            default:
+            {
+                Log.e(TAG, "Unexpected request code: " + String.valueOf(requestCode));
+            }
+            break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onTouch(View v, MotionEvent event)
     {
@@ -237,10 +275,11 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         return mContent.onTouch(v, event);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void onClick(View v)
+    public void onClick(View view)
     {
-        if (v == mReviewedButton)
+        if (view == mReviewedButton)
         {
             mContent.setSelectionType(SelectionType.REVIEWED);
 
@@ -249,7 +288,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
             mLastSelectedButton.setBackgroundColor(mSelectedColor);
         }
         else
-        if (v == mInvalidButton)
+        if (view == mInvalidButton)
         {
             mContent.setSelectionType(SelectionType.INVALID);
 
@@ -258,7 +297,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
             mLastSelectedButton.setBackgroundColor(mSelectedColor);
         }
         else
-        if (v == mNoteButton)
+        if (view == mNoteButton)
         {
             mContent.setSelectionType(SelectionType.NOTE);
 
@@ -267,7 +306,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
             mLastSelectedButton.setBackgroundColor(mSelectedColor);
         }
         else
-        if (v == mClearButton)
+        if (view == mClearButton)
         {
             mContent.setSelectionType(SelectionType.CLEAR);
 
@@ -277,15 +316,11 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         }
         else
         {
-            Log.e(TAG, "Unknown onClick receiver: " + String.valueOf(v));
-
-            if (BuildConfig.DEBUG)
-            {
-                Assert.fail();
-            }
+            Log.e(TAG, "Unknown onClick receiver: " + String.valueOf(view));
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onNoteSupport(boolean noteSupported)
     {
@@ -299,6 +334,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProgressChanged(int progress)
     {
@@ -310,11 +346,11 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
     View.OnTouchListener mHoverTouchListener = new View.OnTouchListener()
     {
         @Override
-        public boolean onTouch(View v, MotionEvent event)
+        public boolean onTouch(View view, MotionEvent event)
         {
             if (event.getAction() == MotionEvent.ACTION_DOWN)
             {
-                v.setBackgroundColor(mHoverColor);
+                view.setBackgroundColor(mHoverColor);
             }
             else
             if (event.getAction() == MotionEvent.ACTION_UP)
@@ -322,15 +358,15 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
                 float x = event.getX();
                 float y = event.getY();
 
-                if (x < 0 || x > v.getWidth() || y < 0 || y > v.getHeight())
+                if (x < 0 || x > view.getWidth() || y < 0 || y > view.getHeight())
                 {
-                    if (v == mLastSelectedButton)
+                    if (view == mLastSelectedButton)
                     {
-                        v.setBackgroundColor(mSelectedColor);
+                        view.setBackgroundColor(mSelectedColor);
                     }
                     else
                     {
-                        v.setBackgroundColor(mDefaultColor);
+                        view.setBackgroundColor(mDefaultColor);
                     }
                 }
             }
@@ -352,10 +388,9 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
     };
 
     /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
+     * Schedules a call to hideControls() in [delay] milliseconds, canceling any
      * previously scheduled calls.
-     *
-     * @param delayMillis   Delay in milliseconds
+     * @param delayMillis   delay in milliseconds
      */
     private void delayedHide(int delayMillis)
     {
@@ -363,6 +398,9 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    /**
+     * Hides controls
+     */
     private void hideControls()
     {
         if (mControlsVisible)
@@ -374,6 +412,9 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         }
     }
 
+    /**
+     * Shows controls
+     */
     private void showControls()
     {
         if (!mControlsVisible)

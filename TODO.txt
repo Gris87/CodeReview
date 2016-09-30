@@ -1,3 +1,4 @@
+File note in Review activity
 CommentDialog
 Add AppLog
 Send exceptions to Google Analytics
