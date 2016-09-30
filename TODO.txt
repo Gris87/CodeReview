@@ -1,19 +1,17 @@
-Code analysis in all files
-UltraHD images
+CommentDialog
 Add AppLog
-Think about app color scheme
 Send exceptions to Google Analytics
-Keep note on file renaming
 Select all in ActionMode
 Mark as correct file in ActionMode
 Mark as invalid file in ActionMode
 Colorize files after using actions above
 Hide Done/Back button in ActionMode
-Failed to get notes on folders after setting it up
 Show note in title in viewer
 Syntax Highlight in menu
 Auto-speed on scrolling with selection
-Save/load dialogs state
+
+Code analysis in all files
+UltraHD images
 Smooth movement
 Code folding
 
