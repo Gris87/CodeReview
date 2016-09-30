@@ -275,7 +275,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                     mModifiedTime = modifiedTime;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 AppLog.e(TAG, "Impossible to save file: " + mFilePath, e);
             }
