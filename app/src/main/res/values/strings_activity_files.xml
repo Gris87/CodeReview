@@ -16,6 +16,12 @@
     <!-- Close -->
     <string name="files_action_close">Close</string>
 
+    <!-- Select all -->
+    <string name="files_action_select_all">Select all</string>
+
+    <!-- Note -->
+    <string name="files_action_note">Note</string>
+
     <!-- Rename -->
     <string name="files_action_rename">Rename</string>
 
@@ -27,9 +33,6 @@
 
     <!-- Mark to delete -->
     <string name="files_action_mark_to_delete">Mark to delete</string>
-
-    <!-- Note -->
-    <string name="files_action_note">Note</string>
 
     <!-- Plurals for selecting folders -->
     <plurals name="files_selected_folders_plurals">

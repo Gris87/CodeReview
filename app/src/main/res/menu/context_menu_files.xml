@@ -5,36 +5,43 @@
     tools:context="com.griscom.codereview.activities.FilesActivity">
 
     <item
-        android:id="@+id/action_mark_to_rename"
+        android:id="@+id/action_select_all"
         android:orderInCategory="100"
+        android:title="@string/files_action_select_all"
+        android:icon="@drawable/select_all"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_note"
+        android:orderInCategory="200"
+        android:title="@string/files_action_note"
+        android:icon="@drawable/note"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_mark_to_rename"
+        android:orderInCategory="300"
         android:title="@string/files_action_mark_to_rename"
         android:icon="@drawable/mark_rename"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_mark_to_delete"
-        android:orderInCategory="200"
+        android:orderInCategory="400"
         android:title="@string/files_action_mark_to_delete"
         android:icon="@drawable/mark_delete"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_note"
-        android:orderInCategory="300"
-        android:title="@string/files_action_note"
-        android:icon="@drawable/note"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_rename"
-        android:orderInCategory="400"
+        android:orderInCategory="500"
         android:title="@string/files_action_rename"
         android:icon="@drawable/rename"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_delete"
-        android:orderInCategory="500"
+        android:orderInCategory="600"
         android:title="@string/files_action_delete"
         android:icon="@drawable/delete"
         app:showAsAction="ifRoom" />

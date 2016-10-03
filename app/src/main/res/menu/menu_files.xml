@@ -8,18 +8,21 @@
         android:id="@+id/action_sort"
         android:orderInCategory="100"
         android:title="@string/files_action_sort"
+        android:icon="@drawable/sort"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="200"
         android:title="@string/files_action_settings"
+        android:icon="@drawable/settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_donate"
         android:orderInCategory="300"
         android:title="@string/files_action_donate"
+        android:icon="@drawable/donate"
         app:showAsAction="never" />
 
     <item

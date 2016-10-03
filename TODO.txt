@@ -2,7 +2,6 @@ Select all in ActionMode
 Mark as correct file in ActionMode
 Mark as invalid file in ActionMode
 Colorize files after using actions above
-Hide Done/Back button in ActionMode
 
 Syntax Highlight in menu
 CommentDialog
