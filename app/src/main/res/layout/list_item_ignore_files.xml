@@ -12,6 +12,8 @@
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginStart="@dimen/common_margin"
         android:layout_centerVertical="true"
+        android:focusable="false"
+        android:clickable="false"
         android:visibility="gone" />
 
     <TextView

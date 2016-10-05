@@ -217,6 +217,30 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
             {
                 switch (item.getItemId())
                 {
+                    case R.id.action_select_all:
+                    {
+                        if (mAdapter.getSelection().size() != mAdapter.getCount())
+                        {
+                            for (int i = 0; i < mAdapter.getCount(); ++i)
+                            {
+                                if (!mIgnoreFilesListView.isItemChecked(i))
+                                {
+                                    mIgnoreFilesListView.setItemChecked(i, true);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 1; i < mAdapter.getCount(); ++i)
+                            {
+                                mIgnoreFilesListView.setItemChecked(i, false);
+                            }
+                        }
+
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    break;
+
                     case R.id.action_delete:
                     {
                         mAdapter.removeSelected();

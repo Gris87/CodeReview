@@ -5,10 +5,17 @@
     tools:context="com.griscom.codereview.activities.IgnoreFilesActivity">
 
     <item
-        android:id="@+id/action_delete"
+        android:id="@+id/action_select_all"
         android:orderInCategory="100"
+        android:title="@string/files_action_select_all"
+        android:icon="@drawable/select_all"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="200"
         android:title="@string/ignore_files_action_delete"
         android:icon="@drawable/delete"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -517,15 +517,15 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             {
                 if (position == 0 && checked)
                 {
-                    FileEntry file = (FileEntry)mAdapter.getItem(position);
+                    FileEntry firstFile = (FileEntry)mAdapter.getItem(0);
 
                     if (
-                        file.isDirectory()
+                        firstFile.isDirectory()
                         &&
-                        file.getFileName().equals("..")
+                        firstFile.getFileName().equals("..")
                        )
                     {
-                        mFilesListView.setItemChecked(position, false);
+                        mFilesListView.setItemChecked(0, false);
 
                         return;
                     }
@@ -610,6 +610,18 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                 switch (item.getItemId())
                 {
+                    case R.id.action_select_all:
+                    {
+                        res = selectAll(items);
+                    }
+                    break;
+
+                    case R.id.action_note:
+                    {
+                        res = assignNote(items);
+                    }
+                    break;
+
                     case R.id.action_mark_to_rename:
                     {
                         res = markToRename(items);
@@ -619,12 +631,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                     case R.id.action_mark_to_delete:
                     {
                         res = markToDelete(items);
-                    }
-                    break;
-
-                    case R.id.action_note:
-                    {
-                        res = assignNote(items);
                     }
                     break;
 
@@ -667,6 +673,78 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     }
 
     /**
+     * Selects/Deselects all files
+     * @param items    selected files
+     * @return true, if need to close ActionMode
+     */
+    private boolean selectAll(ArrayList<Integer> items)
+    {
+        int startIndex;
+
+        FileEntry firstFile = (FileEntry)mAdapter.getItem(0);
+
+        if (
+            firstFile.isDirectory()
+            &&
+            firstFile.getFileName().equals("..")
+           )
+        {
+            startIndex = 1;
+        }
+        else
+        {
+            startIndex = 0;
+        }
+
+        if (items.size() != mAdapter.getCount() - startIndex)
+        {
+            for (int i = startIndex; i < mAdapter.getCount(); ++i)
+            {
+                if (!mFilesListView.isItemChecked(i))
+                {
+                    mFilesListView.setItemChecked(i, true);
+                }
+            }
+        }
+        else
+        {
+            for (int i = startIndex + 1; i < mAdapter.getCount(); ++i)
+            {
+                mFilesListView.setItemChecked(i, false);
+            }
+        }
+
+        mAdapter.notifyDataSetChanged();
+
+        return false;
+    }
+
+    /**
+     * Assign note for selected files
+     * @param items    selected files
+     * @return true, if need to close ActionMode
+     */
+    private boolean assignNote(ArrayList<Integer> items)
+    {
+        String note = ((FileEntry)mAdapter.getItem(items.get(0))).getFileNote();
+
+        for (int i = 1; i < items.size(); ++i)
+        {
+            if (!note.equals(((FileEntry)mAdapter.getItem(items.get(i))).getFileNote()))
+            {
+                note = "";
+
+                break;
+            }
+        }
+
+        NoteDialog dialog = NoteDialog.newInstance(items, note);
+        dialog.show(getSupportFragmentManager(), "NoteDialog");
+
+        return false;
+    }
+
+    /**
      * Marks selected files for renaming
      * @param items    selected files
      * @return true, if need to close ActionMode
@@ -700,31 +778,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         mAdapter.assignNote(items, getString(R.string.files_need_to_delete));
 
         return true;
-    }
-
-    /**
-     * Assign note for selected files
-     * @param items    selected files
-     * @return true, if need to close ActionMode
-     */
-    private boolean assignNote(ArrayList<Integer> items)
-    {
-        String note = ((FileEntry)mAdapter.getItem(items.get(0))).getFileNote();
-
-        for (int i = 1; i < items.size(); ++i)
-        {
-            if (!note.equals(((FileEntry)mAdapter.getItem(items.get(i))).getFileNote()))
-            {
-                note = "";
-
-                break;
-            }
-        }
-
-        NoteDialog dialog = NoteDialog.newInstance(items, note);
-        dialog.show(getSupportFragmentManager(), "NoteDialog");
-
-        return false;
     }
 
     /**

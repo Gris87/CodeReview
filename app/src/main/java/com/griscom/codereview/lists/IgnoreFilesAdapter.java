@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.griscom.codereview.R;
@@ -117,9 +116,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
         if (mSelectionMode)
         {
             holder.mCheckBox.setVisibility(View.VISIBLE);
-            holder.mCheckBox.setOnCheckedChangeListener(null);
             holder.mCheckBox.setChecked(mSelection.contains(position));
-            holder.mCheckBox.setOnCheckedChangeListener(new CheckedChangedListener(position));
         }
         else
         {
@@ -276,40 +273,5 @@ public class IgnoreFilesAdapter extends BaseAdapter
     public ArrayList<Integer> getSelection()
     {
         return mSelection;
-    }
-
-
-
-    /**
-     * Listener for checked changed event
-     */
-    private class CheckedChangedListener implements CompoundButton.OnCheckedChangeListener
-    {
-        private Integer mPosition;
-
-
-
-        /**
-         * Creates instance of CheckedChangedListener
-         * @param position    item position
-         */
-        public CheckedChangedListener(int position)
-        {
-            mPosition = position;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void onCheckedChanged(CompoundButton button, boolean checked)
-        {
-            if (checked)
-            {
-                mSelection.add(mPosition);
-            }
-            else
-            {
-                mSelection.remove(mPosition);
-            }
-        }
     }
 }

@@ -103,28 +103,34 @@ public class FileEntry
     }
 
     /**
-     * Compares current FileEntry instance with another instance and returns true if it's less than another instance according to specified sort type
+     * Compares current FileEntry instance with another instance and returns -1 if it's less than another instance according to specified sort type,
+     * 1 if more than another instance and 0 if instances equal
      * @param another     another FileEntry instance
      * @param sortType    sort type
-     * @return true if it's less than another instance according to specified sort type
+     * @return -1 if it's less than another instance according to specified sort type, 1 if more than another instance and 0 if instances equal
      */
-    public boolean isLess(FileEntry another, int sortType)
+    public int compare(FileEntry another, int sortType)
     {
         if (mIsDirectory != another.mIsDirectory)
         {
-            return mIsDirectory;
+            return mIsDirectory ? -1 : 1;
         }
 
         if (mIsDirectory)
         {
-            return mFileName.equals("..") || mFileName.compareToIgnoreCase(another.mFileName) < 0;
+            if (mFileName.equals("..") && !another.mFileName.equals(".."))
+            {
+                return -1;
+            }
+
+            return mFileName.compareToIgnoreCase(another.mFileName);
         }
 
         switch (sortType)
         {
-            case SortType.NAME: return mFileName.compareToIgnoreCase(another.mFileName) < 0;
-            case SortType.TYPE: return mType.compareToIgnoreCase(another.mType) < 0;
-            case SortType.SIZE: return mSize < another.mSize;
+            case SortType.NAME: return mFileName.compareToIgnoreCase(another.mFileName);
+            case SortType.TYPE: return mType.compareToIgnoreCase(another.mType);
+            case SortType.SIZE: return (mSize < another.mSize) ? -1 : (mSize > another.mSize) ? 1 : 0;
 
             default:
             {
@@ -133,7 +139,7 @@ public class FileEntry
             break;
         }
 
-        return false;
+        return 0;
     }
 
     /**
