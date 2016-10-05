@@ -236,8 +236,6 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
                                 mIgnoreFilesListView.setItemChecked(i, false);
                             }
                         }
-
-                        mAdapter.notifyDataSetChanged();
                     }
                     break;
 

@@ -408,11 +408,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
     /** {@inheritDoc} */
     @Override
-    public void onFileRenamed(boolean mark, int item, String fileName)
+    public void onFileRenamed(boolean addNote, int item, String fileName)
     {
         String oldFileName = ((FileEntry)mAdapter.getItem(item)).getFileName();
 
-        if (mark)
+        if (addNote)
         {
             ArrayList<Integer> items = new ArrayList<>();
 
@@ -622,15 +622,15 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                     }
                     break;
 
-                    case R.id.action_mark_to_rename:
+                    case R.id.action_note_to_rename:
                     {
-                        res = markToRename(items);
+                        res = noteToRename(items);
                     }
                     break;
 
-                    case R.id.action_mark_to_delete:
+                    case R.id.action_note_to_delete:
                     {
-                        res = markToDelete(items);
+                        res = noteToDelete(items);
                     }
                     break;
 
@@ -714,13 +714,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             }
         }
 
-        mAdapter.notifyDataSetChanged();
-
         return false;
     }
 
     /**
-     * Assign note for selected files
+     * Assigns note for selected files
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
@@ -745,11 +743,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     }
 
     /**
-     * Marks selected files for renaming
+     * Assigns note for renaming for selected files
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean markToRename(ArrayList<Integer> items)
+    private boolean noteToRename(ArrayList<Integer> items)
     {
         if (items.size() == 1)
         {
@@ -769,11 +767,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     }
 
     /**
-     * Marks selected files for deleting
+     * Assigns note for deleting for selected files
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    private boolean markToDelete(ArrayList<Integer> items)
+    private boolean noteToDelete(ArrayList<Integer> items)
     {
         mAdapter.assignNote(items, getString(R.string.files_need_to_delete));
 

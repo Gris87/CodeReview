@@ -30,14 +30,14 @@ public class RenameDialog extends DialogFragment
 
 
 
-    private static final String ARG_MARK      = "MARK";
+    private static final String ARG_ADD_NOTE  = "ADD_NOTE";
     private static final String ARG_ITEM      = "ITEM";
     private static final String ARG_FILE_NAME = "FILE_NAME";
 
 
 
     private OnFragmentInteractionListener mListener      = null;
-    private boolean                       mMark          = false;
+    private boolean                       mAddNote       = false;
     private int                           mItem          = 0;
     private String                        mFileName      = null;
     private ArrayList<String>             mFileNames     = null;
@@ -46,17 +46,17 @@ public class RenameDialog extends DialogFragment
 
     /**
      * Creates new instance of RenameDialog with pre-entered file name
-     * @param mark      true, if we need to mark this file for renaming
+     * @param addNote   true, if need to add note for renaming
      * @param item      file index in the list
      * @param fileName  file name
      * @return RenameDialog instance
      */
-    public static RenameDialog newInstance(boolean mark, int item, String fileName)
+    public static RenameDialog newInstance(boolean addNote, int item, String fileName)
     {
         RenameDialog fragment = new RenameDialog();
 
         Bundle args = new Bundle();
-        args.putBoolean(ARG_MARK,      mark);
+        args.putBoolean(ARG_ADD_NOTE,  addNote);
         args.putInt(    ARG_ITEM,      item);
         args.putString( ARG_FILE_NAME, fileName);
         fragment.setArguments(args);
@@ -70,7 +70,7 @@ public class RenameDialog extends DialogFragment
     {
         super.onCreate(savedInstanceState);
 
-        mMark     = getArguments().getBoolean(ARG_MARK);
+        mAddNote  = getArguments().getBoolean(ARG_ADD_NOTE);
         mItem     = getArguments().getInt(    ARG_ITEM);
         mFileName = getArguments().getString( ARG_FILE_NAME);
 
@@ -146,7 +146,7 @@ public class RenameDialog extends DialogFragment
     {
         if (mListener != null)
         {
-            mListener.onFileRenamed(mMark, mItem, fileName);
+            mListener.onFileRenamed(mAddNote, mItem, fileName);
         }
     }
 
@@ -227,10 +227,10 @@ public class RenameDialog extends DialogFragment
     {
         /**
          * Handler for file rename event
-         * @param mark        true, if we need to mark this file for renaming
+         * @param addNote     true, if need to add note for renaming
          * @param item        file index in the list
          * @param fileName    file name
          */
-        void onFileRenamed(boolean mark, int item, String fileName);
+        void onFileRenamed(boolean addNote, int item, String fileName);
     }
 }

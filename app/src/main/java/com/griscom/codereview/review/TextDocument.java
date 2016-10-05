@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
-import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.R;
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
@@ -279,22 +278,6 @@ public class TextDocument implements OnTouchListener
                     float barPosition = barHeight * mOffsetY / (getBottom() + mViewHeight / mScale);
 
                     canvas.drawLine((mViewWidth / mScale) - margin, barPosition + margin, (mViewWidth / mScale) - margin, barHeight * barLength + barPosition + margin, barPaint);
-                }
-            }
-
-            if (BuildConfig.DEBUG)
-            {
-                if (mTouchMiddleX >= 0 && mTouchMiddleY >= 0)
-                {
-                    float markerSize = 10 * density / mScale;
-
-                    Paint debugPaint = new Paint();
-
-                    debugPaint.setARGB(180, 0, 0, 0);
-                    debugPaint.setStrokeWidth(2 * density / mScale);
-
-                    canvas.drawLine(mTouchMiddleX / mScale - markerSize, mTouchMiddleY / mScale,            mTouchMiddleX / mScale + markerSize, mTouchMiddleY / mScale,            debugPaint);
-                    canvas.drawLine(mTouchMiddleX / mScale,            mTouchMiddleY / mScale - markerSize, mTouchMiddleX / mScale,            mTouchMiddleY / mScale + markerSize, debugPaint);
                 }
             }
         }
@@ -977,11 +960,8 @@ public class TextDocument implements OnTouchListener
     {
         if (mRows.size() == 0)
         {
-            if (BuildConfig.DEBUG)
-            {
-                Assert.assertEquals(mVisibleBegin,  - 1);
-                Assert.assertEquals(mVisibleEnd,    - 1);
-            }
+            Assert.assertEquals(mVisibleBegin, -1);
+            Assert.assertEquals(mVisibleEnd,   -1);
 
             return;
         }

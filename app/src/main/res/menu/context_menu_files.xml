@@ -19,17 +19,17 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_mark_to_rename"
+        android:id="@+id/action_note_to_rename"
         android:orderInCategory="300"
-        android:title="@string/files_action_mark_to_rename"
-        android:icon="@drawable/mark_rename"
+        android:title="@string/files_action_note_to_rename"
+        android:icon="@drawable/note_to_rename"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_mark_to_delete"
+        android:id="@+id/action_note_to_delete"
         android:orderInCategory="400"
-        android:title="@string/files_action_mark_to_delete"
-        android:icon="@drawable/mark_delete"
+        android:title="@string/files_action_note_to_delete"
+        android:icon="@drawable/note_to_delete"
         app:showAsAction="ifRoom" />
 
     <item

@@ -22,17 +22,17 @@
     <!-- Note -->
     <string name="files_action_note">Note</string>
 
+    <!-- Note to rename -->
+    <string name="files_action_note_to_rename">Note to rename</string>
+
+    <!-- Note to delete -->
+    <string name="files_action_note_to_delete">Note to delete</string>
+
     <!-- Rename -->
     <string name="files_action_rename">Rename</string>
 
-    <!-- Mark to rename -->
-    <string name="files_action_mark_to_rename">Mark to rename</string>
-
     <!-- Delete -->
     <string name="files_action_delete">Delete</string>
-
-    <!-- Mark to delete -->
-    <string name="files_action_mark_to_delete">Mark to delete</string>
 
     <!-- Plurals for selecting folders -->
     <plurals name="files_selected_folders_plurals">

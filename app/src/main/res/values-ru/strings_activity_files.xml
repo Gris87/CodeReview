@@ -22,17 +22,17 @@
     <!-- Note -->
     <string name="files_action_note">Заметка</string>
 
+    <!-- Note to rename -->
+    <string name="files_action_note_to_rename">Заметка о переименовании</string>
+
+    <!-- Note to delete -->
+    <string name="files_action_note_to_delete">Заметка об удалении</string>
+
     <!-- Rename -->
     <string name="files_action_rename">Переименовать</string>
 
-    <!-- Mark to rename -->
-    <string name="files_action_mark_to_rename">Заметка о переименовании</string>
-
     <!-- Delete -->
     <string name="files_action_delete">Удалить</string>
-
-    <!-- Mark to delete -->
-    <string name="files_action_mark_to_delete">Заметка об удалении</string>
 
     <!-- Plurals for selecting folders -->
     <plurals name="files_selected_folders_plurals">

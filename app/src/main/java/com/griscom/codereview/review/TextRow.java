@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.TextUtils;
 
-import com.griscom.codereview.BuildConfig;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 
@@ -59,10 +58,9 @@ public class TextRow
 
     public void checkForComment(SyntaxParserBase parser)
     {
-        if (BuildConfig.DEBUG)
-        {
-            Assert.assertTrue(mCommentIndex < 0);
-        }
+        Assert.assertTrue(mCommentIndex < 0);
+
+
 
         String commentBegin = parser.getCommentLine();
 
