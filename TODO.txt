@@ -1,4 +1,3 @@
-Auto-speed on scrolling with selection
 AsyncTask for LoadingThread
 Load file note on startup in review activity
 Syntax Highlight in menu
@@ -11,4 +10,5 @@ Code folding
 -----------------------------------
 
 Release keys
+Free money
 Publish

@@ -52,19 +52,21 @@ public class TextDocument implements OnTouchListener
 
 
 
-    private static final int   HIDE_BARS_MESSAGE   = 1;
-    private static final int   HIGHLIGHT_MESSAGE   = 2;
-    private static final int   SELECTION_MESSAGE   = 3;
-    private static final int   SCROLL_MESSAGE      = 4;
+    private static final int   HIDE_BARS_MESSAGE = 1;
+    private static final int   HIGHLIGHT_MESSAGE = 2;
+    private static final int   SELECTION_MESSAGE = 3;
+    private static final int   SCROLL_MESSAGE    = 4;
 
-    private static final int   AUTO_HIDE_DELAY     = 3000;
-    private static final int   HIGHLIGHT_DELAY     = 250;
-    private static final int   VIBRATOR_LONG_CLICK = 50;
-    private static final float SELECTION_SPEED     = 0.01f;
-    private static final float SELECTION_LOW_LIGHT = 0.75f;
-    private static final float SCROLL_SPEED        = 10;
+    private static final int   AUTO_HIDE_DELAY             = 3000;
+    private static final int   HIGHLIGHT_DELAY             = 250;
+    private static final int   VIBRATOR_LONG_CLICK         = 50;
+    private static final float SELECTION_SPEED             = 0.01f;
+    private static final float SELECTION_LOW_LIGHT         = 0.75f;
+    private static final float SCROLL_SPEED                = 10;
+    private static final float SCROLL_MULTIPLIER_INCREMENT = 1.01f;
+    private static final float SCROLL_MULTIPLIER_MAX       = 10;
 
-    private static final int   SCROLL_THRESHOLD    = 25;
+    private static final int   SCROLL_THRESHOLD            = 25;
 
 
 
@@ -102,6 +104,7 @@ public class TextDocument implements OnTouchListener
     private float                            mFingerDistance;
     private float                            mTouchMiddleX;
     private float                            mTouchMiddleY;
+    private float                            mScrollMultiplier;
     private int                              mSelectionEnd;
     private int                              mSelectionType;
 
@@ -154,6 +157,7 @@ public class TextDocument implements OnTouchListener
         mFingerDistance                 = 0;
         mTouchMiddleX                   = -1;
         mTouchMiddleY                   = -1;
+        mScrollMultiplier               = 1;
         mSelectionEnd                   = -1;
         mSelectionType                  = SelectionType.REVIEWED;
 
@@ -391,9 +395,13 @@ public class TextDocument implements OnTouchListener
                         mTouchY < mViewHeight / 8
                         ||
                         mTouchY > mViewHeight * 7 / 8
-                        )
+                       )
                     {
                         touchScroll();
+                    }
+                    else
+                    {
+                        mScrollMultiplier = 1;
                     }
                 }
                 else
@@ -810,15 +818,24 @@ public class TextDocument implements OnTouchListener
 
     private void touchScroll()
     {
+        mScrollMultiplier *= SCROLL_MULTIPLIER_INCREMENT;
+
+        if (mScrollMultiplier > SCROLL_MULTIPLIER_MAX)
+        {
+            mScrollMultiplier = SCROLL_MULTIPLIER_MAX;
+        }
+
+
+
         PointF newOffsets = new PointF(mOffsetX, mOffsetY);
 
         if (mTouchY < mViewHeight / 8)
         {
-            newOffsets.y = mOffsetY - SCROLL_SPEED / mScale;
+            newOffsets.y = mOffsetY - SCROLL_SPEED / mScale * mScrollMultiplier;
         }
         else
         {
-            newOffsets.y = mOffsetY + SCROLL_SPEED / mScale;
+            newOffsets.y = mOffsetY + SCROLL_SPEED / mScale * mScrollMultiplier;
         }
 
         fitOffsets(newOffsets);
@@ -1254,7 +1271,8 @@ public class TextDocument implements OnTouchListener
             {
                 mVibrator.vibrate(VIBRATOR_LONG_CLICK);
 
-                mTouchMode = TouchMode.SELECT;
+                mTouchMode        = TouchMode.SELECT;
+                mScrollMultiplier = 1;
 
                 synchronized(TextDocument.this)
                 {
