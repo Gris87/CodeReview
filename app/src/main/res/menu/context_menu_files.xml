@@ -33,15 +33,29 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_rename"
+        android:id="@+id/action_mark_as_reviewed"
         android:orderInCategory="500"
+        android:title="@string/files_action_mark_as_reviewed"
+        android:icon="@drawable/mark_as_reviewed"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_mark_as_invalid"
+        android:orderInCategory="600"
+        android:title="@string/files_action_mark_as_invalid"
+        android:icon="@drawable/mark_as_invalid"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_rename"
+        android:orderInCategory="700"
         android:title="@string/files_action_rename"
         android:icon="@drawable/rename"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_delete"
-        android:orderInCategory="600"
+        android:orderInCategory="800"
         android:title="@string/files_action_delete"
         android:icon="@drawable/delete"
         app:showAsAction="ifRoom" />

@@ -634,6 +634,18 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                     }
                     break;
 
+                    case R.id.action_mark_as_reviewed:
+                    {
+                        res = markAsReviewed(items);
+                    }
+                    break;
+
+                    case R.id.action_mark_as_invalid:
+                    {
+                        res = markAsInvalid(items);
+                    }
+                    break;
+
                     case R.id.action_rename:
                     {
                         res = rename(items.get(0));
@@ -774,6 +786,30 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     private boolean noteToDelete(ArrayList<Integer> items)
     {
         mAdapter.assignNote(items, getString(R.string.files_need_to_delete));
+
+        return true;
+    }
+
+    /**
+     * Marks selected files as reviewed
+     * @param items    selected files
+     * @return true, if need to close ActionMode
+     */
+    private boolean markAsReviewed(ArrayList<Integer> items)
+    {
+        mAdapter.markAsFinished(items, true);
+
+        return true;
+    }
+
+    /**
+     * Marks selected files as invalid
+     * @param items    selected files
+     * @return true, if need to close ActionMode
+     */
+    private boolean markAsInvalid(ArrayList<Integer> items)
+    {
+        mAdapter.markAsFinished(items, false);
 
         return true;
     }

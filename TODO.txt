@@ -1,7 +1,3 @@
-Mark as correct file in ActionMode
-Mark as invalid file in ActionMode
-Colorize files after using actions above
-
 Syntax Highlight in menu
 CommentDialog
 Load file note on startup in review activity

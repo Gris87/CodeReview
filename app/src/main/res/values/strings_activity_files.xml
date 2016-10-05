@@ -28,6 +28,12 @@
     <!-- Note to delete -->
     <string name="files_action_note_to_delete">Note to delete</string>
 
+    <!-- Mark as reviewed -->
+    <string name="files_action_mark_as_reviewed">Mark as reviewed</string>
+
+    <!-- Mark as invalid -->
+    <string name="files_action_mark_as_invalid">Mark as invalid</string>
+
     <!-- Rename -->
     <string name="files_action_rename">Rename</string>
 

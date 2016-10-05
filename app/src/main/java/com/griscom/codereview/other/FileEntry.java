@@ -297,6 +297,40 @@ public class FileEntry
     }
 
     /**
+     * Sets file stats
+     * @param context          context
+     * @param filePath         path to file
+     * @param reviewedCount    reviewed count
+     * @param invalidCount     invalid count
+     * @param noteCount        note count
+     * @param rowCount         row count
+     */
+    public void setFileStats(Context context, String filePath, int reviewedCount, int invalidCount, int noteCount, int rowCount)
+    {
+        synchronized(this)
+        {
+            mReviewedCount = reviewedCount;
+            mInvalidCount  = invalidCount;
+            mNoteCount     = noteCount;
+            mRowCount      = rowCount;
+
+
+
+            MainDatabase helper = new MainDatabase(context);
+            SQLiteDatabase db = helper.getWritableDatabase();
+
+            if (mDbFileId <= 0)
+            {
+                mDbFileId = helper.getOrCreateFile(db, filePath);
+            }
+
+            helper.updateFileStats(db, mDbFileId, mReviewedCount, mInvalidCount, mNoteCount, mRowCount);
+
+            db.close();
+        }
+    }
+
+    /**
      * Sets file note
      * @param context     context
      * @param filePath    path to file
@@ -309,6 +343,8 @@ public class FileEntry
             if (!mFileNote.equals(note))
             {
                 mFileNote = note;
+
+
 
                 MainDatabase helper = new MainDatabase(context);
                 SQLiteDatabase db = helper.getWritableDatabase();

@@ -557,6 +557,30 @@ public class FilesAdapter extends BaseAdapter
     }
 
     /**
+     * Marks files in specified indices as finished
+     * @param items    file indices
+     * @param reviewed true if files reviewed, false if invalid
+     */
+    public void markAsFinished(ArrayList<Integer> items, boolean reviewed)
+    {
+        for (int item : items)
+        {
+            FileEntry file = mFiles.get(item);
+
+            if (reviewed)
+            {
+                file.setFileStats(mContext, pathToFile(file.getFileName()), 1, 0, 0, 1);
+            }
+            else
+            {
+                file.setFileStats(mContext, pathToFile(file.getFileName()), 0, 1, 0, 1);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    /**
      * Renames file at specified index in the file list
      * @param item        index of file
      * @param fileName    new file name

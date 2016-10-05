@@ -28,6 +28,12 @@
     <!-- Note to delete -->
     <string name="files_action_note_to_delete">Заметка об удалении</string>
 
+    <!-- Mark as reviewed -->
+    <string name="files_action_mark_as_reviewed">Отметить как просмотренный</string>
+
+    <!-- Mark as invalid -->
+    <string name="files_action_mark_as_invalid">Отметить как некорректный</string>
+
     <!-- Rename -->
     <string name="files_action_rename">Переименовать</string>
 
