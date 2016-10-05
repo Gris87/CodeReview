@@ -36,11 +36,11 @@ public class RenameDialog extends DialogFragment
 
 
 
-    private OnFragmentInteractionListener mListener      = null;
-    private boolean                       mAddNote       = false;
-    private int                           mItem          = 0;
-    private String                        mFileName      = null;
-    private ArrayList<String>             mFileNames     = null;
+    private OnFragmentInteractionListener mListener  = null;
+    private boolean                       mAddNote   = false;
+    private int                           mItem      = 0;
+    private String                        mFileName  = null;
+    private ArrayList<String>             mFileNames = null;
 
 
 

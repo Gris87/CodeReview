@@ -20,40 +20,40 @@ import com.griscom.codereview.other.ApplicationPreferences;
 import java.util.ArrayList;
 
 /**
- * Dialog for creating notes
+ * Dialog for creating comments
  */
-public class NoteDialog extends DialogFragment
+public class CommentDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
-    private static final String TAG = "NoteDialog";
+    private static final String TAG = "CommentDialog";
 
 
 
-    private static final String ARG_ITEMS = "ITEMS";
-    private static final String ARG_NOTE  = "NOTE";
+    private static final String ARG_ITEMS   = "ITEMS";
+    private static final String ARG_COMMENT = "COMMENT";
 
 
 
     private OnFragmentInteractionListener mListener = null;
     private ArrayList<Integer>            mItems    = null;
-    private String                        mNote     = null;
-    private ArrayList<String>             mNotes    = null;
+    private String                        mComment  = null;
+    private ArrayList<String>             mComments = null;
 
 
 
     /**
-     * Creates new instance of NoteDialog with pre-entered note
-     * @param items    indices in the list
-     * @param note     note
-     * @return NoteDialog instance
+     * Creates new instance of CommentDialog with pre-entered comment
+     * @param items      indices in the list
+     * @param comment    comment
+     * @return CommentDialog instance
      */
-    public static NoteDialog newInstance(ArrayList<Integer> items, String note)
+    public static CommentDialog newInstance(ArrayList<Integer> items, String comment)
     {
-        NoteDialog fragment = new NoteDialog();
+        CommentDialog fragment = new CommentDialog();
 
         Bundle args = new Bundle();
-        args.putIntegerArrayList(ARG_ITEMS, items);
-        args.putString(          ARG_NOTE,  note);
+        args.putIntegerArrayList(ARG_ITEMS,   items);
+        args.putString(          ARG_COMMENT, comment);
         fragment.setArguments(args);
 
         return fragment;
@@ -65,10 +65,10 @@ public class NoteDialog extends DialogFragment
     {
         super.onCreate(savedInstanceState);
 
-        mItems = getArguments().getIntegerArrayList(ARG_ITEMS);
-        mNote  = getArguments().getString(          ARG_NOTE);
+        mItems   = getArguments().getIntegerArrayList(ARG_ITEMS);
+        mComment = getArguments().getString(          ARG_COMMENT);
 
-        loadLastNotes();
+        loadLastComments();
     }
 
     /** {@inheritDoc} */
@@ -77,19 +77,19 @@ public class NoteDialog extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         final AutoCompleteTextView editText = new AutoCompleteTextView(getContext());
-        editText.setText(mNote);
+        editText.setText(mComment);
         //noinspection deprecation
         editText.setTextColor(getResources().getColor(R.color.textColor));
         editText.selectAll();
-        editText.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, mNotes));
+        editText.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, mComments));
         editText.setThreshold(0);
 
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.dialog_note_title)
-                .setMessage(R.string.dialog_note_message)
+        builder.setTitle(R.string.dialog_comment_title)
+                .setMessage(R.string.dialog_comment_message)
                 .setCancelable(true)
                 .setView(editText)
                 .setPositiveButton(android.R.string.ok,
@@ -98,17 +98,17 @@ public class NoteDialog extends DialogFragment
                             @Override
                             public void onClick(DialogInterface dialog, int whichButton)
                             {
-                                String note = editText.getText().toString();
+                                String comment = editText.getText().toString();
 
-                                if (!note.equals(""))
+                                if (!comment.equals(""))
                                 {
-                                    mNotes.remove(note);
-                                    mNotes.add(0, note);
+                                    mComments.remove(comment);
+                                    mComments.add(0, comment);
 
-                                    saveLastNotes();
+                                    saveLastComments();
                                 }
 
-                                onNoteEntered(note);
+                                onCommentEntered(comment);
 
                                 dialog.dismiss();
                             }
@@ -130,14 +130,14 @@ public class NoteDialog extends DialogFragment
     }
 
     /**
-     * Handler for note entered event
-     * @param note    note
+     * Handler for comment entered event
+     * @param comment    comment
      */
-    public void onNoteEntered(String note)
+    public void onCommentEntered(String comment)
     {
         if (mListener != null)
         {
-            mListener.onNoteEntered(mItems, note);
+            mListener.onCommentEntered(mItems, comment);
         }
     }
 
@@ -167,44 +167,44 @@ public class NoteDialog extends DialogFragment
     }
 
     /**
-     * Saves last entered notes
+     * Saves last entered comments
      */
-    private void saveLastNotes()
+    private void saveLastComments()
     {
-        SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putInt(ApplicationPreferences.LAST_NOTES, mNotes.size());
+        editor.putInt(ApplicationPreferences.LAST_COMMENTS, mComments.size());
 
-        for (int i = 0; i < mNotes.size(); ++i)
+        for (int i = 0; i < mComments.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_NOTE + "_" + String.valueOf(i + 1), mNotes.get(i));
+            editor.putString(ApplicationPreferences.ONE_COMMENT + "_" + String.valueOf(i + 1), mComments.get(i));
         }
 
         editor.apply();
     }
 
     /**
-     * Loads last entered notes
+     * Loads last entered comments
      */
-    private void loadLastNotes()
+    private void loadLastComments()
     {
-        mNotes = new ArrayList<>();
+        mComments = new ArrayList<>();
 
-        SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        int noteCount = prefs.getInt(ApplicationPreferences.LAST_NOTES, 0);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        int commentCount = prefs.getInt(ApplicationPreferences.LAST_COMMENTS, 0);
 
-        for (int i = 0; i < noteCount; ++i)
+        for (int i = 0; i < commentCount; ++i)
         {
-            String note = prefs.getString(ApplicationPreferences.ONE_NOTE + "_" + String.valueOf(i + 1),"");
+            String comment = prefs.getString(ApplicationPreferences.ONE_COMMENT + "_" + String.valueOf(i + 1),"");
 
             if (
-                !TextUtils.isEmpty(note)
+                !TextUtils.isEmpty(comment)
                 &&
-                !mNotes.contains(note)
+                !mComments.contains(comment)
                )
             {
-                mNotes.add(note);
+                mComments.add(comment);
             }
         }
     }
@@ -217,10 +217,10 @@ public class NoteDialog extends DialogFragment
     public interface OnFragmentInteractionListener
     {
         /**
-         * Handler for note entered event
-         * @param items   indices in the list
-         * @param note    note
+         * Handler for comment entered event
+         * @param items      indices in the list
+         * @param comment    comment
          */
-        void onNoteEntered(ArrayList<Integer> items, String note);
+        void onCommentEntered(ArrayList<Integer> items, String comment);
     }
 }
