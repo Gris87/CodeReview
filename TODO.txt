@@ -1,7 +1,7 @@
-CommentDialog
 Load file note on startup in review activity
 Syntax Highlight in menu
 
+AsyncTask for LoadingThread
 Code analysis in all files
 UltraHD images
 Auto-speed on scrolling with selection

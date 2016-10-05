@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import com.griscom.codereview.R;
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
+import com.griscom.codereview.listeners.OnCommentDialogRequestedListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
@@ -67,98 +68,100 @@ public class TextDocument implements OnTouchListener
 
 
 
-    private SyntaxParserBase          mSyntaxParser;
-    private Context                   mContext;
-    private ReviewSurfaceView         mParent;
-    private Vibrator                  mVibrator;
-    private DocumentHandler           mHandler;
-    private ArrayList<TextRow>        mRows;
-    private OnProgressChangedListener mProgressChangedListener;
-    private int                       mReviewedCount;
-    private int                       mInvalidCount;
-    private int                       mNoteCount;
-    private int                       mFontSize;
-    private int                       mTabSize;
-    private Paint                     mRowPaint;
+    private SyntaxParserBase                 mSyntaxParser;
+    private Context                          mContext;
+    private ReviewSurfaceView                mParent;
+    private Vibrator                         mVibrator;
+    private DocumentHandler                  mHandler;
+    private ArrayList<TextRow>               mRows;
+    private OnProgressChangedListener        mProgressChangedListener;
+    private OnCommentDialogRequestedListener mCommentDialogRequestedListener;
+    private int                              mReviewedCount;
+    private int                              mInvalidCount;
+    private int                              mNoteCount;
+    private int                              mFontSize;
+    private int                              mTabSize;
+    private Paint                            mRowPaint;
 
-    private float                     mIndexWidth;
-    private float                     mX;
-    private float                     mY;
-    private float                     mWidth;
-    private float                     mHeight;
-    private float                     mViewWidth;
-    private float                     mViewHeight;
-    private float                     mOffsetX;
-    private float                     mOffsetY;
-    private float                     mScale;
-    private int                       mVisibleBegin;
-    private int                       mVisibleEnd;
+    private float                            mIndexWidth;
+    private float                            mX;
+    private float                            mY;
+    private float                            mWidth;
+    private float                            mHeight;
+    private float                            mViewWidth;
+    private float                            mViewHeight;
+    private float                            mOffsetX;
+    private float                            mOffsetY;
+    private float                            mScale;
+    private int                              mVisibleBegin;
+    private int                              mVisibleEnd;
 
-    private int                       mTouchMode;
-    private float                     mTouchX;
-    private float                     mTouchY;
-    private float                     mFingerDistance;
-    private float                     mTouchMiddleX;
-    private float                     mTouchMiddleY;
-    private int                       mSelectionEnd;
-    private int                       mSelectionType;
+    private int                              mTouchMode;
+    private float                            mTouchX;
+    private float                            mTouchY;
+    private float                            mFingerDistance;
+    private float                            mTouchMiddleX;
+    private float                            mTouchMiddleY;
+    private int                              mSelectionEnd;
+    private int                              mSelectionType;
 
     // USED IN HANDLER [
-    private int                       mBarsAlpha;
-    private int                       mHighlightedRow;
-    private int                       mHighlightAlpha;
-    private float                     mSelectionBrighness;
-    private boolean                   mSelectionMakeLight;
+    private int                              mBarsAlpha;
+    private int                              mHighlightedRow;
+    private int                              mHighlightAlpha;
+    private float                            mSelectionBrightness;
+    private boolean                          mSelectionMakeLight;
     // USED IN HANDLER ]
 
 
 
     public TextDocument(SyntaxParserBase parser)
     {
-        mSyntaxParser            = parser;
-        mContext                 = mSyntaxParser.getContext();
-        mParent                  = null;
-        mVibrator                = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
-        mHandler                 = null;
-        mRows                    = new ArrayList<TextRow>();
-        mProgressChangedListener = null;
-        mReviewedCount           = 0;
-        mInvalidCount            = 0;
-        mNoteCount               = 0;
-        mFontSize                = ApplicationSettings.getFontSize();
-        mTabSize                 = ApplicationSettings.getTabSize();
-        mRowPaint                = new Paint();
+        mSyntaxParser                   = parser;
+        mContext                        = mSyntaxParser.getContext();
+        mParent                         = null;
+        mVibrator                       = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
+        mHandler                        = null;
+        mRows                           = new ArrayList<>();
+        mProgressChangedListener        = null;
+        mCommentDialogRequestedListener = null;
+        mReviewedCount                  = 0;
+        mInvalidCount                   = 0;
+        mNoteCount                      = 0;
+        mFontSize                       = ApplicationSettings.getFontSize();
+        mTabSize                        = ApplicationSettings.getTabSize();
+        mRowPaint                       = new Paint();
         mRowPaint.setColor(Color.LTGRAY);
         mRowPaint.setTypeface(Typeface.MONOSPACE);
         mRowPaint.setTextSize(Utils.spToPixels(mFontSize, mContext));
 
-        mIndexWidth              = 0;
-        mX                       = 0;
-        mY                       = 0;
-        mWidth                   = 0;
-        mHeight                  = 0;
-        mViewWidth               = 0;
-        mViewHeight              = 0;
-        mOffsetX                 = 0;
-        mOffsetY                 = 0;
-        mScale                   = 1;
-        mVisibleBegin            = -1;
-        mVisibleEnd              = -1;
+        mIndexWidth                     = 0;
+        mX                              = 0;
+        mY                              = 0;
+        mWidth                          = 0;
+        mHeight                         = 0;
+        mViewWidth                      = 0;
+        mViewHeight                     = 0;
+        mOffsetX                        = 0;
+        mOffsetY                        = 0;
+        mScale                          = 1;
+        mVisibleBegin                   = -1;
+        mVisibleEnd                     = -1;
 
-        mTouchMode               = TouchMode.NONE;
-        mTouchX                  = 0;
-        mTouchY                  = 0;
-        mFingerDistance          = 0;
-        mTouchMiddleX            = -1;
-        mTouchMiddleY            = -1;
-        mSelectionEnd            = -1;
-        mSelectionType           = SelectionType.REVIEWED;
+        mTouchMode                      = TouchMode.NONE;
+        mTouchX                         = 0;
+        mTouchY                         = 0;
+        mFingerDistance                 = 0;
+        mTouchMiddleX                   = -1;
+        mTouchMiddleY                   = -1;
+        mSelectionEnd                   = -1;
+        mSelectionType                  = SelectionType.REVIEWED;
 
-        mBarsAlpha               = 0;
-        mHighlightedRow          = -1;
-        mHighlightAlpha          = 0;
-        mSelectionBrighness      = 1;
-        mSelectionMakeLight      = false;
+        mBarsAlpha                      = 0;
+        mHighlightedRow                 = -1;
+        mHighlightAlpha                 = 0;
+        mSelectionBrightness            = 1;
+        mSelectionMakeLight             = false;
     }
 
     public void init()
@@ -232,7 +235,7 @@ public class TextDocument implements OnTouchListener
                 {
                     float selectionHSV[] = new float[3];
                     Color.colorToHSV(ColorCache.get(mSelectionType), selectionHSV);
-                    selectionHSV[2] = mSelectionBrighness;
+                    selectionHSV[2] = mSelectionBrightness;
                     color = Color.HSVToColor(selectionHSV);
                 }
                 else
@@ -512,144 +515,7 @@ public class TextDocument implements OnTouchListener
 
                     if (mSelectionType == SelectionType.NOTE)
                     {
-                        // TODO: Make dialog for it
-                        /*
-                        LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                        View view = inflater.inflate(R.layout.dialog_input, null);
-
-                        final EditText editText     = (EditText)    view.findViewById(R.id.inputEditText);
-                        ImageButton    chooseButton = (ImageButton) view.findViewById(R.id.chooseButton);
-
-                        chooseButton.setOnClickListener(new OnClickListener()
-                            {
-                                @Override
-                                public void onClick(View view)
-                                {
-                                    ArrayList<CharSequence> comments = loadLastComments();
-
-                                    if (comments.size() > 0)
-                                    {
-                                        final CharSequence items[] = new CharSequence[comments.size()];
-                                        String currentComment = editText.getText().toString();
-                                        int index = -1;
-
-                                        for (int i = 0; i < comments.size(); ++i)
-                                        {
-                                            String oneComment = (String)comments.get(i);
-
-                                            if (index < 0 && oneComment.equals(currentComment))
-                                            {
-                                                index = i;
-                                            }
-
-                                            items[i] = oneComment;
-                                        }
-
-                                        if (index < 0)
-                                        {
-                                            index = 0;
-                                        }
-
-                                        AlertDialog chooseDialog = new AlertDialog.Builder(mContext)
-                                            .setSingleChoiceItems(items, index, new DialogInterface.OnClickListener()
-                                            {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int index)
-                                                {
-                                                    editText.setText(items[index]);
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                            .create();
-
-                                        chooseDialog.show();
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(mContext, R.string.no_last_comment, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-
-                        AlertDialog dialog = new AlertDialog.Builder(mContext)
-                            .setTitle(R.string.dialog_input_comment_title)
-                            .setMessage(R.string.dialog_input_comment_message)
-                            .setView(view)
-                            .setPositiveButton(android.R.string.ok,
-                            new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int whichButton)
-                                {
-                                    String comment = editText.getText().toString();
-
-                                    if (!comment.equals(""))
-                                    {
-                                        ArrayList<CharSequence> comments = loadLastComments();
-
-                                        comments.remove(comment);
-                                        comments.add(0, comment);
-                                        saveLastComments(comments);
-
-                                        // ----------------------------------
-
-                                        if (mSyntaxParser.getCommentLine().endsWith(" "))
-                                        {
-                                            comment = mSyntaxParser.getCommentLine() + "TODO: " + comment;
-                                        }
-                                        else
-                                        {
-                                            comment = mSyntaxParser.getCommentLine() + " TODO: " + comment;
-                                        }
-
-                                        if (mSyntaxParser.getCommentLineEnd() != null)
-                                        {
-                                            if (mSyntaxParser.getCommentLineEnd().startsWith(" "))
-                                            {
-                                                comment = comment + mSyntaxParser.getCommentLineEnd();
-                                            }
-                                            else
-                                            {
-                                                comment = comment + " " + mSyntaxParser.getCommentLineEnd();
-                                            }
-                                        }
-                                    }
-
-
-
-                                    performSelection(firstRow, lastRow, comment);
-                                    updateSizes();
-
-                                    saveFile();
-
-                                    finishSelection();
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int whichButton)
-                                {
-                                    finishSelection();
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setOnCancelListener(
-                            new DialogInterface.OnCancelListener()
-                            {
-                                @Override
-                                public void onCancel(DialogInterface dialog)
-                                {
-                                    finishSelection();
-                                }
-                            }).create();
-
-                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                        dialog.show();
-                        */
+                        mCommentDialogRequestedListener.onCommentDialogRequested(firstRow, lastRow, "");
                     }
                     else
                     {
@@ -672,6 +538,47 @@ public class TextDocument implements OnTouchListener
         }
 
         return true;
+    }
+
+    public void onCommentEntered(int firstRow, int lastRow, String comment)
+    {
+        if (!comment.equals(""))
+        {
+            if (mSyntaxParser.getCommentLine().endsWith(" "))
+            {
+                comment = mSyntaxParser.getCommentLine() + "TODO: " + comment;
+            }
+            else
+            {
+                comment = mSyntaxParser.getCommentLine() + " TODO: " + comment;
+            }
+
+            if (mSyntaxParser.getCommentLineEnd() != null)
+            {
+                if (mSyntaxParser.getCommentLineEnd().startsWith(" "))
+                {
+                    comment = comment + mSyntaxParser.getCommentLineEnd();
+                }
+                else
+                {
+                    comment = comment + " " + mSyntaxParser.getCommentLineEnd();
+                }
+            }
+        }
+
+
+
+        performSelection(firstRow, lastRow, comment);
+        updateSizes();
+
+        saveFile();
+
+        finishSelection();
+    }
+
+    public void onCommentCanceled()
+    {
+        finishSelection();
     }
 
     private float fingerDistance(MotionEvent event)
@@ -1200,6 +1107,11 @@ public class TextDocument implements OnTouchListener
         progressChanged();
     }
 
+    public void setOnCommentDialogRequestedListener(OnCommentDialogRequestedListener listener)
+    {
+        mCommentDialogRequestedListener = listener;
+    }
+
     public void setProgress(int reviewedCount, int invalidCount, int noteCount)
     {
         if (
@@ -1346,9 +1258,9 @@ public class TextDocument implements OnTouchListener
 
                 synchronized(TextDocument.this)
                 {
-                    mHighlightAlpha     = 0;
-                    mSelectionBrighness = 1;
-                    mSelectionMakeLight = false;
+                    mHighlightAlpha      = 0;
+                    mSelectionBrightness = 1;
+                    mSelectionMakeLight  = false;
                 }
 
                 updateSelection();
@@ -1362,26 +1274,26 @@ public class TextDocument implements OnTouchListener
         private void selection()
         {
             boolean selectionMakeLight  = mSelectionMakeLight;
-            float   selectionBrighness = mSelectionBrighness;
+            float   selectionBrightness = mSelectionBrightness;
 
             if (selectionMakeLight)
             {
-                selectionBrighness += SELECTION_SPEED;
+                selectionBrightness += SELECTION_SPEED;
 
-                if (selectionBrighness >= 1)
+                if (selectionBrightness >= 1)
                 {
                     selectionMakeLight = false;
-                    selectionBrighness = 1;
+                    selectionBrightness = 1;
                 }
             }
             else
             {
-                selectionBrighness -= SELECTION_SPEED;
+                selectionBrightness -= SELECTION_SPEED;
 
-                if (selectionBrighness <= SELECTION_LOW_LIGHT)
+                if (selectionBrightness <= SELECTION_LOW_LIGHT)
                 {
                     selectionMakeLight = true;
-                    selectionBrighness = SELECTION_LOW_LIGHT;
+                    selectionBrightness = SELECTION_LOW_LIGHT;
                 }
             }
 
@@ -1390,13 +1302,13 @@ public class TextDocument implements OnTouchListener
             if (
                 mSelectionMakeLight != selectionMakeLight
                  ||
-                mSelectionBrighness != selectionBrighness
+                mSelectionBrightness != selectionBrightness
                )
             {
                 synchronized(TextDocument.this)
                 {
-                    mSelectionMakeLight = selectionMakeLight;
-                    mSelectionBrighness = selectionBrighness;
+                    mSelectionMakeLight  = selectionMakeLight;
+                    mSelectionBrightness = selectionBrightness;
                 }
 
                 repaint();

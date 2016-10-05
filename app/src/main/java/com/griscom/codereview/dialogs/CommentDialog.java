@@ -29,13 +29,15 @@ public class CommentDialog extends DialogFragment
 
 
 
-    private static final String ARG_ITEMS   = "ITEMS";
-    private static final String ARG_COMMENT = "COMMENT";
+    private static final String ARG_FIRST_ROW = "FIRST_ROW";
+    private static final String ARG_LAST_ROW  = "LAST_ROW";
+    private static final String ARG_COMMENT   = "COMMENT";
 
 
 
     private OnFragmentInteractionListener mListener = null;
-    private ArrayList<Integer>            mItems    = null;
+    private int                           mFirstRow = 0;
+    private int                           mLastRow  = 0;
     private String                        mComment  = null;
     private ArrayList<String>             mComments = null;
 
@@ -43,17 +45,19 @@ public class CommentDialog extends DialogFragment
 
     /**
      * Creates new instance of CommentDialog with pre-entered comment
-     * @param items      indices in the list
-     * @param comment    comment
+     * @param firstRow    first row
+     * @param lastRow     last row
+     * @param comment     comment
      * @return CommentDialog instance
      */
-    public static CommentDialog newInstance(ArrayList<Integer> items, String comment)
+    public static CommentDialog newInstance(int firstRow, int lastRow, String comment)
     {
         CommentDialog fragment = new CommentDialog();
 
         Bundle args = new Bundle();
-        args.putIntegerArrayList(ARG_ITEMS,   items);
-        args.putString(          ARG_COMMENT, comment);
+        args.putInt(   ARG_FIRST_ROW, firstRow);
+        args.putInt(   ARG_LAST_ROW,  lastRow);
+        args.putString(ARG_COMMENT,   comment);
         fragment.setArguments(args);
 
         return fragment;
@@ -65,8 +69,9 @@ public class CommentDialog extends DialogFragment
     {
         super.onCreate(savedInstanceState);
 
-        mItems   = getArguments().getIntegerArrayList(ARG_ITEMS);
-        mComment = getArguments().getString(          ARG_COMMENT);
+        mFirstRow = getArguments().getInt(   ARG_FIRST_ROW);
+        mLastRow  = getArguments().getInt(   ARG_LAST_ROW);
+        mComment  = getArguments().getString(ARG_COMMENT);
 
         loadLastComments();
     }
@@ -119,7 +124,18 @@ public class CommentDialog extends DialogFragment
                             @Override
                             public void onClick(DialogInterface dialog, int whichButton)
                             {
+                                onCommentCanceled();
+
                                 dialog.dismiss();
+                            }
+                        })
+                .setOnCancelListener(
+                        new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                onCommentCanceled();
                             }
                         });
 
@@ -127,6 +143,14 @@ public class CommentDialog extends DialogFragment
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         return dialog;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog)
+    {
+        super.onDismiss(dialog);
+
+        onCommentCanceled();
     }
 
     /**
@@ -137,7 +161,18 @@ public class CommentDialog extends DialogFragment
     {
         if (mListener != null)
         {
-            mListener.onCommentEntered(mItems, comment);
+            mListener.onCommentEntered(mFirstRow, mLastRow, comment);
+        }
+    }
+
+    /**
+     * Handler for comment canceled event
+     */
+    public void onCommentCanceled()
+    {
+        if (mListener != null)
+        {
+            mListener.onCommentCanceled();
         }
     }
 
@@ -218,9 +253,15 @@ public class CommentDialog extends DialogFragment
     {
         /**
          * Handler for comment entered event
-         * @param items      indices in the list
-         * @param comment    comment
+         * @param firstRow    first row
+         * @param lastRow     last row
+         * @param comment     comment
          */
-        void onCommentEntered(ArrayList<Integer> items, String comment);
+        void onCommentEntered(int firstRow, int lastRow, String comment);
+
+        /**
+         * Handler for comment canceled event
+         */
+        void onCommentCanceled();
     }
 }

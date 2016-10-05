@@ -20,6 +20,8 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
+import com.griscom.codereview.dialogs.CommentDialog;
+import com.griscom.codereview.listeners.OnCommentDialogRequestedListener;
 import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationExtras;
@@ -33,7 +35,7 @@ import junit.framework.Assert;
 /**
  * Activity for performing code review
  */
-public class ReviewActivity extends FragmentActivity implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnProgressChangedListener
+public class ReviewActivity extends FragmentActivity implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnProgressChangedListener, OnCommentDialogRequestedListener, CommentDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ReviewActivity";
@@ -134,6 +136,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.setOnTouchListener(this);
         mContent.setOnNoteSupportListener(this);
         mContent.setOnProgressChangedListener(this);
+        mContent.setOnCommentDialogRequestedListener(this);
 
 
 
@@ -355,6 +358,28 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         Assert.assertTrue(progress >= 0 && progress <= 100);
 
         mProgressTextView.setText(getString(R.string.progress, progress));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCommentDialogRequested(int firstRow, int lastRow, String comment)
+    {
+        CommentDialog dialog = CommentDialog.newInstance(firstRow, lastRow, comment);
+        dialog.show(getSupportFragmentManager(), "CommentDialog");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCommentEntered(int firstRow, int lastRow, String comment)
+    {
+        mContent.onCommentEntered(firstRow, lastRow, comment);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCommentCanceled()
+    {
+        mContent.onCommentCanceled();
     }
 
     View.OnTouchListener mHoverTouchListener = new View.OnTouchListener()

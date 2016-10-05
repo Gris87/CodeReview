@@ -1,6 +1,13 @@
 package com.griscom.codereview.listeners;
 
+/**
+ * Note support listener
+ */
 public interface OnNoteSupportListener
 {
-    public void onNoteSupport(boolean noteSupported);
+    /**
+     * Handler for informing about note support
+     * @param noteSupported    true, if note supported
+     */
+    void onNoteSupport(boolean noteSupported);
 }

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 
 import com.griscom.codereview.R;
+import com.griscom.codereview.listeners.OnCommentDialogRequestedListener;
 import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
@@ -45,23 +46,24 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
 
 
-    private Context                   mContext;
-    private SurfaceHolder             mSurfaceHolder;
-    private LoadingThread             mLoadingThread;
-    private DrawThread                mDrawThread;
-    private String                    mFilePath;
-    private int                       mFileId;
-    private long                      mModifiedTime;
-    private SyntaxParserBase          mSyntaxParser;
-    private TextDocument              mDocument;
-    private int                       mFontSize;
-    private int                       mTabSize;
-    private int                       mSelectionType;
-    private OnNoteSupportListener     mNoteSupportListener;
-    private OnProgressChangedListener mProgressChangedListener;
+    private Context                          mContext;
+    private SurfaceHolder                    mSurfaceHolder;
+    private LoadingThread                    mLoadingThread;
+    private DrawThread                       mDrawThread;
+    private String                           mFilePath;
+    private int                              mFileId;
+    private long                             mModifiedTime;
+    private SyntaxParserBase                 mSyntaxParser;
+    private TextDocument                     mDocument;
+    private int                              mFontSize;
+    private int                              mTabSize;
+    private int                              mSelectionType;
+    private OnNoteSupportListener            mNoteSupportListener;
+    private OnProgressChangedListener        mProgressChangedListener;
+    private OnCommentDialogRequestedListener mCommentDialogRequestedListener;
 
     // USED IN HANDLER [
-    private TextDocument              mLastLoadedDocument;
+    private TextDocument                     mLastLoadedDocument;
     // USED IN HANDLER ]
 
 
@@ -92,6 +94,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             mLastLoadedDocument.setTabSize(mTabSize);
             mLastLoadedDocument.setSelectionType(mSelectionType);
             mLastLoadedDocument.setOnProgressChangedListener(mProgressChangedListener);
+            mLastLoadedDocument.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
 
             long modifiedTime = new File(mFilePath).lastModified();
 
@@ -140,20 +143,21 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
     private void init(Context context)
     {
-        mContext                 = context;
-        mSurfaceHolder           = getHolder();
-        mLoadingThread           = null;
-        mDrawThread              = null;
-        mFileId                  = 0;
-        mModifiedTime            = 0;
-        mSyntaxParser            = null;
-        mDocument                = null;
-        mFontSize                = ApplicationSettings.getFontSize();
-        mTabSize                 = ApplicationSettings.getTabSize();
-        mSelectionType           = SelectionType.REVIEWED;
-        mNoteSupportListener     = null;
-        mProgressChangedListener = null;
-        mLastLoadedDocument      = null;
+        mContext                        = context;
+        mSurfaceHolder                  = getHolder();
+        mLoadingThread                  = null;
+        mDrawThread                     = null;
+        mFileId                         = 0;
+        mModifiedTime                   = 0;
+        mSyntaxParser                   = null;
+        mDocument                       = null;
+        mFontSize                       = ApplicationSettings.getFontSize();
+        mTabSize                        = ApplicationSettings.getTabSize();
+        mSelectionType                  = SelectionType.REVIEWED;
+        mNoteSupportListener            = null;
+        mProgressChangedListener        = null;
+        mCommentDialogRequestedListener = null;
+        mLastLoadedDocument             = null;
     }
 
     public void onDestroy()
@@ -201,6 +205,22 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
 
         return true;
+    }
+
+    public void onCommentEntered(int firstRow, int lastRow, String comment)
+    {
+        if (mDocument != null)
+        {
+            mDocument.onCommentEntered(firstRow, lastRow, comment);
+        }
+    }
+
+    public void onCommentCanceled()
+    {
+        if (mDocument != null)
+        {
+            mDocument.onCommentCanceled();
+        }
     }
 
     @Override
@@ -456,6 +476,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         if (mDocument != null)
         {
             mDocument.setOnProgressChangedListener(mProgressChangedListener);
+        }
+    }
+
+    public void setOnCommentDialogRequestedListener(OnCommentDialogRequestedListener listener)
+    {
+        mCommentDialogRequestedListener = listener;
+
+        if (mDocument != null)
+        {
+            mDocument.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
         }
     }
 }
