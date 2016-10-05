@@ -1,10 +1,10 @@
-Syntax Highlight in menu
 CommentDialog
 Load file note on startup in review activity
-Auto-speed on scrolling with selection
+Syntax Highlight in menu
 
 Code analysis in all files
 UltraHD images
+Auto-speed on scrolling with selection
 Smooth movement
 Code folding
 
