@@ -321,7 +321,7 @@ public class FileEntry
 
             if (mDbFileId <= 0)
             {
-                mDbFileId = helper.getOrCreateFile(db, filePath);
+                mDbFileId = helper.getOrCreateFileId(db, filePath);
             }
 
             helper.updateFileStats(db, mDbFileId, mReviewedCount, mInvalidCount, mNoteCount, mRowCount);
@@ -351,7 +351,7 @@ public class FileEntry
 
                 if (mDbFileId <= 0)
                 {
-                    mDbFileId = helper.getOrCreateFile(db, filePath);
+                    mDbFileId = helper.getOrCreateFileId(db, filePath);
                 }
 
                 helper.updateFileNote(db, mDbFileId, note);

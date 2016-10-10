@@ -55,7 +55,7 @@ public class MainDatabase extends SQLiteOpenHelper
 
 
 
-    public  static final String FILES_TABLE_NAME   = "files";
+    private static final String FILES_TABLE_NAME   = "files";
     private static final String FILES_TABLE_CREATE = "CREATE TABLE " + FILES_TABLE_NAME + " " +
                                                      "(" +
                                                           COLUMN_ID                + " INTEGER PRIMARY KEY, " +
@@ -101,26 +101,15 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param filePath    path to file
      * @return file ID in DB
      */
-    public int getFile(SQLiteDatabase db, String filePath)
+    public int getFileId(SQLiteDatabase db, String filePath)
     {
         int res = 0;
 
         long modifiedTime = new File(filePath).lastModified();
 
-        int index = filePath.lastIndexOf('/');
-        Assert.assertTrue(index >= 0);
-
-        String folder   = filePath.substring(0, index);
-        String fileName = filePath.substring(index + 1);
-
-        if (folder.equals(""))
-        {
-            folder = "/";
-        }
 
 
-
-        Cursor cursor = getFile(db, folder, fileName);
+        Cursor cursor = getFile(db, filePath);
 
         int idIndex           = cursor.getColumnIndexOrThrow(COLUMN_ID);
         int modificationIndex = cursor.getColumnIndexOrThrow(COLUMN_MODIFICATION_TIME);
@@ -170,7 +159,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param filePath    path to file
      * @return file ID in DB
      */
-    public int getOrCreateFile(SQLiteDatabase db, String filePath)
+    public int getOrCreateFileId(SQLiteDatabase db, String filePath)
     {
         int res = 0;
 
@@ -247,6 +236,36 @@ public class MainDatabase extends SQLiteOpenHelper
 
             res = (int)db.insertOrThrow(FILES_TABLE_NAME, null, values);
         }
+
+
+
+        return res;
+    }
+
+    /**
+     * Gets file note for specified file ID
+     * @param db        database
+     * @param fileId    file ID in DB
+     * @return file note for specified file ID
+     */
+    public String getFileNote(SQLiteDatabase db, int fileId)
+    {
+        String res = null;
+
+
+
+        Cursor cursor = getFile(db, fileId);
+
+        int noteIndex = cursor.getColumnIndexOrThrow(COLUMN_NOTE);
+
+        cursor.moveToFirst();
+
+        if (!cursor.isAfterLast())
+        {
+            res = cursor.getString(noteIndex);
+        }
+
+        cursor.close();
 
 
 
@@ -349,15 +368,50 @@ public class MainDatabase extends SQLiteOpenHelper
     }
 
     /**
+     * Gets cursor for all files with specified path to file
+     * @param db          database
+     * @param filePath    path to file
+     * @return cursor for all files with specified path to file
+     */
+    @SuppressWarnings("WeakerAccess")
+    public Cursor getFile(SQLiteDatabase db, String filePath)
+    {
+        int index = filePath.lastIndexOf('/');
+        Assert.assertTrue(index >= 0);
+
+        String folder   = filePath.substring(0, index);
+        String fileName = filePath.substring(index + 1);
+
+        if (folder.equals(""))
+        {
+            folder = "/";
+        }
+
+        return getFile(db, folder, fileName);
+    }
+
+    /**
      * Gets cursor for all files with specified path and file name
      * @param db          database
      * @param path        path to folder
      * @param fileName    file name
      * @return cursor for all files with specified path and file name
      */
+    @SuppressWarnings("WeakerAccess")
     public Cursor getFile(SQLiteDatabase db, String path, String fileName)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH + "=? AND " + COLUMN_NAME + "=?", new String[]{ path, fileName }, null, null, null);
+    }
+
+    /**
+     * Gets cursor for file with specified file ID in DB
+     * @param db        database
+     * @param fileId    file ID in DB
+     * @return cursor for file with specified file ID in DB
+     */
+    public Cursor getFile(SQLiteDatabase db, int fileId)
+    {
+        return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_ID + "=?", new String[]{ String.valueOf(fileId) }, null, null, null);
     }
 
     /**

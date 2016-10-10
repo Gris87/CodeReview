@@ -1,4 +1,3 @@
-Load file note on startup in review activity
 Syntax Highlight in menu
 
 Code analysis in all files

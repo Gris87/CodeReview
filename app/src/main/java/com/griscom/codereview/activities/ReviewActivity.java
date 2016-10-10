@@ -22,6 +22,7 @@ import com.griscom.codereview.CodeReviewApplication;
 import com.griscom.codereview.R;
 import com.griscom.codereview.dialogs.CommentDialog;
 import com.griscom.codereview.listeners.OnCommentDialogRequestedListener;
+import com.griscom.codereview.listeners.OnFileNoteLoadedListener;
 import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.other.ApplicationExtras;
@@ -35,7 +36,7 @@ import junit.framework.Assert;
 /**
  * Activity for performing code review
  */
-public class ReviewActivity extends FragmentActivity implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnProgressChangedListener, OnCommentDialogRequestedListener, CommentDialog.OnFragmentInteractionListener
+public class ReviewActivity extends FragmentActivity implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnFileNoteLoadedListener, OnProgressChangedListener, OnCommentDialogRequestedListener, CommentDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ReviewActivity";
@@ -135,6 +136,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.setFilePath(filePath, fileId);
         mContent.setOnTouchListener(this);
         mContent.setOnNoteSupportListener(this);
+        mContent.setOnFileNoteLoadedListener(this);
         mContent.setOnProgressChangedListener(this);
         mContent.setOnCommentDialogRequestedListener(this);
 
@@ -340,6 +342,14 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         {
             mNoteButton.setVisibility(View.GONE);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onFileNoteLoaded(String note)
+    {
+        mNoteTextView.setVisibility(View.VISIBLE);
+        mNoteTextView.setText(note);
     }
 
     /** {@inheritDoc} */

@@ -23,6 +23,7 @@ import com.griscom.codereview.R;
 import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
 import com.griscom.codereview.listeners.OnCommentDialogRequestedListener;
+import com.griscom.codereview.listeners.OnFileNoteLoadedListener;
 import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
@@ -63,6 +64,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     private int                              mTabSize;
     private int                              mSelectionType;
     private OnNoteSupportListener            mNoteSupportListener;
+    private OnFileNoteLoadedListener         mFileNoteLoadedListener;
     private OnProgressChangedListener        mProgressChangedListener;
     private OnCommentDialogRequestedListener mCommentDialogRequestedListener;
 
@@ -143,6 +145,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         mTabSize                        = ApplicationSettings.getTabSize();
         mSelectionType                  = SelectionType.REVIEWED;
         mNoteSupportListener            = null;
+        mFileNoteLoadedListener         = null;
         mProgressChangedListener        = null;
         mCommentDialogRequestedListener = null;
     }
@@ -402,9 +405,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         {
             mNoteSupportListener.onNoteSupport(!TextUtils.isEmpty(mSyntaxParser.getCommentLine()));
         }
-
-        // Maybe reload but no. Calls once and reload will come at the next step
-        // reload();
     }
 
     /**
@@ -417,8 +417,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     }
 
     /**
-     * Sets file identifier
-     * @param fileId    file identifier
+     * Sets file ID in DB
+     * @param fileId    file ID in DB
      */
     public void setFileId(int fileId)
     {
@@ -426,8 +426,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     }
 
     /**
-     * Gets file identifier
-     * @return file identifier
+     * Gets file ID in DB
+     * @return file ID in DB
      */
     public int getFileId()
     {
@@ -500,6 +500,15 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     }
 
     /**
+     * Sets file note loaded listener
+     * @param listener    file note loaded listener
+     */
+    public void setOnFileNoteLoadedListener(OnFileNoteLoadedListener listener)
+    {
+        mFileNoteLoadedListener = listener;
+    }
+
+    /**
      * Sets progress changed listener
      * @param listener    progress changed listener
      */
@@ -535,9 +544,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     private class LoadingTask extends AsyncTask<Void, Void, TextDocument>
     {
         private Context          mContext;
-        private SyntaxParserBase mParser;
         private String           mPath;
         private int              mDbFileId;
+        private SyntaxParserBase mParser;
+        private String           mNote;
 
 
 
@@ -546,9 +556,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         protected void onPreExecute()
         {
             mContext  = getContext();
-            mParser   = mSyntaxParser;
             mPath     = mFilePath;
             mDbFileId = mFileId;
+            mParser   = mSyntaxParser;
+            mNote     = null;
         }
 
         /**
@@ -588,7 +599,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
                     MainDatabase helper = new MainDatabase(mContext);
                     db = helper.getReadableDatabase();
 
-                    mDbFileId = helper.getFile(db, mPath);
+                    mDbFileId = helper.getFileId(db, mPath);
+                    mNote     = helper.getFileNote(db, mDbFileId);
 
                     db.close();
                     db = null;
@@ -722,6 +734,13 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
                 textDocument.setSelectionType(mSelectionType);
                 textDocument.setOnProgressChangedListener(mProgressChangedListener);
                 textDocument.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
+
+                if (!TextUtils.isEmpty(mNote))
+                {
+                    mFileNoteLoadedListener.onFileNoteLoaded(mNote);
+                }
+
+
 
                 long modifiedTime = new File(mPath).lastModified();
 
