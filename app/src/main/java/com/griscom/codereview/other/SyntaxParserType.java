@@ -42,7 +42,7 @@ public class SyntaxParserType
     public static final int TCL                = 29;
     public static final int TEX                = 30;
     public static final int VHDL               = 31;
-    public static final int VISUALBASIC        = 32;
+    public static final int VISUAL_BASIC       = 32;
     public static final int WIKI               = 33;
     public static final int XML                = 34;
     public static final int X_QUERY            = 35;

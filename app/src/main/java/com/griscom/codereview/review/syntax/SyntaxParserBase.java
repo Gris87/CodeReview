@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.Paint;
 
 import com.griscom.codereview.other.ApplicationSettings;
+import com.griscom.codereview.other.SyntaxParserType;
 import com.griscom.codereview.review.TextDocument;
+import com.griscom.codereview.util.AppLog;
 import com.griscom.codereview.util.Utils;
 
 import java.io.BufferedReader;
@@ -17,6 +19,11 @@ import java.io.InputStreamReader;
 @SuppressLint("DefaultLocale")
 public abstract class SyntaxParserBase
 {
+    @SuppressWarnings("unused")
+    private static final String TAG = "SyntaxParserBase";
+
+
+
     protected Context        mContext;
     protected BufferedReader mReader;
     protected Paint          mCommentPaint;
@@ -28,6 +35,59 @@ public abstract class SyntaxParserBase
         mContext      = context;
         mReader       = null;
         mCommentPaint = null;
+    }
+
+    public static SyntaxParserBase createParserByType(String fileName, Context context, int type)
+    {
+        switch (type)
+        {
+            case SyntaxParserType.AUTOMATIC: return createParserByFileName(fileName, context);
+
+            case SyntaxParserType.APOLLO:             return new ApolloSyntaxParser(context);
+            case SyntaxParserType.BASH:               return new BashSyntaxParser(context);
+            case SyntaxParserType.BASIC:              return new BasicSyntaxParser(context);
+            case SyntaxParserType.CLOJURE:            return new ClojureSyntaxParser(context);
+            case SyntaxParserType.C_PLUS_PLUS:        return new CPlusPlusSyntaxParser(context);
+            case SyntaxParserType.C_SHARP:            return new CSharpSyntaxParser(context);
+            case SyntaxParserType.CSS:                return new CssSyntaxParser(context);
+            case SyntaxParserType.CSS_KW:             return new CssKwSyntaxParser(context);
+            case SyntaxParserType.CSS_STR:            return new CssStrSyntaxParser(context);
+            case SyntaxParserType.DART:               return new DartSyntaxParser(context);
+            case SyntaxParserType.ERLANG:             return new ErlangSyntaxParser(context);
+            case SyntaxParserType.GO:                 return new GoSyntaxParser(context);
+            case SyntaxParserType.HASKELL:            return new HaskellSyntaxParser(context);
+            case SyntaxParserType.JAVA:               return new JavaSyntaxParser(context);
+            case SyntaxParserType.LISP:               return new LispSyntaxParser(context);
+            case SyntaxParserType.LLVM:               return new LlvmSyntaxParser(context);
+            case SyntaxParserType.LUA:                return new LuaSyntaxParser(context);
+            case SyntaxParserType.MATLAB:             return new MatlabSyntaxParser(context);
+            case SyntaxParserType.MATLAB_IDENTIFIERS: return new MatlabIdentifiersSyntaxParser(context);
+            case SyntaxParserType.MATLAB_OPERATORS:   return new MatlabOperatorsSyntaxParser(context);
+            case SyntaxParserType.ML:                 return new MlSyntaxParser(context);
+            case SyntaxParserType.MUMPS:              return new MumpsSyntaxParser(context);
+            case SyntaxParserType.N:                  return new NSyntaxParser(context);
+            case SyntaxParserType.PASCAL:             return new PascalSyntaxParser(context);
+            case SyntaxParserType.R:                  return new RSyntaxParser(context);
+            case SyntaxParserType.RD:                 return new RdSyntaxParser(context);
+            case SyntaxParserType.SCALA:              return new ScalaSyntaxParser(context);
+            case SyntaxParserType.SQL:                return new SqlSyntaxParser(context);
+            case SyntaxParserType.TCL:                return new TclSyntaxParser(context);
+            case SyntaxParserType.TEX:                return new TexSyntaxParser(context);
+            case SyntaxParserType.VHDL:               return new VisualBasicSyntaxParser(context);
+            case SyntaxParserType.VISUAL_BASIC:       return new VhdlSyntaxParser(context);
+            case SyntaxParserType.WIKI:               return new WikiSyntaxParser(context);
+            case SyntaxParserType.XML:                return new XmlSyntaxParser(context);
+            case SyntaxParserType.X_QUERY:            return new XQuerySyntaxParser(context);
+            case SyntaxParserType.YAML:               return new YamlSyntaxParser(context);
+            case SyntaxParserType.PLAIN_TEXT:         return new PlainTextSyntaxParser(context);
+
+            default:
+            {
+                AppLog.wtf(TAG, "Unknown syntax parser type: " + String.valueOf(type));
+            }
+        }
+
+        return new PlainTextSyntaxParser(context);
     }
 
     public static SyntaxParserBase createParserByFileName(String fileName, Context context)
