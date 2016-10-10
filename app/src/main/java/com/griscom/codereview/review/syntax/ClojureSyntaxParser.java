@@ -18,11 +18,11 @@ import prettify.PrettifyParser;
 import prettify.parser.Prettify;
 import syntaxhighlight.ParseResult;
 
-public class XqSyntaxParser extends SyntaxParserBase
+public class ClojureSyntaxParser extends SyntaxParserBase
 {
-    private static final String TAG = "XqSyntaxParser";
+    private static final String TAG = "ClojureSyntaxParser";
 
-    public XqSyntaxParser(Context context)
+    public ClojureSyntaxParser(Context context)
     {
         super(context);
     }
@@ -80,7 +80,7 @@ public class XqSyntaxParser extends SyntaxParserBase
             int tabSize = getTabSize();
 
             String sourceCode = codeBuilder.toString();
-            List<ParseResult> results = new PrettifyParser().parse("xq", sourceCode);
+            List<ParseResult> results = new PrettifyParser().parse("clj", sourceCode);
 
             TextRow row = null;
             int curColumn = 0;
@@ -152,6 +152,6 @@ public class XqSyntaxParser extends SyntaxParserBase
     public String getCommentLine()
     {
         // TODO: Check it
-        return "-- ";
+        return "//";
     }
 }

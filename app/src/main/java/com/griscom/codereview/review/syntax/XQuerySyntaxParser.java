@@ -18,11 +18,11 @@ import prettify.PrettifyParser;
 import prettify.parser.Prettify;
 import syntaxhighlight.ParseResult;
 
-public class CljSyntaxParser extends SyntaxParserBase
+public class XQuerySyntaxParser extends SyntaxParserBase
 {
-    private static final String TAG = "CljSyntaxParser";
+    private static final String TAG = "XQuerySyntaxParser";
 
-    public CljSyntaxParser(Context context)
+    public XQuerySyntaxParser(Context context)
     {
         super(context);
     }
@@ -80,7 +80,7 @@ public class CljSyntaxParser extends SyntaxParserBase
             int tabSize = getTabSize();
 
             String sourceCode = codeBuilder.toString();
-            List<ParseResult> results = new PrettifyParser().parse("clj", sourceCode);
+            List<ParseResult> results = new PrettifyParser().parse("xq", sourceCode);
 
             TextRow row = null;
             int curColumn = 0;
@@ -152,6 +152,6 @@ public class CljSyntaxParser extends SyntaxParserBase
     public String getCommentLine()
     {
         // TODO: Check it
-        return "//";
+        return "-- ";
     }
 }

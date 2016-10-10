@@ -18,11 +18,11 @@ import prettify.PrettifyParser;
 import prettify.parser.Prettify;
 import syntaxhighlight.ParseResult;
 
-public class HsSyntaxParser extends SyntaxParserBase
+public class HaskellSyntaxParser extends SyntaxParserBase
 {
-    private static final String TAG = "HsSyntaxParser";
+    private static final String TAG = "HaskellSyntaxParser";
 
-    public HsSyntaxParser(Context context)
+    public HaskellSyntaxParser(Context context)
     {
         super(context);
     }

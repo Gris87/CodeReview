@@ -67,7 +67,7 @@ public abstract class SyntaxParserBase
 
             if (extension.equals("clj"))
             {
-                return new CljSyntaxParser(context);
+                return new ClojureSyntaxParser(context);
             }
 
             if (
@@ -124,7 +124,7 @@ public abstract class SyntaxParserBase
 
             if (extension.equals("hs"))
             {
-                return new HsSyntaxParser(context);
+                return new HaskellSyntaxParser(context);
             }
 
             if (extension.equals("java"))
@@ -292,7 +292,7 @@ public abstract class SyntaxParserBase
                 extension.equals("xquery")
                 )
             {
-                return new XqSyntaxParser(context);
+                return new XQuerySyntaxParser(context);
             }
 
             if (
