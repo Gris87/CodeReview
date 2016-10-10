@@ -793,7 +793,7 @@ public class FilesAdapter extends BaseAdapter
 
         /** {@inheritDoc} */
         @Override
-        protected Boolean doInBackground(Void... arg0)
+        protected Boolean doInBackground(Void... params)
         {
             MainDatabase helper = new MainDatabase(mContext);
             SQLiteDatabase db = helper.getReadableDatabase();

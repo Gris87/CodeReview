@@ -166,15 +166,6 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
     /** {@inheritDoc} */
     @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-
-        mContent.onDestroy();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void onPause()
     {
         super.onPause();

@@ -3,28 +3,32 @@ package com.griscom.codereview.review;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
 import com.griscom.codereview.R;
+import com.griscom.codereview.db.MainDatabase;
+import com.griscom.codereview.db.SingleFileDatabase;
 import com.griscom.codereview.listeners.OnCommentDialogRequestedListener;
-import com.griscom.codereview.listeners.OnDocumentLoadedListener;
 import com.griscom.codereview.listeners.OnNoteSupportListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
 import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
+import com.griscom.codereview.other.RowType;
 import com.griscom.codereview.other.SelectionType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.AppLog;
@@ -37,18 +41,18 @@ import java.util.ArrayList;
 /**
  * SurfaceView that used in Review activity
  */
-public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDrawListener, OnDocumentLoadedListener, OnTouchListener
+public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, OnReviewSurfaceDrawListener
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "ReviewSurfaceView";
 
-    private static final int LOADED_MESSAGE  = 1;
-    private static final int REPAINT_MESSAGE = 2;
+
+
+    private static final int REPAINT_MESSAGE = 1;
 
 
 
-    private Context                          mContext;
-    private SurfaceHolder                    mSurfaceHolder;
-    private LoadingThread                    mLoadingThread;
+    private LoadingTask                      mLoadingTask;
     private DrawThread                       mDrawThread;
     private String                           mFilePath;
     private int                              mFileId;
@@ -62,91 +66,75 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
     private OnProgressChangedListener        mProgressChangedListener;
     private OnCommentDialogRequestedListener mCommentDialogRequestedListener;
 
-    // USED IN HANDLER [
-    private TextDocument                     mLastLoadedDocument;
-    // USED IN HANDLER ]
-
 
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler()
     {
+        /** {@inheritDoc} */
         @Override
         public void handleMessage(Message msg)
         {
             switch (msg.what)
             {
-                case LOADED_MESSAGE:
-                    loaded();
-                break;
-
                 case REPAINT_MESSAGE:
-                    repaint();
+                {
+                    if (mDrawThread != null)
+                    {
+                        mDrawThread.repaint();
+                    }
+                }
                 break;
-            }
-        }
-
-        private void loaded()
-        {
-            mLastLoadedDocument.init();
-
-            mLastLoadedDocument.setFontSize(mFontSize);
-            mLastLoadedDocument.setTabSize(mTabSize);
-            mLastLoadedDocument.setSelectionType(mSelectionType);
-            mLastLoadedDocument.setOnProgressChangedListener(mProgressChangedListener);
-            mLastLoadedDocument.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
-
-            long modifiedTime = new File(mFilePath).lastModified();
-
-            synchronized(this)
-            {
-                mModifiedTime       = modifiedTime;
-
-                mDocument           = mLastLoadedDocument;
-                mLastLoadedDocument = null;
-            }
-
-            repaint();
-        }
-
-        private void repaint()
-        {
-            if (mDrawThread != null)
-            {
-                mDrawThread.repaint();
             }
         }
     };
 
 
 
+    /**
+     * Creates ReviewSurfaceView instance
+     * @param context    context
+     */
     public ReviewSurfaceView(Context context)
     {
         super(context);
 
-        init(context);
+        init();
     }
 
+    /**
+     * Creates ReviewSurfaceView instance
+     * @param context    context
+     * @param attrs      attributes
+     */
     public ReviewSurfaceView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
-        init(context);
+        init();
     }
 
+    /**
+     * Creates ReviewSurfaceView instance
+     * @param context    context
+     * @param attrs      attributes
+     * @param defStyle   default style
+     */
     public ReviewSurfaceView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
 
-        init(context);
+        init();
     }
 
-    private void init(Context context)
+    /**
+     * Initializes instance
+     */
+    private void init()
     {
-        mContext                        = context;
-        mSurfaceHolder                  = getHolder();
-        mLoadingThread                  = null;
+        mLoadingTask                    = null;
         mDrawThread                     = null;
+        mFilePath                       = null;
         mFileId                         = 0;
         mModifiedTime                   = 0;
         mSyntaxParser                   = null;
@@ -157,34 +145,30 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         mNoteSupportListener            = null;
         mProgressChangedListener        = null;
         mCommentDialogRequestedListener = null;
-        mLastLoadedDocument             = null;
     }
 
-    public void onDestroy()
-    {
-        synchronized(this)
-        {
-            mDocument = null;
-        }
-    }
-
+    /**
+     * Handler for pause event
+     */
     public void onPause()
     {
-        stopLoadingThread();
+        stopLoadingTask();
         stopDrawThread();
     }
 
+    /**
+     * Handler for resume event
+     */
     public void onResume()
     {
-        stopDrawThread();
-
         reload();
         repaint(200);
 
-        mDrawThread = new DrawThread(mSurfaceHolder, this);
+        mDrawThread = new DrawThread(getHolder(), this);
         mDrawThread.start();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onConfigurationChanged(Configuration newConfig)
     {
@@ -196,17 +180,19 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         repaint(80);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onTouch(View v, MotionEvent event)
     {
-        if (mDocument != null)
-        {
-            return mDocument.onTouch(v, event);
-        }
-
-        return true;
+        return mDocument == null || mDocument.onTouch(v, event);
     }
 
+    /**
+     * Handler for comment entered event
+     * @param firstRow    first row
+     * @param lastRow     last row
+     * @param comment     comment
+     */
     public void onCommentEntered(int firstRow, int lastRow, String comment)
     {
         if (mDocument != null)
@@ -215,6 +201,9 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /**
+     * Handler for comment canceled event
+     */
     public void onCommentCanceled()
     {
         if (mDocument != null)
@@ -223,6 +212,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onReviewSurfaceDraw(Canvas canvas)
     {
@@ -246,35 +236,34 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
             Paint paint = new Paint();
 
             paint.setColor(Color.GRAY);
-            paint.setTextSize(Utils.spToPixels(36, mContext));
+            paint.setTextSize(Utils.spToPixels(36, getContext()));
             paint.setTextAlign(Align.CENTER);
 
             if (modifiedTime == -1)
             {
-                canvas.drawText(mContext.getString(R.string.review_file_not_found), getWidth() * 0.5f, getHeight() * 0.5f, paint);
+                canvas.drawText(getContext().getString(R.string.review_file_not_found), getWidth() * 0.5f, getHeight() * 0.5f, paint);
             }
             else
             {
-                canvas.drawText(mContext.getString(R.string.review_loading),        getWidth() * 0.5f, getHeight() * 0.5f, paint);
+                canvas.drawText(getContext().getString(R.string.review_loading),        getWidth() * 0.5f, getHeight() * 0.5f, paint);
             }
         }
     }
 
-    @Override
-    public void onDocumentLoaded(TextDocument document)
-    {
-        mLastLoadedDocument = document;
-        mHandler.sendEmptyMessage(LOADED_MESSAGE);
-    }
-
+    /**
+     * Saves document
+     */
     public void saveRequested()
     {
         if (mDocument != null)
         {
             try
             {
-                ArrayList<TextRow> rows   = mDocument.getRows();
-                PrintWriter        writer = new PrintWriter(mFilePath);
+                ArrayList<TextRow> rows = mDocument.getRows();
+
+
+
+                PrintWriter writer = new PrintWriter(mFilePath);
 
                 for (int i = 0; i < rows.size() - 1; ++i)
                 {
@@ -283,10 +272,12 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
                 if (rows.size() > 0)
                 {
-                    writer.print(rows.get(rows.size() - 1));
+                    writer.print(rows.get(rows.size() - 1).toString());
                 }
 
                 writer.close();
+
+
 
                 long modifiedTime = new File(mFilePath).lastModified();
 
@@ -302,11 +293,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /**
+     * Repaints surface
+     */
     public void repaint()
     {
         repaint(0);
     }
 
+    /**
+     * Repaints surface with specified timeout
+     * @param timeout    timeout
+     */
     public void repaint(long timeout)
     {
         if (timeout > 0)
@@ -319,13 +317,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /**
+     * Reloads document
+     */
     public void reload()
     {
         File file = new File(mFilePath);
 
         if (!file.exists() || mModifiedTime != file.lastModified())
         {
-            stopLoadingThread();
+            stopLoadingTask();
 
             synchronized(this)
             {
@@ -341,33 +342,27 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
 
             if (file.exists())
             {
-                mLoadingThread = new LoadingThread(this, mSyntaxParser, this, mFilePath, mFileId);
-                mLoadingThread.start();
+                mLoadingTask = new LoadingTask();
+                mLoadingTask.execute();
             }
         }
     }
 
-    private void stopLoadingThread()
+    /**
+     * Stops loading task
+     */
+    private void stopLoadingTask()
     {
-        if (mLoadingThread != null)
+        if (mLoadingTask != null)
         {
-            mLoadingThread.interrupt();
-
-            do
-            {
-                try
-                {
-                    mLoadingThread.join();
-                    mLoadingThread = null;
-                    return;
-                }
-                catch (Exception e)
-                {
-                }
-            } while(true);
+            mLoadingTask.interrupt();
+            mLoadingTask = null;
         }
     }
 
+    /**
+     * Stops draw thread
+     */
     private void stopDrawThread()
     {
         if (mDrawThread != null)
@@ -380,21 +375,28 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
                 {
                     mDrawThread.join();
                     mDrawThread = null;
+
                     return;
                 }
                 catch (Exception e)
                 {
+                    // Nothing
                 }
             } while(true);
         }
     }
 
+    /**
+     * Sets path to file
+     * @param filePath    path to file
+     */
     public void setFilePath(String filePath, int fileId)
     {
+        // TODO: Split this function
         mFilePath = filePath;
         mFileId   = fileId;
 
-        mSyntaxParser = SyntaxParserBase.createParserByFileName(mFilePath, mContext);
+        mSyntaxParser = SyntaxParserBase.createParserByFileName(mFilePath, getContext());
 
         if (mNoteSupportListener != null && mSyntaxParser != null)
         {
@@ -405,21 +407,37 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         // reload();
     }
 
+    /**
+     * Gets path to file
+     * @return path to file
+     */
     public String getFilePath()
     {
         return mFilePath;
     }
 
+    /**
+     * Sets file identifier
+     * @param fileId    file identifier
+     */
     public void setFileId(int fileId)
     {
         mFileId = fileId;
     }
 
+    /**
+     * Gets file identifier
+     * @return file identifier
+     */
     public int getFileId()
     {
         return mFileId;
     }
 
+    /**
+     * Sets font size
+     * @param fontSize    font size
+     */
     public void setFontSize(int fontSize)
     {
         if (mFontSize != fontSize)
@@ -433,6 +451,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /**
+     * Sets tab size
+     * @param tabSize    tab size
+     */
     public void setTabSize(int tabSize)
     {
         if (mTabSize != tabSize)
@@ -446,6 +468,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /**
+     * Sets selection type
+     * @param selectionType    selection type
+     */
     public void setSelectionType(int selectionType)
     {
         if (mSelectionType != selectionType)
@@ -459,6 +485,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /**
+     * Sets note support listener
+     * @param listener    note support listener
+     */
     public void setOnNoteSupportListener(OnNoteSupportListener listener)
     {
         mNoteSupportListener = listener;
@@ -469,6 +499,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /**
+     * Sets progress changed listener
+     * @param listener    progress changed listener
+     */
     public void setOnProgressChangedListener(OnProgressChangedListener listener)
     {
         mProgressChangedListener = listener;
@@ -479,6 +513,10 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         }
     }
 
+    /**
+     * Sets comment dialog requested listener
+     * @param listener    comment dialog requested listener
+     */
     public void setOnCommentDialogRequestedListener(OnCommentDialogRequestedListener listener)
     {
         mCommentDialogRequestedListener = listener;
@@ -486,6 +524,215 @@ public class ReviewSurfaceView extends SurfaceView implements OnReviewSurfaceDra
         if (mDocument != null)
         {
             mDocument.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
+        }
+    }
+
+
+
+    /**
+     * File loading task
+     */
+    private class LoadingTask extends AsyncTask<Void, Void, TextDocument>
+    {
+        private Context          mContext;
+        private SyntaxParserBase mParser;
+        private String           mPath;
+        private int              mDbFileId;
+
+
+
+        /** {@inheritDoc} */
+        @Override
+        protected void onPreExecute()
+        {
+            mContext  = getContext();
+            mParser   = mSyntaxParser;
+            mPath     = mFilePath;
+            mDbFileId = mFileId;
+        }
+
+        /**
+         * Interrupts execution
+         */
+        @SuppressWarnings("WeakerAccess")
+        public void interrupt()
+        {
+            cancel(true);
+
+            try
+            {
+                mParser.closeReader();
+            }
+            catch (Exception e)
+            {
+                AppLog.e(TAG, "Impossible to close parser", e);
+            }
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected TextDocument doInBackground(Void... params)
+        {
+            TextDocument document = null;
+
+            SQLiteDatabase db = null;
+
+            try
+            {
+                document = mParser.parseFile(mPath);
+
+                document.setParent(ReviewSurfaceView.this);
+
+                if (mDbFileId <= 0)
+                {
+                    MainDatabase helper = new MainDatabase(mContext);
+                    db = helper.getReadableDatabase();
+
+                    mDbFileId = helper.getFile(db, mPath);
+
+                    db.close();
+                    db = null;
+                }
+
+                ArrayList<TextRow> rows = document.getRows();
+
+                if (mDbFileId > 0)
+                {
+                    SingleFileDatabase helper = new SingleFileDatabase(mContext, mDbFileId);
+
+                    db            = helper.getReadableDatabase();
+                    Cursor cursor = helper.getRows(db);
+
+                    int idIndex   = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ID);
+                    int typeIndex = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_TYPE);
+
+                    cursor.moveToFirst();
+
+                    while (!cursor.isAfterLast())
+                    {
+                        int row = cursor.getInt(idIndex) - 1;
+
+                        if (row >= 0 && row < rows.size())
+                        {
+                            String typeStr = cursor.getString(typeIndex);
+
+                            char type = !TextUtils.isEmpty(typeStr) ? typeStr.charAt(0) : '-';
+
+                            switch (type)
+                            {
+                                case RowType.REVIEWED:
+                                {
+                                    rows.get(row).setSelectionType(SelectionType.REVIEWED);
+                                }
+                                break;
+
+                                case RowType.INVALID:
+                                {
+                                    rows.get(row).setSelectionType(SelectionType.INVALID);
+                                }
+                                break;
+
+                                default:
+                                {
+                                    AppLog.wtf(TAG, "Unknown row type \"" + String.valueOf(type) + "\" in database \"" + helper.getDbName() + "\"");
+                                }
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            AppLog.wtf(TAG, "Unexpected row id (" + String.valueOf(row) + ") with row count (" + String.valueOf(rows.size()) + ")");
+                        }
+
+                        cursor.moveToNext();
+                    }
+
+                    cursor.close();
+                }
+
+                int reviewedCount = 0;
+                int invalidCount  = 0;
+                int noteCount     = 0;
+
+                for (int i = 0; i < rows.size(); ++i)
+                {
+                    TextRow row = rows.get(i);
+
+                    row.checkForComment(mParser);
+
+                    switch (row.getSelectionType())
+                    {
+                        case SelectionType.REVIEWED:
+                        {
+                            ++reviewedCount;
+                        }
+                        break;
+
+                        case SelectionType.INVALID:
+                        {
+                            ++invalidCount;
+                        }
+                        break;
+
+                        case SelectionType.NOTE:
+                        {
+                            ++noteCount;
+                        }
+                        break;
+
+                        case SelectionType.CLEAR:
+                        {
+                            // Nothing
+                        }
+                        break;
+
+                        default:
+                        {
+                            AppLog.wtf(TAG, "Unknown selection type: " + String.valueOf(row.getSelectionType()));
+                        }
+                        break;
+                    }
+                }
+
+                document.setProgress(reviewedCount, invalidCount, noteCount);
+            }
+            catch (Exception e)
+            {
+                AppLog.wtf(TAG, "Exception occurred during parsing", e);
+            }
+
+            if (db != null)
+            {
+                db.close();
+            }
+
+            return document;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected void onPostExecute(TextDocument textDocument)
+        {
+            if (textDocument != null)
+            {
+                textDocument.init();
+
+                textDocument.setFontSize(mFontSize);
+                textDocument.setTabSize(mTabSize);
+                textDocument.setSelectionType(mSelectionType);
+                textDocument.setOnProgressChangedListener(mProgressChangedListener);
+                textDocument.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
+
+                long modifiedTime = new File(mPath).lastModified();
+
+                synchronized(this)
+                {
+                    mModifiedTime = modifiedTime;
+                    mDocument     = textDocument;
+                }
+
+                repaint();
+            }
         }
     }
 }
