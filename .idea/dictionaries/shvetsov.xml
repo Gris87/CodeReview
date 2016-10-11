@@ -2,11 +2,15 @@
   <dictionary name="shvetsov">
     <words>
       <w>codereview</w>
+      <w>erlang</w>
       <w>griscom</w>
+      <w>matlab</w>
       <w>snfhj</w>
+      <w>vhdl</w>
       <w>vpvb</w>
       <w>webscr</w>
       <w>xclick</w>
+      <w>yaml</w>
     </words>
   </dictionary>
 </component>

@@ -31,6 +31,7 @@ import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.RowType;
 import com.griscom.codereview.other.SelectionType;
+import com.griscom.codereview.other.SyntaxParserType;
 import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import com.griscom.codereview.util.AppLog;
 import com.griscom.codereview.util.Utils;
@@ -58,6 +59,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     private String                           mFilePath;
     private int                              mFileId;
     private long                             mModifiedTime;
+    private int                              mSyntaxParserType;
     private SyntaxParserBase                 mSyntaxParser;
     private TextDocument                     mDocument;
     private int                              mFontSize;
@@ -139,6 +141,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         mFilePath                       = null;
         mFileId                         = 0;
         mModifiedTime                   = 0;
+        mSyntaxParserType               = SyntaxParserType.AUTOMATIC;
         mSyntaxParser                   = null;
         mDocument                       = null;
         mFontSize                       = ApplicationSettings.getFontSize();
@@ -329,25 +332,35 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
         if (!file.exists() || mModifiedTime != file.lastModified())
         {
-            stopLoadingTask();
+            forceReload();
+        }
+    }
 
-            synchronized(this)
+    /**
+     * Reloads document with the force
+     */
+    public void forceReload()
+    {
+        File file = new File(mFilePath);
+
+        stopLoadingTask();
+
+        synchronized(this)
+        {
+            if (!file.exists())
             {
-                if (!file.exists())
-                {
-                    mModifiedTime = -1;
-                }
-
-                mDocument = null;
+                mModifiedTime = -1;
             }
 
-            repaint();
+            mDocument = null;
+        }
 
-            if (file.exists())
-            {
-                mLoadingTask = new LoadingTask();
-                mLoadingTask.execute();
-            }
+        repaint();
+
+        if (file.exists())
+        {
+            mLoadingTask = new LoadingTask();
+            mLoadingTask.execute();
         }
     }
 
@@ -393,18 +406,9 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
      * Sets path to file
      * @param filePath    path to file
      */
-    public void setFilePath(String filePath, int fileId)
+    public void setFilePath(String filePath)
     {
-        // TODO: Split this function
         mFilePath = filePath;
-        mFileId   = fileId;
-
-        mSyntaxParser = SyntaxParserBase.createParserByFileName(mFilePath, getContext());
-
-        if (mNoteSupportListener != null && mSyntaxParser != null)
-        {
-            mNoteSupportListener.onNoteSupport(!TextUtils.isEmpty(mSyntaxParser.getCommentLine()));
-        }
     }
 
     /**
@@ -432,6 +436,31 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     public int getFileId()
     {
         return mFileId;
+    }
+
+    /**
+     * Sets syntax parser type
+     * @param syntaxParserType    syntax parser type
+     */
+    public void setSyntaxParserType(int syntaxParserType)
+    {
+        mSyntaxParserType = syntaxParserType;
+
+        mSyntaxParser = SyntaxParserBase.createParserByType(mFilePath, getContext(), mSyntaxParserType);
+
+        if (mNoteSupportListener != null && mSyntaxParser != null)
+        {
+            mNoteSupportListener.onNoteSupport(!TextUtils.isEmpty(mSyntaxParser.getCommentLine()));
+        }
+    }
+
+    /**
+     * Gets syntax parser type
+     * @return syntax parser type
+     */
+    public int getSyntaxParserType()
+    {
+        return mSyntaxParserType;
     }
 
     /**

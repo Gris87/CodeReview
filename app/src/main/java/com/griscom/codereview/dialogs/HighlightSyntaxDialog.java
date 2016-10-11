@@ -10,38 +10,38 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
 import com.griscom.codereview.R;
-import com.griscom.codereview.other.SortType;
+import com.griscom.codereview.other.SyntaxParserType;
 
 /**
- * Dialog for selecting sort type
+ * Dialog for selecting syntax parser type
  */
-public class SortDialog extends DialogFragment
+public class HighlightSyntaxDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
-    private static final String TAG = "SortDialog";
+    private static final String TAG = "HighlightSyntaxDialog";
 
 
 
-    private static final String ARG_SORT_TYPE = "SORT_TYPE";
+    private static final String ARG_SYNTAX_PARSER_TYPE = "SYNTAX_PARSER_TYPE";
 
 
 
-    private OnFragmentInteractionListener mListener = null;
-    private int                           mSortType = SortType.NONE;
+    private OnFragmentInteractionListener mListener         = null;
+    private int                           mSyntaxParserType = SyntaxParserType.AUTOMATIC;
 
 
 
     /**
-     * Creates new instance of SortDialog with pre-selected sort type
-     * @param sortType    sort type
-     * @return SortDialog instance
+     * Creates new instance of HighlightSyntaxDialog with pre-selected syntax parser type
+     * @param syntaxParserType    syntax parser type
+     * @return HighlightSyntaxDialog instance
      */
-    public static SortDialog newInstance(int sortType)
+    public static HighlightSyntaxDialog newInstance(int syntaxParserType)
     {
-        SortDialog fragment = new SortDialog();
+        HighlightSyntaxDialog fragment = new HighlightSyntaxDialog();
 
         Bundle args = new Bundle();
-        args.putInt(ARG_SORT_TYPE, sortType);
+        args.putInt(ARG_SYNTAX_PARSER_TYPE, syntaxParserType);
         fragment.setArguments(args);
 
         return fragment;
@@ -53,7 +53,7 @@ public class SortDialog extends DialogFragment
     {
         super.onCreate(savedInstanceState);
 
-        mSortType = getArguments().getInt(ARG_SORT_TYPE);
+        mSyntaxParserType = getArguments().getInt(ARG_SYNTAX_PARSER_TYPE);
     }
 
     /** {@inheritDoc} */
@@ -63,10 +63,10 @@ public class SortDialog extends DialogFragment
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.dialog_sort_title)
+        builder.setTitle(R.string.dialog_highlight_syntax_title)
                 .setCancelable(true)
-                .setSingleChoiceItems(R.array.dialog_sort_types,
-                        mSortType - 1,
+                .setSingleChoiceItems(R.array.dialog_highlight_syntax_types,
+                        mSyntaxParserType,
                         new DialogInterface.OnClickListener()
                         {
                             /**
@@ -78,7 +78,7 @@ public class SortDialog extends DialogFragment
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                onSortTypeSelected(which + 1);
+                                onSyntaxParserTypeSelected(which);
 
                                 dialog.dismiss();
                             }
@@ -88,14 +88,14 @@ public class SortDialog extends DialogFragment
     }
 
     /**
-     * Handler for sort type selected event
-     * @param sortType    selected sort type
+     * Handler for syntax parser type selected event
+     * @param syntaxParserType    selected syntax parser type
      */
-    public void onSortTypeSelected(int sortType)
+    public void onSyntaxParserTypeSelected(int syntaxParserType)
     {
         if (mListener != null)
         {
-            mListener.onSortTypeSelected(sortType);
+            mListener.onSyntaxParserTypeSelected(syntaxParserType);
         }
     }
 
@@ -132,9 +132,9 @@ public class SortDialog extends DialogFragment
     public interface OnFragmentInteractionListener
     {
         /**
-         * Handler for sort type selected event
-         * @param sortType    selected sort type
+         * Handler for syntax parser type selected event
+         * @param syntaxParserType    selected syntax parser type
          */
-        void onSortTypeSelected(int sortType);
+        void onSyntaxParserTypeSelected(int syntaxParserType);
     }
 }

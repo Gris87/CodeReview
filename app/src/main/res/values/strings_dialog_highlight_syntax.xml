@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title -->
+    <string name="dialog_highlight_syntax_title">Highlight syntax</string>
+
+    <!-- Syntax parser types -->
+    <string-array name="dialog_highlight_syntax_types">
+        <item>Automatic</item>
+        <item>Apollo</item>
+        <item>Bash</item>
+        <item>Basic</item>
+        <item>Clojure</item>
+        <item>C++</item>
+        <item>C#</item>
+        <item>CSS</item>
+        <item>CSS KW</item>
+        <item>CSS STR</item>
+        <item>Dart</item>
+        <item>Erlang</item>
+        <item>Go</item>
+        <item>Haskell</item>
+        <item>Java</item>
+        <item>LISP</item>
+        <item>LLVM</item>
+        <item>LUA</item>
+        <item>MATLAB</item>
+        <item>MATLAB Identifiers</item>
+        <item>MATLAB Operators</item>
+        <item>ML</item>
+        <item>MUMPS</item>
+        <item>N</item>
+        <item>Pascal</item>
+        <item>R</item>
+        <item>RD</item>
+        <item>Scala</item>
+        <item>SQL</item>
+        <item>Tcl</item>
+        <item>TEX</item>
+        <item>VHDL</item>
+        <item>Visual Basic</item>
+        <item>Wiki</item>
+        <item>XML</item>
+        <item>X Query</item>
+        <item>YAML</item>
+        <item>Plain Text</item>
+    </string-array>
+
+</resources>

@@ -12,15 +12,22 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_highlight_syntax"
         android:orderInCategory="200"
+        android:title="@string/review_action_highlight_syntax"
+        android:icon="@drawable/highlight_syntax"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="300"
         android:title="@string/review_action_settings"
         android:icon="@drawable/settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_close"
-        android:orderInCategory="300"
+        android:orderInCategory="400"
         android:title="@string/review_action_close"
         android:icon="@drawable/close"
         app:showAsAction="never" />

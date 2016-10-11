@@ -4,6 +4,9 @@
     <!-- Reload -->
     <string name="review_action_reload">Reload</string>
 
+    <!-- Highlight syntax -->
+    <string name="review_action_highlight_syntax">Highlight syntax</string>
+
     <!-- Settings -->
     <string name="review_action_settings">Settings</string>
 

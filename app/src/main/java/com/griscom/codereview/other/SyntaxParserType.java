@@ -48,6 +48,4 @@ public class SyntaxParserType
     public static final int X_QUERY            = 35;
     public static final int YAML               = 36;
     public static final int PLAIN_TEXT         = 37;
-
-    public static final int MAX = PLAIN_TEXT;
 }
