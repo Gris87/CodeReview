@@ -1,4 +1,6 @@
 Check dictinary
+Code generator for Syntax Parsers
+Check for SuppressWarnings
 Code analysis in all files
 UltraHD images
 Smooth movement
