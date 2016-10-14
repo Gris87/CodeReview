@@ -244,15 +244,27 @@ function generateSyntaxParser {
     echo "import prettify.parser.Prettify;"                                                                                    >> ${target_file}
     echo "import syntaxhighlight.ParseResult;"                                                                                 >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
+    echo "/**"                                                                                                                 >> ${target_file}
+    echo " * ${parser_name} syntax parser"                                                                                     >> ${target_file}
+    echo " */"                                                                                                                 >> ${target_file}
+    echo "@SuppressWarnings("WeakerAccess")"                                                                                   >> ${target_file}
     echo "public class ${parser}SyntaxParser extends SyntaxParserBase"                                                         >> ${target_file}
     echo "{"                                                                                                                   >> ${target_file}
+    echo "    @SuppressWarnings("unused")"                                                                                     >> ${target_file}
     echo "    private static final String TAG = \"${parser}SyntaxParser\";"                                                    >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
+    echo ""                                                                                                                    >> ${target_file}
+    echo ""                                                                                                                    >> ${target_file}
+    echo "    /**"                                                                                                             >> ${target_file}
+    echo "     * Creates ${parser}SyntaxParser instance"                                                                       >> ${target_file}
+    echo "     * @param context    context"                                                                                    >> ${target_file}
+    echo "     */"                                                                                                             >> ${target_file}
     echo "    public ${parser}SyntaxParser(Context context)"                                                                   >> ${target_file}
     echo "    {"                                                                                                               >> ${target_file}
     echo "        super(context);"                                                                                             >> ${target_file}
     echo "    }"                                                                                                               >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
+    echo "    /** {@inheritDoc} */"                                                                                            >> ${target_file}
     echo "    @Override"                                                                                                       >> ${target_file}
     echo "    public TextDocument parseFile(String fileName)"                                                                  >> ${target_file}
     echo "    {"                                                                                                               >> ${target_file}
@@ -271,7 +283,7 @@ function generateSyntaxParser {
         echo "            Paint tagPaint         = new Paint(basePaint);"                                                      >> ${target_file}
         echo "            Paint attribNamePaint  = new Paint(basePaint);"                                                      >> ${target_file}
         echo "            Paint attribValuePaint = new Paint(basePaint);"                                                      >> ${target_file}
-        echo "            mCommentPaint          = new Paint(basePaint);"                                                      >> ${target_file}
+        echo "            Paint commentPaint     = new Paint(basePaint);"                                                      >> ${target_file}
         echo "            Paint stringPaint      = new Paint(basePaint);"                                                      >> ${target_file}
         echo "            Paint punctuationPaint = new Paint(basePaint);"                                                      >> ${target_file}
         echo ""                                                                                                                >> ${target_file}
@@ -280,39 +292,41 @@ function generateSyntaxParser {
         echo "            tagPaint.setFakeBoldText (true);"                                                                    >> ${target_file}
         echo "            attribNamePaint.setColor (Color.rgb(172, 0,   172));"                                                >> ${target_file}
         echo "            attribValuePaint.setColor(Color.rgb(40,  0,   255));"                                                >> ${target_file}
-        echo "            mCommentPaint.setColor   (Color.rgb(64,  96,  192));"                                                >> ${target_file}
+        echo "            commentPaint.setColor    (Color.rgb(64,  96,  192));"                                                >> ${target_file}
         echo "            stringPaint.setColor     (Color.rgb(40,  0,   255));"                                                >> ${target_file}
         echo ""                                                                                                                >> ${target_file}
-        echo "            Map<String, Paint> colorsMap = new HashMap<String, Paint>();"                                        >> ${target_file}
+        echo "            Map<String, Paint> colorsMap = new HashMap<>();"                                                     >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_TAG,          tagPaint);"                                                  >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_ATTRIB_NAME,  attribNamePaint);"                                           >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_ATTRIB_VALUE, attribValuePaint);"                                          >> ${target_file}
-        echo "            colorsMap.put(Prettify.PR_COMMENT,      mCommentPaint);"                                             >> ${target_file}
+        echo "            colorsMap.put(Prettify.PR_COMMENT,      commentPaint);"                                              >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_STRING,       stringPaint);"                                               >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_PUNCTUATION,  punctuationPaint);"                                          >> ${target_file}
     else
         echo "            Paint keywordPaint     = new Paint(basePaint);"                                                      >> ${target_file}
         echo "            Paint typePaint        = new Paint(basePaint);"                                                      >> ${target_file}
         echo "            Paint literalPaint     = new Paint(basePaint);"                                                      >> ${target_file}
-        echo "            mCommentPaint          = new Paint(basePaint);"                                                      >> ${target_file}
+        echo "            Paint commentPaint     = new Paint(basePaint);"                                                      >> ${target_file}
         echo "            Paint stringPaint      = new Paint(basePaint);"                                                      >> ${target_file}
         echo "            Paint punctuationPaint = new Paint(basePaint);"                                                      >> ${target_file}
         echo ""                                                                                                                >> ${target_file}
         echo "            keywordPaint.setColor       (Color.rgb(150, 0,   85));"                                              >> ${target_file}
         echo "            keywordPaint.setTypeface    (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));"                   >> ${target_file}
         echo "            keywordPaint.setFakeBoldText(true);"                                                                 >> ${target_file}
-        echo "            mCommentPaint.setColor      (Color.rgb(64,  128, 100));"                                             >> ${target_file}
+        echo "            commentPaint.setColor       (Color.rgb(64,  128, 100));"                                             >> ${target_file}
         echo "            stringPaint.setColor        (Color.rgb(0,   0,   192));"                                             >> ${target_file}
         echo ""                                                                                                                >> ${target_file}
-        echo "            Map<String, Paint> colorsMap = new HashMap<String, Paint>();"                                        >> ${target_file}
+        echo "            Map<String, Paint> colorsMap = new HashMap<>();"                                                     >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);"                                               >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_TYPE,        typePaint);"                                                  >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_LITERAL,     literalPaint);"                                               >> ${target_file}
-        echo "            colorsMap.put(Prettify.PR_COMMENT,     mCommentPaint);"                                              >> ${target_file}
+        echo "            colorsMap.put(Prettify.PR_COMMENT,     commentPaint);"                                               >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_STRING,      stringPaint);"                                                >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_PUNCTUATION, punctuationPaint);"                                           >> ${target_file}
     fi
 
+    echo ""                                                                                                                    >> ${target_file}
+    echo "            setCommentPaint(commentPaint);"                                                                          >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "            // ---------------------------------------------------------------"                                      >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
@@ -401,6 +415,7 @@ function generateSyntaxParser {
     echo "        return res;"                                                                                                 >> ${target_file}
     echo "    }"                                                                                                               >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
+    echo "    /** {@inheritDoc} */"                                                                                            >> ${target_file}
     echo "    @Override"                                                                                                       >> ${target_file}
     echo "    public String getCommentLine()"                                                                                  >> ${target_file}
     echo "    {"                                                                                                               >> ${target_file}
@@ -409,6 +424,7 @@ function generateSyntaxParser {
 
     if [ "${comment_end}" != "" ]; then
         echo ""                                                                                                                >> ${target_file}
+        echo "    /** {@inheritDoc} */"                                                                                        >> ${target_file}
         echo "    @Override"                                                                                                   >> ${target_file}
         echo "    public String getCommentLineEnd()"                                                                           >> ${target_file}
         echo "    {"                                                                                                           >> ${target_file}

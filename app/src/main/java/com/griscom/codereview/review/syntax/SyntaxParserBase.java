@@ -24,9 +24,9 @@ public abstract class SyntaxParserBase
 
 
 
-    protected Context        mContext;
-    protected BufferedReader mReader;
-    protected Paint          mCommentPaint;
+    private Context        mContext;
+    private BufferedReader mReader;
+    private Paint          mCommentPaint;
 
 
 
@@ -453,6 +453,11 @@ public abstract class SyntaxParserBase
     public Context getContext()
     {
         return mContext;
+    }
+
+    public void setCommentPaint(Paint paint)
+    {
+        mCommentPaint = paint;
     }
 
     public Paint getCommentPaint()
