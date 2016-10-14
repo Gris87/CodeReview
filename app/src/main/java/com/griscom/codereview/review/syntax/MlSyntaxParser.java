@@ -151,7 +151,6 @@ public class MlSyntaxParser extends SyntaxParserBase
     @Override
     public String getCommentLine()
     {
-        // TODO: Check it
         return "-- ";
     }
 }

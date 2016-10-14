@@ -151,7 +151,6 @@ public class HaskellSyntaxParser extends SyntaxParserBase
     @Override
     public String getCommentLine()
     {
-        // TODO: Check it
         return "//";
     }
 }

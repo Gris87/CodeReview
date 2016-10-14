@@ -151,7 +151,6 @@ public class RSyntaxParser extends SyntaxParserBase
     @Override
     public String getCommentLine()
     {
-        // TODO: Check it
         return "-- ";
     }
 }

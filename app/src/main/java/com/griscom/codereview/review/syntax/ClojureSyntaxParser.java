@@ -151,7 +151,6 @@ public class ClojureSyntaxParser extends SyntaxParserBase
     @Override
     public String getCommentLine()
     {
-        // TODO: Check it
         return "//";
     }
 }

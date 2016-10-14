@@ -151,7 +151,6 @@ public class WikiSyntaxParser extends SyntaxParserBase
     @Override
     public String getCommentLine()
     {
-        // TODO: Check it
         return "-- ";
     }
 }

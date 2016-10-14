@@ -151,7 +151,6 @@ public class LlvmSyntaxParser extends SyntaxParserBase
     @Override
     public String getCommentLine()
     {
-        // TODO: Check it
         return "//";
     }
 }
