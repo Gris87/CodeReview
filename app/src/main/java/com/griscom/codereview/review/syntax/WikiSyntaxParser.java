@@ -18,15 +18,27 @@ import prettify.PrettifyParser;
 import prettify.parser.Prettify;
 import syntaxhighlight.ParseResult;
 
+/**
+ * Wiki syntax parser
+ */
+@SuppressWarnings("WeakerAccess")
 public class WikiSyntaxParser extends SyntaxParserBase
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "WikiSyntaxParser";
 
+
+
+    /**
+     * Creates WikiSyntaxParser instance
+     * @param context    context
+     */
     public WikiSyntaxParser(Context context)
     {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public TextDocument parseFile(String fileName)
     {
@@ -43,23 +55,25 @@ public class WikiSyntaxParser extends SyntaxParserBase
             Paint keywordPaint     = new Paint(basePaint);
             Paint typePaint        = new Paint(basePaint);
             Paint literalPaint     = new Paint(basePaint);
-            mCommentPaint          = new Paint(basePaint);
+            Paint commentPaint     = new Paint(basePaint);
             Paint stringPaint      = new Paint(basePaint);
             Paint punctuationPaint = new Paint(basePaint);
 
             keywordPaint.setColor       (Color.rgb(150, 0,   85));
             keywordPaint.setTypeface    (Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
             keywordPaint.setFakeBoldText(true);
-            mCommentPaint.setColor      (Color.rgb(64,  128, 100));
+            commentPaint.setColor       (Color.rgb(64,  128, 100));
             stringPaint.setColor        (Color.rgb(0,   0,   192));
 
-            Map<String, Paint> colorsMap = new HashMap<String, Paint>();
+            Map<String, Paint> colorsMap = new HashMap<>();
             colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);
             colorsMap.put(Prettify.PR_TYPE,        typePaint);
             colorsMap.put(Prettify.PR_LITERAL,     literalPaint);
-            colorsMap.put(Prettify.PR_COMMENT,     mCommentPaint);
+            colorsMap.put(Prettify.PR_COMMENT,     commentPaint);
             colorsMap.put(Prettify.PR_STRING,      stringPaint);
             colorsMap.put(Prettify.PR_PUNCTUATION, punctuationPaint);
+
+            setCommentPaint(commentPaint);
 
             // ---------------------------------------------------------------
 
@@ -148,6 +162,7 @@ public class WikiSyntaxParser extends SyntaxParserBase
         return res;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getCommentLine()
     {

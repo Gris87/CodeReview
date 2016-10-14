@@ -18,15 +18,27 @@ import prettify.PrettifyParser;
 import prettify.parser.Prettify;
 import syntaxhighlight.ParseResult;
 
+/**
+ * XML syntax parser
+ */
+@SuppressWarnings("WeakerAccess")
 public class XmlSyntaxParser extends SyntaxParserBase
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "XmlSyntaxParser";
 
+
+
+    /**
+     * Creates XmlSyntaxParser instance
+     * @param context    context
+     */
     public XmlSyntaxParser(Context context)
     {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
     public TextDocument parseFile(String fileName)
     {
@@ -43,7 +55,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
             Paint tagPaint         = new Paint(basePaint);
             Paint attribNamePaint  = new Paint(basePaint);
             Paint attribValuePaint = new Paint(basePaint);
-            mCommentPaint          = new Paint(basePaint);
+            Paint commentPaint     = new Paint(basePaint);
             Paint stringPaint      = new Paint(basePaint);
             Paint punctuationPaint = new Paint(basePaint);
 
@@ -52,16 +64,18 @@ public class XmlSyntaxParser extends SyntaxParserBase
             tagPaint.setFakeBoldText (true);
             attribNamePaint.setColor (Color.rgb(172, 0,   172));
             attribValuePaint.setColor(Color.rgb(40,  0,   255));
-            mCommentPaint.setColor   (Color.rgb(64,  96,  192));
+            commentPaint.setColor    (Color.rgb(64,  96,  192));
             stringPaint.setColor     (Color.rgb(40,  0,   255));
 
-            Map<String, Paint> colorsMap = new HashMap<String, Paint>();
+            Map<String, Paint> colorsMap = new HashMap<>();
             colorsMap.put(Prettify.PR_TAG,          tagPaint);
             colorsMap.put(Prettify.PR_ATTRIB_NAME,  attribNamePaint);
             colorsMap.put(Prettify.PR_ATTRIB_VALUE, attribValuePaint);
-            colorsMap.put(Prettify.PR_COMMENT,      mCommentPaint);
+            colorsMap.put(Prettify.PR_COMMENT,      commentPaint);
             colorsMap.put(Prettify.PR_STRING,       stringPaint);
             colorsMap.put(Prettify.PR_PUNCTUATION,  punctuationPaint);
+
+            setCommentPaint(commentPaint);
 
             // ---------------------------------------------------------------
 
@@ -150,12 +164,14 @@ public class XmlSyntaxParser extends SyntaxParserBase
         return res;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getCommentLine()
     {
         return "<!--";
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getCommentLineEnd()
     {
