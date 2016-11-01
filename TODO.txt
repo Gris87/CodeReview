@@ -1,7 +1,8 @@
-Check dictinary
 Code generator for Syntax Parsers
+Check dictinary
 Check for SuppressWarnings
 Code analysis in all files
+
 UltraHD images
 Smooth movement
 Code folding
