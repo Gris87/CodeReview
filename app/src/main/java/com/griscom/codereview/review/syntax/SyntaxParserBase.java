@@ -516,7 +516,7 @@ public abstract class SyntaxParserBase
      * Sets comment paint
      * @param paint    comment paint
      */
-    public void setCommentPaint(Paint paint)
+    protected void setCommentPaint(Paint paint)
     {
         mCommentPaint = paint;
     }

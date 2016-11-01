@@ -133,7 +133,7 @@ public class NoteDialog extends DialogFragment
      * Handler for note entered event
      * @param note    note
      */
-    public void onNoteEntered(String note)
+    private void onNoteEntered(String note)
     {
         if (mListener != null)
         {

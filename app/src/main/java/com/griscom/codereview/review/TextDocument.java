@@ -1062,7 +1062,7 @@ public class TextDocument implements OnTouchListener
             editor.putString(ApplicationPreferences.ONE_COMMENT + "_" + String.valueOf(i + 1), comments.get(i).toString());
         }
 
-        editor.commit();
+        editor.apply();
     }
 
     public void setParent(ReviewSurfaceView parent)

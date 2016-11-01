@@ -91,7 +91,7 @@ public class SortDialog extends DialogFragment
      * Handler for sort type selected event
      * @param sortType    selected sort type
      */
-    public void onSortTypeSelected(int sortType)
+    private void onSortTypeSelected(int sortType)
     {
         if (mListener != null)
         {

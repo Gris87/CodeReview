@@ -433,7 +433,14 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             {
                 if (!mAdapter.renameFile(item, fileName))
                 {
-                    Toast.makeText(this, R.string.files_can_not_rename_file, Toast.LENGTH_SHORT).show();
+                    if (((FileEntry) mAdapter.getItem(item)).isDirectory())
+                    {
+                        Toast.makeText(this, R.string.files_can_not_rename_folder, Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(this, R.string.files_can_not_rename_file, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }

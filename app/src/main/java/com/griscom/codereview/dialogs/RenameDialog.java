@@ -142,7 +142,7 @@ public class RenameDialog extends DialogFragment
      * Handler for file rename event
      * @param fileName    file name
      */
-    public void onFileRenamed(String fileName)
+    private void onFileRenamed(String fileName)
     {
         if (mListener != null)
         {

@@ -91,7 +91,7 @@ public class HighlightSyntaxDialog extends DialogFragment
      * Handler for syntax parser type selected event
      * @param syntaxParserType    selected syntax parser type
      */
-    public void onSyntaxParserTypeSelected(int syntaxParserType)
+    private void onSyntaxParserTypeSelected(int syntaxParserType)
     {
         if (mListener != null)
         {

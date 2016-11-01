@@ -157,7 +157,7 @@ public class CommentDialog extends DialogFragment
      * Handler for comment entered event
      * @param comment    comment
      */
-    public void onCommentEntered(String comment)
+    private void onCommentEntered(String comment)
     {
         if (mListener != null)
         {
@@ -168,7 +168,7 @@ public class CommentDialog extends DialogFragment
     /**
      * Handler for comment canceled event
      */
-    public void onCommentCanceled()
+    private void onCommentCanceled()
     {
         if (mListener != null)
         {

@@ -139,7 +139,7 @@ public class InputDialog extends DialogFragment
      * Handler for text entered event
      * @param text    text
      */
-    public void onTextEntered(String text)
+    private void onTextEntered(String text)
     {
         if (mListener != null)
         {

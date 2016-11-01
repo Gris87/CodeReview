@@ -475,7 +475,7 @@ public class FilesAdapter extends BaseAdapter
     /**
      * Sorts files list with selected sort type
      */
-    public void sort()
+    private void sort()
     {
         sort(SortType.NONE);
     }

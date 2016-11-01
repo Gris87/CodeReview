@@ -311,7 +311,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
      * Repaints surface with specified timeout
      * @param timeout    timeout
      */
-    public void repaint(long timeout)
+    private void repaint(long timeout)
     {
         if (timeout > 0)
         {

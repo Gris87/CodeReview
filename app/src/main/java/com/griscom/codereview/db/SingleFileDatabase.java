@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Single file database helper
  */
+@SuppressWarnings("WeakerAccess")
 public class SingleFileDatabase extends SQLiteOpenHelper
 {
     @SuppressWarnings("unused")

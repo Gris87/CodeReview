@@ -126,7 +126,7 @@ public class DeleteDialog extends DialogFragment
     /**
      * Handler for delete confirmed event
      */
-    public void onDeleteConfirmed()
+    private void onDeleteConfirmed()
     {
         if (mListener != null)
         {
