@@ -10,17 +10,29 @@ import com.griscom.codereview.review.TextRegion;
 import com.griscom.codereview.review.TextRow;
 import com.griscom.codereview.util.AppLog;
 
+/**
+ * Plain text syntax parser
+ */
+@SuppressWarnings("WeakerAccess")
 public class PlainTextSyntaxParser extends SyntaxParserBase
 {
+    @SuppressWarnings("unused")
     private static final String TAG = "PlainTextSyntaxParser";
 
+
+
+    /**
+     * Creates PlainTextSyntaxParser instance
+     * @param context    context
+     */
     public PlainTextSyntaxParser(Context context)
     {
         super(context);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public TextDocument parseFile(String fileName)
+    public TextDocument parseFile(String filePath)
     {
         TextDocument res = new TextDocument(this);
 
@@ -36,7 +48,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
 
             // ---------------------------------------------------------------
 
-            createReader(fileName);
+            createReader(filePath);
 
             boolean lastEnter = false;
 
@@ -72,7 +84,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
         }
         catch (Exception e)
         {
-            AppLog.e(TAG, "Impossible to read file: " + fileName, e);
+            AppLog.e(TAG, "Impossible to read file: " + filePath, e);
         }
 
         return res;

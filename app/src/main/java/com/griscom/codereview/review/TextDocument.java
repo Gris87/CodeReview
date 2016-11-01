@@ -297,8 +297,8 @@ public class TextDocument implements OnTouchListener
         updateSizeByRow(row);
     }
 
-    @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @SuppressWarnings("WeakerAccess")
     public void onConfigurationChanged(Configuration newConfig)
     {
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -316,7 +316,9 @@ public class TextDocument implements OnTouchListener
             }
             else
             {
+                //noinspection deprecation
                 mViewWidth  = display.getWidth();
+                //noinspection deprecation
                 mViewHeight = display.getHeight();
             }
 

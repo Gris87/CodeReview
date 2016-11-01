@@ -1,7 +1,3 @@
-Check dictinary
-SuppressWarnings
-SuppressLint
-// noinspection
 Code analysis in all files
 
 UltraHD images

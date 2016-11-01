@@ -15,6 +15,7 @@ import java.io.File;
 /**
  * Main database helper
  */
+@SuppressWarnings("WeakerAccess")
 public class MainDatabase extends SQLiteOpenHelper
 {
     @SuppressWarnings("unused")
@@ -373,7 +374,6 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param filePath    path to file
      * @return cursor for all files with specified path to file
      */
-    @SuppressWarnings("WeakerAccess")
     public Cursor getFile(SQLiteDatabase db, String filePath)
     {
         int index = filePath.lastIndexOf('/');
@@ -397,7 +397,6 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileName    file name
      * @return cursor for all files with specified path and file name
      */
-    @SuppressWarnings("WeakerAccess")
     public Cursor getFile(SQLiteDatabase db, String path, String fileName)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH + "=? AND " + COLUMN_NAME + "=?", new String[]{ path, fileName }, null, null, null);
