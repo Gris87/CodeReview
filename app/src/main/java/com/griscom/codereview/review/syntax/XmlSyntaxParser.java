@@ -40,7 +40,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
 
     /** {@inheritDoc} */
     @Override
-    public TextDocument parseFile(String fileName)
+    public TextDocument parseFile(String filePath)
     {
         TextDocument res = new TextDocument(this);
 
@@ -81,7 +81,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
 
             StringBuilder codeBuilder = new StringBuilder();
 
-            createReader(fileName);
+            createReader(filePath);
 
             String line;
             while ((line = readLine()) != null)
@@ -158,7 +158,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
         }
         catch (Exception e)
         {
-            AppLog.e(TAG, "Impossible to read file: " + fileName, e);
+            AppLog.e(TAG, "Impossible to read file: " + filePath, e);
         }
 
         return res;

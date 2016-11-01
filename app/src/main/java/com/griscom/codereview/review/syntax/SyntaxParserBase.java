@@ -1,6 +1,5 @@
 package com.griscom.codereview.review.syntax;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 
@@ -16,7 +15,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-@SuppressLint("DefaultLocale")
+/**
+ * Base class for SyntaxParser
+ */
 public abstract class SyntaxParserBase
 {
     @SuppressWarnings("unused")
@@ -30,6 +31,10 @@ public abstract class SyntaxParserBase
 
 
 
+    /**
+     * Creates SyntaxParserBase instance
+     * @param context    context
+     */
     protected SyntaxParserBase(Context context)
     {
         mContext      = context;
@@ -37,11 +42,18 @@ public abstract class SyntaxParserBase
         mCommentPaint = null;
     }
 
-    public static SyntaxParserBase createParserByType(String fileName, Context context, int type)
+    /**
+     * Creates SyntaxParser instance based on specified type or file name
+     * @param filePath    path to file
+     * @param context     context
+     * @param type        syntax parser type
+     * @return SyntaxParserBase instance
+     */
+    public static SyntaxParserBase createParserByType(String filePath, Context context, int type)
     {
         switch (type)
         {
-            case SyntaxParserType.AUTOMATIC: return createParserByFileName(fileName, context);
+            case SyntaxParserType.AUTOMATIC: return createParserByFileName(filePath, context);
 
             case SyntaxParserType.APOLLO:             return new ApolloSyntaxParser(context);
             case SyntaxParserType.BASH:               return new BashSyntaxParser(context);
@@ -90,15 +102,21 @@ public abstract class SyntaxParserBase
         return new PlainTextSyntaxParser(context);
     }
 
-    public static SyntaxParserBase createParserByFileName(String fileName, Context context)
+    /**
+     * Creates SyntaxParser instance based on specified file name
+     * @param filePath    path to file
+     * @param context     context
+     * @return SyntaxParserBase instance
+     */
+    private static SyntaxParserBase createParserByFileName(String filePath, Context context)
     {
-        fileName = fileName.toLowerCase();
+        filePath = filePath.toLowerCase();
 
-        int index = fileName.lastIndexOf('.');
+        int index = filePath.lastIndexOf('.');
 
         if (index > 0)
         {
-            String extension = fileName.substring(index + 1);
+            String extension = filePath.substring(index + 1);
 
             if (
                 extension.equals("apollo")
@@ -330,7 +348,7 @@ public abstract class SyntaxParserBase
                 return new VhdlSyntaxParser(context);
             }
 
-            if (fileName.endsWith(".wiki.meta"))
+            if (filePath.endsWith(".wiki.meta"))
             {
                 return new WikiSyntaxParser(context);
             }
@@ -368,17 +386,32 @@ public abstract class SyntaxParserBase
         return new PlainTextSyntaxParser(context);
     }
 
-    public abstract TextDocument parseFile(String fileName);
+    /**
+     * Parses file and returns TextDocument instance with parsed syntax
+     * @param filePath    path to file
+     * @return TextDocument instance with parsed syntax
+     */
+    public abstract TextDocument parseFile(String filePath);
 
-    protected void createReader(String fileName) throws FileNotFoundException
+    /**
+     * Creates file reader for specified file
+     * @param filePath    path to file
+     * @throws FileNotFoundException
+     */
+    protected void createReader(String filePath) throws FileNotFoundException
     {
         synchronized (this)
         {
             mReader = null;
-            mReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
+            mReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
         }
     }
 
+    /**
+     * Reads line from file reader
+     * @return line from file reader
+     * @throws IOException if impossible to read line from file reader
+     */
     protected String readLine() throws IOException
     {
         BufferedReader reader;
@@ -418,6 +451,10 @@ public abstract class SyntaxParserBase
         return null;
     }
 
+    /**
+     * Closes reader
+     * @throws IOException if impossible to close reader
+     */
     public void closeReader() throws IOException
     {
         synchronized (this)
@@ -430,36 +467,64 @@ public abstract class SyntaxParserBase
         }
     }
 
+    /**
+     * Gets font size
+     * @return font size
+     */
     protected float getFontSize()
     {
         return Utils.spToPixels(ApplicationSettings.getFontSize(), mContext);
     }
 
+    /**
+     * Gets tab size
+     * @return tab size
+     */
     protected int getTabSize()
     {
         return ApplicationSettings.getTabSize();
     }
 
+    /**
+     * Gets start line comment characters
+     * @return start line comment characters
+     */
     public String getCommentLine()
     {
         return null;
     }
 
+    /**
+     * Gets end line comment characters
+     * @return end line comment characters
+     */
     public String getCommentLineEnd()
     {
         return null;
     }
 
+    /**
+     * Gets context
+     * @return context
+     */
     public Context getContext()
     {
         return mContext;
     }
 
+    /**
+     * Sets comment paint
+     * @param paint    comment paint
+     */
     public void setCommentPaint(Paint paint)
     {
         mCommentPaint = paint;
     }
 
+    /**
+     * Gets comment paint
+     * @return comment paint
+     */
     public Paint getCommentPaint()
     {
         return mCommentPaint;

@@ -1,6 +1,7 @@
-Code generator for Syntax Parsers
 Check dictinary
-Check for SuppressWarnings
+SuppressWarnings
+SuppressLint
+// noinspection
 Code analysis in all files
 
 UltraHD images

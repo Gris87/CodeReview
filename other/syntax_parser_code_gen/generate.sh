@@ -266,7 +266,7 @@ function generateSyntaxParser {
     echo ""                                                                                                                    >> ${target_file}
     echo "    /** {@inheritDoc} */"                                                                                            >> ${target_file}
     echo "    @Override"                                                                                                       >> ${target_file}
-    echo "    public TextDocument parseFile(String fileName)"                                                                  >> ${target_file}
+    echo "    public TextDocument parseFile(String filePath)"                                                                  >> ${target_file}
     echo "    {"                                                                                                               >> ${target_file}
     echo "        TextDocument res = new TextDocument(this);"                                                                  >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
@@ -332,7 +332,7 @@ function generateSyntaxParser {
     echo ""                                                                                                                    >> ${target_file}
     echo "            StringBuilder codeBuilder = new StringBuilder();"                                                        >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
-    echo "            createReader(fileName);"                                                                                 >> ${target_file}
+    echo "            createReader(filePath);"                                                                                 >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "            String line;"                                                                                            >> ${target_file}
     echo "            while ((line = readLine()) != null)"                                                                     >> ${target_file}
@@ -409,7 +409,7 @@ function generateSyntaxParser {
     echo "        }"                                                                                                           >> ${target_file}
     echo "        catch (Exception e)"                                                                                         >> ${target_file}
     echo "        {"                                                                                                           >> ${target_file}
-    echo "            AppLog.e(TAG, \"Impossible to read file: \" + fileName, e);"                                             >> ${target_file}
+    echo "            AppLog.e(TAG, \"Impossible to read file: \" + filePath, e);"                                             >> ${target_file}
     echo "        }"                                                                                                           >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "        return res;"                                                                                                 >> ${target_file}
