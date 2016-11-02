@@ -59,6 +59,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
 
 
+    private static final int ACTION_ADD_NOTE = 1;
+    private static final int ACTION_RENAME   = 2;
+
+
+
     private static final int TIME_FOR_CLOSE = 1000;
 
 
@@ -409,11 +414,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
     /** {@inheritDoc} */
     @Override
-    public void onFileRenamed(boolean addNote, int item, String fileName)
+    public void onFileRenamed(int action, int item, String fileName)
     {
         String oldFileName = ((FileEntry)mAdapter.getItem(item)).getFileName();
 
-        if (addNote)
+        if (action == ACTION_ADD_NOTE)
         {
             ArrayList<Integer> items = new ArrayList<>(1);
 
@@ -773,7 +778,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             int item = items.get(0);
 
-            RenameDialog dialog = RenameDialog.newInstance(true, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
+            RenameDialog dialog = RenameDialog.newInstance(ACTION_ADD_NOTE, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
             dialog.show(getSupportFragmentManager(), "RenameDialog");
 
             return false;
@@ -829,7 +834,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      */
     private boolean rename(int item)
     {
-        RenameDialog dialog = RenameDialog.newInstance(false, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
+        RenameDialog dialog = RenameDialog.newInstance(ACTION_RENAME, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
         dialog.show(getSupportFragmentManager(), "RenameDialog");
 
         return false;
