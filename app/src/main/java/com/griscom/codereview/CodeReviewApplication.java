@@ -9,6 +9,7 @@ import com.griscom.codereview.other.ApplicationSettings;
 /**
  * CodeReview application
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class CodeReviewApplication extends Application
 {
     @SuppressWarnings("unused")
@@ -42,5 +43,14 @@ public class CodeReviewApplication extends Application
         }
 
         return mTracker;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "CodeReviewApplication{" +
+                "mTracker=" + mTracker +
+                '}';
     }
 }

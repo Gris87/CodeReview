@@ -46,6 +46,7 @@ import java.util.ArrayList;
 /**
  * Activity for displaying files
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class FilesActivity extends AppCompatActivity implements OnItemClickListener, SortDialog.OnFragmentInteractionListener, RenameDialog.OnFragmentInteractionListener, NoteDialog.OnFragmentInteractionListener, DeleteDialog.OnFragmentInteractionListener, OpenBigFileDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
@@ -116,7 +117,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             loadPath();
             loadLastFile();
         }
-        catch (FileNotFoundException e)
+        catch (FileNotFoundException ignored)
         {
             // Nothing
         }
@@ -153,9 +154,9 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         super.onRestoreInstanceState(savedInstanceState);
 
         ArrayList<Integer> selection = savedInstanceState.getIntegerArrayList(SAVED_STATE_SELECTION);
-        Assert.assertNotNull(selection);
+        Assert.assertNotNull("selection is null", selection);
 
-        if (selection.size() > 0)
+        if (!selection.isEmpty())
         {
             mAdapter.setSelectionMode(true);
 
@@ -228,7 +229,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             default:
             {
-                AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
+                AppLog.wtf(TAG, "Unknown action ID: " + item.getItemId());
             }
             break;
         }
@@ -260,7 +261,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                     default:
                     {
-                        AppLog.wtf(TAG, "Unexpected result code: " + String.valueOf(resultCode));
+                        AppLog.wtf(TAG, "Unexpected result code: " + resultCode);
                     }
                     break;
                 }
@@ -275,7 +276,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             default:
             {
-                AppLog.wtf(TAG, "Unexpected request code: " + String.valueOf(requestCode));
+                AppLog.wtf(TAG, "Unexpected request code: " + requestCode);
             }
             break;
         }
@@ -345,7 +346,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 {
                     openFile(fileName, file.getDbFileId(), file.getFileNote());
                 }
-                catch (FileNotFoundException e)
+                catch (FileNotFoundException ignored)
                 {
                     mAdapter.setCurrentPathBacktrace(mAdapter.pathToFile("."));
 
@@ -356,7 +357,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         }
         else
         {
-            AppLog.wtf(TAG, "Unexpected parent: " + String.valueOf(parent));
+            AppLog.wtf(TAG, "Unexpected parent: " + parent);
         }
     }
 
@@ -389,7 +390,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             default:
             {
                 typeName = "UNKNOWN";
-                AppLog.wtf(TAG, "Unknown sort type: " + String.valueOf(sortType));
+                AppLog.wtf(TAG, "Unknown sort type: " + sortType);
             }
             break;
         }
@@ -414,7 +415,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
         if (addNote)
         {
-            ArrayList<Integer> items = new ArrayList<>();
+            ArrayList<Integer> items = new ArrayList<>(1);
 
             items.add(item);
 
@@ -461,41 +462,41 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     @Override
     public void onDeleteConfirmed(ArrayList<Integer> items)
     {
-        ArrayList<String> keepFolders = new ArrayList<>();
-        ArrayList<String> keepFiles   = new ArrayList<>();
+        ArrayList<String> keepFolders = new ArrayList<>(0);
+        ArrayList<String> keepFiles   = new ArrayList<>(0);
 
         mAdapter.deleteFiles(items, keepFolders, keepFiles);
 
-        if (keepFolders.size() > 0 || keepFiles.size() > 0)
+        if (!keepFolders.isEmpty() || !keepFiles.isEmpty())
         {
             Resources resources = getResources();
 
-            if (keepFolders.size() == 1 && keepFiles.size() == 0)
+            if (keepFolders.size() == 1 && keepFiles.isEmpty())
             {
-                Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_folder, keepFolders.get(0)), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, resources.getString(R.string.files_can_not_delete_folder, keepFolders.get(0)), Toast.LENGTH_SHORT).show();
             }
             else
-            if (keepFolders.size() == 0 && keepFiles.size() == 1)
+            if (keepFolders.isEmpty() && keepFiles.size() == 1)
             {
-                Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_file, keepFiles.get(0)), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, resources.getString(R.string.files_can_not_delete_file, keepFiles.get(0)), Toast.LENGTH_SHORT).show();
             }
             else
             {
-                String folders = keepFolders.size() > 0 ? resources.getQuantityString(R.plurals.files_delete_folders_plurals, keepFolders.size(), keepFolders.size()) : null;
-                String files   = keepFiles.size()   > 0 ? resources.getQuantityString(R.plurals.files_delete_files_plurals,   keepFiles.size(),   keepFiles.size())   : null;
+                String folders = keepFolders.isEmpty() ? null : resources.getQuantityString(R.plurals.files_delete_folders_plurals, keepFolders.size(), keepFolders.size());
+                String files   = keepFiles.isEmpty()   ? null : resources.getQuantityString(R.plurals.files_delete_files_plurals,   keepFiles.size(),   keepFiles.size());
 
-                if (keepFolders.size() > 1 && keepFiles.size() == 0)
+                if (keepFolders.size() > 1 && keepFiles.isEmpty())
                 {
-                    Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_folders_or_files, folders), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, resources.getString(R.string.files_can_not_delete_folders_or_files, folders), Toast.LENGTH_SHORT).show();
                 }
                 else
-                if (keepFolders.size() == 0 && keepFiles.size() > 1)
+                if (keepFolders.isEmpty() && keepFiles.size() > 1)
                 {
-                    Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_folders_or_files, files), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, resources.getString(R.string.files_can_not_delete_folders_or_files, files), Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(FilesActivity.this, resources.getString(R.string.files_can_not_delete_folders_and_files, folders, files), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, resources.getString(R.string.files_can_not_delete_folders_and_files, folders, files), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -667,7 +668,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                     default:
                     {
-                        AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item));
+                        AppLog.wtf(TAG, "Unknown action ID: " + item);
                     }
                     break;
                 }
@@ -696,7 +697,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    @SuppressWarnings("SameReturnValue")
     private boolean selectAll(ArrayList<Integer> items)
     {
         int startIndex;
@@ -742,7 +742,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    @SuppressWarnings("SameReturnValue")
     private boolean assignNote(ArrayList<Integer> items)
     {
         String note = ((FileEntry)mAdapter.getItem(items.get(0))).getFileNote();
@@ -792,7 +791,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    @SuppressWarnings("SameReturnValue")
     private boolean noteToDelete(ArrayList<Integer> items)
     {
         mAdapter.assignNote(items, getString(R.string.files_need_to_delete));
@@ -805,7 +803,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    @SuppressWarnings("SameReturnValue")
     private boolean markAsReviewed(ArrayList<Integer> items)
     {
         mAdapter.markAsFinished(items, true);
@@ -818,7 +815,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    @SuppressWarnings("SameReturnValue")
     private boolean markAsInvalid(ArrayList<Integer> items)
     {
         mAdapter.markAsFinished(items, false);
@@ -831,7 +827,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param item    selected file
      * @return true, if need to close ActionMode
      */
-    @SuppressWarnings("SameReturnValue")
     private boolean rename(int item)
     {
         RenameDialog dialog = RenameDialog.newInstance(false, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
@@ -845,7 +840,6 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
-    @SuppressWarnings("SameReturnValue")
     private boolean delete(ArrayList<Integer> items)
     {
         int foldersCount = 0;
@@ -874,7 +868,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      */
     private void hideActionMode()
     {
-        Assert.assertNotNull(mActionMode);
+        Assert.assertNotNull("mActionMode is null", mActionMode);
 
         mActionMode.finish();
     }
@@ -887,17 +881,17 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         String oldPath = (String)mActionBar.getTitle();
         String newPath = mAdapter.getCurrentPath();
 
-        Assert.assertNotNull(oldPath);
+        Assert.assertNotNull("oldPath is null", oldPath);
 
         if (newPath.length() < oldPath.length())
         {
-            Assert.assertTrue(oldPath.startsWith(newPath));
+            Assert.assertTrue("oldPath doesn't start with newPath", oldPath.startsWith(newPath));
 
             String tail = oldPath.substring(newPath.length());
 
-            if (tail.startsWith("/"))
+            if (!tail.isEmpty() && tail.charAt(0) == '/')
             {
-                Assert.assertTrue(tail.length() > 1);
+                Assert.assertTrue("tail should start with \"/...\"", tail.length() > 1);
 
                 tail = tail.substring(1);
             }
@@ -906,7 +900,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             String prevFolder;
 
-            int index = tail.indexOf("/");
+            int index = tail.indexOf('/');
 
             if (index >= 0)
             {
@@ -953,13 +947,13 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
         if (!file.exists())
         {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException("File \"" + filePath + "\" not found");
         }
 
         if (
             ApplicationSettings.getBigFileSize() == 0
             ||
-            file.length() <= ApplicationSettings.getBigFileSize() * 1024
+            file.length() <= ApplicationSettings.getBigFileSize() << 10 // * 1024
            )
         {
             openFileAtPath(filePath, fileId, fileNote);
@@ -1017,7 +1011,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             if (!mAdapter.getCurrentPath().equals(path))
             {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException("File \"" + path + "\" not found");
             }
         }
     }
@@ -1104,5 +1098,19 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             mAdapter.sort(sortType);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "FilesActivity{" +
+                "mFilesListView=" + mFilesListView +
+                ", mAdapter=" + mAdapter +
+                ", mActionBar=" + mActionBar +
+                ", mActionMode=" + mActionMode +
+                ", mTracker=" + mTracker +
+                ", mBackPressTime=" + mBackPressTime +
+                '}';
     }
 }

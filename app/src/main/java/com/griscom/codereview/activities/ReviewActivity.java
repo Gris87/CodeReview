@@ -45,7 +45,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
 
 
-    public static final int RESULT_CLOSE = 1;
+    public static final int RESULT_CLOSE = RESULT_FIRST_USER;
 
 
 
