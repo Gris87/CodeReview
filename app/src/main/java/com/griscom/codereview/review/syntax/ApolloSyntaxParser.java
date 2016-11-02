@@ -33,9 +33,18 @@ public class ApolloSyntaxParser extends SyntaxParserBase
      * Creates ApolloSyntaxParser instance
      * @param context    context
      */
-    public ApolloSyntaxParser(Context context)
+    private ApolloSyntaxParser(Context context)
     {
         super(context);
+    }
+
+    /**
+     * Creates ApolloSyntaxParser instance
+     * @param context    context
+     */
+    public static ApolloSyntaxParser create(Context context)
+    {
+        return new ApolloSyntaxParser(context);
     }
 
     /** {@inheritDoc} */
@@ -65,7 +74,7 @@ public class ApolloSyntaxParser extends SyntaxParserBase
             commentPaint.setColor       (Color.rgb(64,  128, 100));
             stringPaint.setColor        (Color.rgb(0,   0,   192));
 
-            Map<String, Paint> colorsMap = new HashMap<>();
+            Map<String, Paint> colorsMap = new HashMap<>(6);
             colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);
             colorsMap.put(Prettify.PR_TYPE,        typePaint);
             colorsMap.put(Prettify.PR_LITERAL,     literalPaint);
@@ -77,7 +86,7 @@ public class ApolloSyntaxParser extends SyntaxParserBase
 
             // ---------------------------------------------------------------
 
-            StringBuilder codeBuilder = new StringBuilder();
+            StringBuilder codeBuilder = new StringBuilder(0);
 
             createReader(filePath);
 

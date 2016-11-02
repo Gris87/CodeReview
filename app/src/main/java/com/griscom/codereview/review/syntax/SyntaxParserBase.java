@@ -56,7 +56,7 @@ public abstract class SyntaxParserBase
         {
             case SyntaxParserType.AUTOMATIC: return createParserByFileName(filePath, context);
 
-            case SyntaxParserType.APOLLO:             return new ApolloSyntaxParser(context);
+            case SyntaxParserType.APOLLO:             return ApolloSyntaxParser.create(context);
             case SyntaxParserType.BASH:               return new BashSyntaxParser(context);
             case SyntaxParserType.BASIC:              return new BasicSyntaxParser(context);
             case SyntaxParserType.CLOJURE:            return new ClojureSyntaxParser(context);
@@ -127,7 +127,7 @@ public abstract class SyntaxParserBase
                 extension.equals("aea")
                )
             {
-                return new ApolloSyntaxParser(context);
+                return ApolloSyntaxParser.create(context);
             }
 
             if (extension.equals("sh"))
