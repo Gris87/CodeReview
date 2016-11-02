@@ -625,7 +625,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
                 if (mDbFileId <= 0)
                 {
-                    MainDatabase helper = new MainDatabase(mContext);
+                    MainDatabase helper = MainDatabase.newInstance(mContext);
                     db = helper.getReadableDatabase();
 
                     mDbFileId = helper.getFileId(db, mPath);
@@ -639,7 +639,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
                 if (mDbFileId > 0)
                 {
-                    SingleFileDatabase helper = new SingleFileDatabase(mContext, mDbFileId);
+                    SingleFileDatabase helper = SingleFileDatabase.newInstance(mContext, mDbFileId);
 
                     db            = helper.getReadableDatabase();
                     Cursor cursor = helper.getRows(db);

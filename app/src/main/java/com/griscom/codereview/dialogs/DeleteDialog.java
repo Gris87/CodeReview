@@ -17,6 +17,7 @@ import java.util.ArrayList;
 /**
  * Dialog for confirming deletion
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class DeleteDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
@@ -36,6 +37,18 @@ public class DeleteDialog extends DialogFragment
     private int                           mFilesCount   = 0;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "DeleteDialog{" +
+                "mListener="       + mListener     +
+                ", mItems="        + mItems        +
+                ", mFoldersCount=" + mFoldersCount +
+                ", mFilesCount="   + mFilesCount   +
+                '}';
+    }
 
     /**
      * Creates new instance of DeleteDialog
@@ -146,7 +159,8 @@ public class DeleteDialog extends DialogFragment
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 

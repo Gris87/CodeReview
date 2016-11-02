@@ -36,6 +36,7 @@ public abstract class SyntaxParserBase
      * Creates SyntaxParserBase instance
      * @param context    context
      */
+    @SuppressWarnings("ImplicitCallToSuper")
     protected SyntaxParserBase(Context context)
     {
         mContext      = context;
@@ -56,51 +57,51 @@ public abstract class SyntaxParserBase
         {
             case SyntaxParserType.AUTOMATIC: return createParserByFileName(filePath, context);
 
-            case SyntaxParserType.APOLLO:             return ApolloSyntaxParser.create(context);
-            case SyntaxParserType.BASH:               return new BashSyntaxParser(context);
-            case SyntaxParserType.BASIC:              return new BasicSyntaxParser(context);
-            case SyntaxParserType.CLOJURE:            return new ClojureSyntaxParser(context);
-            case SyntaxParserType.C_PLUS_PLUS:        return new CPlusPlusSyntaxParser(context);
-            case SyntaxParserType.C_SHARP:            return new CSharpSyntaxParser(context);
-            case SyntaxParserType.CSS:                return new CssSyntaxParser(context);
-            case SyntaxParserType.CSS_KW:             return new CssKwSyntaxParser(context);
-            case SyntaxParserType.CSS_STR:            return new CssStrSyntaxParser(context);
-            case SyntaxParserType.DART:               return new DartSyntaxParser(context);
-            case SyntaxParserType.ERLANG:             return new ErlangSyntaxParser(context);
-            case SyntaxParserType.GO:                 return new GoSyntaxParser(context);
-            case SyntaxParserType.HASKELL:            return new HaskellSyntaxParser(context);
-            case SyntaxParserType.JAVA:               return new JavaSyntaxParser(context);
-            case SyntaxParserType.LISP:               return new LispSyntaxParser(context);
-            case SyntaxParserType.LLVM:               return new LlvmSyntaxParser(context);
-            case SyntaxParserType.LUA:                return new LuaSyntaxParser(context);
-            case SyntaxParserType.MATLAB:             return new MatlabSyntaxParser(context);
-            case SyntaxParserType.MATLAB_IDENTIFIERS: return new MatlabIdentifiersSyntaxParser(context);
-            case SyntaxParserType.MATLAB_OPERATORS:   return new MatlabOperatorsSyntaxParser(context);
-            case SyntaxParserType.ML:                 return new MlSyntaxParser(context);
-            case SyntaxParserType.MUMPS:              return new MumpsSyntaxParser(context);
-            case SyntaxParserType.N:                  return new NSyntaxParser(context);
-            case SyntaxParserType.PASCAL:             return new PascalSyntaxParser(context);
-            case SyntaxParserType.R:                  return new RSyntaxParser(context);
-            case SyntaxParserType.RD:                 return new RdSyntaxParser(context);
-            case SyntaxParserType.SCALA:              return new ScalaSyntaxParser(context);
-            case SyntaxParserType.SQL:                return new SqlSyntaxParser(context);
-            case SyntaxParserType.TCL:                return new TclSyntaxParser(context);
-            case SyntaxParserType.TEX:                return new TexSyntaxParser(context);
-            case SyntaxParserType.VHDL:               return new VisualBasicSyntaxParser(context);
-            case SyntaxParserType.VISUAL_BASIC:       return new VhdlSyntaxParser(context);
-            case SyntaxParserType.WIKI:               return new WikiSyntaxParser(context);
-            case SyntaxParserType.XML:                return new XmlSyntaxParser(context);
-            case SyntaxParserType.X_QUERY:            return new XQuerySyntaxParser(context);
-            case SyntaxParserType.YAML:               return new YamlSyntaxParser(context);
-            case SyntaxParserType.PLAIN_TEXT:         return new PlainTextSyntaxParser(context);
+            case SyntaxParserType.APOLLO:             return ApolloSyntaxParser.newInstance(context);
+            case SyntaxParserType.BASH:               return BashSyntaxParser.newInstance(context);
+            case SyntaxParserType.BASIC:              return BasicSyntaxParser.newInstance(context);
+            case SyntaxParserType.CLOJURE:            return ClojureSyntaxParser.newInstance(context);
+            case SyntaxParserType.C_PLUS_PLUS:        return CPlusPlusSyntaxParser.newInstance(context);
+            case SyntaxParserType.C_SHARP:            return CSharpSyntaxParser.newInstance(context);
+            case SyntaxParserType.CSS:                return CssSyntaxParser.newInstance(context);
+            case SyntaxParserType.CSS_KW:             return CssKwSyntaxParser.newInstance(context);
+            case SyntaxParserType.CSS_STR:            return CssStrSyntaxParser.newInstance(context);
+            case SyntaxParserType.DART:               return DartSyntaxParser.newInstance(context);
+            case SyntaxParserType.ERLANG:             return ErlangSyntaxParser.newInstance(context);
+            case SyntaxParserType.GO:                 return GoSyntaxParser.newInstance(context);
+            case SyntaxParserType.HASKELL:            return HaskellSyntaxParser.newInstance(context);
+            case SyntaxParserType.JAVA:               return JavaSyntaxParser.newInstance(context);
+            case SyntaxParserType.LISP:               return LispSyntaxParser.newInstance(context);
+            case SyntaxParserType.LLVM:               return LlvmSyntaxParser.newInstance(context);
+            case SyntaxParserType.LUA:                return LuaSyntaxParser.newInstance(context);
+            case SyntaxParserType.MATLAB:             return MatlabSyntaxParser.newInstance(context);
+            case SyntaxParserType.MATLAB_IDENTIFIERS: return MatlabIdentifiersSyntaxParser.newInstance(context);
+            case SyntaxParserType.MATLAB_OPERATORS:   return MatlabOperatorsSyntaxParser.newInstance(context);
+            case SyntaxParserType.ML:                 return MlSyntaxParser.newInstance(context);
+            case SyntaxParserType.MUMPS:              return MumpsSyntaxParser.newInstance(context);
+            case SyntaxParserType.N:                  return NSyntaxParser.newInstance(context);
+            case SyntaxParserType.PASCAL:             return PascalSyntaxParser.newInstance(context);
+            case SyntaxParserType.R:                  return RSyntaxParser.newInstance(context);
+            case SyntaxParserType.RD:                 return RdSyntaxParser.newInstance(context);
+            case SyntaxParserType.SCALA:              return ScalaSyntaxParser.newInstance(context);
+            case SyntaxParserType.SQL:                return SqlSyntaxParser.newInstance(context);
+            case SyntaxParserType.TCL:                return TclSyntaxParser.newInstance(context);
+            case SyntaxParserType.TEX:                return TexSyntaxParser.newInstance(context);
+            case SyntaxParserType.VHDL:               return VisualBasicSyntaxParser.newInstance(context);
+            case SyntaxParserType.VISUAL_BASIC:       return VhdlSyntaxParser.newInstance(context);
+            case SyntaxParserType.WIKI:               return WikiSyntaxParser.newInstance(context);
+            case SyntaxParserType.XML:                return XmlSyntaxParser.newInstance(context);
+            case SyntaxParserType.X_QUERY:            return XQuerySyntaxParser.newInstance(context);
+            case SyntaxParserType.YAML:               return YamlSyntaxParser.newInstance(context);
+            case SyntaxParserType.PLAIN_TEXT:         return PlainTextSyntaxParser.newInstance(context);
 
             default:
             {
-                AppLog.wtf(TAG, "Unknown syntax parser type: " + String.valueOf(type));
+                AppLog.wtf(TAG, "Unknown syntax parser type: " + type);
             }
         }
 
-        return new PlainTextSyntaxParser(context);
+        return PlainTextSyntaxParser.newInstance(context);
     }
 
     /**
@@ -127,12 +128,12 @@ public abstract class SyntaxParserBase
                 extension.equals("aea")
                )
             {
-                return ApolloSyntaxParser.create(context);
+                return ApolloSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("sh"))
             {
-                return new BashSyntaxParser(context);
+                return BashSyntaxParser.newInstance(context);
             }
 
             if (
@@ -141,12 +142,12 @@ public abstract class SyntaxParserBase
                 extension.equals("cbm")
                )
             {
-                return new BasicSyntaxParser(context);
+                return BasicSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("clj"))
             {
-                return new ClojureSyntaxParser(context);
+                return ClojureSyntaxParser.newInstance(context);
             }
 
             if (
@@ -159,32 +160,32 @@ public abstract class SyntaxParserBase
                 extension.equals("hpp")
                )
             {
-                return new CPlusPlusSyntaxParser(context);
+                return CPlusPlusSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("cs"))
             {
-                return new CSharpSyntaxParser(context);
+                return CSharpSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("css"))
             {
-                return new CssSyntaxParser(context);
+                return CssSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("css-kw"))
             {
-                return new CssKwSyntaxParser(context);
+                return CssKwSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("css-str"))
             {
-                return new CssStrSyntaxParser(context);
+                return CssStrSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("dart"))
             {
-                return new DartSyntaxParser(context);
+                return DartSyntaxParser.newInstance(context);
             }
 
             if (
@@ -193,22 +194,22 @@ public abstract class SyntaxParserBase
                 extension.equals("erl")
                )
             {
-                return new ErlangSyntaxParser(context);
+                return ErlangSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("go"))
             {
-                return new GoSyntaxParser(context);
+                return GoSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("hs"))
             {
-                return new HaskellSyntaxParser(context);
+                return HaskellSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("java"))
             {
-                return new JavaSyntaxParser(context);
+                return JavaSyntaxParser.newInstance(context);
             }
 
             if (
@@ -227,7 +228,7 @@ public abstract class SyntaxParserBase
                 extension.equals("rkt")
                )
             {
-                return new LispSyntaxParser(context);
+                return LispSyntaxParser.newInstance(context);
             }
 
             if (
@@ -236,27 +237,27 @@ public abstract class SyntaxParserBase
                 extension.equals("ll")
                )
             {
-                return new LlvmSyntaxParser(context);
+                return LlvmSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("lua"))
             {
-                return new LuaSyntaxParser(context);
+                return LuaSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("matlab"))
             {
-                return new MatlabSyntaxParser(context);
+                return MatlabSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("matlab-identifiers"))
             {
-                return new MatlabIdentifiersSyntaxParser(context);
+                return MatlabIdentifiersSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("matlab-operators"))
             {
-                return new MatlabOperatorsSyntaxParser(context);
+                return MatlabOperatorsSyntaxParser.newInstance(context);
             }
 
             if (
@@ -265,12 +266,12 @@ public abstract class SyntaxParserBase
                 extension.equals("ml")
                )
             {
-                return new MlSyntaxParser(context);
+                return MlSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("mumps"))
             {
-                return new MumpsSyntaxParser(context);
+                return MumpsSyntaxParser.newInstance(context);
             }
 
             if (
@@ -279,7 +280,7 @@ public abstract class SyntaxParserBase
                 extension.equals("nemerle")
                )
             {
-                return new NSyntaxParser(context);
+                return NSyntaxParser.newInstance(context);
             }
 
             if (
@@ -288,7 +289,7 @@ public abstract class SyntaxParserBase
                 extension.equals("pascal")
                )
             {
-                return new PascalSyntaxParser(context);
+                return PascalSyntaxParser.newInstance(context);
             }
 
             if (
@@ -299,27 +300,27 @@ public abstract class SyntaxParserBase
                 extension.equals("splus")
                )
             {
-                return new RSyntaxParser(context);
+                return RSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("rd"))
             {
-                return new RdSyntaxParser(context);
+                return RdSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("scala"))
             {
-                return new ScalaSyntaxParser(context);
+                return ScalaSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("sql"))
             {
-                return new SqlSyntaxParser(context);
+                return SqlSyntaxParser.newInstance(context);
             }
 
             if (extension.equals("tcl"))
             {
-                return new TclSyntaxParser(context);
+                return TclSyntaxParser.newInstance(context);
             }
 
             if (
@@ -328,7 +329,7 @@ public abstract class SyntaxParserBase
                 extension.equals("tex")
                 )
             {
-                return new TexSyntaxParser(context);
+                return TexSyntaxParser.newInstance(context);
             }
 
             if (
@@ -337,7 +338,7 @@ public abstract class SyntaxParserBase
                 extension.equals("vbs")
                 )
             {
-                return new VisualBasicSyntaxParser(context);
+                return VisualBasicSyntaxParser.newInstance(context);
             }
 
             if (
@@ -346,12 +347,12 @@ public abstract class SyntaxParserBase
                 extension.equals("vhd")
                 )
             {
-                return new VhdlSyntaxParser(context);
+                return VhdlSyntaxParser.newInstance(context);
             }
 
             if (filePath.endsWith(".wiki.meta"))
             {
-                return new WikiSyntaxParser(context);
+                return WikiSyntaxParser.newInstance(context);
             }
 
             if (
@@ -362,7 +363,7 @@ public abstract class SyntaxParserBase
                 extension.equals("ui")
                )
             {
-                return new XmlSyntaxParser(context);
+                return XmlSyntaxParser.newInstance(context);
             }
 
             if (
@@ -371,7 +372,7 @@ public abstract class SyntaxParserBase
                 extension.equals("xquery")
                 )
             {
-                return new XQuerySyntaxParser(context);
+                return XQuerySyntaxParser.newInstance(context);
             }
 
             if (
@@ -380,11 +381,11 @@ public abstract class SyntaxParserBase
                 extension.equals("yml")
                 )
             {
-                return new YamlSyntaxParser(context);
+                return YamlSyntaxParser.newInstance(context);
             }
         }
 
-        return new PlainTextSyntaxParser(context);
+        return PlainTextSyntaxParser.newInstance(context);
     }
 
     /**

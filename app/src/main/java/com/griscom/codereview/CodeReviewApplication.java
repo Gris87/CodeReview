@@ -23,6 +23,15 @@ public class CodeReviewApplication extends Application
 
     /** {@inheritDoc} */
     @Override
+    public String toString()
+    {
+        return "CodeReviewApplication{" +
+                "mTracker=" + mTracker +
+                '}';
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void onCreate()
     {
         super.onCreate();
@@ -43,14 +52,5 @@ public class CodeReviewApplication extends Application
         }
 
         return mTracker;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString()
-    {
-        return "CodeReviewApplication{" +
-                "mTracker=" + mTracker +
-                '}';
     }
 }

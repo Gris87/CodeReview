@@ -15,6 +15,7 @@ import com.griscom.codereview.other.SyntaxParserType;
 /**
  * Dialog for selecting syntax parser type
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class HighlightSyntaxDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
@@ -30,6 +31,16 @@ public class HighlightSyntaxDialog extends DialogFragment
     private int                           mSyntaxParserType = SyntaxParserType.AUTOMATIC;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "HighlightSyntaxDialog{" +
+                "mListener=" + mListener +
+                ", mSyntaxParserType=" + mSyntaxParserType +
+                '}';
+    }
 
     /**
      * Creates new instance of HighlightSyntaxDialog with pre-selected syntax parser type
@@ -111,7 +122,8 @@ public class HighlightSyntaxDialog extends DialogFragment
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 

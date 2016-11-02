@@ -33,9 +33,18 @@ public class XmlSyntaxParser extends SyntaxParserBase
      * Creates XmlSyntaxParser instance
      * @param context    context
      */
-    public XmlSyntaxParser(Context context)
+    private XmlSyntaxParser(Context context)
     {
         super(context);
+    }
+
+    /**
+     * Creates XmlSyntaxParser instance
+     * @param context    context
+     */
+    public static XmlSyntaxParser newInstance(Context context)
+    {
+        return new XmlSyntaxParser(context);
     }
 
     /** {@inheritDoc} */
@@ -67,7 +76,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
             commentPaint.setColor    (Color.rgb(64,  96,  192));
             stringPaint.setColor     (Color.rgb(40,  0,   255));
 
-            Map<String, Paint> colorsMap = new HashMap<>();
+            Map<String, Paint> colorsMap = new HashMap<>(6);
             colorsMap.put(Prettify.PR_TAG,          tagPaint);
             colorsMap.put(Prettify.PR_ATTRIB_NAME,  attribNamePaint);
             colorsMap.put(Prettify.PR_ATTRIB_VALUE, attribValuePaint);
@@ -79,7 +88,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
 
             // ---------------------------------------------------------------
 
-            StringBuilder codeBuilder = new StringBuilder();
+            StringBuilder codeBuilder = new StringBuilder(0);
 
             createReader(filePath);
 
@@ -123,7 +132,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
                     selectedPaint = basePaint;
                 }
 
-                boolean lastEnter = content.endsWith("\n");
+                boolean lastEnter = !content.isEmpty() && content.charAt(content.length() - 1) == '\n';
 
                 do
                 {
@@ -144,7 +153,7 @@ public class XmlSyntaxParser extends SyntaxParserBase
                     curColumn = 0;
                 } while (true);
 
-                if (lastEnter || !content.equals(""))
+                if (lastEnter || !content.isEmpty())
                 {
                     row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));
                     curColumn += content.length();

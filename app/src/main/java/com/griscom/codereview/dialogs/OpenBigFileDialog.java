@@ -14,6 +14,7 @@ import com.griscom.codereview.R;
 /**
  * Dialog for asking opening big file
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class OpenBigFileDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
@@ -33,6 +34,18 @@ public class OpenBigFileDialog extends DialogFragment
     private String                        mFileNote = null;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "OpenBigFileDialog{" +
+                "mListener="    + mListener +
+                ", mFilePath='" + mFilePath + '\'' +
+                ", mFileId="    + mFileId   +
+                ", mFileNote='" + mFileNote + '\'' +
+                '}';
+    }
 
     /**
      * Creates new instance of OpenBigFileDialog
@@ -120,7 +133,8 @@ public class OpenBigFileDialog extends DialogFragment
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 

@@ -316,7 +316,7 @@ public class FileEntry
 
 
 
-            MainDatabase helper = new MainDatabase(context);
+            MainDatabase helper = MainDatabase.newInstance(context);
             SQLiteDatabase db = helper.getWritableDatabase();
 
             if (mDbFileId <= 0)
@@ -346,7 +346,7 @@ public class FileEntry
 
 
 
-                MainDatabase helper = new MainDatabase(context);
+                MainDatabase helper = MainDatabase.newInstance(context);
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 if (mDbFileId <= 0)

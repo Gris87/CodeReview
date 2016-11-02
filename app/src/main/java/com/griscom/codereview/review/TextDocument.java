@@ -635,7 +635,7 @@ public class TextDocument implements OnTouchListener
             }
         }
 
-        MainDatabase helper = new MainDatabase(mContext);
+        MainDatabase helper = MainDatabase.newInstance(mContext);
         SQLiteDatabase db = helper.getWritableDatabase();
 
         int fileId = mParent.getFileId();
@@ -648,7 +648,7 @@ public class TextDocument implements OnTouchListener
 
         db.close();
 
-        SingleFileDatabase fileHelper = new SingleFileDatabase(mContext, fileId);
+        SingleFileDatabase fileHelper = SingleFileDatabase.newInstance(mContext, fileId);
         db = fileHelper.getWritableDatabase();
 
         synchronized(this)
@@ -725,7 +725,7 @@ public class TextDocument implements OnTouchListener
 
             if (mParent.getFileId() > 0)
             {
-                MainDatabase helper = new MainDatabase(mContext);
+                MainDatabase helper = MainDatabase.newInstance(mContext);
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 helper.updateFileMeta(db, mParent.getFileId(), mParent.getFilePath());
@@ -1102,7 +1102,7 @@ public class TextDocument implements OnTouchListener
             mInvalidCount  = invalidCount;
             mNoteCount     = noteCount;
 
-            MainDatabase helper = new MainDatabase(mContext);
+            MainDatabase helper = MainDatabase.newInstance(mContext);
             SQLiteDatabase db = helper.getWritableDatabase();
 
             int fileId = mParent.getFileId();

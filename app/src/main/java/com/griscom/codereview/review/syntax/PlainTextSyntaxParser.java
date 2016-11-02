@@ -25,9 +25,18 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
      * Creates PlainTextSyntaxParser instance
      * @param context    context
      */
-    public PlainTextSyntaxParser(Context context)
+    private PlainTextSyntaxParser(Context context)
     {
         super(context);
+    }
+
+    /**
+     * Creates PlainTextSyntaxParser instance
+     * @param context    context
+     */
+    public static PlainTextSyntaxParser newInstance(Context context)
+    {
+        return new PlainTextSyntaxParser(context);
     }
 
     /** {@inheritDoc} */
@@ -55,7 +64,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
             String line;
             while ((line = readLine()) != null)
             {
-                lastEnter = line.endsWith("\n");
+                lastEnter = !line.isEmpty() && line.charAt(line.length() - 1) == '\n';
 
                 if (lastEnter)
                 {

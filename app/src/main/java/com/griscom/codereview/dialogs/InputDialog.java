@@ -16,6 +16,7 @@ import com.griscom.codereview.R;
 /**
  * Dialog for inputting text
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class InputDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
@@ -39,6 +40,20 @@ public class InputDialog extends DialogFragment
     private Bundle                        mData     = null;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "InputDialog{" +
+                "mListener="  + mListener +
+                ", mId="      + mId       +
+                ", mTitle="   + mTitle    +
+                ", mMessage=" + mMessage  +
+                ", mText='"   + mText     + '\'' +
+                ", mData="    + mData     +
+                '}';
+    }
 
     /**
      * Creates new instance of InputDialog with pre-entered text
@@ -159,7 +174,8 @@ public class InputDialog extends DialogFragment
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 

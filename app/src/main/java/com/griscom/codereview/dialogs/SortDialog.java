@@ -15,6 +15,7 @@ import com.griscom.codereview.other.SortType;
 /**
  * Dialog for selecting sort type
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class SortDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
@@ -30,6 +31,16 @@ public class SortDialog extends DialogFragment
     private int                           mSortType = SortType.NONE;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "SortDialog{" +
+                "mListener="   + mListener +
+                ", mSortType=" + mSortType +
+                '}';
+    }
 
     /**
      * Creates new instance of SortDialog with pre-selected sort type
@@ -111,7 +122,8 @@ public class SortDialog extends DialogFragment
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 

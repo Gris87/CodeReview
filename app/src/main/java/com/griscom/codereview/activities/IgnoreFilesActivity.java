@@ -24,6 +24,7 @@ import java.util.ArrayList;
 /**
  * Activity that allow to choose files for ignoring
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClickListener, InputDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
@@ -48,6 +49,16 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
     private IgnoreFilesAdapter mAdapter             = null;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "IgnoreFilesActivity{" +
+                "mIgnoreFilesListView=" + mIgnoreFilesListView +
+                ", mAdapter="           + mAdapter             +
+                '}';
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -91,9 +102,9 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
         super.onRestoreInstanceState(savedInstanceState);
 
         ArrayList<Integer> selection = savedInstanceState.getIntegerArrayList(SAVED_STATE_SELECTION);
-        Assert.assertNotNull(selection);
+        Assert.assertNotNull("selection is null", selection);
 
-        if (selection.size() > 0)
+        if (!selection.isEmpty())
         {
             mAdapter.setSelectionMode(true);
 
@@ -129,7 +140,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
             default:
             {
-                AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
+                AppLog.wtf(TAG, "Unknown action ID: " + item.getItemId());
             }
             break;
         }
@@ -139,7 +150,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
     /** {@inheritDoc} */
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
         Bundle data = new Bundle();
         data.putInt(DATA_POSITION, position);
@@ -168,7 +179,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
             default:
             {
-                AppLog.wtf(TAG, "Unknown id: " + String.valueOf(id));
+                AppLog.wtf(TAG, "Unknown id: " + id);
             }
             break;
         }
@@ -249,7 +260,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
                     default:
                     {
-                        AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item.getItemId()));
+                        AppLog.wtf(TAG, "Unknown action ID: " + item.getItemId());
                     }
                     break;
                 }

@@ -27,16 +27,16 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
 
 
-    public static final String[] ROWS_COLUMNS = {
+    private static final String[] ROWS_COLUMNS = {
                                                     COLUMN_ID,
                                                     COLUMN_TYPE
-                                                };
+                                                 };
 
 
 
     public  static final String ROWS_TABLE_NAME   = "rows";
-    private static final String ROWS_TABLE_CREATE = "CREATE TABLE " + ROWS_TABLE_NAME + " " +
-                                                    "(" +
+    private static final String ROWS_TABLE_CREATE = "CREATE TABLE " + ROWS_TABLE_NAME + ' ' +
+                                                    '(' +
                                                          COLUMN_ID   + " INTEGER PRIMARY KEY, " +
                                                          COLUMN_TYPE + " TEXT NOT NULL"         +
                                                     ");";
@@ -47,16 +47,35 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
 
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "SingleFileDatabase{" +
+                "mDbName='" + mDbName + '\'' +
+                '}';
+    }
+
     /**
      * Constructs SingleFileDatabase instance
      * @param context    context
      * @param fileId     file ID in DB
      */
-    public SingleFileDatabase(Context context, int fileId)
+    private SingleFileDatabase(Context context, int fileId)
     {
-        super(context, DB_NAME + String.valueOf(fileId) + ".db", null, DB_VERSION);
+        super(context, DB_NAME + fileId + ".db", null, DB_VERSION);
 
-        mDbName = DB_NAME + String.valueOf(fileId) + ".db";
+        mDbName = DB_NAME + fileId + ".db";
+    }
+
+    /**
+     * Constructs SingleFileDatabase instance
+     * @param context    context
+     * @param fileId     file ID in DB
+     */
+    public static SingleFileDatabase newInstance(Context context, int fileId)
+    {
+        return new SingleFileDatabase(context, fileId);
     }
 
     /** {@inheritDoc} */
@@ -79,7 +98,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
      * @param row     row ID
      * @param type    type of row (reviewed/invalid)
      */
-    public void insertOrUpdateRow(SQLiteDatabase db, int row, char type)
+    public static void insertOrUpdateRow(SQLiteDatabase db, int row, char type)
     {
         ContentValues values = new ContentValues();
 
@@ -94,7 +113,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
      * @param db     database
      * @param row    row ID
      */
-    public void removeRow(SQLiteDatabase db, int row)
+    public static void removeRow(SQLiteDatabase db, int row)
     {
         db.delete(ROWS_TABLE_NAME, COLUMN_ID + "=?", new String[]{ String.valueOf(row + 1) });
     }
@@ -104,7 +123,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
      * @param db    database
      * @return rows from database
      */
-    public Cursor getRows(SQLiteDatabase db)
+    public static Cursor getRows(SQLiteDatabase db)
     {
         return db.query(ROWS_TABLE_NAME, ROWS_COLUMNS, null, null, null, null, COLUMN_ID);
     }

@@ -42,7 +42,7 @@ public class ApolloSyntaxParser extends SyntaxParserBase
      * Creates ApolloSyntaxParser instance
      * @param context    context
      */
-    public static ApolloSyntaxParser create(Context context)
+    public static ApolloSyntaxParser newInstance(Context context)
     {
         return new ApolloSyntaxParser(context);
     }

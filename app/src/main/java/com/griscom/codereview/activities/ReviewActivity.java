@@ -38,6 +38,7 @@ import junit.framework.Assert;
 /**
  * Activity for performing code review
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class ReviewActivity extends FragmentActivity implements OnTouchListener, OnClickListener, OnNoteSupportListener, OnFileNoteLoadedListener, OnProgressChangedListener, OnCommentDialogRequestedListener, CommentDialog.OnFragmentInteractionListener, HighlightSyntaxDialog.OnFragmentInteractionListener
 {
     @SuppressWarnings("unused")
@@ -72,6 +73,32 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
     private int               mHoverColor         = -1;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "ReviewActivity{" +
+                "mContent="              + mContent            +
+                ", mTitle="              + mTitle              +
+                ", mNoteTextView="       + mNoteTextView       +
+                ", mProgressTextView="   + mProgressTextView   +
+                ", mControls="           + mControls           +
+                ", mReviewedButton="     + mReviewedButton     +
+                ", mInvalidButton="      + mInvalidButton      +
+                ", mNoteButton="         + mNoteButton         +
+                ", mClearButton="        + mClearButton        +
+                ", mTracker="            + mTracker            +
+                ", mControlsVisible="    + mControlsVisible    +
+                ", mLastSelectedButton=" + mLastSelectedButton +
+                ", mDefaultColor="       + mDefaultColor       +
+                ", mSelectedColor="      + mSelectedColor      +
+                ", mHoverColor="         + mHoverColor         +
+                ", mHoverTouchListener=" + mHoverTouchListener +
+                ", mHideHandler="        + mHideHandler        +
+                ", mHideRunnable="       + mHideRunnable       +
+                '}';
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -252,7 +279,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
             default:
             {
-                AppLog.wtf(TAG, "Unknown action ID: " + String.valueOf(item));
+                AppLog.wtf(TAG, "Unknown action ID: " + item);
             }
             break;
         }
@@ -277,7 +304,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
 
             default:
             {
-                AppLog.wtf(TAG, "Unexpected request code: " + String.valueOf(requestCode));
+                AppLog.wtf(TAG, "Unexpected request code: " + requestCode);
             }
             break;
         }
@@ -338,11 +365,12 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         }
         else
         {
-            AppLog.wtf(TAG, "Unknown onClick receiver: " + String.valueOf(view));
+            AppLog.wtf(TAG, "Unknown onClick receiver: " + view);
         }
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("BooleanParameter")
     @Override
     public void onNoteSupport(boolean noteSupported)
     {
@@ -368,7 +396,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
     @Override
     public void onProgressChanged(int progress)
     {
-        Assert.assertTrue(progress >= 0 && progress <= 100);
+        Assert.assertTrue("progress is out of bounds", progress >= 0 && progress <= 100);
 
         mProgressTextView.setText(getString(R.string.progress, progress));
     }

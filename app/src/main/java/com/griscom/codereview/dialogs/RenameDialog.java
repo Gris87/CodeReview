@@ -23,6 +23,7 @@ import java.util.ArrayList;
 /**
  * Dialog for renaming file
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class RenameDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
@@ -43,6 +44,19 @@ public class RenameDialog extends DialogFragment
     private ArrayList<String>             mFileNames = null;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "RenameDialog{" +
+                "mListener="    + mListener  +
+                ", mAction="    + mAction    +
+                ", mItem="      + mItem      +
+                ", mFileName='" + mFileName  + '\'' +
+                ", mFileNames=" + mFileNames +
+                '}';
+    }
 
     /**
      * Creates new instance of RenameDialog with pre-entered file name
@@ -106,7 +120,7 @@ public class RenameDialog extends DialogFragment
                             {
                                 String fileName = editText.getText().toString();
 
-                                if (!fileName.equals(""))
+                                if (!fileName.isEmpty())
                                 {
                                     mFileNames.remove(fileName);
                                     mFileNames.add(0, fileName);
@@ -162,7 +176,8 @@ public class RenameDialog extends DialogFragment
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -187,7 +202,7 @@ public class RenameDialog extends DialogFragment
 
         for (int i = 0; i < mFileNames.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1), mFileNames.get(i));
+            editor.putString(ApplicationPreferences.ONE_FILENAME + '_' + (i + 1), mFileNames.get(i));
         }
 
         editor.apply();
@@ -198,14 +213,14 @@ public class RenameDialog extends DialogFragment
      */
     private void loadLastFileNames()
     {
-        mFileNames = new ArrayList<>();
+        mFileNames = new ArrayList<>(0);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.FILE_NAMES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         int fileNameCount = prefs.getInt(ApplicationPreferences.LAST_FILENAMES, 0);
 
         for (int i = 0; i < fileNameCount; ++i)
         {
-            String fileName = prefs.getString(ApplicationPreferences.ONE_FILENAME + "_" + String.valueOf(i + 1),"");
+            String fileName = prefs.getString(ApplicationPreferences.ONE_FILENAME + '_' + (i + 1), "");
 
             if (
                 !TextUtils.isEmpty(fileName)

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 /**
  * Dialog for creating comments
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class CommentDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
@@ -42,6 +43,19 @@ public class CommentDialog extends DialogFragment
     private ArrayList<String>             mComments = null;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "CommentDialog{" +
+                "mListener="   + mListener +
+                ", mFirstRow=" + mFirstRow +
+                ", mLastRow="  + mLastRow  +
+                ", mComment='" + mComment  + '\'' +
+                ", mComments=" + mComments +
+                '}';
+    }
 
     /**
      * Creates new instance of CommentDialog with pre-entered comment
@@ -105,7 +119,7 @@ public class CommentDialog extends DialogFragment
                             {
                                 String comment = editText.getText().toString();
 
-                                if (!comment.equals(""))
+                                if (!comment.isEmpty())
                                 {
                                     mComments.remove(comment);
                                     mComments.add(0, comment);
@@ -188,7 +202,8 @@ public class CommentDialog extends DialogFragment
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -213,7 +228,7 @@ public class CommentDialog extends DialogFragment
 
         for (int i = 0; i < mComments.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_COMMENT + "_" + String.valueOf(i + 1), mComments.get(i));
+            editor.putString(ApplicationPreferences.ONE_COMMENT + '_' + (i + 1), mComments.get(i));
         }
 
         editor.apply();
@@ -224,14 +239,14 @@ public class CommentDialog extends DialogFragment
      */
     private void loadLastComments()
     {
-        mComments = new ArrayList<>();
+        mComments = new ArrayList<>(0);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         int commentCount = prefs.getInt(ApplicationPreferences.LAST_COMMENTS, 0);
 
         for (int i = 0; i < commentCount; ++i)
         {
-            String comment = prefs.getString(ApplicationPreferences.ONE_COMMENT + "_" + String.valueOf(i + 1),"");
+            String comment = prefs.getString(ApplicationPreferences.ONE_COMMENT + '_' + (i + 1), "");
 
             if (
                 !TextUtils.isEmpty(comment)

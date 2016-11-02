@@ -33,9 +33,18 @@ public class CPlusPlusSyntaxParser extends SyntaxParserBase
      * Creates CPlusPlusSyntaxParser instance
      * @param context    context
      */
-    public CPlusPlusSyntaxParser(Context context)
+    private CPlusPlusSyntaxParser(Context context)
     {
         super(context);
+    }
+
+    /**
+     * Creates CPlusPlusSyntaxParser instance
+     * @param context    context
+     */
+    public static CPlusPlusSyntaxParser newInstance(Context context)
+    {
+        return new CPlusPlusSyntaxParser(context);
     }
 
     /** {@inheritDoc} */
@@ -65,7 +74,7 @@ public class CPlusPlusSyntaxParser extends SyntaxParserBase
             commentPaint.setColor       (Color.rgb(64,  128, 100));
             stringPaint.setColor        (Color.rgb(0,   0,   192));
 
-            Map<String, Paint> colorsMap = new HashMap<>();
+            Map<String, Paint> colorsMap = new HashMap<>(6);
             colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);
             colorsMap.put(Prettify.PR_TYPE,        typePaint);
             colorsMap.put(Prettify.PR_LITERAL,     literalPaint);
@@ -77,7 +86,7 @@ public class CPlusPlusSyntaxParser extends SyntaxParserBase
 
             // ---------------------------------------------------------------
 
-            StringBuilder codeBuilder = new StringBuilder();
+            StringBuilder codeBuilder = new StringBuilder(0);
 
             createReader(filePath);
 
@@ -121,7 +130,7 @@ public class CPlusPlusSyntaxParser extends SyntaxParserBase
                     selectedPaint = basePaint;
                 }
 
-                boolean lastEnter = content.endsWith("\n");
+                boolean lastEnter = !content.isEmpty() && content.charAt(content.length() - 1) == '\n';
 
                 do
                 {
@@ -142,7 +151,7 @@ public class CPlusPlusSyntaxParser extends SyntaxParserBase
                     curColumn = 0;
                 } while (true);
 
-                if (lastEnter || !content.equals(""))
+                if (lastEnter || !content.isEmpty())
                 {
                     row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));
                     curColumn += content.length();

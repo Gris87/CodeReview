@@ -83,6 +83,20 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
     /** {@inheritDoc} */
     @Override
+    public String toString()
+    {
+        return "FilesActivity{" +
+                "mFilesListView="   + mFilesListView +
+                ", mAdapter="       + mAdapter       +
+                ", mActionBar="     + mActionBar     +
+                ", mActionMode="    + mActionMode    +
+                ", mTracker="       + mTracker       +
+                ", mBackPressTime=" + mBackPressTime +
+                '}';
+    }
+
+    /** {@inheritDoc} */
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -1103,19 +1117,5 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             mAdapter.sort(sortType);
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString()
-    {
-        return "FilesActivity{" +
-                "mFilesListView=" + mFilesListView +
-                ", mAdapter=" + mAdapter +
-                ", mActionBar=" + mActionBar +
-                ", mActionMode=" + mActionMode +
-                ", mTracker=" + mTracker +
-                ", mBackPressTime=" + mBackPressTime +
-                '}';
     }
 }

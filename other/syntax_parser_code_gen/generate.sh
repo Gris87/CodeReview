@@ -259,9 +259,18 @@ function generateSyntaxParser {
     echo "     * Creates ${parser}SyntaxParser instance"                                                                       >> ${target_file}
     echo "     * @param context    context"                                                                                    >> ${target_file}
     echo "     */"                                                                                                             >> ${target_file}
-    echo "    public ${parser}SyntaxParser(Context context)"                                                                   >> ${target_file}
+    echo "    private ${parser}SyntaxParser(Context context)"                                                                  >> ${target_file}
     echo "    {"                                                                                                               >> ${target_file}
     echo "        super(context);"                                                                                             >> ${target_file}
+    echo "    }"                                                                                                               >> ${target_file}
+    echo ""                                                                                                                    >> ${target_file}
+    echo "    /**"                                                                                                             >> ${target_file}
+    echo "     * Creates ${parser}SyntaxParser instance"                                                                       >> ${target_file}
+    echo "     * @param context    context"                                                                                    >> ${target_file}
+    echo "     */"                                                                                                             >> ${target_file}
+    echo "    public static ${parser}SyntaxParser newInstance(Context context)"                                                >> ${target_file}
+    echo "    {"                                                                                                               >> ${target_file}
+    echo "        return new ${parser}SyntaxParser(context);"                                                                  >> ${target_file}
     echo "    }"                                                                                                               >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "    /** {@inheritDoc} */"                                                                                            >> ${target_file}
@@ -295,7 +304,7 @@ function generateSyntaxParser {
         echo "            commentPaint.setColor    (Color.rgb(64,  96,  192));"                                                >> ${target_file}
         echo "            stringPaint.setColor     (Color.rgb(40,  0,   255));"                                                >> ${target_file}
         echo ""                                                                                                                >> ${target_file}
-        echo "            Map<String, Paint> colorsMap = new HashMap<>();"                                                     >> ${target_file}
+        echo "            Map<String, Paint> colorsMap = new HashMap<>(6);"                                                    >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_TAG,          tagPaint);"                                                  >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_ATTRIB_NAME,  attribNamePaint);"                                           >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_ATTRIB_VALUE, attribValuePaint);"                                          >> ${target_file}
@@ -316,7 +325,7 @@ function generateSyntaxParser {
         echo "            commentPaint.setColor       (Color.rgb(64,  128, 100));"                                             >> ${target_file}
         echo "            stringPaint.setColor        (Color.rgb(0,   0,   192));"                                             >> ${target_file}
         echo ""                                                                                                                >> ${target_file}
-        echo "            Map<String, Paint> colorsMap = new HashMap<>();"                                                     >> ${target_file}
+        echo "            Map<String, Paint> colorsMap = new HashMap<>(6);"                                                    >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);"                                               >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_TYPE,        typePaint);"                                                  >> ${target_file}
         echo "            colorsMap.put(Prettify.PR_LITERAL,     literalPaint);"                                               >> ${target_file}
@@ -330,7 +339,7 @@ function generateSyntaxParser {
     echo ""                                                                                                                    >> ${target_file}
     echo "            // ---------------------------------------------------------------"                                      >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
-    echo "            StringBuilder codeBuilder = new StringBuilder();"                                                        >> ${target_file}
+    echo "            StringBuilder codeBuilder = new StringBuilder(0);"                                                       >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "            createReader(filePath);"                                                                                 >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
@@ -374,7 +383,7 @@ function generateSyntaxParser {
     echo "                    selectedPaint = basePaint;"                                                                      >> ${target_file}
     echo "                }"                                                                                                   >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
-    echo "                boolean lastEnter = content.endsWith(\"\\n\");"                                                      >> ${target_file}
+    echo "                boolean lastEnter = !content.isEmpty() && content.charAt(content.length() - 1) == '\n';"             >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "                do"                                                                                                  >> ${target_file}
     echo "                {"                                                                                                   >> ${target_file}
@@ -395,7 +404,7 @@ function generateSyntaxParser {
     echo "                    curColumn = 0;"                                                                                  >> ${target_file}
     echo "                } while (true);"                                                                                     >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
-    echo "                if (lastEnter || !content.equals(\"\"))"                                                             >> ${target_file}
+    echo "                if (lastEnter || !content.isEmpty())"                                                                >> ${target_file}
     echo "                {"                                                                                                   >> ${target_file}
     echo "                    row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));"                  >> ${target_file}
     echo "                    curColumn += content.length();"                                                                  >> ${target_file}

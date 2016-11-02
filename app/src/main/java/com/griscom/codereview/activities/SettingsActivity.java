@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * Activity with settings
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class SettingsActivity extends PreferenceActivity
 {
     @SuppressWarnings("unused")
@@ -113,6 +114,7 @@ public class SettingsActivity extends PreferenceActivity
      * This method stops fragment injection in malicious applications.
      * Make sure to deny any unknown fragments here.
      */
+    @Override
     protected boolean isValidFragment(String fragmentName)
     {
         return fragmentName.equals(PreferenceFragment.class.getName())
@@ -128,6 +130,7 @@ public class SettingsActivity extends PreferenceActivity
      * This fragment shows file manager preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
+    @SuppressWarnings("PublicInnerClass")
     public static class FileManagerPreferenceFragment extends PreferenceFragment
     {
         @Override
@@ -148,6 +151,7 @@ public class SettingsActivity extends PreferenceActivity
      * This fragment shows colors preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
+    @SuppressWarnings("PublicInnerClass")
     public static class ColorsPreferenceFragment extends PreferenceFragment
     {
         @Override
@@ -168,6 +172,7 @@ public class SettingsActivity extends PreferenceActivity
      * This fragment shows editor preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
+    @SuppressWarnings("PublicInnerClass")
     public static class EditorPreferenceFragment extends PreferenceFragment
     {
         @Override

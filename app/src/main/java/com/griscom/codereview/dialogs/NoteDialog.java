@@ -22,6 +22,7 @@ import java.util.ArrayList;
 /**
  * Dialog for creating notes
  */
+@SuppressWarnings({"ClassWithoutConstructor", "PublicConstructor"})
 public class NoteDialog extends DialogFragment
 {
     @SuppressWarnings("unused")
@@ -40,6 +41,18 @@ public class NoteDialog extends DialogFragment
     private ArrayList<String>             mNotes    = null;
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "NoteDialog{" +
+                "mListener=" + mListener +
+                ", mItems="  + mItems    +
+                ", mNote='"  + mNote     + '\'' +
+                ", mNotes="  + mNotes    +
+                '}';
+    }
 
     /**
      * Creates new instance of NoteDialog with pre-entered note
@@ -100,7 +113,7 @@ public class NoteDialog extends DialogFragment
                             {
                                 String note = editText.getText().toString();
 
-                                if (!note.equals(""))
+                                if (!note.isEmpty())
                                 {
                                     mNotes.remove(note);
                                     mNotes.add(0, note);
@@ -153,7 +166,8 @@ public class NoteDialog extends DialogFragment
         }
         else
         {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            //noinspection ProhibitedExceptionThrown
+            throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -178,7 +192,7 @@ public class NoteDialog extends DialogFragment
 
         for (int i = 0; i < mNotes.size(); ++i)
         {
-            editor.putString(ApplicationPreferences.ONE_NOTE + "_" + String.valueOf(i + 1), mNotes.get(i));
+            editor.putString(ApplicationPreferences.ONE_NOTE + '_' + String.valueOf(i + 1), mNotes.get(i));
         }
 
         editor.apply();
@@ -189,14 +203,14 @@ public class NoteDialog extends DialogFragment
      */
     private void loadLastNotes()
     {
-        mNotes = new ArrayList<>();
+        mNotes = new ArrayList<>(0);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(ApplicationPreferences.NOTES_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         int noteCount = prefs.getInt(ApplicationPreferences.LAST_NOTES, 0);
 
         for (int i = 0; i < noteCount; ++i)
         {
-            String note = prefs.getString(ApplicationPreferences.ONE_NOTE + "_" + String.valueOf(i + 1),"");
+            String note = prefs.getString(ApplicationPreferences.ONE_NOTE + '_' + (i + 1), "");
 
             if (
                 !TextUtils.isEmpty(note)

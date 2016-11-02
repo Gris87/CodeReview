@@ -605,10 +605,10 @@ public class FilesAdapter extends BaseAdapter
 
             if (file.getDbFileId() > 0)
             {
-                MainDatabase helper = new MainDatabase(mContext);
+                MainDatabase helper = MainDatabase.newInstance(mContext);
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                helper.updateFilePath(db, file.getDbFileId(), pathToFile(fileName));
+                MainDatabase.updateFilePath(db, file.getDbFileId(), pathToFile(fileName));
 
                 db.close();
             }
@@ -795,7 +795,7 @@ public class FilesAdapter extends BaseAdapter
         @Override
         protected Boolean doInBackground(Void... params)
         {
-            MainDatabase helper = new MainDatabase(mContext);
+            MainDatabase helper = MainDatabase.newInstance(mContext);
             SQLiteDatabase db = helper.getReadableDatabase();
 
 

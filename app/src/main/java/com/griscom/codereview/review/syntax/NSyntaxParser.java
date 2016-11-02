@@ -33,9 +33,18 @@ public class NSyntaxParser extends SyntaxParserBase
      * Creates NSyntaxParser instance
      * @param context    context
      */
-    public NSyntaxParser(Context context)
+    private NSyntaxParser(Context context)
     {
         super(context);
+    }
+
+    /**
+     * Creates NSyntaxParser instance
+     * @param context    context
+     */
+    public static NSyntaxParser newInstance(Context context)
+    {
+        return new NSyntaxParser(context);
     }
 
     /** {@inheritDoc} */
@@ -65,7 +74,7 @@ public class NSyntaxParser extends SyntaxParserBase
             commentPaint.setColor       (Color.rgb(64,  128, 100));
             stringPaint.setColor        (Color.rgb(0,   0,   192));
 
-            Map<String, Paint> colorsMap = new HashMap<>();
+            Map<String, Paint> colorsMap = new HashMap<>(6);
             colorsMap.put(Prettify.PR_KEYWORD,     keywordPaint);
             colorsMap.put(Prettify.PR_TYPE,        typePaint);
             colorsMap.put(Prettify.PR_LITERAL,     literalPaint);
@@ -77,7 +86,7 @@ public class NSyntaxParser extends SyntaxParserBase
 
             // ---------------------------------------------------------------
 
-            StringBuilder codeBuilder = new StringBuilder();
+            StringBuilder codeBuilder = new StringBuilder(0);
 
             createReader(filePath);
 
@@ -121,7 +130,7 @@ public class NSyntaxParser extends SyntaxParserBase
                     selectedPaint = basePaint;
                 }
 
-                boolean lastEnter = content.endsWith("\n");
+                boolean lastEnter = !content.isEmpty() && content.charAt(content.length() - 1) == '\n';
 
                 do
                 {
@@ -142,7 +151,7 @@ public class NSyntaxParser extends SyntaxParserBase
                     curColumn = 0;
                 } while (true);
 
-                if (lastEnter || !content.equals(""))
+                if (lastEnter || !content.isEmpty())
                 {
                     row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));
                     curColumn += content.length();

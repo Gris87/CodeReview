@@ -41,7 +41,7 @@ public class MainDatabase extends SQLiteOpenHelper
 
 
 
-    public static final String[] FILES_COLUMNS = {
+    private static final String[] FILES_COLUMNS = {
                                                      COLUMN_ID,
                                                      COLUMN_PATH,
                                                      COLUMN_NAME,
@@ -52,13 +52,13 @@ public class MainDatabase extends SQLiteOpenHelper
                                                      COLUMN_NOTE_COUNT,
                                                      COLUMN_ROW_COUNT,
                                                      COLUMN_NOTE
-                                                 };
+                                                  };
 
 
 
     private static final String FILES_TABLE_NAME   = "files";
-    private static final String FILES_TABLE_CREATE = "CREATE TABLE " + FILES_TABLE_NAME + " " +
-                                                     "(" +
+    private static final String FILES_TABLE_CREATE = "CREATE TABLE " + FILES_TABLE_NAME + ' ' +
+                                                     '(' +
                                                           COLUMN_ID                + " INTEGER PRIMARY KEY, " +
                                                           COLUMN_PATH              + " TEXT NOT NULL, "       +
                                                           COLUMN_NAME              + " TEXT NOT NULL, "       +
@@ -77,9 +77,18 @@ public class MainDatabase extends SQLiteOpenHelper
      * Creates MainDatabase instance
      * @param context    context
      */
-    public MainDatabase(Context context)
+    private MainDatabase(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    /**
+     * Creates MainDatabase instance
+     * @param context    context
+     */
+    public static MainDatabase newInstance(Context context)
+    {
+        return new MainDatabase(context);
     }
 
     /** {@inheritDoc} */
@@ -102,7 +111,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param filePath    path to file
      * @return file ID in DB
      */
-    public int getFileId(SQLiteDatabase db, String filePath)
+    public static int getFileId(SQLiteDatabase db, String filePath)
     {
         int res = 0;
 
@@ -160,20 +169,20 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param filePath    path to file
      * @return file ID in DB
      */
-    public int getOrCreateFileId(SQLiteDatabase db, String filePath)
+    public static long getOrCreateFileId(SQLiteDatabase db, String filePath)
     {
-        int res = 0;
+        long res = 0;
 
         String md5 = null;
         long modifiedTime = new File(filePath).lastModified();
 
         int index = filePath.lastIndexOf('/');
-        Assert.assertTrue(index >= 0);
+        Assert.assertTrue("filePath doesn't contains \"/\"", index >= 0);
 
         String folder   = filePath.substring(0, index);
         String fileName = filePath.substring(index + 1);
 
-        if (folder.equals(""))
+        if (folder.isEmpty())
         {
             folder = "/";
         }
@@ -235,7 +244,7 @@ public class MainDatabase extends SQLiteOpenHelper
             values.put(COLUMN_ROW_COUNT,         0);
             values.put(COLUMN_NOTE,              "");
 
-            res = (int)db.insertOrThrow(FILES_TABLE_NAME, null, values);
+            res = db.insertOrThrow(FILES_TABLE_NAME, null, values);
         }
 
 
@@ -249,7 +258,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId    file ID in DB
      * @return file note for specified file ID
      */
-    public String getFileNote(SQLiteDatabase db, int fileId)
+    public static String getFileNote(SQLiteDatabase db, int fileId)
     {
         String res = null;
 
@@ -279,17 +288,17 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId      file ID in DB
      * @param filePath    path to file
      */
-    public void updateFilePath(SQLiteDatabase db, int fileId, String filePath)
+    public static void updateFilePath(SQLiteDatabase db, int fileId, String filePath)
     {
         ContentValues values = new ContentValues();
 
         int index = filePath.lastIndexOf('/');
-        Assert.assertTrue(index >= 0);
+        Assert.assertTrue("filePath doesn't contains \"/\"", index >= 0);
 
         String folder   = filePath.substring(0, index);
         String fileName = filePath.substring(index + 1);
 
-        if (folder.equals(""))
+        if (folder.isEmpty())
         {
             folder = "/";
         }
@@ -306,7 +315,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId      file ID in DB
      * @param filePath    filePath
      */
-    public void updateFileMeta(SQLiteDatabase db, int fileId, String filePath)
+    public static void updateFileMeta(SQLiteDatabase db, int fileId, String filePath)
     {
         String md5        = Utils.md5ForFile(filePath);
         long modifiedTime = new File(filePath).lastModified();
@@ -330,7 +339,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param noteCount        note count
      * @param rowCount         row count
      */
-    public void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount, int rowCount)
+    public static void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount, int rowCount)
     {
         ContentValues values = new ContentValues();
 
@@ -348,7 +357,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId    file ID in database
      * @param note      note
      */
-    public void updateFileNote(SQLiteDatabase db, int fileId, String note)
+    public static void updateFileNote(SQLiteDatabase db, int fileId, String note)
     {
         ContentValues values = new ContentValues();
 
@@ -363,7 +372,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param path    path to folder
      * @return cursor for all files in specified path
      */
-    public Cursor getFiles(SQLiteDatabase db, String path)
+    public static Cursor getFiles(SQLiteDatabase db, String path)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH + "=?", new String[]{ path }, null, null, null);
     }
@@ -374,15 +383,15 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param filePath    path to file
      * @return cursor for all files with specified path to file
      */
-    public Cursor getFile(SQLiteDatabase db, String filePath)
+    public static Cursor getFile(SQLiteDatabase db, String filePath)
     {
         int index = filePath.lastIndexOf('/');
-        Assert.assertTrue(index >= 0);
+        Assert.assertTrue("filePath doesn't contains \"/\"", index >= 0);
 
         String folder   = filePath.substring(0, index);
         String fileName = filePath.substring(index + 1);
 
-        if (folder.equals(""))
+        if (folder.isEmpty())
         {
             folder = "/";
         }
@@ -397,7 +406,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileName    file name
      * @return cursor for all files with specified path and file name
      */
-    public Cursor getFile(SQLiteDatabase db, String path, String fileName)
+    public static Cursor getFile(SQLiteDatabase db, String path, String fileName)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_PATH + "=? AND " + COLUMN_NAME + "=?", new String[]{ path, fileName }, null, null, null);
     }
@@ -408,7 +417,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId    file ID in DB
      * @return cursor for file with specified file ID in DB
      */
-    public Cursor getFile(SQLiteDatabase db, int fileId)
+    public static Cursor getFile(SQLiteDatabase db, int fileId)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_ID + "=?", new String[]{ String.valueOf(fileId) }, null, null, null);
     }
@@ -419,7 +428,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param md5    MD5 hash
      * @return cursor for all files with specified MD5 hash
      */
-    public Cursor getFileByMD5(SQLiteDatabase db, String md5)
+    public static Cursor getFileByMD5(SQLiteDatabase db, String md5)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_MD5 + "=?", new String[]{ md5 }, null, null, null);
     }
