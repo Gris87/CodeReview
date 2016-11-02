@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 /**
  * Base class for SyntaxParser
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class SyntaxParserBase
 {
     @SuppressWarnings("unused")

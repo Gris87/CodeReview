@@ -2,7 +2,7 @@ package com.griscom.codereview.util;
 
 import android.util.Log;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class AppLog
 {
     @SuppressWarnings("unused")

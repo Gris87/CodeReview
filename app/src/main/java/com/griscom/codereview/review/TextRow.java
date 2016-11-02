@@ -229,6 +229,7 @@ public class TextRow
         mY = y;
     }
 
+    @SuppressWarnings("SameReturnValue")
     @Deprecated
     public float getX() // Do not use it. Always zero
     {

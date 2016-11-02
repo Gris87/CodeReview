@@ -123,6 +123,7 @@ public class TextRegion
         return mX;
     }
 
+    @SuppressWarnings("SameReturnValue")
     @Deprecated
     public float getY() // Do not use it. Always zero
     {

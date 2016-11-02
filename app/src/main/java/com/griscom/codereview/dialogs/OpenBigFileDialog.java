@@ -100,7 +100,7 @@ public class OpenBigFileDialog extends DialogFragment
     /**
      * Handler for big file opening confirmed event
      */
-    public void onBigFileOpeningConfirmed()
+    private void onBigFileOpeningConfirmed()
     {
         if (mListener != null)
         {

@@ -3,7 +3,6 @@ package com.griscom.codereview.review;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
@@ -16,7 +15,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.text.TextUtils;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +26,6 @@ import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.db.SingleFileDatabase;
 import com.griscom.codereview.listeners.OnCommentDialogRequestedListener;
 import com.griscom.codereview.listeners.OnProgressChangedListener;
-import com.griscom.codereview.other.ApplicationPreferences;
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.ColorCache;
 import com.griscom.codereview.other.RowType;
@@ -774,7 +771,7 @@ public class TextDocument implements OnTouchListener
         repaint();
     }
 
-    public void updateSelection()
+    private void updateSelection()
     {
         int selectionEnd = mSelectionEnd;
 
@@ -1025,46 +1022,6 @@ public class TextDocument implements OnTouchListener
         }
     }
 
-    public ArrayList<CharSequence> loadLastComments()
-    {
-        SharedPreferences prefs = mContext.getSharedPreferences(ApplicationPreferences.COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-
-        int commentCount = prefs.getInt(ApplicationPreferences.LAST_COMMENTS, 0);
-
-        ArrayList<CharSequence> res = new ArrayList<CharSequence>();
-
-        for (int i = 0; i < commentCount; ++i)
-        {
-            String comment = prefs.getString(ApplicationPreferences.ONE_COMMENT + "_" + String.valueOf(i + 1),"");
-
-            if (
-                !TextUtils.isEmpty(comment)
-                &&
-                !res.contains(comment)
-               )
-            {
-                res.add(comment);
-            }
-        }
-
-        return res;
-    }
-
-    public void saveLastComments(ArrayList<CharSequence> comments)
-    {
-        SharedPreferences prefs = mContext.getSharedPreferences(ApplicationPreferences.COMMENTS_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putInt(ApplicationPreferences.LAST_COMMENTS, comments.size());
-
-        for (int i = 0; i < comments.size(); ++i)
-        {
-            editor.putString(ApplicationPreferences.ONE_COMMENT + "_" + String.valueOf(i + 1), comments.get(i).toString());
-        }
-
-        editor.apply();
-    }
-
     public void setParent(ReviewSurfaceView parent)
     {
         mParent = parent;
@@ -1194,11 +1151,13 @@ public class TextDocument implements OnTouchListener
         return mHeight;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public float getRight()
     {
         return mX + mWidth;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public float getBottom()
     {
         return mY + mHeight;
