@@ -113,7 +113,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
 
 
-        mAdapter       = new FilesAdapter(this);
+        mAdapter       = FilesAdapter.newInstance(this);
         mActionBar     = getSupportActionBar();
         mActionMode    = null;
         mTracker       = ((CodeReviewApplication)getApplication()).getDefaultTracker();

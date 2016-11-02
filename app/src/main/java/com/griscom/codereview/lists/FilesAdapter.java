@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,35 +59,46 @@ public class FilesAdapter extends BaseAdapter
 
 
 
-    /**
-     * View holder
-     */
-    private static class ViewHolder
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
     {
-        CheckBox  mCheckBox;
-        ImageView mExtensionImage;
-        TextView  mFileNote;
-        TextView  mFileName;
-        TextView  mFileSize;
+        return "FilesAdapter{" +
+                "mContext="         + mContext       +
+                ", mCurrentPath='"  + mCurrentPath   + '\'' +
+                ", mFiles="         + mFiles         +
+                ", mSortType="      + mSortType      +
+                ", mSelectionMode=" + mSelectionMode +
+                ", mSelection="     + mSelection     +
+                ", mDbReaderTask="  + mDbReaderTask  +
+                '}';
     }
-
-
 
     /**
      * Creates instance of FilesAdapter
      * @param context    context
      */
-    public FilesAdapter(Context context)
+    @SuppressWarnings("ImplicitCallToSuper")
+    private FilesAdapter(Context context)
     {
         mContext       = context;
         mCurrentPath   = Environment.getExternalStorageDirectory().getPath();
-        mFiles         = new ArrayList<>();
+        mFiles         = new ArrayList<>(0);
         mSortType      = SortType.NAME;
         mSelectionMode = false;
-        mSelection     = new ArrayList<>();
+        mSelection     = new ArrayList<>(0);
         mDbReaderTask  = null;
 
         rescan();
+    }
+
+    /**
+     * Creates instance of FilesAdapter
+     * @param context    context
+     */
+    public static FilesAdapter newInstance(Context context)
+    {
+        return new FilesAdapter(context);
     }
 
     /** {@inheritDoc} */
@@ -97,6 +109,7 @@ public class FilesAdapter extends BaseAdapter
     }
 
     /** {@inheritDoc} */
+    @Nullable
     @Override
     public Object getItem(int position)
     {
@@ -124,11 +137,11 @@ public class FilesAdapter extends BaseAdapter
 
         ViewHolder holder = new ViewHolder();
 
-        holder.mCheckBox       = (CheckBox) resView.findViewById(R.id.checkbox);
-        holder.mExtensionImage = (ImageView)resView.findViewById(R.id.extensionImageView);
-        holder.mFileNote       = (TextView) resView.findViewById(R.id.fileNoteTextView);
-        holder.mFileName       = (TextView) resView.findViewById(R.id.fileNameTextView);
-        holder.mFileSize       = (TextView) resView.findViewById(R.id.fileSizeTextView);
+        holder.setCheckBox(      (CheckBox) resView.findViewById(R.id.checkbox));
+        holder.setExtensionImage((ImageView)resView.findViewById(R.id.extensionImageView));
+        holder.setFileNote(      (TextView) resView.findViewById(R.id.fileNoteTextView));
+        holder.setFileName(      (TextView) resView.findViewById(R.id.fileNameTextView));
+        holder.setFileSize(      (TextView) resView.findViewById(R.id.fileSizeTextView));
 
         resView.setTag(holder);
 
@@ -158,7 +171,7 @@ public class FilesAdapter extends BaseAdapter
                 int reviewedPercent = reviewedCount * 100 / rowCount;
                 int invalidPercent  = invalidCount  * 100 / rowCount;
                 int notePercent     = noteCount     * 100 / rowCount;
-                int clearPercent    = 100 - ((reviewedCount + invalidCount + noteCount) * 100 / rowCount);
+                int clearPercent    = 100 - (reviewedCount + invalidCount + noteCount) * 100 / rowCount;
 
                 if (reviewedPercent <= 0)
                 {
@@ -349,12 +362,12 @@ public class FilesAdapter extends BaseAdapter
             )
            )
         {
-            holder.mCheckBox.setVisibility(View.VISIBLE);
-            holder.mCheckBox.setChecked(mSelection.contains(position));
+            holder.getCheckBox().setVisibility(View.VISIBLE);
+            holder.getCheckBox().setChecked(mSelection.contains(position));
         }
         else
         {
-            holder.mCheckBox.setVisibility(View.GONE);
+            holder.getCheckBox().setVisibility(View.GONE);
         }
 
 
@@ -363,27 +376,27 @@ public class FilesAdapter extends BaseAdapter
 
         if (!TextUtils.isEmpty(note))
         {
-            holder.mFileNote.setVisibility(View.VISIBLE);
-            holder.mFileNote.setText(note);
+            holder.getFileNote().setVisibility(View.VISIBLE);
+            holder.getFileNote().setText(note);
         }
         else
         {
-            holder.mFileNote.setVisibility(View.GONE);
+            holder.getFileNote().setVisibility(View.GONE);
         }
 
 
 
-        holder.mExtensionImage.setImageResource(file.getImageId());
-        holder.mFileName.setText(file.getFileName());
+        holder.getExtensionImage().setImageResource(file.getImageId());
+        holder.getFileName().setText(file.getFileName());
 
         if (!file.isDirectory())
         {
-            holder.mFileSize.setVisibility(View.VISIBLE);
-            holder.mFileSize.setText(Utils.bytesToString(file.getSize()));
+            holder.getFileSize().setVisibility(View.VISIBLE);
+            holder.getFileSize().setText(Utils.bytesToString(file.getSize()));
         }
         else
         {
-            holder.mFileSize.setVisibility(View.GONE);
+            holder.getFileSize().setVisibility(View.GONE);
         }
     }
 
@@ -412,7 +425,7 @@ public class FilesAdapter extends BaseAdapter
      */
     public void goUp()
     {
-        Assert.assertTrue(!mCurrentPath.equals("/"));
+        Assert.assertTrue("Current path is root", !mCurrentPath.equals("/"));
 
         setCurrentPathBacktrace(mCurrentPath.substring(0, mCurrentPath.lastIndexOf('/')));
     }
@@ -421,9 +434,9 @@ public class FilesAdapter extends BaseAdapter
      * Rescans current folder
      * @return true, if successful
      */
-    public boolean rescan()
+    public final boolean rescan()
     {
-        if (!(new File(mCurrentPath).exists()))
+        if (!new File(mCurrentPath).exists())
         {
             setCurrentPathBacktrace(pathToFile("."));
 
@@ -511,13 +524,13 @@ public class FilesAdapter extends BaseAdapter
      */
     public String pathToFile(String fileName)
     {
-        if (mCurrentPath.endsWith("/"))
+        if (!mCurrentPath.isEmpty() && mCurrentPath.charAt(mCurrentPath.length() - 1) == '/')
         {
             return mCurrentPath + fileName;
         }
         else
         {
-            return mCurrentPath + "/" + fileName;
+            return mCurrentPath + '/' + fileName;
         }
     }
 
@@ -769,6 +782,126 @@ public class FilesAdapter extends BaseAdapter
     public ArrayList<Integer> getSelection()
     {
         return mSelection;
+    }
+
+
+
+    /**
+     * View holder
+     */
+    @SuppressWarnings("ClassWithoutConstructor")
+    private static class ViewHolder
+    {
+        private CheckBox  mCheckBox       = null;
+        private ImageView mExtensionImage = null;
+        private TextView  mFileNote       = null;
+        private TextView  mFileName       = null;
+        private TextView  mFileSize       = null;
+
+
+
+        /** {@inheritDoc} */
+        @Override
+        public String toString()
+        {
+            return "ViewHolder{" +
+                    "mCheckBox="         + mCheckBox       +
+                    ", mExtensionImage=" + mExtensionImage +
+                    ", mFileNote="       + mFileNote       +
+                    ", mFileName="       + mFileName       +
+                    ", mFileSize="       + mFileSize       +
+                    '}';
+        }
+
+        /**
+         * Gets checkbox
+         * @return checkbox
+         */
+        CheckBox getCheckBox()
+        {
+            return mCheckBox;
+        }
+
+        /**
+         * Sets checkbox
+         * @param checkBox    checkbox
+         */
+        void setCheckBox(CheckBox checkBox)
+        {
+            mCheckBox = checkBox;
+        }
+
+        /**
+         * Gets extension image
+         * @return extension image
+         */
+        ImageView getExtensionImage()
+        {
+            return mExtensionImage;
+        }
+
+        /**
+         * Sets extension image
+         * @param extensionImage    extension image
+         */
+        void setExtensionImage(ImageView extensionImage)
+        {
+            mExtensionImage = extensionImage;
+        }
+
+        /**
+         * Gets file note
+         * @return file note
+         */
+        TextView getFileNote()
+        {
+            return mFileNote;
+        }
+
+        /**
+         * Sets file note
+         * @param fileNote    file note
+         */
+        void setFileNote(TextView fileNote)
+        {
+            mFileNote = fileNote;
+        }
+
+        /**
+         * Gets file name
+         * @return file name
+         */
+        TextView getFileName()
+        {
+            return mFileName;
+        }
+
+        /**
+         * Sets file name
+         * @param fileName    file name
+         */
+        void setFileName(TextView fileName)
+        {
+            mFileName = fileName;
+        }
+
+        /**
+         * Gets file size
+         * @return file size
+         */
+        TextView getFileSize()
+        {
+            return mFileSize;
+        }
+
+        /**
+         * Sets file size
+         * @param fileSize    file size
+         */
+        void setFileSize(TextView fileSize)
+        {
+            mFileSize = fileSize;
+        }
     }
 
 
