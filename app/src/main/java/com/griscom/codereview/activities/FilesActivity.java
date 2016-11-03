@@ -177,11 +177,11 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
         if (!selection.isEmpty())
         {
-            mAdapter.setSelectionMode(true);
+            mAdapter.setSelectionMode(FilesAdapter.SELECTION_MODE_ENABLED);
 
             for (int i = 0; i < selection.size(); ++i)
             {
-                mAdapter.setSelected(selection.get(i), true);
+                mAdapter.setSelected(selection.get(i), FilesAdapter.ITEM_SELECTED);
             }
         }
     }
@@ -341,36 +341,39 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             FileEntry file = (FileEntry)mAdapter.getItem(position);
 
-            String fileName = file.getFileName();
-
-            if (file.isDirectory())
+            if (file != null)
             {
-                if (fileName.equals(".."))
-                {
-                    mAdapter.goUp();
-                }
-                else
-                {
-                    mAdapter.setCurrentPathBacktrace(mAdapter.pathToFile(fileName));
-                }
+                String fileName = file.getFileName();
 
-                savePath();
-                updateCurrentPath();
-            }
-            else
-            {
-                saveLastFile(fileName);
-
-                try
+                if (file.isDirectory())
                 {
-                    openFile(fileName, file.getDbFileId(), file.getFileNote());
-                }
-                catch (FileNotFoundException ignored)
-                {
-                    mAdapter.setCurrentPathBacktrace(mAdapter.pathToFile("."));
+                    if (fileName.equals(".."))
+                    {
+                        mAdapter.goUp();
+                    }
+                    else
+                    {
+                        mAdapter.setCurrentPathBacktrace(mAdapter.pathToFile(fileName));
+                    }
 
                     savePath();
                     updateCurrentPath();
+                }
+                else
+                {
+                    saveLastFile(fileName);
+
+                    try
+                    {
+                        openFile(fileName, file.getDbFileId(), file.getFileNote());
+                    }
+                    catch (FileNotFoundException ignored)
+                    {
+                        mAdapter.setCurrentPathBacktrace(mAdapter.pathToFile("."));
+
+                        savePath();
+                        updateCurrentPath();
+                    }
                 }
             }
         }
@@ -430,36 +433,41 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
     @Override
     public void onFileRenamed(int action, int item, String fileName)
     {
-        String oldFileName = ((FileEntry)mAdapter.getItem(item)).getFileName();
+        FileEntry file = (FileEntry)mAdapter.getItem(item);
 
-        if (action == ACTION_ADD_NOTE)
+        if (file != null)
         {
-            ArrayList<Integer> items = new ArrayList<>(1);
+            String oldFileName = file.getFileName();
 
-            items.add(item);
-
-            if (!oldFileName.equals(fileName))
+            if (action == ACTION_ADD_NOTE)
             {
-                mAdapter.assignNote(items, getString(R.string.files_rename_to, fileName));
+                ArrayList<Integer> items = new ArrayList<>(1);
+
+                items.add(item);
+
+                if (!oldFileName.equals(fileName))
+                {
+                    mAdapter.assignNote(items, getString(R.string.files_rename_to, fileName));
+                }
+                else
+                {
+                    mAdapter.assignNote(items, "");
+                }
             }
             else
             {
-                mAdapter.assignNote(items, "");
-            }
-        }
-        else
-        {
-            if (!oldFileName.equals(fileName))
-            {
-                if (!mAdapter.renameFile(item, fileName))
+                if (!oldFileName.equals(fileName))
                 {
-                    if (((FileEntry) mAdapter.getItem(item)).isDirectory())
+                    if (!mAdapter.renameFile(item, fileName))
                     {
-                        Toast.makeText(this, R.string.files_can_not_rename_folder, Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(this, R.string.files_can_not_rename_file, Toast.LENGTH_SHORT).show();
+                        if (file.isDirectory())
+                        {
+                            Toast.makeText(this, R.string.files_can_not_rename_folder, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(this, R.string.files_can_not_rename_file, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }
@@ -547,6 +555,8 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                     FileEntry firstFile = (FileEntry)mAdapter.getItem(0);
 
                     if (
+                        firstFile != null
+                        &&
                         firstFile.isDirectory()
                         &&
                         firstFile.getFileName().equals("..")
@@ -558,7 +568,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                     }
                 }
 
-                mAdapter.setSelected(position, checked);
+                mAdapter.setSelected(position, checked ? FilesAdapter.ITEM_SELECTED : FilesAdapter.ITEM_DESELECTED);
 
 
 
@@ -569,13 +579,18 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
                 for (int item : items)
                 {
-                    if (((FileEntry)mAdapter.getItem(item)).isDirectory())
+                    FileEntry file = (FileEntry)mAdapter.getItem(item);
+
+                    if (file != null)
                     {
-                        ++foldersCount;
-                    }
-                    else
-                    {
-                        ++filesCount;
+                        if (file.isDirectory())
+                        {
+                            ++foldersCount;
+                        }
+                        else
+                        {
+                            ++filesCount;
+                        }
                     }
                 }
 
@@ -613,7 +628,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
                 mActionMode.setTitle(R.string.files_select_files);
                 mActionMode.getMenuInflater().inflate(R.menu.context_menu_files, menu);
 
-                mAdapter.setSelectionMode(true);
+                mAdapter.setSelectionMode(FilesAdapter.SELECTION_MODE_ENABLED);
 
                 return true;
             }
@@ -706,7 +721,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
             {
                 mActionMode = null;
 
-                mAdapter.setSelectionMode(false);
+                mAdapter.setSelectionMode(FilesAdapter.SELECTION_MODE_DISABLED);
             }
         });
     }
@@ -723,6 +738,8 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         FileEntry firstFile = (FileEntry)mAdapter.getItem(0);
 
         if (
+            firstFile != null
+            &&
             firstFile.isDirectory()
             &&
             firstFile.getFileName().equals("..")
@@ -763,20 +780,31 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      */
     private boolean assignNote(ArrayList<Integer> items)
     {
-        String note = ((FileEntry)mAdapter.getItem(items.get(0))).getFileNote();
+        FileEntry file = (FileEntry)mAdapter.getItem(items.get(0));
 
-        for (int i = 1; i < items.size(); ++i)
+        if (file != null)
         {
-            if (!note.equals(((FileEntry)mAdapter.getItem(items.get(i))).getFileNote()))
+            String note = file.getFileNote();
+
+            for (int i = 1; i < items.size(); ++i)
             {
-                note = "";
+                file = (FileEntry)mAdapter.getItem(items.get(i));
 
-                break;
+                if (
+                    file != null
+                    &&
+                    !note.equals(file.getFileNote())
+                   )
+                {
+                    note = "";
+
+                    break;
+                }
             }
-        }
 
-        NoteDialog dialog = NoteDialog.newInstance(items, note);
-        dialog.show(getSupportFragmentManager(), "NoteDialog");
+            NoteDialog dialog = NoteDialog.newInstance(items, note);
+            dialog.show(getSupportFragmentManager(), "NoteDialog");
+        }
 
         return false;
     }
@@ -792,8 +820,13 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             int item = items.get(0);
 
-            RenameDialog dialog = RenameDialog.newInstance(ACTION_ADD_NOTE, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
-            dialog.show(getSupportFragmentManager(), "RenameDialog");
+            FileEntry file = (FileEntry)mAdapter.getItem(item);
+
+            if (file != null)
+            {
+                RenameDialog dialog = RenameDialog.newInstance(ACTION_ADD_NOTE, item, file.getFileName());
+                dialog.show(getSupportFragmentManager(), "RenameDialog");
+            }
 
             return false;
         }
@@ -824,7 +857,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      */
     private boolean markAsReviewed(ArrayList<Integer> items)
     {
-        mAdapter.markAsFinished(items, true);
+        mAdapter.markAsFinished(items, FilesAdapter.MARK_TYPE_REVIEWED);
 
         return true;
     }
@@ -836,7 +869,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      */
     private boolean markAsInvalid(ArrayList<Integer> items)
     {
-        mAdapter.markAsFinished(items, false);
+        mAdapter.markAsFinished(items, FilesAdapter.MARK_TYPE_INVALID);
 
         return true;
     }
@@ -848,8 +881,13 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      */
     private boolean rename(int item)
     {
-        RenameDialog dialog = RenameDialog.newInstance(ACTION_RENAME, item, ((FileEntry)mAdapter.getItem(item)).getFileName());
-        dialog.show(getSupportFragmentManager(), "RenameDialog");
+        FileEntry file = (FileEntry)mAdapter.getItem(item);
+
+        if (file != null)
+        {
+            RenameDialog dialog = RenameDialog.newInstance(ACTION_RENAME, item, file.getFileName());
+            dialog.show(getSupportFragmentManager(), "RenameDialog");
+        }
 
         return false;
     }
@@ -866,13 +904,18 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
         for (int item : items)
         {
-            if (((FileEntry)mAdapter.getItem(item)).isDirectory())
+            FileEntry file = (FileEntry)mAdapter.getItem(item);
+
+            if (file != null)
             {
-                ++foldersCount;
-            }
-            else
-            {
-                ++filesCount;
+                if (file.isDirectory())
+                {
+                    ++foldersCount;
+                }
+                else
+                {
+                    ++filesCount;
+                }
             }
         }
 

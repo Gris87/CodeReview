@@ -49,11 +49,26 @@ public class FilesAdapter extends BaseAdapter
 
 
 
+    public static final int SELECTION_MODE_DISABLED = 0;
+    public static final int SELECTION_MODE_ENABLED  = 1;
+
+
+
+    public static final int ITEM_DESELECTED = 0;
+    public static final int ITEM_SELECTED   = 1;
+
+
+
+    public static final int MARK_TYPE_REVIEWED = 0;
+    public static final int MARK_TYPE_INVALID  = 1;
+
+
+
     private Context              mContext;
     private String               mCurrentPath;
     private ArrayList<FileEntry> mFiles;
     private int                  mSortType;
-    private boolean              mSelectionMode;
+    private int                  mSelectionMode;
     private ArrayList<Integer>   mSelection;
     private DbReaderTask         mDbReaderTask;
 
@@ -85,7 +100,7 @@ public class FilesAdapter extends BaseAdapter
         mCurrentPath   = Environment.getExternalStorageDirectory().getPath();
         mFiles         = new ArrayList<>(0);
         mSortType      = SortType.NAME;
-        mSelectionMode = false;
+        mSelectionMode = SELECTION_MODE_DISABLED;
         mSelection     = new ArrayList<>(0);
         mDbReaderTask  = null;
 
@@ -351,7 +366,7 @@ public class FilesAdapter extends BaseAdapter
 
 
         if (
-            mSelectionMode
+            mSelectionMode == SELECTION_MODE_ENABLED
             &&
             (
              position > 0
@@ -477,7 +492,7 @@ public class FilesAdapter extends BaseAdapter
             mDbReaderTask.cancel(true);
         }
 
-        mDbReaderTask = new DbReaderTask();
+        mDbReaderTask = DbReaderTask.newInstance(this);
         mDbReaderTask.execute();
 
 
@@ -572,15 +587,15 @@ public class FilesAdapter extends BaseAdapter
     /**
      * Marks files in specified indices as finished
      * @param items    file indices
-     * @param reviewed true if files reviewed, false if invalid
+     * @param markType mark type
      */
-    public void markAsFinished(ArrayList<Integer> items, boolean reviewed)
+    public void markAsFinished(ArrayList<Integer> items, int markType)
     {
         for (int item : items)
         {
             FileEntry file = mFiles.get(item);
 
-            if (reviewed)
+            if (markType == MARK_TYPE_REVIEWED)
             {
                 file.setFileStats(mContext, pathToFile(file.getFileName()), 1, 0, 0, 1);
             }
@@ -677,10 +692,12 @@ public class FilesAdapter extends BaseAdapter
     /**
      * Trying to set current path to the specified path.
      * If it's impossible to change current path then it will move upper recursively
-     * @param newPath    new path
+     * @param path    path
      */
-    public void setCurrentPathBacktrace(String newPath)
+    public void setCurrentPathBacktrace(String path)
     {
+        String newPath = path;
+
         do
         {
             try
@@ -689,9 +706,9 @@ public class FilesAdapter extends BaseAdapter
 
                 return;
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException ignored)
             {
-                Assert.assertTrue(!TextUtils.isEmpty(newPath) && !newPath.equals("/"));
+                Assert.assertTrue("Impossible to get parent folder", !TextUtils.isEmpty(newPath) && !newPath.equals("/"));
 
                 newPath = newPath.substring(0, newPath.lastIndexOf('/'));
             }
@@ -700,19 +717,21 @@ public class FilesAdapter extends BaseAdapter
 
     /**
      * Sets current path to the specified path
-     * @param newPath    new path
+     * @param path    path
      * @throws FileNotFoundException if specified path is not exist
      */
-    private void setCurrentPath(String newPath) throws FileNotFoundException
+    private void setCurrentPath(String path) throws FileNotFoundException
     {
+        String newPath = path;
+
         if (TextUtils.isEmpty(newPath))
         {
             newPath = "/";
         }
 
-        if (!(new File(newPath).exists()))
+        if (!new File(newPath).exists())
         {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException("File \"" + newPath + "\" not found");
         }
 
         mCurrentPath = newPath;
@@ -740,13 +759,13 @@ public class FilesAdapter extends BaseAdapter
 
     /**
      * Enables or disables selection mode
-     * @param enable    true, if need to enable
+     * @param selectionMode    selection mode
      */
-    public void setSelectionMode(boolean enable)
+    public void setSelectionMode(int selectionMode)
     {
-        if (mSelectionMode != enable)
+        if (mSelectionMode != selectionMode)
         {
-            mSelectionMode = enable;
+            mSelectionMode = selectionMode;
             mSelection.clear();
 
             notifyDataSetChanged();
@@ -755,14 +774,14 @@ public class FilesAdapter extends BaseAdapter
 
     /**
      * Selects or deselects item at specified index
-     * @param index      item index
-     * @param checked    true, if need to select
+     * @param index           item index
+     * @param itemSelected    item selected
      */
-    public void setSelected(int index, boolean checked)
+    public void setSelected(int index, int itemSelected)
     {
-        if (mSelectionMode)
+        if (mSelectionMode == SELECTION_MODE_ENABLED)
         {
-            if (checked)
+            if (itemSelected == ITEM_SELECTED)
             {
                 mSelection.add(index);
             }
@@ -909,19 +928,47 @@ public class FilesAdapter extends BaseAdapter
     /**
      * DB reader task
      */
-    private class DbReaderTask extends AsyncTask<Void, Void, Boolean>
+    private static class DbReaderTask extends AsyncTask<Void, Void, Boolean>
     {
-        private String               mStoredPath;
-        private ArrayList<FileEntry> mStoredFiles;
+        @SuppressWarnings("FieldNotUsedInToString")
+        private FilesAdapter         mAdapter     = null;
+        private Context              mContext     = null;
+        private String               mStoredPath  = null;
+        private ArrayList<FileEntry> mStoredFiles = null;
 
 
 
         /** {@inheritDoc} */
         @Override
-        protected void onPreExecute()
+        public String toString()
         {
-            mStoredPath  = mCurrentPath;
-            mStoredFiles = new ArrayList<>(mFiles);
+            return "DbReaderTask{" +
+                    "mContext="       + mContext     +
+                    ", mStoredPath='" + mStoredPath  + '\'' +
+                    ", mStoredFiles=" + mStoredFiles +
+                    '}';
+        }
+
+        /**
+         * Creates DbReaderTask instance for provided adapter
+         * @param adapter    adapter
+         */
+        @SuppressWarnings({"ImplicitCallToSuper", "AccessingNonPublicFieldOfAnotherObject"})
+        private DbReaderTask(FilesAdapter adapter)
+        {
+            mAdapter     = adapter;
+            mContext     = mAdapter.mContext;
+            mStoredPath  = mAdapter.mCurrentPath;
+            mStoredFiles = new ArrayList<>(mAdapter.mFiles);
+        }
+
+        /**
+         * Creates DbReaderTask instance for provided adapter
+         * @param adapter    adapter
+         */
+        public static DbReaderTask newInstance(FilesAdapter adapter)
+        {
+            return new DbReaderTask(adapter);
         }
 
         /** {@inheritDoc} */
@@ -933,7 +980,7 @@ public class FilesAdapter extends BaseAdapter
 
 
 
-            Cursor cursor = helper.getFiles(db, mStoredPath);
+            Cursor cursor = MainDatabase.getFiles(db, mStoredPath);
 
             int idIndex            = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_ID);
             int nameIndex          = cursor.getColumnIndexOrThrow(MainDatabase.COLUMN_NAME);
@@ -968,13 +1015,13 @@ public class FilesAdapter extends BaseAdapter
                 {
                     String filePath;
 
-                    if (mStoredPath.endsWith("/"))
+                    if (!mStoredPath.isEmpty() && mStoredPath.charAt(mStoredPath.length() - 1) == '/')
                     {
                         filePath = mStoredPath + fileName;
                     }
                     else
                     {
-                        filePath = mStoredPath + "/" + fileName;
+                        filePath = mStoredPath + '/' + fileName;
                     }
 
                     long modifiedTime = new File(filePath).lastModified();
@@ -1011,7 +1058,7 @@ public class FilesAdapter extends BaseAdapter
                     (
                      ApplicationSettings.getBigFileSize() == 0
                      ||
-                     entry.getSize() <= ApplicationSettings.getBigFileSize() * 1024
+                     entry.getSize() <= ApplicationSettings.getBigFileSize() << 10 // *  1024
                     )
                     &&
                     entry.getDbFileId() <= 0
@@ -1019,20 +1066,20 @@ public class FilesAdapter extends BaseAdapter
                 {
                     String filePath;
 
-                    if (mStoredPath.endsWith("/"))
+                    if (!mStoredPath.isEmpty() && mStoredPath.charAt(mStoredPath.length() - 1) == '/')
                     {
                         filePath = mStoredPath + entry.getFileName();
                     }
                     else
                     {
-                        filePath = mStoredPath + "/" + entry.getFileName();
+                        filePath = mStoredPath + '/' + entry.getFileName();
                     }
 
                     String md5 = Utils.md5ForFile(filePath);
 
                     if (!TextUtils.isEmpty(md5))
                     {
-                        cursor = helper.getFileByMD5(db, md5);
+                        cursor = MainDatabase.getFileByMD5(db, md5);
 
                         cursor.moveToFirst();
 
@@ -1066,9 +1113,11 @@ public class FilesAdapter extends BaseAdapter
         {
             if (result)
             {
-                mDbReaderTask = null;
+                mAdapter.notifyDataSetChanged();
 
-                notifyDataSetChanged();
+                //noinspection AccessingNonPublicFieldOfAnotherObject
+                mAdapter.mDbReaderTask = null;
+                mAdapter = null;
             }
         }
     }
