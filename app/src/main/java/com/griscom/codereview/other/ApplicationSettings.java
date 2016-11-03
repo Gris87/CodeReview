@@ -13,23 +13,32 @@ import java.util.Collections;
 /**
  * Application settings
  */
-public class ApplicationSettings
+@SuppressWarnings("WeakerAccess")
+public final class ApplicationSettings
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ApplicationSettings";
 
 
 
-    private static ArrayList<String> mIgnoreFiles    = null;
-    private static int               mReviewedColor  = 0;
-    private static int               mInvalidColor   = 0;
-    private static int               mNoteColor      = 0;
-    private static int               mSelectionColor = 0;
-    private static int               mFontSize       = 0;
-    private static int               mTabSize        = 0;
-    private static int               mBigFileSize    = 0;
+    private static ArrayList<String> sIgnoreFiles    = null;
+    private static int               sReviewedColor  = 0;
+    private static int               sInvalidColor   = 0;
+    private static int               sNoteColor      = 0;
+    private static int               sSelectionColor = 0;
+    private static int               sFontSize       = 0;
+    private static int               sTabSize        = 0;
+    private static int               sBigFileSize    = 0;
 
 
+
+    /**
+     * Disabled default constructor
+     */
+    private ApplicationSettings()
+    {
+        // Nothing
+    }
 
     /**
      * Updates application settings from SharedPreferences
@@ -40,29 +49,29 @@ public class ApplicationSettings
         SharedPreferences prefs = context.getSharedPreferences(ApplicationPreferences.MAIN_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
         String[] ignoreFiles = prefs.getString(ApplicationPreferences.IGNORE_FILES, "").split("\\|");
-        mReviewedColor       = prefs.getInt(context.getString(R.string.pref_key_reviewed_color),  context.getResources().getInteger(R.integer.pref_default_reviewed_color));
-        mInvalidColor        = prefs.getInt(context.getString(R.string.pref_key_invalid_color),   context.getResources().getInteger(R.integer.pref_default_invalid_color));
-        mNoteColor           = prefs.getInt(context.getString(R.string.pref_key_note_color),      context.getResources().getInteger(R.integer.pref_default_note_color));
-        mSelectionColor      = prefs.getInt(context.getString(R.string.pref_key_selection_color), context.getResources().getInteger(R.integer.pref_default_selection_color));
-        mFontSize            = prefs.getInt(context.getString(R.string.pref_key_font_size),       context.getResources().getInteger(R.integer.pref_default_font_size));
-        mTabSize             = prefs.getInt(context.getString(R.string.pref_key_tab_size),        context.getResources().getInteger(R.integer.pref_default_tab_size));
-        mBigFileSize         = prefs.getInt(context.getString(R.string.pref_key_big_file_size),   context.getResources().getInteger(R.integer.pref_default_big_file_size));
+        sReviewedColor       = prefs.getInt(context.getString(R.string.pref_key_reviewed_color),  context.getResources().getInteger(R.integer.pref_default_reviewed_color));
+        sInvalidColor        = prefs.getInt(context.getString(R.string.pref_key_invalid_color),   context.getResources().getInteger(R.integer.pref_default_invalid_color));
+        sNoteColor           = prefs.getInt(context.getString(R.string.pref_key_note_color),      context.getResources().getInteger(R.integer.pref_default_note_color));
+        sSelectionColor      = prefs.getInt(context.getString(R.string.pref_key_selection_color), context.getResources().getInteger(R.integer.pref_default_selection_color));
+        sFontSize            = prefs.getInt(context.getString(R.string.pref_key_font_size),       context.getResources().getInteger(R.integer.pref_default_font_size));
+        sTabSize             = prefs.getInt(context.getString(R.string.pref_key_tab_size),        context.getResources().getInteger(R.integer.pref_default_tab_size));
+        sBigFileSize         = prefs.getInt(context.getString(R.string.pref_key_big_file_size),   context.getResources().getInteger(R.integer.pref_default_big_file_size));
 
 
 
-        mIgnoreFiles = new ArrayList<>();
+        sIgnoreFiles = new ArrayList<>(0);
 
         for (String fileName : ignoreFiles)
         {
             fileName = Utils.replaceIncorrectIgnoreFileName(fileName);
 
-            if (!TextUtils.isEmpty(fileName) && !mIgnoreFiles.contains(fileName))
+            if (!TextUtils.isEmpty(fileName) && !sIgnoreFiles.contains(fileName))
             {
-                mIgnoreFiles.add(fileName);
+                sIgnoreFiles.add(fileName);
             }
         }
 
-        Collections.sort(mIgnoreFiles);
+        Collections.sort(sIgnoreFiles);
 
 
 
@@ -75,7 +84,7 @@ public class ApplicationSettings
      */
     public static ArrayList<String> getIgnoreFiles()
     {
-        return mIgnoreFiles;
+        return sIgnoreFiles;
     }
 
     /**
@@ -84,7 +93,7 @@ public class ApplicationSettings
      */
     public static int getReviewedColor()
     {
-        return mReviewedColor;
+        return sReviewedColor;
     }
 
     /**
@@ -93,7 +102,7 @@ public class ApplicationSettings
      */
     public static int getInvalidColor()
     {
-        return mInvalidColor;
+        return sInvalidColor;
     }
 
     /**
@@ -102,7 +111,7 @@ public class ApplicationSettings
      */
     public static int getNoteColor()
     {
-        return mNoteColor;
+        return sNoteColor;
     }
 
     /**
@@ -111,7 +120,7 @@ public class ApplicationSettings
      */
     public static int getSelectionColor()
     {
-        return mSelectionColor;
+        return sSelectionColor;
     }
 
     /**
@@ -120,7 +129,7 @@ public class ApplicationSettings
      */
     public static int getFontSize()
     {
-        return mFontSize;
+        return sFontSize;
     }
 
     /**
@@ -129,7 +138,7 @@ public class ApplicationSettings
      */
     public static int getTabSize()
     {
-        return mTabSize;
+        return sTabSize;
     }
 
     /**
@@ -138,6 +147,6 @@ public class ApplicationSettings
      */
     public static int getBigFileSize()
     {
-        return mBigFileSize;
+        return sBigFileSize;
     }
 }

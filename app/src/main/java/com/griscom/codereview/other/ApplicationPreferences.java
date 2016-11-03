@@ -3,7 +3,7 @@ package com.griscom.codereview.other;
 /**
  * Application preferences
  */
-public class ApplicationPreferences
+public final class ApplicationPreferences
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ApplicationPreferences";
@@ -31,4 +31,14 @@ public class ApplicationPreferences
 
     public static final String LAST_COMMENTS  = "LastComments";
     public static final String ONE_COMMENT    = "Comment";
+
+
+
+    /**
+     * Disabled default constructor
+     */
+    private ApplicationPreferences()
+    {
+        // Nothing
+    }
 }
