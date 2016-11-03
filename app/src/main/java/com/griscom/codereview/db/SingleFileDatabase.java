@@ -61,7 +61,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
      * @param context    context
      * @param fileId     file ID in DB
      */
-    private SingleFileDatabase(Context context, int fileId)
+    private SingleFileDatabase(Context context, long fileId)
     {
         super(context, DB_NAME + fileId + ".db", null, DB_VERSION);
 
@@ -73,7 +73,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
      * @param context    context
      * @param fileId     file ID in DB
      */
-    public static SingleFileDatabase newInstance(Context context, int fileId)
+    public static SingleFileDatabase newInstance(Context context, long fileId)
     {
         return new SingleFileDatabase(context, fileId);
     }

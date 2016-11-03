@@ -30,7 +30,7 @@ public class OpenBigFileDialog extends DialogFragment
 
     private OnFragmentInteractionListener mListener = null;
     private String                        mFilePath = null;
-    private int                           mFileId   = 0;
+    private long                          mFileId   = 0;
     private String                        mFileNote = null;
 
 
@@ -54,13 +54,13 @@ public class OpenBigFileDialog extends DialogFragment
      * @param fileNote    file note
      * @return OpenBigFileDialog instance
      */
-    public static OpenBigFileDialog newInstance(String filePath, int fileId, String fileNote)
+    public static OpenBigFileDialog newInstance(String filePath, long fileId, String fileNote)
     {
         OpenBigFileDialog fragment = new OpenBigFileDialog();
 
         Bundle args = new Bundle();
         args.putString(ARG_FILE_PATH, filePath);
-        args.putInt(   ARG_FILE_ID,   fileId);
+        args.putLong(  ARG_FILE_ID,   fileId);
         args.putString(ARG_FILE_NOTE, fileNote);
         fragment.setArguments(args);
 
@@ -74,7 +74,7 @@ public class OpenBigFileDialog extends DialogFragment
         super.onCreate(savedInstanceState);
 
         mFilePath = getArguments().getString(ARG_FILE_PATH);
-        mFileId   = getArguments().getInt(   ARG_FILE_ID);
+        mFileId   = getArguments().getLong(  ARG_FILE_ID);
         mFileNote = getArguments().getString(ARG_FILE_NOTE);
     }
 
@@ -160,6 +160,6 @@ public class OpenBigFileDialog extends DialogFragment
          * @param fileId      file ID in DB
          * @param fileNote    file note
          */
-        void onBigFileOpeningConfirmed(String filePath, int fileId, String fileNote);
+        void onBigFileOpeningConfirmed(String filePath, long fileId, String fileNote);
     }
 }

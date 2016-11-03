@@ -258,7 +258,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId    file ID in DB
      * @return file note for specified file ID
      */
-    public static String getFileNote(SQLiteDatabase db, int fileId)
+    public static String getFileNote(SQLiteDatabase db, long fileId)
     {
         String res = null;
 
@@ -288,7 +288,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId      file ID in DB
      * @param filePath    path to file
      */
-    public static void updateFilePath(SQLiteDatabase db, int fileId, String filePath)
+    public static void updateFilePath(SQLiteDatabase db, long fileId, String filePath)
     {
         ContentValues values = new ContentValues();
 
@@ -315,7 +315,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId      file ID in DB
      * @param filePath    filePath
      */
-    public static void updateFileMeta(SQLiteDatabase db, int fileId, String filePath)
+    public static void updateFileMeta(SQLiteDatabase db, long fileId, String filePath)
     {
         String md5        = Utils.md5ForFile(filePath);
         long modifiedTime = new File(filePath).lastModified();
@@ -339,7 +339,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param noteCount        note count
      * @param rowCount         row count
      */
-    public static void updateFileStats(SQLiteDatabase db, int fileId, int reviewedCount, int invalidCount, int noteCount, int rowCount)
+    public static void updateFileStats(SQLiteDatabase db, long fileId, int reviewedCount, int invalidCount, int noteCount, int rowCount)
     {
         ContentValues values = new ContentValues();
 
@@ -357,7 +357,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId    file ID in database
      * @param note      note
      */
-    public static void updateFileNote(SQLiteDatabase db, int fileId, String note)
+    public static void updateFileNote(SQLiteDatabase db, long fileId, String note)
     {
         ContentValues values = new ContentValues();
 
@@ -417,7 +417,7 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param fileId    file ID in DB
      * @return cursor for file with specified file ID in DB
      */
-    public static Cursor getFile(SQLiteDatabase db, int fileId)
+    public static Cursor getFile(SQLiteDatabase db, long fileId)
     {
         return db.query(FILES_TABLE_NAME, FILES_COLUMNS, COLUMN_ID + "=?", new String[]{ String.valueOf(fileId) }, null, null, null);
     }

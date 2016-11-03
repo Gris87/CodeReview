@@ -2,6 +2,7 @@ package com.griscom.codereview.review.syntax;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.support.annotation.Nullable;
 
 import com.griscom.codereview.other.ApplicationSettings;
 import com.griscom.codereview.other.SyntaxParserType;
@@ -14,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 /**
  * Base class for SyntaxParser
@@ -26,11 +28,30 @@ public abstract class SyntaxParserBase
 
 
 
-    private Context        mContext;
-    private BufferedReader mReader;
-    private Paint          mCommentPaint;
+    private Context        mContext      = null;
+    private BufferedReader mReader       = null;
+    private Paint          mCommentPaint = null;
+    private final Object   mLock         = new Object();
 
 
+
+    @Override
+    public String toString()
+    {
+        BufferedReader reader;
+
+        synchronized(mLock)
+        {
+            reader = mReader;
+        }
+
+        return "SyntaxParserBase{" +
+                "mContext="        + mContext      +
+                ", mReader="       + reader        +
+                ", mCommentPaint=" + mCommentPaint +
+                ", mLock="         + mLock         +
+                '}';
+    }
 
     /**
      * Creates SyntaxParserBase instance
@@ -106,13 +127,13 @@ public abstract class SyntaxParserBase
 
     /**
      * Creates SyntaxParser instance based on specified file name
-     * @param filePath    path to file
-     * @param context     context
+     * @param path      path to file
+     * @param context   context
      * @return SyntaxParserBase instance
      */
-    private static SyntaxParserBase createParserByFileName(String filePath, Context context)
+    private static SyntaxParserBase createParserByFileName(String path, Context context)
     {
-        filePath = filePath.toLowerCase();
+        String filePath = path.toLowerCase(Locale.getDefault());
 
         int index = filePath.lastIndexOf('.');
 
@@ -402,7 +423,7 @@ public abstract class SyntaxParserBase
      */
     protected void createReader(String filePath) throws FileNotFoundException
     {
-        synchronized (this)
+        synchronized(mLock)
         {
             mReader = null;
             mReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
@@ -414,11 +435,12 @@ public abstract class SyntaxParserBase
      * @return line from file reader
      * @throws IOException if impossible to read line from file reader
      */
+    @Nullable
     protected String readLine() throws IOException
     {
         BufferedReader reader;
 
-        synchronized (this)
+        synchronized(mLock)
         {
             reader = mReader;
         }
@@ -438,9 +460,10 @@ public abstract class SyntaxParserBase
 
                 if (res == null)
                 {
-                    res = new StringBuilder();
+                    res = new StringBuilder(0);
                 }
 
+                //noinspection NumericCastThatLosesPrecision
                 res.append((char)oneChar);
 
                 if (oneChar == '\n')
@@ -459,7 +482,7 @@ public abstract class SyntaxParserBase
      */
     public void closeReader() throws IOException
     {
-        synchronized (this)
+        synchronized(mLock)
         {
             if (mReader != null)
             {
@@ -491,6 +514,7 @@ public abstract class SyntaxParserBase
      * Gets start line comment characters
      * @return start line comment characters
      */
+    @Nullable
     public String getCommentLine()
     {
         return null;
@@ -500,6 +524,7 @@ public abstract class SyntaxParserBase
      * Gets end line comment characters
      * @return end line comment characters
      */
+    @Nullable
     public String getCommentLineEnd()
     {
         return null;

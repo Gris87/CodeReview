@@ -533,7 +533,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
     /** {@inheritDoc} */
     @Override
-    public void onBigFileOpeningConfirmed(String filePath, int fileId, String fileNote)
+    public void onBigFileOpeningConfirmed(String filePath, long fileId, String fileNote)
     {
         openFileAtPath(filePath, fileId, fileNote);
     }
@@ -1001,7 +1001,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param fileNote    file note
      * @throws FileNotFoundException if file not found
      */
-    private void openFile(String fileName, int fileId, String fileNote) throws FileNotFoundException
+    private void openFile(String fileName, long fileId, String fileNote) throws FileNotFoundException
     {
         String filePath = mAdapter.pathToFile(fileName);
 
@@ -1033,7 +1033,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param fileId      file ID in database
      * @param fileNote    file note
      */
-    private void openFileAtPath(String filePath, int fileId, String fileNote)
+    private void openFileAtPath(String filePath, long fileId, String fileNote)
     {
         Intent intent = new Intent(this, ReviewActivity.class);
 

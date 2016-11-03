@@ -7,28 +7,37 @@ import com.griscom.codereview.R;
 /**
  * Color cache
  */
-public class ColorCache
+@SuppressWarnings("WeakerAccess")
+public final class ColorCache
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ColorCache";
 
 
 
-    private static final int mCache[] = new int[SelectionType.MAX + 1];
+    private static int[] sCache = new int[SelectionType.MAX + 1];
 
 
+
+    /**
+     * Disabled default constructor
+     */
+    private ColorCache()
+    {
+        // Nothing
+    }
 
     /**
      * Updates color cache from ApplicationSettings
      */
     public static void update(Context context)
     {
-        mCache[SelectionType.REVIEWED] = ApplicationSettings.getReviewedColor();
-        mCache[SelectionType.INVALID]  = ApplicationSettings.getInvalidColor();
-        mCache[SelectionType.NOTE]     = ApplicationSettings.getNoteColor();
+        sCache[SelectionType.REVIEWED] = ApplicationSettings.getReviewedColor();
+        sCache[SelectionType.INVALID]  = ApplicationSettings.getInvalidColor();
+        sCache[SelectionType.NOTE]     = ApplicationSettings.getNoteColor();
 
         //noinspection deprecation
-        mCache[SelectionType.CLEAR]    = context.getResources().getColor(R.color.windowBackground);
+        sCache[SelectionType.CLEAR]    = context.getResources().getColor(R.color.windowBackground);
     }
 
     /**
@@ -38,6 +47,6 @@ public class ColorCache
      */
     public static int get(int selectionType)
     {
-        return mCache[selectionType];
+        return sCache[selectionType];
     }
 }

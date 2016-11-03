@@ -10,14 +10,15 @@ import java.util.Map;
 /**
  * Extension to icon conversion
  */
-public class ExtensionToIcon
+@SuppressWarnings("WeakerAccess")
+public final class ExtensionToIcon
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ExtensionToIcon";
 
 
 
-    private static final Map<String, Integer> sMap = new HashMap<>();
+    private static Map<String, Integer> sMap = new HashMap<>(100);
 
 
 
@@ -34,6 +35,8 @@ public class ExtensionToIcon
                 if (drawableName.startsWith("_icon_"))
                 {
                     String extension = drawableName.substring(6);
+
+                    //noinspection NonFinalStaticVariableUsedInClassInitialization
                     sMap.put(extension, drawable.getInt(null));
                 }
             }
@@ -42,6 +45,14 @@ public class ExtensionToIcon
                 AppLog.wtf(TAG, "Impossible to get drawables", e);
             }
         }
+    }
+
+    /**
+     * Disabled default constructor
+     */
+    private ExtensionToIcon()
+    {
+        // Nothing
     }
 
     /**

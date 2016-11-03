@@ -43,6 +43,7 @@ import java.util.ArrayList;
 /**
  * SurfaceView that used in Review activity
  */
+@SuppressWarnings("PublicConstructor")
 public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, OnReviewSurfaceDrawListener
 {
     @SuppressWarnings("unused")
@@ -54,21 +55,22 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
 
 
-    private LoadingTask                      mLoadingTask;
-    private DrawThread                       mDrawThread;
-    private String                           mFilePath;
-    private int                              mFileId;
-    private long                             mModifiedTime;
-    private int                              mSyntaxParserType;
-    private SyntaxParserBase                 mSyntaxParser;
-    private TextDocument                     mDocument;
-    private int                              mFontSize;
-    private int                              mTabSize;
-    private int                              mSelectionType;
-    private OnNoteSupportListener            mNoteSupportListener;
-    private OnFileNoteLoadedListener         mFileNoteLoadedListener;
-    private OnProgressChangedListener        mProgressChangedListener;
-    private OnCommentDialogRequestedListener mCommentDialogRequestedListener;
+    private LoadingTask                      mLoadingTask                    = null;
+    private DrawThread                       mDrawThread                     = null;
+    private String                           mFilePath                       = null;
+    private long                             mFileId                         = 0;
+    private long                             mModifiedTime                   = 0;
+    private int                              mSyntaxParserType               = 0;
+    private SyntaxParserBase                 mSyntaxParser                   = null;
+    private TextDocument                     mDocument                       = null;
+    private int                              mFontSize                       = 0;
+    private int                              mTabSize                        = 0;
+    private int                              mSelectionType                  = 0;
+    private OnNoteSupportListener            mNoteSupportListener            = null;
+    private OnFileNoteLoadedListener         mFileNoteLoadedListener         = null;
+    private OnProgressChangedListener        mProgressChangedListener        = null;
+    private OnCommentDialogRequestedListener mCommentDialogRequestedListener = null;
+    private final Object                     mLock                           = new Object();
 
 
 
@@ -89,11 +91,49 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
                     }
                 }
                 break;
+
+                default:
+                {
+                    AppLog.wtf(TAG, "Unknown message type: " + msg.what);
+                }
             }
         }
     };
 
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        TextDocument document;
+        long         modifiedTime;
+
+        synchronized(mLock)
+        {
+            document     = mDocument;
+            modifiedTime = mModifiedTime;
+        }
+
+        return "ReviewSurfaceView{" +
+                "mLoadingTask="                      + mLoadingTask                    +
+                ", mDrawThread="                     + mDrawThread                     +
+                ", mFilePath='"                      + mFilePath + '\''                +
+                ", mFileId="                         + mFileId                         +
+                ", mModifiedTime="                   + modifiedTime                    +
+                ", mSyntaxParserType="               + mSyntaxParserType               +
+                ", mSyntaxParser="                   + mSyntaxParser                   +
+                ", mDocument="                       + document                        +
+                ", mFontSize="                       + mFontSize                       +
+                ", mTabSize="                        + mTabSize                        +
+                ", mSelectionType="                  + mSelectionType                  +
+                ", mNoteSupportListener="            + mNoteSupportListener            +
+                ", mFileNoteLoadedListener="         + mFileNoteLoadedListener         +
+                ", mProgressChangedListener="        + mProgressChangedListener        +
+                ", mCommentDialogRequestedListener=" + mCommentDialogRequestedListener +
+                ", mLock="                           + mLock                           +
+                ", mHandler="                        + mHandler                        +
+                '}';
+    }
 
     /**
      * Creates ReviewSurfaceView instance
@@ -140,10 +180,8 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         mDrawThread                     = null;
         mFilePath                       = null;
         mFileId                         = 0;
-        mModifiedTime                   = 0;
         mSyntaxParserType               = SyntaxParserType.AUTOMATIC;
         mSyntaxParser                   = null;
-        mDocument                       = null;
         mFontSize                       = ApplicationSettings.getFontSize();
         mTabSize                        = ApplicationSettings.getTabSize();
         mSelectionType                  = SelectionType.REVIEWED;
@@ -151,6 +189,12 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         mFileNoteLoadedListener         = null;
         mProgressChangedListener        = null;
         mCommentDialogRequestedListener = null;
+
+        synchronized(mLock)
+        {
+            mModifiedTime = 0;
+            mDocument     = null;
+        }
     }
 
     /**
@@ -170,7 +214,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         reload();
         repaint(200);
 
-        mDrawThread = new DrawThread(getHolder(), this);
+        mDrawThread = DrawThread.newInstance(getHolder(), this);
         mDrawThread.start();
     }
 
@@ -178,9 +222,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     @Override
     public void onConfigurationChanged(Configuration newConfig)
     {
-        if (mDocument != null)
+        TextDocument document;
+
+        synchronized(mLock)
         {
-            mDocument.onConfigurationChanged(newConfig);
+            document = mDocument;
+        }
+
+        if (document != null)
+        {
+            document.onConfigurationChanged(newConfig);
         }
 
         repaint(80);
@@ -190,7 +241,14 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     @Override
     public boolean onTouch(View v, MotionEvent event)
     {
-        return mDocument == null || mDocument.onTouch(v, event);
+        TextDocument document;
+
+        synchronized(mLock)
+        {
+            document = mDocument;
+        }
+
+        return document == null || document.onTouch(v, event);
     }
 
     /**
@@ -201,9 +259,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
      */
     public void onCommentEntered(int firstRow, int lastRow, String comment)
     {
-        if (mDocument != null)
+        TextDocument document;
+
+        synchronized(mLock)
         {
-            mDocument.onCommentEntered(firstRow, lastRow, comment);
+            document = mDocument;
+        }
+
+        if (document != null)
+        {
+            document.onCommentEntered(firstRow, lastRow, comment);
         }
     }
 
@@ -212,9 +277,16 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
      */
     public void onCommentCanceled()
     {
-        if (mDocument != null)
+        TextDocument document;
+
+        synchronized(mLock)
         {
-            mDocument.onCommentCanceled();
+            document = mDocument;
+        }
+
+        if (document != null)
+        {
+            document.onCommentCanceled();
         }
     }
 
@@ -223,9 +295,9 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     public void onReviewSurfaceDraw(Canvas canvas)
     {
         TextDocument document;
-        long modifiedTime;
+        long         modifiedTime;
 
-        synchronized(this)
+        synchronized(mLock)
         {
             document     = mDocument;
             modifiedTime = mModifiedTime;
@@ -261,33 +333,40 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
      */
     public void saveRequested()
     {
-        if (mDocument != null)
+        TextDocument document;
+
+        synchronized(mLock)
         {
+            document = mDocument;
+        }
+
+        if (document != null)
+        {
+            PrintWriter writer = null;
+
             try
             {
-                ArrayList<TextRow> rows = mDocument.getRows();
+                ArrayList<TextRow> rows = document.getRows();
 
 
-
-                PrintWriter writer = new PrintWriter(mFilePath);
+                //noinspection IOResourceOpenedButNotSafelyClosed
+                writer = new PrintWriter(mFilePath);
 
                 for (int i = 0; i < rows.size() - 1; ++i)
                 {
-                    writer.println(rows.get(i).toString());
+                    writer.println(rows.get(i));
                 }
 
-                if (rows.size() > 0)
+                if (!rows.isEmpty())
                 {
-                    writer.print(rows.get(rows.size() - 1).toString());
+                    writer.print(rows.get(rows.size() - 1));
                 }
-
-                writer.close();
 
 
 
                 long modifiedTime = new File(mFilePath).lastModified();
 
-                synchronized(this)
+                synchronized(mLock)
                 {
                     mModifiedTime = modifiedTime;
                 }
@@ -295,6 +374,11 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
             catch (Exception e)
             {
                 AppLog.e(TAG, "Impossible to save file: " + mFilePath, e);
+            }
+
+            if (writer != null)
+            {
+                writer.close();
             }
         }
     }
@@ -330,7 +414,14 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     {
         File file = new File(mFilePath);
 
-        if (!file.exists() || mModifiedTime != file.lastModified())
+        long modifiedTime;
+
+        synchronized(mLock)
+        {
+            modifiedTime = mModifiedTime;
+        }
+
+        if (!file.exists() || modifiedTime != file.lastModified())
         {
             forceReload();
         }
@@ -345,7 +436,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
         stopLoadingTask();
 
-        synchronized(this)
+        synchronized(mLock)
         {
             if (!file.exists())
             {
@@ -359,7 +450,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
         if (file.exists())
         {
-            mLoadingTask = new LoadingTask();
+            mLoadingTask = LoadingTask.newInstance(this);
             mLoadingTask.execute();
         }
     }
@@ -394,7 +485,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
                     return;
                 }
-                catch (Exception e)
+                catch (Exception ignored)
                 {
                     // Nothing
                 }
@@ -424,7 +515,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
      * Sets file ID in DB
      * @param fileId    file ID in DB
      */
-    public void setFileId(int fileId)
+    public void setFileId(long fileId)
     {
         mFileId = fileId;
     }
@@ -433,7 +524,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
      * Gets file ID in DB
      * @return file ID in DB
      */
-    public int getFileId()
+    public long getFileId()
     {
         return mFileId;
     }
@@ -473,9 +564,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         {
             mFontSize = fontSize;
 
-            if (mDocument != null)
+
+
+            TextDocument document;
+
+            synchronized(mLock)
             {
-                mDocument.setFontSize(mFontSize);
+                document = mDocument;
+            }
+
+            if (document != null)
+            {
+                document.setFontSize(mFontSize);
             }
         }
     }
@@ -490,9 +590,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         {
             mTabSize = tabSize;
 
-            if (mDocument != null)
+
+
+            TextDocument document;
+
+            synchronized(mLock)
             {
-                mDocument.setTabSize(mTabSize);
+                document = mDocument;
+            }
+
+            if (document != null)
+            {
+                document.setTabSize(mTabSize);
             }
         }
     }
@@ -507,9 +616,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         {
             mSelectionType = selectionType;
 
-            if (mDocument != null)
+
+
+            TextDocument document;
+
+            synchronized(mLock)
             {
-                mDocument.setSelectionType(mSelectionType);
+                document = mDocument;
+            }
+
+            if (document != null)
+            {
+                document.setSelectionType(mSelectionType);
             }
         }
     }
@@ -545,9 +663,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     {
         mProgressChangedListener = listener;
 
-        if (mDocument != null)
+
+
+        TextDocument document;
+
+        synchronized(mLock)
         {
-            mDocument.setOnProgressChangedListener(mProgressChangedListener);
+            document = mDocument;
+        }
+
+        if (document != null)
+        {
+            document.setOnProgressChangedListener(mProgressChangedListener);
         }
     }
 
@@ -559,9 +686,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     {
         mCommentDialogRequestedListener = listener;
 
-        if (mDocument != null)
+
+
+        TextDocument document;
+
+        synchronized(mLock)
         {
-            mDocument.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
+            document = mDocument;
+        }
+
+        if (document != null)
+        {
+            document.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
         }
     }
 
@@ -570,31 +706,60 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     /**
      * File loading task
      */
-    private class LoadingTask extends AsyncTask<Void, Void, TextDocument>
+    @SuppressWarnings("WeakerAccess")
+    private static class LoadingTask extends AsyncTask<Void, Void, TextDocument>
     {
-        private Context          mContext;
-        private String           mPath;
-        private int              mDbFileId;
-        private SyntaxParserBase mParser;
-        private String           mNote;
+        @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
+        private ReviewSurfaceView mReviewSurfaceView = null;
+        private Context           mContext           = null;
+        private String            mPath              = null;
+        private long              mDbFileId          = 0;
+        private SyntaxParserBase  mParser            = null;
+        private String            mNote              = null;
 
 
 
         /** {@inheritDoc} */
         @Override
-        protected void onPreExecute()
+        public String toString()
         {
-            mContext  = getContext();
-            mPath     = mFilePath;
-            mDbFileId = mFileId;
-            mParser   = mSyntaxParser;
-            mNote     = null;
+            return "LoadingTask{" +
+                    "mReviewSurfaceView=" + mReviewSurfaceView +
+                    ", mContext="         + mContext           +
+                    ", mPath='"           + mPath              + '\'' +
+                    ", mDbFileId="        + mDbFileId          +
+                    ", mParser="          + mParser            +
+                    ", mNote='"           + mNote              + '\'' +
+                    '}';
+        }
+
+        /**
+         * Creates LoadingTask instance for provided ReviewSurfaceView
+         * @param view    ReviewSurfaceView
+         */
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
+        private LoadingTask(ReviewSurfaceView view)
+        {
+            mReviewSurfaceView = view;
+            mContext           = mReviewSurfaceView.getContext();
+            mPath              = mReviewSurfaceView.mFilePath;
+            mDbFileId          = mReviewSurfaceView.mFileId;
+            mParser            = mReviewSurfaceView.mSyntaxParser;
+            mNote              = null;
+        }
+
+        /**
+         * Creates LoadingTask instance for provided ReviewSurfaceView
+         * @param view    ReviewSurfaceView
+         */
+        public static LoadingTask newInstance(ReviewSurfaceView view)
+        {
+            return new LoadingTask(view);
         }
 
         /**
          * Interrupts execution
          */
-        @SuppressWarnings("WeakerAccess")
         public void interrupt()
         {
             cancel(true);
@@ -621,15 +786,15 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
             {
                 document = mParser.parseFile(mPath);
 
-                document.setParent(ReviewSurfaceView.this);
+                document.setParent(mReviewSurfaceView);
 
                 if (mDbFileId <= 0)
                 {
                     MainDatabase helper = MainDatabase.newInstance(mContext);
                     db = helper.getReadableDatabase();
 
-                    mDbFileId = helper.getFileId(db, mPath);
-                    mNote     = helper.getFileNote(db, mDbFileId);
+                    mDbFileId = MainDatabase.getFileId(db, mPath);
+                    mNote     = MainDatabase.getFileNote(db, mDbFileId);
 
                     db.close();
                     db = null;
@@ -642,7 +807,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
                     SingleFileDatabase helper = SingleFileDatabase.newInstance(mContext, mDbFileId);
 
                     db            = helper.getReadableDatabase();
-                    Cursor cursor = helper.getRows(db);
+                    Cursor cursor = SingleFileDatabase.getRows(db);
 
                     int idIndex   = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_ID);
                     int typeIndex = cursor.getColumnIndexOrThrow(SingleFileDatabase.COLUMN_TYPE);
@@ -657,7 +822,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
                         {
                             String typeStr = cursor.getString(typeIndex);
 
-                            char type = !TextUtils.isEmpty(typeStr) ? typeStr.charAt(0) : '-';
+                            char type = TextUtils.isEmpty(typeStr) ? '-' : typeStr.charAt(0);
 
                             switch (type)
                             {
@@ -675,14 +840,14 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
                                 default:
                                 {
-                                    AppLog.wtf(TAG, "Unknown row type \"" + String.valueOf(type) + "\" in database \"" + helper.getDbName() + "\"");
+                                    AppLog.wtf(TAG, "Unknown row type \"" + type + "\" in database \"" + helper.getDbName() + '\"');
                                 }
                                 break;
                             }
                         }
                         else
                         {
-                            AppLog.wtf(TAG, "Unexpected row id (" + String.valueOf(row) + ") with row count (" + String.valueOf(rows.size()) + ")");
+                            AppLog.wtf(TAG, "Unexpected row id (" + row + ") with row count (" + rows.size() + ')');
                         }
 
                         cursor.moveToNext();
@@ -729,7 +894,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
                         default:
                         {
-                            AppLog.wtf(TAG, "Unknown selection type: " + String.valueOf(row.getSelectionType()));
+                            AppLog.wtf(TAG, "Unknown selection type: " + row.getSelectionType());
                         }
                         break;
                     }
@@ -751,6 +916,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         }
 
         /** {@inheritDoc} */
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         @Override
         protected void onPostExecute(TextDocument textDocument)
         {
@@ -758,28 +924,31 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
             {
                 textDocument.init();
 
-                textDocument.setFontSize(mFontSize);
-                textDocument.setTabSize(mTabSize);
-                textDocument.setSelectionType(mSelectionType);
-                textDocument.setOnProgressChangedListener(mProgressChangedListener);
-                textDocument.setOnCommentDialogRequestedListener(mCommentDialogRequestedListener);
+                textDocument.setFontSize(mReviewSurfaceView.mFontSize);
+                textDocument.setTabSize(mReviewSurfaceView.mTabSize);
+                textDocument.setSelectionType(mReviewSurfaceView.mSelectionType);
+                textDocument.setOnProgressChangedListener(mReviewSurfaceView.mProgressChangedListener);
+                textDocument.setOnCommentDialogRequestedListener(mReviewSurfaceView.mCommentDialogRequestedListener);
 
                 if (!TextUtils.isEmpty(mNote))
                 {
-                    mFileNoteLoadedListener.onFileNoteLoaded(mNote);
+                    mReviewSurfaceView.mFileNoteLoadedListener.onFileNoteLoaded(mNote);
                 }
 
 
 
                 long modifiedTime = new File(mPath).lastModified();
 
-                synchronized(this)
+                synchronized(mReviewSurfaceView.mLock)
                 {
-                    mModifiedTime = modifiedTime;
-                    mDocument     = textDocument;
+                    mReviewSurfaceView.mModifiedTime = modifiedTime;
+                    mReviewSurfaceView.mDocument     = textDocument;
                 }
 
-                repaint();
+                mReviewSurfaceView.repaint();
+
+                mReviewSurfaceView.mLoadingTask = null;
+                mReviewSurfaceView = null;
             }
         }
     }

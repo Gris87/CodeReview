@@ -3,7 +3,7 @@ package com.griscom.codereview.other;
 /**
  * Syntax parser type
  */
-public class SyntaxParserType
+public final class SyntaxParserType
 {
     @SuppressWarnings("unused")
     private static final String TAG = "SyntaxParserType";
@@ -48,4 +48,14 @@ public class SyntaxParserType
     public static final int X_QUERY            = 35;
     public static final int YAML               = 36;
     public static final int PLAIN_TEXT         = 37;
+
+
+
+    /**
+     * Disabled default constructor
+     */
+    private SyntaxParserType()
+    {
+        // Nothing
+    }
 }

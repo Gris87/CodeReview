@@ -8,39 +8,69 @@ import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
 /**
  * Draw thread
  */
-class DrawThread extends Thread
+@SuppressWarnings("WeakerAccess")
+public class DrawThread extends Thread
 {
     @SuppressWarnings("unused")
     private static final String TAG = "DrawThread";
 
 
 
-    private SurfaceHolder               mSurfaceHolder;
-    private OnReviewSurfaceDrawListener mDrawer;
-    private boolean                     mTerminated;
-    private boolean                     mNeedRepaint;
+    private SurfaceHolder               mSurfaceHolder = null;
+    private OnReviewSurfaceDrawListener mDrawer        = null;
+    private volatile boolean            mRunning       = false;
+    private boolean                     mNeedRepaint   = false;
+    private final Object                mLock          = new Object();
 
 
+
+    @Override
+    public String toString()
+    {
+        boolean needRepaint;
+
+        synchronized(mLock)
+        {
+            needRepaint = mNeedRepaint;
+        }
+
+        return "DrawThread{" +
+                "mSurfaceHolder=" + mSurfaceHolder +
+                ", mDrawer="      + mDrawer        +
+                ", mRunning="     + mRunning       +
+                ", mNeedRepaint=" + needRepaint    +
+                ", mLock="        + mLock          +
+                '}';
+    }
 
     /**
      * Creates DrawThread instance
      * @param surfaceHolder    surface holder
      * @param drawer           drawer
      */
-    @SuppressWarnings("WeakerAccess")
-    public DrawThread(SurfaceHolder surfaceHolder, OnReviewSurfaceDrawListener drawer)
+    private DrawThread(SurfaceHolder surfaceHolder, OnReviewSurfaceDrawListener drawer)
     {
         mSurfaceHolder = surfaceHolder;
         mDrawer        = drawer;
-        mTerminated    = false;
+        mRunning    = true;
         mNeedRepaint   = true;
+    }
+
+    /**
+     * Creates DrawThread instance
+     * @param surfaceHolder    surface holder
+     * @param drawer           drawer
+     */
+    public static DrawThread newInstance(SurfaceHolder surfaceHolder, OnReviewSurfaceDrawListener drawer)
+    {
+        return new DrawThread(surfaceHolder, drawer);
     }
 
     /** {@inheritDoc} */
     @Override
     public void interrupt()
     {
-        mTerminated = true;
+        mRunning = false;
 
         super.interrupt();
     }
@@ -51,7 +81,7 @@ class DrawThread extends Thread
     @SuppressWarnings("WeakerAccess")
     public void repaint()
     {
-        synchronized (this)
+        synchronized(mLock)
         {
             mNeedRepaint = true;
         }
@@ -61,7 +91,7 @@ class DrawThread extends Thread
     @Override
     public void run()
     {
-        while (!mTerminated)
+        while (mRunning)
         {
             Canvas canvas = null;
 
@@ -69,31 +99,31 @@ class DrawThread extends Thread
             {
                 boolean needRepaint;
 
-                synchronized (this)
+                synchronized(mLock)
                 {
                     needRepaint = mNeedRepaint;
                 }
 
                 if (
-                    !needRepaint
-                    ||
-                    !mSurfaceHolder.getSurface().isValid()
+                    needRepaint
+                    &&
+                    mSurfaceHolder.getSurface().isValid()
                    )
                 {
-                    Thread.sleep(20);
+                    synchronized(mLock)
+                    {
+                        mNeedRepaint = false;
+                    }
 
-                    continue;
+                    canvas = mSurfaceHolder.lockCanvas();
+                    mDrawer.onReviewSurfaceDraw(canvas);
                 }
-
-                synchronized (this)
+                else
                 {
-                    mNeedRepaint = false;
+                    Thread.sleep(20);
                 }
-
-                canvas = mSurfaceHolder.lockCanvas();
-                mDrawer.onReviewSurfaceDraw(canvas);
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {
                 // Nothing
             }

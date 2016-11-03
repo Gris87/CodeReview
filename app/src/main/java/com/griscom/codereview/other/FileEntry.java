@@ -8,6 +8,7 @@ import com.griscom.codereview.db.MainDatabase;
 import com.griscom.codereview.util.AppLog;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * File entry in files list
@@ -19,19 +20,60 @@ public class FileEntry
 
 
 
-    private String  mFileName;
-    private boolean mIsDirectory;
-    private String  mType;
-    private long    mSize;
-    private int     mImageId;
-    private int     mDbFileId;
-    private int     mReviewedCount;
-    private int     mInvalidCount;
-    private int     mNoteCount;
-    private int     mRowCount;
-    private String  mFileNote;
+    private String       mFileName      = null;
+    private boolean      mIsDirectory   = false;
+    private String       mType          = null;
+    private long         mSize          = 0;
+    private int          mImageId       = 0;
+    private long         mDbFileId      = 0;
+    private int          mReviewedCount = 0;
+    private int          mInvalidCount  = 0;
+    private int          mNoteCount     = 0;
+    private int          mRowCount      = 0;
+    private String       mFileNote      = null;
+    private final Object mLock          = new Object();
 
 
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        String fileName;
+        long   dbFileId;
+        int    reviewedCount;
+        int    invalidCount;
+        int    noteCount;
+        int    rowCount;
+        String fileNote;
+
+        synchronized(mLock)
+        {
+            fileName      = mFileName;
+            dbFileId      = mDbFileId;
+            reviewedCount = mReviewedCount;
+            invalidCount  = mInvalidCount;
+            noteCount     = mNoteCount;
+            rowCount      = mRowCount;
+            fileNote      = mFileNote;
+        }
+
+        return "FileEntry{" +
+                "mFileName='"       + fileName      + '\'' +
+                ", mIsDirectory="   + mIsDirectory  +
+                ", mType='"         + mType         + '\'' +
+                ", mSize="          + mSize         +
+                ", mImageId="       + mImageId      +
+                ", mDbFileId="      + dbFileId      +
+                ", mReviewedCount=" + reviewedCount +
+                ", mInvalidCount="  + invalidCount  +
+                ", mNoteCount="     + noteCount     +
+                ", mRowCount="      + rowCount      +
+                ", mFileNote='"     + fileNote      + '\'' +
+                ", mLock="          + mLock         +
+                '}';
+
+    }
 
     /**
      * Default constructor. Used locally
@@ -45,7 +87,7 @@ public class FileEntry
      * Creates FileEntry instance based on File object
      * @param file    file
      */
-    public FileEntry(File file)
+    private FileEntry(File file)
     {
         mFileName    = file.getName();
         mIsDirectory = file.isDirectory();
@@ -58,7 +100,7 @@ public class FileEntry
 
             if (index > 0)
             {
-                mType = mFileName.substring(index + 1).toLowerCase();
+                mType = mFileName.substring(index + 1).toLowerCase(Locale.getDefault());
                 mImageId = ExtensionToIcon.getIcon(mType);
             }
             else
@@ -80,9 +122,19 @@ public class FileEntry
     }
 
     /**
+     * Creates FileEntry instance based on File object
+     * @param file    file
+     */
+    public static FileEntry newInstance(File file)
+    {
+        return new FileEntry(file);
+    }
+
+    /**
      * Creates FileEntry instance for parent folder ".."
      * @return FileEntry instance
      */
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
     public static FileEntry createParentFolder()
     {
         FileEntry parentFolder = new FileEntry();
@@ -109,6 +161,7 @@ public class FileEntry
      * @param sortType    sort type
      * @return -1 if it's less than another instance according to specified sort type, 1 if more than another instance and 0 if instances equal
      */
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
     public int compare(FileEntry another, int sortType)
     {
         if (mIsDirectory != another.mIsDirectory)
@@ -116,25 +169,38 @@ public class FileEntry
             return mIsDirectory ? -1 : 1;
         }
 
+        String fileName;
+        String anotherFileName;
+
+        synchronized(mLock)
+        {
+            fileName = mFileName;
+        }
+
+        synchronized(another.mLock)
+        {
+            anotherFileName = another.mFileName;
+        }
+
         if (mIsDirectory)
         {
-            if (mFileName.equals("..") && !another.mFileName.equals(".."))
+            if (fileName.equals("..") && !anotherFileName.equals(".."))
             {
                 return -1;
             }
 
-            return mFileName.compareToIgnoreCase(another.mFileName);
+            return fileName.compareToIgnoreCase(anotherFileName);
         }
 
         switch (sortType)
         {
-            case SortType.NAME: return mFileName.compareToIgnoreCase(another.mFileName);
+            case SortType.NAME: return fileName.compareToIgnoreCase(anotherFileName);
             case SortType.TYPE: return mType.compareToIgnoreCase(another.mType);
-            case SortType.SIZE: return (mSize < another.mSize) ? -1 : (mSize > another.mSize) ? 1 : 0;
+            case SortType.SIZE: return Long.valueOf(mSize).compareTo(another.mSize);
 
             default:
             {
-                AppLog.wtf(TAG, "Unknown sort type: " + String.valueOf(sortType));
+                AppLog.wtf(TAG, "Unknown sort type: " + sortType);
             }
             break;
         }
@@ -153,7 +219,7 @@ public class FileEntry
      */
     public void updateFromDb(int dbFileId, int reviewedCount, int invalidCount, int noteCount, int rowCount, String note)
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             mDbFileId      = dbFileId;
             mReviewedCount = reviewedCount;
@@ -170,7 +236,7 @@ public class FileEntry
      */
     public String getFileName()
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             return mFileName;
         }
@@ -182,7 +248,7 @@ public class FileEntry
      */
     public void setFileName(String fileName)
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             mFileName = fileName;
         }
@@ -228,9 +294,9 @@ public class FileEntry
      * Gets file ID in DB
      * @return file ID in DB
      */
-    public int getDbFileId()
+    public long getDbFileId()
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             return mDbFileId;
         }
@@ -242,7 +308,7 @@ public class FileEntry
      */
     public int getReviewedCount()
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             return mReviewedCount;
         }
@@ -254,7 +320,7 @@ public class FileEntry
      */
     public int getInvalidCount()
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             return mInvalidCount;
         }
@@ -266,7 +332,7 @@ public class FileEntry
      */
     public int getNoteCount()
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             return mNoteCount;
         }
@@ -278,7 +344,7 @@ public class FileEntry
      */
     public int getRowCount()
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             return mRowCount;
         }
@@ -290,7 +356,7 @@ public class FileEntry
      */
     public String getFileNote()
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             return mFileNote;
         }
@@ -307,7 +373,7 @@ public class FileEntry
      */
     public void setFileStats(Context context, String filePath, int reviewedCount, int invalidCount, int noteCount, int rowCount)
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             mReviewedCount = reviewedCount;
             mInvalidCount  = invalidCount;
@@ -321,10 +387,10 @@ public class FileEntry
 
             if (mDbFileId <= 0)
             {
-                mDbFileId = helper.getOrCreateFileId(db, filePath);
+                mDbFileId = MainDatabase.getOrCreateFileId(db, filePath);
             }
 
-            helper.updateFileStats(db, mDbFileId, mReviewedCount, mInvalidCount, mNoteCount, mRowCount);
+            MainDatabase.updateFileStats(db, mDbFileId, mReviewedCount, mInvalidCount, mNoteCount, mRowCount);
 
             db.close();
         }
@@ -338,7 +404,7 @@ public class FileEntry
      */
     public void setFileNote(Context context, String filePath, String note)
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             if (!mFileNote.equals(note))
             {
@@ -351,10 +417,10 @@ public class FileEntry
 
                 if (mDbFileId <= 0)
                 {
-                    mDbFileId = helper.getOrCreateFileId(db, filePath);
+                    mDbFileId = MainDatabase.getOrCreateFileId(db, filePath);
                 }
 
-                helper.updateFileNote(db, mDbFileId, note);
+                MainDatabase.updateFileNote(db, mDbFileId, note);
 
                 db.close();
             }

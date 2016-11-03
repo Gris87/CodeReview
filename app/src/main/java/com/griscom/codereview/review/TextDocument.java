@@ -638,7 +638,7 @@ public class TextDocument implements OnTouchListener
         MainDatabase helper = MainDatabase.newInstance(mContext);
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        int fileId = mParent.getFileId();
+        long fileId = mParent.getFileId();
 
         if (fileId <= 0)
         {
@@ -1105,15 +1105,15 @@ public class TextDocument implements OnTouchListener
             MainDatabase helper = MainDatabase.newInstance(mContext);
             SQLiteDatabase db = helper.getWritableDatabase();
 
-            int fileId = mParent.getFileId();
+            long fileId = mParent.getFileId();
 
             if (fileId <= 0)
             {
-                fileId = helper.getOrCreateFileId(db, mParent.getFilePath());
+                fileId = MainDatabase.getOrCreateFileId(db, mParent.getFilePath());
                 mParent.setFileId(fileId);
             }
 
-            helper.updateFileStats(db, fileId, mReviewedCount, mInvalidCount, mNoteCount, mRows.size());
+            MainDatabase.updateFileStats(db, fileId, mReviewedCount, mInvalidCount, mNoteCount, mRows.size());
 
             db.close();
 

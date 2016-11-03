@@ -3,7 +3,7 @@ package com.griscom.codereview.util;
 import android.util.Log;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public class AppLog
+public final class AppLog
 {
     @SuppressWarnings("unused")
     private static final String TAG = "AppLog";
@@ -73,6 +73,7 @@ public class AppLog
     {
         try
         {
+            //noinspection ProhibitedExceptionThrown
             throw new Exception("Logged stacktrace");
         }
         catch (Exception e)
@@ -85,6 +86,7 @@ public class AppLog
     {
         try
         {
+            //noinspection ProhibitedExceptionThrown
             throw new Exception("Logged stacktrace");
         }
         catch (Exception e)
@@ -97,6 +99,7 @@ public class AppLog
     {
         try
         {
+            //noinspection ProhibitedExceptionThrown
             throw new Exception("Logged stacktrace");
         }
         catch (Exception e)

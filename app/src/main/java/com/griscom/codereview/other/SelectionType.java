@@ -3,7 +3,8 @@ package com.griscom.codereview.other;
 /**
  * Selection type
  */
-public class SelectionType
+@SuppressWarnings("WeakerAccess")
+public final class SelectionType
 {
     @SuppressWarnings("unused")
     private static final String TAG = "SelectionType";
@@ -16,4 +17,14 @@ public class SelectionType
     public static final int CLEAR    = 3;
 
     public static final int MAX = CLEAR;
+
+
+
+    /**
+     * Disabled default constructor
+     */
+    private SelectionType()
+    {
+        // Nothing
+    }
 }

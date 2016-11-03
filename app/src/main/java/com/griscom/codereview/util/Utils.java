@@ -9,7 +9,7 @@ import java.security.MessageDigest;
 /**
  * Class for useful functions
  */
-public class Utils
+public final class Utils
 {
     @SuppressWarnings("unused")
     private static final String TAG = "Utils";
@@ -19,6 +19,14 @@ public class Utils
     private static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 
+
+    /**
+     * Disabled default constructor
+     */
+    private Utils()
+    {
+        // Nothing
+    }
 
     /**
      * Converts sp to pixels
@@ -43,23 +51,28 @@ public class Utils
         byte   type     = 0;
         double bytesDiv = bytes;
 
-        while (bytesDiv >= 1024d && type < 5)
+        while (bytesDiv >= 1024.0d && type < 5)
         {
             ++type;
 
-            bytesDiv /= 1024d;
+            bytesDiv /= 1024.0d;
         }
 
         switch (type)
         {
-            case 0: return String.valueOf(bytes)                             +  " B";
-            case 1: return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " KB";
-            case 2: return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " MB";
-            case 3: return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " GB";
-            case 4: return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " TB";
+            case 0: return bytes +  " B";
+            case 1: return Math.round(bytesDiv * 100) / 100.0d + " KB";
+            case 2: return Math.round(bytesDiv * 100) / 100.0d + " MB";
+            case 3: return Math.round(bytesDiv * 100) / 100.0d + " GB";
+            case 4: return Math.round(bytesDiv * 100) / 100.0d + " TB";
+
+            default:
+            {
+                // Nothing
+            }
         }
 
-        return String.valueOf(Math.round(bytesDiv * 100) / 100d) + " PB";
+        return Math.round(bytesDiv * 100) / 100.0d + " PB";
     }
 
     /**
@@ -70,14 +83,14 @@ public class Utils
     @SuppressWarnings("WeakerAccess")
     public static String bytesToHex(byte[] bytes)
     {
-        char[] hexChars = new char[bytes.length * 2];
+        char[] hexChars = new char[bytes.length << 1]; // * 2
 
         for (int i = 0; i < bytes.length; ++i)
         {
             int v = bytes[i] & 0xFF;
 
-            hexChars[i * 2]     = HEX_CHARS[v >>> 4];
-            hexChars[i * 2 + 1] = HEX_CHARS[v & 0x0F];
+            hexChars[i << 1]       = HEX_CHARS[v >>> 4];
+            hexChars[(i << 1) + 1] = HEX_CHARS[v & 0x0F];
         }
 
         return new String(hexChars);
@@ -94,14 +107,17 @@ public class Utils
         FileInputStream in = null;
 
 
-
+        //noinspection TryWithIdenticalCatches
         try
         {
             MessageDigest md = MessageDigest.getInstance("MD5");
 
-            byte buffer[] = new byte[4096];
+            byte[] buffer = new byte[4096];
+            //noinspection IOResourceOpenedButNotSafelyClosed
             in = new FileInputStream(filePath);
 
+
+            //noinspection LoopWithImplicitTerminationCondition
             do
             {
                 int len = in.read(buffer);
@@ -118,11 +134,14 @@ public class Utils
 
             res = bytesToHex(md.digest());
         }
-        catch (Exception e)
+        catch (OutOfMemoryError ignored)
         {
             // Nothing
         }
-
+        catch (Exception ignored)
+        {
+            // Nothing
+        }
 
 
         if (in != null)
@@ -131,7 +150,7 @@ public class Utils
             {
                 in.close();
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {
                 // Nothing;
             }
@@ -154,11 +173,11 @@ public class Utils
 
         if (file.isDirectory())
         {
-            String files[] = file.list();
+            String[] files = file.list();
 
             for (String oneFile : files)
             {
-                if (!deleteFileOrFolder(filePath + "/" + oneFile))
+                if (!deleteFileOrFolder(filePath + '/' + oneFile))
                 {
                     res = false;
                 }

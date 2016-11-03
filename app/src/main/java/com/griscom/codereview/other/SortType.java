@@ -3,7 +3,7 @@ package com.griscom.codereview.other;
 /**
  * Sort types
  */
-public class SortType
+public final class SortType
 {
     @SuppressWarnings("unused")
     private static final String TAG = "SortType";
@@ -17,4 +17,14 @@ public class SortType
 
     public static final int MIN = NAME;
     public static final int MAX = SIZE;
+
+
+
+    /**
+     * Disabled default constructor
+     */
+    private SortType()
+    {
+        // Nothing
+    }
 }

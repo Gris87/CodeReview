@@ -478,7 +478,7 @@ public class FilesAdapter extends BaseAdapter
             {
                 if (!filter.accept(file))
                 {
-                    mFiles.add(new FileEntry(file));
+                    mFiles.add(FileEntry.newInstance(file));
                 }
             }
         }
@@ -1108,6 +1108,7 @@ public class FilesAdapter extends BaseAdapter
         }
 
         /** {@inheritDoc} */
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         @Override
         protected void onPostExecute(Boolean result)
         {
@@ -1115,7 +1116,6 @@ public class FilesAdapter extends BaseAdapter
             {
                 mAdapter.notifyDataSetChanged();
 
-                //noinspection AccessingNonPublicFieldOfAnotherObject
                 mAdapter.mDbReaderTask = null;
                 mAdapter = null;
             }
