@@ -3,7 +3,6 @@ package com.griscom.codereview.review;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 /**
  * Text document
  */
+@SuppressWarnings("WeakerAccess")
 public class TextDocument implements OnTouchListener
 {
     @SuppressWarnings("unused")
@@ -67,62 +67,63 @@ public class TextDocument implements OnTouchListener
 
 
 
-    private SyntaxParserBase                 mSyntaxParser;
-    private Context                          mContext;
-    private ReviewSurfaceView                mParent;
-    private Vibrator                         mVibrator;
-    private DocumentHandler                  mHandler;
-    private ArrayList<TextRow>               mRows;
-    private OnProgressChangedListener        mProgressChangedListener;
-    private OnCommentDialogRequestedListener mCommentDialogRequestedListener;
-    private int                              mReviewedCount;
-    private int                              mInvalidCount;
-    private int                              mNoteCount;
-    private int                              mFontSize;
-    private int                              mTabSize;
-    private Paint                            mRowPaint;
+    private SyntaxParserBase                 mSyntaxParser                   = null;
+    private Context                          mContext                        = null;
+    private ReviewSurfaceView                mParent                         = null;
+    private Vibrator                         mVibrator                       = null;
+    private DocumentHandler                  mHandler                        = null;
+    private ArrayList<TextRow>               mRows                           = null;
+    private OnProgressChangedListener        mProgressChangedListener        = null;
+    private OnCommentDialogRequestedListener mCommentDialogRequestedListener = null;
+    private int                              mReviewedCount                  = 0;
+    private int                              mInvalidCount                   = 0;
+    private int                              mNoteCount                      = 0;
+    private int                              mFontSize                       = 0;
+    private int                              mTabSize                        = 0;
+    private Paint                            mRowPaint                       = null;
+    private final Object                     mLock                           = new Object();
 
-    private float                            mIndexWidth;
-    private float                            mX;
-    private float                            mY;
-    private float                            mWidth;
-    private float                            mHeight;
-    private float                            mViewWidth;
-    private float                            mViewHeight;
-    private float                            mOffsetX;
-    private float                            mOffsetY;
-    private float                            mScale;
-    private int                              mVisibleBegin;
-    private int                              mVisibleEnd;
+    private float                            mIndexWidth                     = 0;
+    private float                            mX                              = 0;
+    private float                            mY                              = 0;
+    private float                            mWidth                          = 0;
+    private float                            mHeight                         = 0;
+    private float                            mViewWidth                      = 0;
+    private float                            mViewHeight                     = 0;
+    private float                            mOffsetX                        = 0;
+    private float                            mOffsetY                        = 0;
+    private float                            mScale                          = 0;
+    private int                              mVisibleBegin                   = 0;
+    private int                              mVisibleEnd                     = 0;
 
-    private int                              mTouchMode;
-    private float                            mTouchX;
-    private float                            mTouchY;
-    private float                            mFingerDistance;
-    private float                            mTouchMiddleX;
-    private float                            mTouchMiddleY;
-    private float                            mScrollMultiplier;
-    private int                              mSelectionEnd;
-    private int                              mSelectionType;
+    private int                              mTouchMode                      = 0;
+    private float                            mTouchX                         = 0;
+    private float                            mTouchY                         = 0;
+    private float                            mFingerDistance                 = 0;
+    private float                            mTouchMiddleX                   = 0;
+    private float                            mTouchMiddleY                   = 0;
+    private float                            mScrollMultiplier               = 0;
+    private int                              mSelectionEnd                   = 0;
+    private int                              mSelectionType                  = 0;
 
     // USED IN HANDLER [
-    private int                              mBarsAlpha;
-    private int                              mHighlightedRow;
-    private int                              mHighlightAlpha;
-    private float                            mSelectionBrightness;
-    private boolean                          mSelectionMakeLight;
+    private int                              mBarsAlpha                      = 0;
+    private int                              mHighlightedRow                 = 0;
+    private int                              mHighlightAlpha                 = 0;
+    private float                            mSelectionBrightness            = 0;
+    private boolean                          mSelectionMakeLight             = false;
     // USED IN HANDLER ]
 
 
 
-    public TextDocument(SyntaxParserBase parser)
+    private TextDocument(SyntaxParserBase parser)
     {
         mSyntaxParser                   = parser;
         mContext                        = mSyntaxParser.getContext();
         mParent                         = null;
         mVibrator                       = (Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE);
         mHandler                        = null;
-        mRows                           = new ArrayList<>();
+        mRows                           = new ArrayList<>(0);
         mProgressChangedListener        = null;
         mCommentDialogRequestedListener = null;
         mReviewedCount                  = 0;
@@ -165,6 +166,11 @@ public class TextDocument implements OnTouchListener
         mSelectionMakeLight             = false;
     }
 
+    public static TextDocument newInstance(SyntaxParserBase parser)
+    {
+        return new TextDocument(parser);
+    }
+
     public void init()
     {
         mHandler = new DocumentHandler();
@@ -175,13 +181,13 @@ public class TextDocument implements OnTouchListener
         mIndexWidth = mRowPaint.measureText(String.valueOf(mRows.size() + 1));
         mX += mIndexWidth;
 
-        onConfigurationChanged(mContext.getResources().getConfiguration());
+        onConfigurationChanged();
         showBars();
     }
 
     public void draw(Canvas canvas)
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             float density = mContext.getResources().getDisplayMetrics().scaledDensity;
 
@@ -228,13 +234,13 @@ public class TextDocument implements OnTouchListener
                     mSelectionEnd >= 0
                     &&
                     (
-                     (i >= mHighlightedRow && i <= mSelectionEnd)
+                     i >= mHighlightedRow && i <= mSelectionEnd
                      ||
-                     (i >= mSelectionEnd   && i <= mHighlightedRow)
+                     i >= mSelectionEnd   && i <= mHighlightedRow
                     )
                    )
                 {
-                    float selectionHSV[] = new float[3];
+                    float[] selectionHSV = new float[3];
                     Color.colorToHSV(ColorCache.get(mSelectionType), selectionHSV);
                     selectionHSV[2] = mSelectionBrightness;
                     color = Color.HSVToColor(selectionHSV);
@@ -268,20 +274,20 @@ public class TextDocument implements OnTouchListener
 
                 // Draw horizontal bar
                 {
-                    float barLength   = (mViewWidth / mScale) / (getRight() + mViewWidth / mScale);
-                    float barWidth    = (mViewWidth / mScale) - margin * 3;
+                    float barLength   = mViewWidth / mScale / (getRight() + mViewWidth / mScale);
+                    float barWidth    = mViewWidth / mScale - margin * 3;
                     float barPosition = barWidth * mOffsetX / (getRight() + mViewWidth / mScale);
 
-                    canvas.drawLine(barPosition + margin, (mViewHeight / mScale) - margin, barWidth * barLength + barPosition + margin, (mViewHeight / mScale) - margin, barPaint);
+                    canvas.drawLine(barPosition + margin, mViewHeight / mScale - margin, barWidth * barLength + barPosition + margin, mViewHeight / mScale - margin, barPaint);
                 }
 
                 // Draw vertical bar
                 {
-                    float barLength   = (mViewHeight / mScale) / (getBottom() + mViewHeight / mScale);
-                    float barHeight   = (mViewHeight / mScale) - margin * 3;
+                    float barLength   = mViewHeight / mScale / (getBottom() + mViewHeight / mScale);
+                    float barHeight   = mViewHeight / mScale - margin * 3;
                     float barPosition = barHeight * mOffsetY / (getBottom() + mViewHeight / mScale);
 
-                    canvas.drawLine((mViewWidth / mScale) - margin, barPosition + margin, (mViewWidth / mScale) - margin, barHeight * barLength + barPosition + margin, barPaint);
+                    canvas.drawLine(mViewWidth / mScale - margin, barPosition + margin, mViewWidth / mScale - margin, barHeight * barLength + barPosition + margin, barPaint);
                 }
             }
         }
@@ -296,12 +302,12 @@ public class TextDocument implements OnTouchListener
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressWarnings("WeakerAccess")
-    public void onConfigurationChanged(Configuration newConfig)
+    public void onConfigurationChanged()
     {
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
 
-        synchronized(this)
+        synchronized(mLock)
         {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
             {
@@ -351,7 +357,7 @@ public class TextDocument implements OnTouchListener
                     }
                 }
 
-                synchronized(this)
+                synchronized(mLock)
                 {
                     mHighlightedRow = highlightedRow;
                     mHighlightAlpha = 0;
@@ -416,13 +422,14 @@ public class TextDocument implements OnTouchListener
                             scale = 0.25f;
                         }
                         else
-                        if (scale > 10f)
+                        if (scale > 10.0f)
                         {
-                            scale = 10f;
+                            scale = 10.0f;
                         }
 
                         mFingerDistance = newDistance;
 
+                        //noinspection FloatingPointEquality
                         if (mScale != scale)
                         {
                             PointF newOffsets = new PointF(mOffsetX + mTouchMiddleX / mScale * (1 - mScale / scale), mOffsetY + mTouchMiddleY / mScale * (1 - mScale / scale));
@@ -431,7 +438,7 @@ public class TextDocument implements OnTouchListener
 
 
 
-                            synchronized(this)
+                            synchronized(mLock)
                             {
                                 mScale = scale;
 
@@ -468,14 +475,14 @@ public class TextDocument implements OnTouchListener
                         fitOffsets(newOffsets);
 
 
-
+                        //noinspection FloatingPointEquality
                         if (
                             mOffsetX != newOffsets.x
                             ||
                             mOffsetY != newOffsets.y
                             )
                         {
-                            synchronized(this)
+                            synchronized(mLock)
                             {
                                 mOffsetX = newOffsets.x;
                                 mOffsetY = newOffsets.y;
@@ -506,8 +513,8 @@ public class TextDocument implements OnTouchListener
                 {
                     mHandler.removeMessages(SCROLL_MESSAGE);
 
-                    final int firstRow;
-                    final int lastRow;
+                    int firstRow;
+                    int lastRow;
 
                     if (mSelectionEnd > mHighlightedRow)
                     {
@@ -549,33 +556,41 @@ public class TextDocument implements OnTouchListener
 
     public void onCommentEntered(int firstRow, int lastRow, String comment)
     {
-        if (!comment.equals(""))
-        {
-            if (mSyntaxParser.getCommentLine().endsWith(" "))
-            {
-                comment = mSyntaxParser.getCommentLine() + "TODO: " + comment;
-            }
-            else
-            {
-                comment = mSyntaxParser.getCommentLine() + " TODO: " + comment;
-            }
+        String commentLine = comment;
 
-            if (mSyntaxParser.getCommentLineEnd() != null)
+        if (!commentLine.isEmpty())
+        {
+            String commentLineStart = mSyntaxParser.getCommentLine();
+            String commentLineEnd   = mSyntaxParser.getCommentLineEnd();
+
+            if (commentLineStart != null)
             {
-                if (mSyntaxParser.getCommentLineEnd().startsWith(" "))
+                if (!commentLineStart.isEmpty() && commentLineStart.charAt(commentLineStart.length() - 1) == ' ')
                 {
-                    comment = comment + mSyntaxParser.getCommentLineEnd();
+                    commentLine = commentLineStart + "TODO: " + commentLine;
                 }
                 else
                 {
-                    comment = comment + " " + mSyntaxParser.getCommentLineEnd();
+                    commentLine = commentLineStart + " TODO: " + commentLine;
+                }
+            }
+
+            if (commentLineEnd != null)
+            {
+                if (!commentLineEnd.isEmpty() && commentLineEnd.charAt(0) == ' ')
+                {
+                    commentLine += commentLineEnd;
+                }
+                else
+                {
+                    commentLine += ' ' + commentLineEnd;
                 }
             }
         }
 
 
 
-        performSelection(firstRow, lastRow, comment);
+        performSelection(firstRow, lastRow, commentLine);
         updateSizes();
 
         saveFile();
@@ -588,16 +603,21 @@ public class TextDocument implements OnTouchListener
         finishSelection();
     }
 
-    private float fingerDistance(MotionEvent event)
+    private static float fingerDistance(MotionEvent event)
     {
-        return (float) Math.sqrt(Math.pow(event.getX(0) - event.getX(1), 2) + Math.pow(event.getY(0) - event.getY(1), 2));
+        //noinspection NumericCastThatLosesPrecision
+        return (float) Math.sqrt(
+                                 (event.getX(0) - event.getX(1)) * (event.getX(0) - event.getX(1))
+                                 +
+                                 (event.getY(0) - event.getY(1)) * (event.getY(0) - event.getY(1))
+                                );
     }
 
     private void stopHighlight()
     {
         if (mHighlightedRow >= 0)
         {
-            synchronized(this)
+            synchronized(mLock)
             {
                 mHighlightedRow = -1;
                 mHighlightAlpha = 0;
@@ -607,7 +627,7 @@ public class TextDocument implements OnTouchListener
         }
     }
 
-    private void performSelection(final int firstRow, final int lastRow, String comment)
+    private void performSelection(int firstRow, int lastRow, String comment)
     {
         int reviewedCount = 0;
         int invalidCount  = 0;
@@ -630,7 +650,7 @@ public class TextDocument implements OnTouchListener
                     // Nothing
                 break;
                 default:
-                    AppLog.wtf(TAG, "Unknown selection type: " + String.valueOf(mRows.get(i).getSelectionType()));
+                    AppLog.wtf(TAG, "Unknown selection type: " + mRows.get(i).getSelectionType());
                 break;
             }
         }
@@ -642,7 +662,7 @@ public class TextDocument implements OnTouchListener
 
         if (fileId <= 0)
         {
-            fileId = helper.getOrCreateFileId(db, mParent.getFilePath());
+            fileId = MainDatabase.getOrCreateFileId(db, mParent.getFilePath());
             mParent.setFileId(fileId);
         }
 
@@ -651,7 +671,7 @@ public class TextDocument implements OnTouchListener
         SingleFileDatabase fileHelper = SingleFileDatabase.newInstance(mContext, fileId);
         db = fileHelper.getWritableDatabase();
 
-        synchronized(this)
+        synchronized(mLock)
         {
             for (int i = firstRow; i <= lastRow; ++i)
             {
@@ -670,21 +690,21 @@ public class TextDocument implements OnTouchListener
                 {
                     case SelectionType.REVIEWED:
                         ++reviewedCount;
-                        fileHelper.insertOrUpdateRow(db, i, RowType.REVIEWED);
+                        SingleFileDatabase.insertOrUpdateRow(db, i, RowType.REVIEWED);
                     break;
                     case SelectionType.INVALID:
                         ++invalidCount;
-                        fileHelper.insertOrUpdateRow(db, i, RowType.INVALID);
+                        SingleFileDatabase.insertOrUpdateRow(db, i, RowType.INVALID);
                     break;
                     case SelectionType.NOTE:
                         ++noteCount;
-                        fileHelper.removeRow(db, i);
+                        SingleFileDatabase.removeRow(db, i);
                     break;
                     case SelectionType.CLEAR:
-                        fileHelper.removeRow(db, i);
+                        SingleFileDatabase.removeRow(db, i);
                     break;
                     default:
-                        AppLog.wtf(TAG, "Unknown selection type: " + String.valueOf(mRows.get(i).getSelectionType()));
+                        AppLog.wtf(TAG, "Unknown selection type: " + mRows.get(i).getSelectionType());
                     break;
                 }
             }
@@ -760,7 +780,7 @@ public class TextDocument implements OnTouchListener
 
     private void showBars()
     {
-        synchronized(this)
+        synchronized(mLock)
         {
             mBarsAlpha = 255;
         }
@@ -806,7 +826,7 @@ public class TextDocument implements OnTouchListener
 
         if (mSelectionEnd != selectionEnd)
         {
-            synchronized(this)
+            synchronized(mLock)
             {
                 mSelectionEnd = selectionEnd;
             }
@@ -843,7 +863,7 @@ public class TextDocument implements OnTouchListener
 
         if (mOffsetY != newOffsets.y)
         {
-            synchronized(this)
+            synchronized(mLock)
             {
                 mOffsetY = newOffsets.y;
             }
@@ -967,7 +987,7 @@ public class TextDocument implements OnTouchListener
             mVisibleEnd != visibleEnd
            )
         {
-            synchronized(this)
+            synchronized(mLock)
             {
                 mVisibleBegin = visibleBegin;
                 mVisibleEnd   = visibleEnd;
@@ -999,7 +1019,7 @@ public class TextDocument implements OnTouchListener
             mOffsetY != newOffsets.y
             )
         {
-            synchronized(this)
+            synchronized(mLock)
             {
                 mOffsetX = newOffsets.x;
                 mOffsetY = newOffsets.y;

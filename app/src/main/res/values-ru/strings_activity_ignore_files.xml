@@ -26,6 +26,6 @@
     <string name="ignore_files_dialog_title">Игнорирование файла</string>
 
     <!-- Message for dialog in ignore files activity -->
-    <string name="ignore_files_dialog_message">Введите имя файла или шаблон\n(разрешены символы \'*\' и \'?\'):</string>
+    <string name="ignore_files_dialog_message">Введите имя файла или шаблон\n(разрешены символы ‘*’ и ‘?’):</string>
 
 </resources>

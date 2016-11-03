@@ -43,7 +43,7 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
     @Override
     public TextDocument parseFile(String filePath)
     {
-        TextDocument res = new TextDocument(this);
+        TextDocument res = TextDocument.newInstance(this);
 
         try
         {

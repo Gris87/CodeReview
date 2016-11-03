@@ -231,7 +231,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
         if (document != null)
         {
-            document.onConfigurationChanged(newConfig);
+            document.onConfigurationChanged();
         }
 
         repaint(80);

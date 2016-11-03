@@ -26,6 +26,6 @@
     <string name="ignore_files_dialog_title">Ignore file</string>
 
     <!-- Message for dialog in ignore files activity -->
-    <string name="ignore_files_dialog_message">Input name of file or pattern\n(\'*\' and \'?\' is allowed):</string>
+    <string name="ignore_files_dialog_message">Input name of file or pattern\n(‘*’ and ‘?’ is allowed):</string>
 
 </resources>
