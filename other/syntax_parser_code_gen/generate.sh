@@ -277,7 +277,7 @@ function generateSyntaxParser {
     echo "    @Override"                                                                                                       >> ${target_file}
     echo "    public TextDocument parseFile(String filePath)"                                                                  >> ${target_file}
     echo "    {"                                                                                                               >> ${target_file}
-    echo "        TextDocument res = new TextDocument(this);"                                                                  >> ${target_file}
+    echo "        TextDocument res = TextDocument.newInstance(this);"                                                          >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "        try"                                                                                                         >> ${target_file}
     echo "        {"                                                                                                           >> ${target_file}
