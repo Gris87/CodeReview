@@ -27,6 +27,7 @@
         android:layout_marginRight="@dimen/common_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:maxLines="1"
-        android:gravity="start|center_vertical" />
+        android:gravity="start|center_vertical"
+        tools:ignore="SelectableText" />
 
 </RelativeLayout>

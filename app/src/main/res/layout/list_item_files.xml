@@ -45,7 +45,8 @@
         android:maxLines="1"
         android:gravity="end|top"
         android:textColor="@color/subtitle"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:ignore="SelectableText" />
 
     <TextView
         android:id="@+id/fileNameTextView"
@@ -61,7 +62,8 @@
         android:layout_marginRight="@dimen/common_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:maxLines="1"
-        android:gravity="start|center_vertical" />
+        android:gravity="start|center_vertical"
+        tools:ignore="SelectableText" />
 
     <TextView
         android:id="@+id/fileSizeTextView"
@@ -77,6 +79,7 @@
         android:maxLines="1"
         android:gravity="end|bottom"
         android:textColor="@color/subtitle"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:ignore="SelectableText" />
 
 </RelativeLayout>

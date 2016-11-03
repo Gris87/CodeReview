@@ -1,5 +1,10 @@
 Code analysis in all files
 
+suppressLint
+suppressWarning
+//noinspection
+tools:ignore
+
 UltraHD images
 Smooth movement
 Code folding
