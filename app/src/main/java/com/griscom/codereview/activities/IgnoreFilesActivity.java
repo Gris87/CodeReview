@@ -78,7 +78,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
 
 
-        mAdapter = new IgnoreFilesAdapter(this);
+        mAdapter = IgnoreFilesAdapter.newInstance(this);
 
         mIgnoreFilesListView.setAdapter(mAdapter);
         mIgnoreFilesListView.setOnItemClickListener(this);
@@ -106,11 +106,11 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
 
         if (!selection.isEmpty())
         {
-            mAdapter.setSelectionMode(true);
+            mAdapter.setSelectionMode(IgnoreFilesAdapter.SELECTION_MODE_ENABLED);
 
             for (int i = 0; i < selection.size(); ++i)
             {
-                mAdapter.setSelected(selection.get(i), true);
+                mAdapter.setSelected(selection.get(i), IgnoreFilesAdapter.ITEM_SELECTED);
             }
         }
     }
@@ -197,7 +197,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked)
             {
-                mAdapter.setSelected(position, checked);
+                mAdapter.setSelected(position, checked ? IgnoreFilesAdapter.ITEM_SELECTED : IgnoreFilesAdapter.ITEM_DESELECTED);
 
                 int selectedCount = mIgnoreFilesListView.getCheckedItemCount();
                 mode.setSubtitle(getResources().getQuantityString(R.plurals.ignore_files_items_selected, selectedCount, selectedCount));
@@ -210,7 +210,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
                 mode.setTitle(R.string.ignore_files_select_items);
                 mode.getMenuInflater().inflate(R.menu.context_menu_ignore_files, menu);
 
-                mAdapter.setSelectionMode(true);
+                mAdapter.setSelectionMode(IgnoreFilesAdapter.SELECTION_MODE_ENABLED);
 
                 return true;
             }
@@ -272,7 +272,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
             @Override
             public void onDestroyActionMode(ActionMode mode)
             {
-                mAdapter.setSelectionMode(false);
+                mAdapter.setSelectionMode(IgnoreFilesAdapter.SELECTION_MODE_DISABLED);
             }
         });
     }

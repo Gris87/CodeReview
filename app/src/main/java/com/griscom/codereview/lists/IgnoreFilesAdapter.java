@@ -3,6 +3,7 @@ package com.griscom.codereview.lists;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,34 +30,55 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
 
 
+    public static final int SELECTION_MODE_DISABLED = 0;
+    public static final int SELECTION_MODE_ENABLED  = 1;
+
+
+
+    public static final int ITEM_DESELECTED = 0;
+    public static final int ITEM_SELECTED   = 1;
+
+
+
     private Activity           mContext;
     private ArrayList<String>  mFiles;
-    private boolean            mSelectionMode;
+    private int                mSelectionMode;
     private ArrayList<Integer> mSelection;
 
 
 
-    /**
-     * View holder
-     */
-    private static class ViewHolder
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
     {
-        CheckBox mCheckBox;
-        TextView mFileName;
+        return "IgnoreFilesAdapter{" +
+                "mContext="         + mContext       +
+                ", mFiles="         + mFiles         +
+                ", mSelectionMode=" + mSelectionMode +
+                ", mSelection="     + mSelection     +
+                '}';
     }
-
-
 
     /**
      * Creates instance of IgnoreFilesAdapter
      * @param context    context
      */
-    public IgnoreFilesAdapter(Activity context)
+    @SuppressWarnings("ImplicitCallToSuper")
+    private IgnoreFilesAdapter(Activity context)
     {
         mContext       = context;
         mFiles         = ApplicationSettings.getIgnoreFiles();
-        mSelectionMode = false;
-        mSelection     = new ArrayList<>();
+        mSelectionMode = SELECTION_MODE_DISABLED;
+        mSelection     = new ArrayList<>(0);
+    }
+
+    /**
+     * Creates instance of IgnoreFilesAdapter
+     * @param context    context
+     */
+    public static IgnoreFilesAdapter newInstance(Activity context)
+    {
+        return new IgnoreFilesAdapter(context);
     }
 
     /** {@inheritDoc} */
@@ -67,6 +89,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
     }
 
     /** {@inheritDoc} */
+    @Nullable
     @Override
     public Object getItem(int position)
     {
@@ -94,8 +117,8 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         ViewHolder holder = new ViewHolder();
 
-        holder.mCheckBox = (CheckBox)resView.findViewById(R.id.checkbox);
-        holder.mFileName = (TextView)resView.findViewById(R.id.fileNameTextView);
+        holder.setCheckBox((CheckBox)resView.findViewById(R.id.checkbox));
+        holder.setFileName((TextView)resView.findViewById(R.id.fileNameTextView));
 
         resView.setTag(holder);
 
@@ -113,17 +136,17 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         ViewHolder holder = (ViewHolder)view.getTag();
 
-        if (mSelectionMode)
+        if (mSelectionMode == SELECTION_MODE_ENABLED)
         {
-            holder.mCheckBox.setVisibility(View.VISIBLE);
-            holder.mCheckBox.setChecked(mSelection.contains(position));
+            holder.getCheckBox().setVisibility(View.VISIBLE);
+            holder.getCheckBox().setChecked(mSelection.contains(position));
         }
         else
         {
-            holder.mCheckBox.setVisibility(View.GONE);
+            holder.getCheckBox().setVisibility(View.GONE);
         }
 
-        holder.mFileName.setText(fileName);
+        holder.getFileName().setText(fileName);
     }
 
     /** {@inheritDoc} */
@@ -148,11 +171,11 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
     /**
      * Adds file name to the list
-     * @param fileName    file name
+     * @param name    file name
      */
-    public void add(String fileName)
+    public void add(String name)
     {
-        fileName = Utils.replaceIncorrectIgnoreFileName(fileName);
+        String fileName = Utils.replaceIncorrectIgnoreFileName(name);
 
         if (!TextUtils.isEmpty(fileName) && !mFiles.contains(fileName))
         {
@@ -164,12 +187,12 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
     /**
      * Replaces item at specified index
-     * @param index       item index
-     * @param fileName    file name
+     * @param index    item index
+     * @param name     file name
      */
-    public void replace(int index, String fileName)
+    public void replace(int index, String name)
     {
-        fileName = Utils.replaceIncorrectIgnoreFileName(fileName);
+        String fileName = Utils.replaceIncorrectIgnoreFileName(name);
 
         mFiles.remove(index);
 
@@ -205,7 +228,7 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
         // -----------------------------------------------------------------------------------
 
-        StringBuilder res = new StringBuilder();
+        StringBuilder res = new StringBuilder(0);
 
         for (int i = 0; i < mFiles.size(); ++i)
         {
@@ -231,13 +254,13 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
     /**
      * Enables or disables selection mode
-     * @param enable    true, if need to enable
+     * @param selectionMode    selection mode
      */
-    public void setSelectionMode(boolean enable)
+    public void setSelectionMode(int selectionMode)
     {
-        if (mSelectionMode != enable)
+        if (mSelectionMode != selectionMode)
         {
-            mSelectionMode = enable;
+            mSelectionMode = selectionMode;
             mSelection.clear();
 
             notifyDataSetChanged();
@@ -246,14 +269,14 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
     /**
      * Selects or deselects item at specified index
-     * @param index      item index
-     * @param checked    true, if need to select
+     * @param index           item index
+     * @param itemSelected    item selected
      */
-    public void setSelected(int index, boolean checked)
+    public void setSelected(int index, int itemSelected)
     {
-        if (mSelectionMode)
+        if (mSelectionMode == SELECTION_MODE_ENABLED)
         {
-            if (checked)
+            if (itemSelected == ITEM_SELECTED)
             {
                 mSelection.add(index);
             }
@@ -273,5 +296,65 @@ public class IgnoreFilesAdapter extends BaseAdapter
     public ArrayList<Integer> getSelection()
     {
         return mSelection;
+    }
+
+
+
+    /**
+     * View holder
+     */
+    @SuppressWarnings("ClassWithoutConstructor")
+    private static class ViewHolder
+    {
+        private CheckBox mCheckBox = null;
+        private TextView mFileName = null;
+
+
+
+        /** {@inheritDoc} */
+        @Override
+        public String toString()
+        {
+            return "ViewHolder{" +
+                    "mCheckBox="   + mCheckBox +
+                    ", mFileName=" + mFileName +
+                    '}';
+        }
+
+        /**
+         * Gets checkBox
+         * @return checkBox
+         */
+        CheckBox getCheckBox()
+        {
+            return mCheckBox;
+        }
+
+        /**
+         * Sets checkBox
+         * @param checkBox    checkBox
+         */
+        void setCheckBox(CheckBox checkBox)
+        {
+            mCheckBox = checkBox;
+        }
+
+        /**
+         * Gets file name
+         * @return file name
+         */
+        TextView getFileName()
+        {
+            return mFileName;
+        }
+
+        /**
+         * Sets file name
+         * @param fileName    file name
+         */
+        void setFileName(TextView fileName)
+        {
+            mFileName = fileName;
+        }
     }
 }

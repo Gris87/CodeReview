@@ -833,8 +833,8 @@ public class FilesAdapter extends BaseAdapter
         }
 
         /**
-         * Gets checkbox
-         * @return checkbox
+         * Gets checkBox
+         * @return checkBox
          */
         CheckBox getCheckBox()
         {
@@ -842,8 +842,8 @@ public class FilesAdapter extends BaseAdapter
         }
 
         /**
-         * Sets checkbox
-         * @param checkBox    checkbox
+         * Sets checkBox
+         * @param checkBox    checkBox
          */
         void setCheckBox(CheckBox checkBox)
         {
