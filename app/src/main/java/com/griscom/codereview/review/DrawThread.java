@@ -52,7 +52,7 @@ public class DrawThread extends Thread
     {
         mSurfaceHolder = surfaceHolder;
         mDrawer        = drawer;
-        mRunning    = true;
+        mRunning       = true;
         mNeedRepaint   = true;
     }
 
