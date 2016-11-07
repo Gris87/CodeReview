@@ -37,7 +37,7 @@ public class HighlightSyntaxDialog extends DialogFragment
     public String toString()
     {
         return "HighlightSyntaxDialog{" +
-                "mListener=" + mListener +
+                "mListener="           + mListener         +
                 ", mSyntaxParserType=" + mSyntaxParserType +
                 '}';
     }

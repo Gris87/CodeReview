@@ -111,9 +111,9 @@ public class MainDatabase extends SQLiteOpenHelper
      * @param filePath    path to file
      * @return file ID in DB
      */
-    public static int getFileId(SQLiteDatabase db, String filePath)
+    public static long getFileId(SQLiteDatabase db, String filePath)
     {
-        int res = 0;
+        long res = 0;
 
         long modifiedTime = new File(filePath).lastModified();
 
@@ -130,7 +130,7 @@ public class MainDatabase extends SQLiteOpenHelper
         {
             if (cursor.getLong(modificationIndex) == modifiedTime)
             {
-                res = cursor.getInt(idIndex);
+                res = cursor.getLong(idIndex);
 
                 break;
             }

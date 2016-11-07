@@ -142,7 +142,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         Intent intent = getIntent();
 
         String filePath = intent.getStringExtra(ApplicationExtras.FILE_PATH);
-        int    fileId   = intent.getIntExtra   (ApplicationExtras.FILE_ID, 0);
+        long   fileId   = intent.getLongExtra  (ApplicationExtras.FILE_ID, 0);
         String fileNote = intent.getStringExtra(ApplicationExtras.FILE_NOTE);
 
 

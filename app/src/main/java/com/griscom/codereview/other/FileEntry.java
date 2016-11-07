@@ -217,7 +217,7 @@ public class FileEntry
      * @param rowCount         row count
      * @param note             note
      */
-    public void updateFromDb(int dbFileId, int reviewedCount, int invalidCount, int noteCount, int rowCount, String note)
+    public void updateFromDb(long dbFileId, int reviewedCount, int invalidCount, int noteCount, int rowCount, String note)
     {
         synchronized(mLock)
         {
