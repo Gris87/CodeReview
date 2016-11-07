@@ -372,9 +372,9 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
     /** {@inheritDoc} */
     @SuppressWarnings("BooleanParameter")
     @Override
-    public void onNoteSupport(boolean noteSupported)
+    public void onNoteSupport(int noteSupported)
     {
-        if (noteSupported)
+        if (noteSupported == OnNoteSupportListener.SUPPORTED)
         {
             mNoteButton.setVisibility(View.VISIBLE);
         }

@@ -60,7 +60,7 @@ public final class Utils
 
         switch (type)
         {
-            case 0: return bytes +  " B";
+            case 0: return bytes                               +  " B";
             case 1: return Math.round(bytesDiv * 100) / 100.0d + " KB";
             case 2: return Math.round(bytesDiv * 100) / 100.0d + " MB";
             case 3: return Math.round(bytesDiv * 100) / 100.0d + " GB";
@@ -142,6 +142,7 @@ public final class Utils
         {
             // Nothing
         }
+
 
 
         if (in != null)

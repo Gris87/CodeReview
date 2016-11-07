@@ -542,7 +542,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
         if (mNoteSupportListener != null && mSyntaxParser != null)
         {
-            mNoteSupportListener.onNoteSupport(!TextUtils.isEmpty(mSyntaxParser.getCommentLine()));
+            mNoteSupportListener.onNoteSupport(TextUtils.isEmpty(mSyntaxParser.getCommentLine()) ? OnNoteSupportListener.UNSUPPORTED : OnNoteSupportListener.SUPPORTED);
         }
     }
 
@@ -643,7 +643,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
         if (mNoteSupportListener != null && mSyntaxParser != null)
         {
-            mNoteSupportListener.onNoteSupport(!TextUtils.isEmpty(mSyntaxParser.getCommentLine()));
+            mNoteSupportListener.onNoteSupport(TextUtils.isEmpty(mSyntaxParser.getCommentLine()) ? OnNoteSupportListener.UNSUPPORTED : OnNoteSupportListener.SUPPORTED);
         }
     }
 
