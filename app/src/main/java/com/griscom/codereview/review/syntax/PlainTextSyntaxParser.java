@@ -73,8 +73,8 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
 
 
 
-                TextRow    newRow    = new TextRow();
-                TextRegion newRegion = new TextRegion(line, basePaint, 0, tabSize);
+                TextRow    newRow    = TextRow.newInstance();
+                TextRegion newRegion = TextRegion.newInstance(line, basePaint, 0, tabSize);
 
                 newRow.addTextRegion(newRegion);
                 res.addTextRow(newRow);
@@ -82,8 +82,8 @@ public class PlainTextSyntaxParser extends SyntaxParserBase
 
             if (lastEnter)
             {
-                TextRow    newRow    = new TextRow();
-                TextRegion newRegion = new TextRegion("", basePaint, 0, tabSize);
+                TextRow    newRow    = TextRow.newInstance();
+                TextRegion newRegion = TextRegion.newInstance("", basePaint, 0, tabSize);
 
                 newRow.addTextRegion(newRegion);
                 res.addTextRow(newRow);

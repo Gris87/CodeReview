@@ -3,6 +3,7 @@ package com.griscom.codereview.review;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+@SuppressWarnings("WeakerAccess")
 public class TextRegion
 {
     private int    mPosition;
@@ -15,7 +16,21 @@ public class TextRegion
 
 
 
-    public TextRegion(String text, Paint paint, int position, int tabSize)
+    @Override
+    public String toString()
+    {
+        return "TextRegion{" +
+                "mPosition="         + mPosition      +
+                ", mOriginalText='"  + mOriginalText  + '\'' +
+                ", mDisplayedText='" + mDisplayedText + '\'' +
+                ", mPaint="          + mPaint         +
+                ", mX="              + mX             +
+                ", mWidth="          + mWidth         +
+                ", mHeight="         + mHeight        +
+                '}';
+    }
+
+    private TextRegion(String text, Paint paint, int position, int tabSize)
     {
         mPosition = position;
         mPaint    = paint;
@@ -23,6 +38,11 @@ public class TextRegion
 
         setupDisplayedText(text, tabSize);
         updateSizes();
+    }
+
+    public static TextRegion newInstance(String text, Paint paint, int position, int tabSize)
+    {
+        return new TextRegion(text, paint, position, tabSize);
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
@@ -42,7 +62,7 @@ public class TextRegion
 
             do
             {
-                int requiredSpaces = tabSize - ((mPosition + index) % tabSize);
+                int requiredSpaces = tabSize - (mPosition + index) % tabSize;
                 sb.replace(index, index + 1, spaces(requiredSpaces));
 
                 index = sb.indexOf("\t", index);
@@ -57,9 +77,9 @@ public class TextRegion
         }
     }
 
-    private String spaces(int count)
+    private static String spaces(int count)
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(0);
 
         for (int i = 0; i < count; ++i)
         {
@@ -118,12 +138,13 @@ public class TextRegion
         mX = x;
     }
 
+    @SuppressWarnings("unused")
     public float getX()
     {
         return mX;
     }
 
-    @SuppressWarnings("SameReturnValue")
+    @SuppressWarnings({"SameReturnValue", "MethodMayBeStatic", "unused"})
     @Deprecated
     public float getY() // Do not use it. Always zero
     {
@@ -140,12 +161,14 @@ public class TextRegion
         return mHeight;
     }
 
+    @SuppressWarnings("unused")
     public float getRight()
     {
         return mX + mWidth;
     }
 
     @Deprecated
+    @SuppressWarnings("unused")
     public float getBottom()// Do not use it. Use getHeight() instead
     {
         return mHeight;

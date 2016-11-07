@@ -349,17 +349,18 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
                 ArrayList<TextRow> rows = document.getRows();
 
 
+
                 //noinspection IOResourceOpenedButNotSafelyClosed
                 writer = new PrintWriter(mFilePath);
 
                 for (int i = 0; i < rows.size() - 1; ++i)
                 {
-                    writer.println(rows.get(i));
+                    writer.println(rows.get(i).getString());
                 }
 
                 if (!rows.isEmpty())
                 {
-                    writer.print(rows.get(rows.size() - 1));
+                    writer.print(rows.get(rows.size() - 1).getString());
                 }
 
 

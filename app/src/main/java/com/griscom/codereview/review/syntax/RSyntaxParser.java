@@ -112,7 +112,7 @@ public class RSyntaxParser extends SyntaxParserBase
             {
                 if (row == null)
                 {
-                    row = new TextRow();
+                    row = TextRow.newInstance();
                 }
 
                 String type    = result.getStyleKeys().get(0);
@@ -144,16 +144,16 @@ public class RSyntaxParser extends SyntaxParserBase
                     String contentPart = content.substring(0, index);
                     content = content.substring(index + 1);
 
-                    row.addTextRegion(new TextRegion(contentPart, selectedPaint, curColumn, tabSize));
+                    row.addTextRegion(TextRegion.newInstance(contentPart, selectedPaint, curColumn, tabSize));
                     res.addTextRow(row);
 
-                    row = new TextRow();
+                    row = TextRow.newInstance();
                     curColumn = 0;
                 } while (true);
 
                 if (lastEnter || !content.isEmpty())
                 {
-                    row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));
+                    row.addTextRegion(TextRegion.newInstance(content, selectedPaint, curColumn, tabSize));
                     curColumn += content.length();
                 }
             }

@@ -41,7 +41,7 @@ import java.util.ArrayList;
 /**
  * Text document
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "FieldAccessedSynchronizedAndUnsynchronized"})
 public class TextDocument implements OnTouchListener
 {
     @SuppressWarnings("unused")
@@ -115,6 +115,54 @@ public class TextDocument implements OnTouchListener
     // USED IN HANDLER ]
 
 
+
+    @Override
+    public String toString()
+    {
+        return "TextDocument{" +
+                "mSyntaxParser=" + mSyntaxParser +
+                ", mContext=" + mContext +
+                ", mParent=" + mParent +
+                ", mVibrator=" + mVibrator +
+                ", mHandler=" + mHandler +
+                ", mRows=" + mRows +
+                ", mProgressChangedListener=" + mProgressChangedListener +
+                ", mCommentDialogRequestedListener=" + mCommentDialogRequestedListener +
+                ", mReviewedCount=" + mReviewedCount +
+                ", mInvalidCount=" + mInvalidCount +
+                ", mNoteCount=" + mNoteCount +
+                ", mFontSize=" + mFontSize +
+                ", mTabSize=" + mTabSize +
+                ", mRowPaint=" + mRowPaint +
+                ", mLock=" + mLock +
+                ", mIndexWidth=" + mIndexWidth +
+                ", mX=" + mX +
+                ", mY=" + mY +
+                ", mWidth=" + mWidth +
+                ", mHeight=" + mHeight +
+                ", mViewWidth=" + mViewWidth +
+                ", mViewHeight=" + mViewHeight +
+                ", mOffsetX=" + mOffsetX +
+                ", mOffsetY=" + mOffsetY +
+                ", mScale=" + mScale +
+                ", mVisibleBegin=" + mVisibleBegin +
+                ", mVisibleEnd=" + mVisibleEnd +
+                ", mTouchMode=" + mTouchMode +
+                ", mTouchX=" + mTouchX +
+                ", mTouchY=" + mTouchY +
+                ", mFingerDistance=" + mFingerDistance +
+                ", mTouchMiddleX=" + mTouchMiddleX +
+                ", mTouchMiddleY=" + mTouchMiddleY +
+                ", mScrollMultiplier=" + mScrollMultiplier +
+                ", mSelectionEnd=" + mSelectionEnd +
+                ", mSelectionType=" + mSelectionType +
+                ", mBarsAlpha=" + mBarsAlpha +
+                ", mHighlightedRow=" + mHighlightedRow +
+                ", mHighlightAlpha=" + mHighlightAlpha +
+                ", mSelectionBrightness=" + mSelectionBrightness +
+                ", mSelectionMakeLight=" + mSelectionMakeLight +
+                '}';
+    }
 
     private TextDocument(SyntaxParserBase parser)
     {
@@ -605,12 +653,11 @@ public class TextDocument implements OnTouchListener
 
     private static float fingerDistance(MotionEvent event)
     {
+        float dx = event.getX(0) - event.getX(1);
+        float dy = event.getY(0) - event.getY(1);
+
         //noinspection NumericCastThatLosesPrecision
-        return (float) Math.sqrt(
-                                 (event.getX(0) - event.getX(1)) * (event.getX(0) - event.getX(1))
-                                 +
-                                 (event.getY(0) - event.getY(1)) * (event.getY(0) - event.getY(1))
-                                );
+        return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
     private void stopHighlight()
@@ -748,7 +795,7 @@ public class TextDocument implements OnTouchListener
                 MainDatabase helper = MainDatabase.newInstance(mContext);
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                helper.updateFileMeta(db, mParent.getFileId(), mParent.getFilePath());
+                MainDatabase.updateFileMeta(db, mParent.getFileId(), mParent.getFilePath());
 
                 db.close();
             }
@@ -759,7 +806,7 @@ public class TextDocument implements OnTouchListener
     {
         if (mProgressChangedListener != null)
         {
-            if (mRows.size() == 0)
+            if (mRows.isEmpty())
             {
                 mProgressChangedListener.onProgressChanged(100);
             }
@@ -861,6 +908,7 @@ public class TextDocument implements OnTouchListener
 
 
 
+        //noinspection FloatingPointEquality
         if (mOffsetY != newOffsets.y)
         {
             synchronized(mLock)
@@ -901,10 +949,10 @@ public class TextDocument implements OnTouchListener
 
     private void updateVisibleRanges()
     {
-        if (mRows.size() == 0)
+        if (mRows.isEmpty())
         {
-            Assert.assertEquals(mVisibleBegin, -1);
-            Assert.assertEquals(mVisibleEnd,   -1);
+            Assert.assertEquals("mVisibleBegin must be -1", mVisibleBegin, -1);
+            Assert.assertEquals("mVisibleEnd must be -1",   mVisibleEnd,   -1);
 
             return;
         }
@@ -1013,6 +1061,7 @@ public class TextDocument implements OnTouchListener
 
 
 
+        //noinspection FloatingPointEquality
         if (
             mOffsetX != newOffsets.x
             ||
@@ -1056,7 +1105,9 @@ public class TextDocument implements OnTouchListener
     {
         if (mFontSize != fontSize)
         {
+            //noinspection UnnecessaryExplicitNumericCast
             mOffsetX *= (float)fontSize / (float)mFontSize;
+            //noinspection UnnecessaryExplicitNumericCast
             mOffsetY *= (float)fontSize / (float)mFontSize;
 
             mFontSize = fontSize;
@@ -1141,31 +1192,37 @@ public class TextDocument implements OnTouchListener
         }
     }
 
+    @SuppressWarnings("unused")
     public void setX(float x)
     {
         mX = x;
     }
 
+    @SuppressWarnings("unused")
     public void setY(float y)
     {
         mY = y;
     }
 
+    @SuppressWarnings("unused")
     public float getX()
     {
         return mX;
     }
 
+    @SuppressWarnings("unused")
     public float getY()
     {
         return mY;
     }
 
+    @SuppressWarnings("unused")
     public float getWidth()
     {
         return mWidth;
     }
 
+    @SuppressWarnings("unused")
     public float getHeight()
     {
         return mHeight;
@@ -1185,28 +1242,47 @@ public class TextDocument implements OnTouchListener
 
 
 
+    @SuppressWarnings("NonStaticInnerClassInSecureContext")
     @SuppressLint("HandlerLeak")
     private class DocumentHandler extends Handler
     {
+        private DocumentHandler()
+        {
+        }
+
         @Override
         public void handleMessage(Message msg)
         {
             switch (msg.what)
             {
                 case HIDE_BARS_MESSAGE:
+                {
                     hideBars();
+                }
                 break;
 
                 case HIGHLIGHT_MESSAGE:
+                {
                     highlight();
+                }
                 break;
 
                 case SELECTION_MESSAGE:
+                {
                     selection();
+                }
                 break;
 
                 case SCROLL_MESSAGE:
+                {
                     scroll();
+                }
+                break;
+
+                default:
+                {
+                    AppLog.wtf(TAG, "Unknown message type: " + msg.what);
+                }
                 break;
             }
         }
@@ -1226,7 +1302,7 @@ public class TextDocument implements OnTouchListener
 
             if (mBarsAlpha != barsAlpha)
             {
-                synchronized(TextDocument.this)
+                synchronized(mLock)
                 {
                     mBarsAlpha = barsAlpha;
                 }
@@ -1241,7 +1317,7 @@ public class TextDocument implements OnTouchListener
 
             if (highlightAlpha < 255)
             {
-                synchronized(TextDocument.this)
+                synchronized(mLock)
                 {
                     mHighlightAlpha = highlightAlpha;
                 }
@@ -1255,7 +1331,7 @@ public class TextDocument implements OnTouchListener
                 mTouchMode        = TouchMode.SELECT;
                 mScrollMultiplier = 1;
 
-                synchronized(TextDocument.this)
+                synchronized(mLock)
                 {
                     mHighlightAlpha      = 0;
                     mSelectionBrightness = 1;
@@ -1298,13 +1374,14 @@ public class TextDocument implements OnTouchListener
 
             sendEmptyMessageDelayed(SELECTION_MESSAGE, 40);
 
+            //noinspection FloatingPointEquality
             if (
                 mSelectionMakeLight != selectionMakeLight
                  ||
                 mSelectionBrightness != selectionBrightness
                )
             {
-                synchronized(TextDocument.this)
+                synchronized(mLock)
                 {
                     mSelectionMakeLight  = selectionMakeLight;
                     mSelectionBrightness = selectionBrightness;

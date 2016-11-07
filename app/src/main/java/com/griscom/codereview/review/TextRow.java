@@ -1,6 +1,5 @@
 package com.griscom.codereview.review;
 
-import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.TextUtils;
@@ -11,8 +10,9 @@ import com.griscom.codereview.review.syntax.SyntaxParserBase;
 import junit.framework.Assert;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-@SuppressLint("DefaultLocale")
+@SuppressWarnings("WeakerAccess")
 public class TextRow
 {
     private ArrayList<TextRegion> mRegions;
@@ -24,9 +24,22 @@ public class TextRow
 
 
 
-    public TextRow()
+    @Override
+    public String toString()
     {
-        mRegions = new ArrayList<>();
+        return "TextRow{" +
+                "mRegions="         + mRegions       +
+                ", mSelectionType=" + mSelectionType +
+                ", mY="             + mY             +
+                ", mWidth="         + mWidth         +
+                ", mHeight="        + mHeight        +
+                ", mCommentIndex="  + mCommentIndex  +
+                '}';
+    }
+
+    private TextRow()
+    {
+        mRegions = new ArrayList<>(0);
 
         mSelectionType = SelectionType.CLEAR;
         mY             = 0;
@@ -34,6 +47,11 @@ public class TextRow
         mHeight        = 0;
 
         mCommentIndex  = -1;
+    }
+
+    public static TextRow newInstance()
+    {
+        return new TextRow();
     }
 
     public void draw(Canvas canvas, float offsetX, float offsetY)
@@ -46,7 +64,7 @@ public class TextRow
 
     public void addTextRegion(TextRegion region)
     {
-        if (mRegions.size() > 0 && region.getOriginalText().equals(""))
+        if (!mRegions.isEmpty() && region.getOriginalText().isEmpty())
         {
             return;
         }
@@ -58,7 +76,7 @@ public class TextRow
 
     public void checkForComment(SyntaxParserBase parser)
     {
-        Assert.assertTrue(mCommentIndex < 0);
+        Assert.assertTrue("Comment already exists", mCommentIndex < 0);
 
 
 
@@ -66,18 +84,18 @@ public class TextRow
 
         if (commentBegin != null)
         {
-            commentBegin = commentBegin.toUpperCase();
+            commentBegin = commentBegin.toUpperCase(Locale.getDefault());
 
             String commentEnd = parser.getCommentLineEnd();
 
             if (commentEnd != null)
             {
-                commentEnd = commentEnd.toUpperCase();
+                commentEnd = commentEnd.toUpperCase(Locale.getDefault());
             }
 
             for (int i = 0; i < mRegions.size(); ++i)
             {
-                String text = mRegions.get(i).getOriginalText().toUpperCase();
+                String text = mRegions.get(i).getOriginalText().toUpperCase(Locale.getDefault());
 
                 if (
                     text.contains(commentBegin)
@@ -123,10 +141,9 @@ public class TextRow
         }
     }
 
-    @Override
-    public String toString()
+    public String getString()
     {
-        StringBuilder res = new StringBuilder();
+        StringBuilder res = new StringBuilder(0);
 
         for (int i = 0; i < mRegions.size(); ++i)
         {
@@ -138,12 +155,14 @@ public class TextRow
 
     public boolean hasRegions()
     {
-        return mRegions.size() > 0;
+        return !mRegions.isEmpty();
     }
 
     public void setComment(String comment, Paint paint)
     {
-        if (TextUtils.isEmpty(comment))
+        String newComment = comment;
+
+        if (TextUtils.isEmpty(newComment))
         {
             if (mCommentIndex >= 0)
             {
@@ -156,35 +175,33 @@ public class TextRow
         else
         {
             if (
-                mRegions.size() > 0
+                !mRegions.isEmpty()
                 &&
                 (
-                 (
-                  mCommentIndex < 0
-                  &&
-                  !mRegions.get(mRegions.size() - 1).getOriginalText().equals("")
-                 )
+                 mCommentIndex < 0
+                 &&
+                 !mRegions.get(mRegions.size() - 1).getOriginalText().isEmpty()
+
                  ||
-                 (
-                  mCommentIndex > 0
-                  &&
-                  !mRegions.get(mCommentIndex - 1).getOriginalText().equals("")
-                 )
+
+                 mCommentIndex > 0
+                 &&
+                 !mRegions.get(mCommentIndex - 1).getOriginalText().isEmpty()
                 )
                )
             {
-                comment = " " + comment;
+                newComment = ' ' + newComment;
             }
 
             if (mCommentIndex >= 0)
             {
-                mRegions.get(mCommentIndex).setOriginalText(comment);
+                mRegions.get(mCommentIndex).setOriginalText(newComment);
 
                 updateSizes();
             }
             else
             {
-                addTextRegion(new TextRegion(comment, paint, 0, 4));
+                addTextRegion(TextRegion.newInstance(newComment, paint, 0, 4));
                 mCommentIndex = mRegions.size() - 1;
                 mSelectionType = SelectionType.NOTE;
             }
@@ -229,7 +246,7 @@ public class TextRow
         mY = y;
     }
 
-    @SuppressWarnings("SameReturnValue")
+    @SuppressWarnings({"SameReturnValue", "unused", "MethodMayBeStatic"})
     @Deprecated
     public float getX() // Do not use it. Always zero
     {
@@ -251,6 +268,7 @@ public class TextRow
         return mHeight;
     }
 
+    @SuppressWarnings("unused")
     @Deprecated
     public float getRight() // Do not use it. Use getWidth() instead
     {
