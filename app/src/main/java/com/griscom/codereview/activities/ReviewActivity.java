@@ -370,7 +370,6 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("BooleanParameter")
     @Override
     public void onNoteSupport(int noteSupported)
     {

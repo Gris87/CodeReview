@@ -953,7 +953,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
 
             if (!tail.isEmpty() && tail.charAt(0) == '/')
             {
-                Assert.assertTrue("tail should start with \"/...\"", tail.length() > 1);
+                Assert.assertTrue("tail should start with \"/\"", tail.length() > 1);
 
                 tail = tail.substring(1);
             }
