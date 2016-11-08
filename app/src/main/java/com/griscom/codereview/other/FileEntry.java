@@ -267,6 +267,7 @@ public class FileEntry
      * Gets file type
      * @return file type
      */
+    @SuppressWarnings("unused")
     public String getType()
     {
         return mType;

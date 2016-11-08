@@ -75,7 +75,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler()
+    private final Handler mHandler = new Handler()
     {
         /** {@inheritDoc} */
         @Override

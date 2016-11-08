@@ -743,6 +743,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
+    @SuppressWarnings("SameReturnValue")
     private boolean selectAll(ArrayList<Integer> items)
     {
         int startIndex;
@@ -790,6 +791,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
+    @SuppressWarnings("SameReturnValue")
     private boolean assignNote(ArrayList<Integer> items)
     {
         FileEntry file = (FileEntry)mAdapter.getItem(items.get(0));
@@ -855,6 +857,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
+    @SuppressWarnings("SameReturnValue")
     private boolean noteToDelete(ArrayList<Integer> items)
     {
         mAdapter.assignNote(items, getString(R.string.files_need_to_delete));
@@ -867,6 +870,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
+    @SuppressWarnings("SameReturnValue")
     private boolean markAsReviewed(ArrayList<Integer> items)
     {
         mAdapter.markAsFinished(items, FilesAdapter.MARK_TYPE_REVIEWED);
@@ -879,6 +883,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
+    @SuppressWarnings("SameReturnValue")
     private boolean markAsInvalid(ArrayList<Integer> items)
     {
         mAdapter.markAsFinished(items, FilesAdapter.MARK_TYPE_INVALID);
@@ -891,6 +896,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param item    selected file
      * @return true, if need to close ActionMode
      */
+    @SuppressWarnings("SameReturnValue")
     private boolean rename(int item)
     {
         FileEntry file = (FileEntry)mAdapter.getItem(item);
@@ -909,6 +915,7 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
      * @param items    selected files
      * @return true, if need to close ActionMode
      */
+    @SuppressWarnings("SameReturnValue")
     private boolean delete(ArrayList<Integer> items)
     {
         int foldersCount = 0;

@@ -15,7 +15,8 @@ public final class ColorCache
 
 
 
-    private static int[] sCache = new int[SelectionType.MAX + 1];
+    @SuppressWarnings("ConstantNamingConvention")
+    private static final int[] sCache = new int[SelectionType.MAX + 1];
 
 
 

@@ -43,7 +43,7 @@ public class SingleFileDatabase extends SQLiteOpenHelper
 
 
 
-    private String mDbName;
+    private String mDbName = null;
 
 
 

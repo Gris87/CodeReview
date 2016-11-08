@@ -64,13 +64,13 @@ public class FilesAdapter extends BaseAdapter
 
 
 
-    private Context              mContext;
-    private String               mCurrentPath;
-    private ArrayList<FileEntry> mFiles;
-    private int                  mSortType;
-    private int                  mSelectionMode;
-    private ArrayList<Integer>   mSelection;
-    private DbReaderTask         mDbReaderTask;
+    private Context              mContext       = null;
+    private String               mCurrentPath   = null;
+    private ArrayList<FileEntry> mFiles         = null;
+    private int                  mSortType      = 0;
+    private int                  mSelectionMode = 0;
+    private ArrayList<Integer>   mSelection     = null;
+    private DbReaderTask         mDbReaderTask  = null;
 
 
 

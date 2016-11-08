@@ -6,13 +6,13 @@ import android.graphics.Paint;
 @SuppressWarnings("WeakerAccess")
 public class TextRegion
 {
-    private int    mPosition;
-    private String mOriginalText;
-    private String mDisplayedText;
-    private Paint  mPaint;
-    private float  mX;
-    private float  mWidth;
-    private float  mHeight;
+    private Paint  mPaint         = null;
+    private int    mPosition      = 0;
+    private String mOriginalText  = null;
+    private String mDisplayedText = null;
+    private float  mX             = 0;
+    private float  mWidth         = 0;
+    private float  mHeight        = 0;
 
 
 
@@ -20,10 +20,10 @@ public class TextRegion
     public String toString()
     {
         return "TextRegion{" +
-                "mPosition="         + mPosition      +
+                "mPaint="            + mPaint         +
+                ", mPosition="       + mPosition      +
                 ", mOriginalText='"  + mOriginalText  + '\'' +
                 ", mDisplayedText='" + mDisplayedText + '\'' +
-                ", mPaint="          + mPaint         +
                 ", mX="              + mX             +
                 ", mWidth="          + mWidth         +
                 ", mHeight="         + mHeight        +
@@ -32,8 +32,8 @@ public class TextRegion
 
     private TextRegion(String text, Paint paint, int position, int tabSize)
     {
-        mPosition = position;
         mPaint    = paint;
+        mPosition = position;
         mX        = 0;
 
         setupDisplayedText(text, tabSize);
@@ -144,7 +144,7 @@ public class TextRegion
         return mX;
     }
 
-    @SuppressWarnings({"SameReturnValue", "MethodMayBeStatic", "unused"})
+    @SuppressWarnings({"SameReturnValue", "MethodMayBeStatic", "unused", "MethodReturnAlwaysConstant"})
     @Deprecated
     public float getY() // Do not use it. Always zero
     {

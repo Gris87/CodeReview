@@ -18,7 +18,8 @@ public final class ExtensionToIcon
 
 
 
-    private static Map<String, Integer> sMap = new HashMap<>(100);
+    @SuppressWarnings("ConstantNamingConvention")
+    private static final Map<String, Integer> sMap = new HashMap<>(100);
 
 
 

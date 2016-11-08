@@ -216,6 +216,7 @@ public class IgnoreFilesActivity extends AppCompatActivity implements OnItemClic
             }
 
             /** {@inheritDoc} */
+            @SuppressWarnings("MethodReturnAlwaysConstant")
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu)
             {

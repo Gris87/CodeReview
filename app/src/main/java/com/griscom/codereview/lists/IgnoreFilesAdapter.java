@@ -40,10 +40,10 @@ public class IgnoreFilesAdapter extends BaseAdapter
 
 
 
-    private Activity           mContext;
-    private ArrayList<String>  mFiles;
-    private int                mSelectionMode;
-    private ArrayList<Integer> mSelection;
+    private Activity           mContext       = null;
+    private ArrayList<String>  mFiles         = null;
+    private int                mSelectionMode = 0;
+    private ArrayList<Integer> mSelection     = null;
 
 
 

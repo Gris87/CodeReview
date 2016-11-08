@@ -15,12 +15,12 @@ import java.util.Locale;
 @SuppressWarnings("WeakerAccess")
 public class TextRow
 {
-    private ArrayList<TextRegion> mRegions;
-    private int                   mSelectionType;
-    private float                 mY;
-    private float                 mWidth;
-    private float                 mHeight;
-    private int                   mCommentIndex;
+    private ArrayList<TextRegion> mRegions       = null;
+    private int                   mSelectionType = 0;
+    private float                 mY             = 0;
+    private float                 mWidth         = 0;
+    private float                 mHeight        = 0;
+    private int                   mCommentIndex  = 0;
 
 
 
@@ -246,7 +246,7 @@ public class TextRow
         mY = y;
     }
 
-    @SuppressWarnings({"SameReturnValue", "unused", "MethodMayBeStatic"})
+    @SuppressWarnings({"SameReturnValue", "unused", "MethodMayBeStatic", "MethodReturnAlwaysConstant"})
     @Deprecated
     public float getX() // Do not use it. Always zero
     {

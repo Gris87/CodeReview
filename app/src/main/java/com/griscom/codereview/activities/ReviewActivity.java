@@ -430,7 +430,7 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         mContent.forceReload();
     }
 
-    private View.OnTouchListener mHoverTouchListener = new View.OnTouchListener()
+    private final View.OnTouchListener mHoverTouchListener = new View.OnTouchListener()
     {
         @Override
         public boolean onTouch(View view, MotionEvent event)
@@ -464,8 +464,8 @@ public class ReviewActivity extends FragmentActivity implements OnTouchListener,
         }
     };
 
-    private Handler mHideHandler   = new Handler();
-    private Runnable mHideRunnable = new Runnable()
+    private final Handler mHideHandler   = new Handler();
+    private final Runnable mHideRunnable = new Runnable()
     {
         @Override
         public void run()
