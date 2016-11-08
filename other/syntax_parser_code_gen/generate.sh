@@ -365,7 +365,7 @@ function generateSyntaxParser {
     echo "            {"                                                                                                       >> ${target_file}
     echo "                if (row == null)"                                                                                    >> ${target_file}
     echo "                {"                                                                                                   >> ${target_file}
-    echo "                    row = new TextRow();"                                                                            >> ${target_file}
+    echo "                    row = TextRow.newInstance();"                                                                    >> ${target_file}
     echo "                }"                                                                                                   >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "                String type    = result.getStyleKeys().get(0);"                                                      >> ${target_file}
@@ -397,16 +397,16 @@ function generateSyntaxParser {
     echo "                    String contentPart = content.substring(0, index);"                                               >> ${target_file}
     echo "                    content = content.substring(index + 1);"                                                         >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
-    echo "                    row.addTextRegion(new TextRegion(contentPart, selectedPaint, curColumn, tabSize));"              >> ${target_file}
+    echo "                    row.addTextRegion(TextRegion.newInstance(contentPart, selectedPaint, curColumn, tabSize));"      >> ${target_file}
     echo "                    res.addTextRow(row);"                                                                            >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
-    echo "                    row = new TextRow();"                                                                            >> ${target_file}
+    echo "                    row = TextRow.newInstance();"                                                                    >> ${target_file}
     echo "                    curColumn = 0;"                                                                                  >> ${target_file}
     echo "                } while (true);"                                                                                     >> ${target_file}
     echo ""                                                                                                                    >> ${target_file}
     echo "                if (lastEnter || !content.isEmpty())"                                                                >> ${target_file}
     echo "                {"                                                                                                   >> ${target_file}
-    echo "                    row.addTextRegion(new TextRegion(content, selectedPaint, curColumn, tabSize));"                  >> ${target_file}
+    echo "                    row.addTextRegion(TextRegion.newInstance(content, selectedPaint, curColumn, tabSize));"          >> ${target_file}
     echo "                    curColumn += content.length();"                                                                  >> ${target_file}
     echo "                }"                                                                                                   >> ${target_file}
     echo "            }"                                                                                                       >> ${target_file}
