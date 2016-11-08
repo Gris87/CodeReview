@@ -2,6 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <!-- Font size -->
+    <!--suppress AndroidElementNotAllowed -->
     <com.lukehorvat.NumberPickerDialogPreference
         android:key="@string/pref_key_font_size"
         android:defaultValue="@integer/pref_default_font_size"
@@ -12,6 +13,7 @@
         custom:maximum="72" />
 
     <!-- Tab size -->
+    <!--suppress AndroidElementNotAllowed -->
     <com.lukehorvat.NumberPickerDialogPreference
         android:key="@string/pref_key_tab_size"
         android:defaultValue="@integer/pref_default_tab_size"
@@ -22,6 +24,7 @@
         custom:maximum="8" />
 
     <!-- Big file size -->
+    <!--suppress AndroidElementNotAllowed -->
     <com.lukehorvat.NumberPickerDialogPreference
         android:key="@string/pref_key_big_file_size"
         android:defaultValue="@integer/pref_default_big_file_size"

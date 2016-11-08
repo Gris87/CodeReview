@@ -4,6 +4,7 @@ suppressLint
 suppressWarning
 //noinspection
 tools:ignore
+<!--suppress
 
 UltraHD images
 Smooth movement
