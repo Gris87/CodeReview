@@ -523,6 +523,7 @@ public class TextDocument implements OnTouchListener
                         fitOffsets(newOffsets);
 
 
+
                         //noinspection FloatingPointEquality
                         if (
                             mOffsetX != newOffsets.x

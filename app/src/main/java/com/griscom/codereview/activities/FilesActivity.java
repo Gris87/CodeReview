@@ -439,37 +439,49 @@ public class FilesActivity extends AppCompatActivity implements OnItemClickListe
         {
             String oldFileName = file.getFileName();
 
-            if (action == ACTION_ADD_NOTE)
+            switch (action)
             {
-                ArrayList<Integer> items = new ArrayList<>(1);
+                case ACTION_ADD_NOTE:
+                {
+                    ArrayList<Integer> items = new ArrayList<>(1);
 
-                items.add(item);
+                    items.add(item);
 
-                if (!oldFileName.equals(fileName))
-                {
-                    mAdapter.assignNote(items, getString(R.string.files_rename_to, fileName));
-                }
-                else
-                {
-                    mAdapter.assignNote(items, "");
-                }
-            }
-            else
-            {
-                if (!oldFileName.equals(fileName))
-                {
-                    if (!mAdapter.renameFile(item, fileName))
+                    if (!oldFileName.equals(fileName))
                     {
-                        if (file.isDirectory())
+                        mAdapter.assignNote(items, getString(R.string.files_rename_to, fileName));
+                    }
+                    else
+                    {
+                        mAdapter.assignNote(items, "");
+                    }
+                }
+                break;
+
+                case ACTION_RENAME:
+                {
+                    if (!oldFileName.equals(fileName))
+                    {
+                        if (!mAdapter.renameFile(item, fileName))
                         {
-                            Toast.makeText(this, R.string.files_can_not_rename_folder, Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(this, R.string.files_can_not_rename_file, Toast.LENGTH_SHORT).show();
+                            if (file.isDirectory())
+                            {
+                                Toast.makeText(this, R.string.files_can_not_rename_folder, Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(this, R.string.files_can_not_rename_file, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }
+                break;
+
+                default:
+                {
+                    AppLog.wtf(TAG, "Unexpected action: " + action);
+                }
+                break;
             }
         }
 

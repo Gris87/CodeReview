@@ -107,6 +107,7 @@ public final class Utils
         FileInputStream in = null;
 
 
+
         //noinspection TryWithIdenticalCatches
         try
         {
@@ -115,7 +116,6 @@ public final class Utils
             byte[] buffer = new byte[4096];
             //noinspection IOResourceOpenedButNotSafelyClosed
             in = new FileInputStream(filePath);
-
 
             //noinspection LoopWithImplicitTerminationCondition
             do
