@@ -1252,6 +1252,7 @@ public final class TextDocument implements OnTouchListener
 
 
 
+        @SuppressWarnings("MethodReturnAlwaysConstant")
         @Override
         public String toString()
         {
