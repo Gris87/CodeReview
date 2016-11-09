@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Bash syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class BashSyntaxParser extends SyntaxParserBase
+public final class BashSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "BashSyntaxParser";

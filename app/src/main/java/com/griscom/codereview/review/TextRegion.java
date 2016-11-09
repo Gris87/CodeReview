@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 @SuppressWarnings("WeakerAccess")
-public class TextRegion
+public final class TextRegion
 {
     private Paint  mPaint         = null;
     private int    mPosition      = 0;

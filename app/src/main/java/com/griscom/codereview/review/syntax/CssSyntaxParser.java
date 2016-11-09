@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * CSS syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class CssSyntaxParser extends SyntaxParserBase
+public final class CssSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "CssSyntaxParser";

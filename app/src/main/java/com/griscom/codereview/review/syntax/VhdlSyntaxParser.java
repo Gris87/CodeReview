@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * VHDL syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class VhdlSyntaxParser extends SyntaxParserBase
+public final class VhdlSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "VhdlSyntaxParser";

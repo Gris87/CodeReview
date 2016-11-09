@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * LISP syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class LispSyntaxParser extends SyntaxParserBase
+public final class LispSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "LispSyntaxParser";

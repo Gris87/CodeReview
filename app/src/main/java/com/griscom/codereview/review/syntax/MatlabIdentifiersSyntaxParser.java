@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * MATLAB Identifiers syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class MatlabIdentifiersSyntaxParser extends SyntaxParserBase
+public final class MatlabIdentifiersSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "MatlabIdentifiersSyntaxParser";

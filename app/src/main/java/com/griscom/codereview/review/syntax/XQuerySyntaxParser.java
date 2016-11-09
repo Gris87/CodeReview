@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * X Query syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class XQuerySyntaxParser extends SyntaxParserBase
+public final class XQuerySyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "XQuerySyntaxParser";

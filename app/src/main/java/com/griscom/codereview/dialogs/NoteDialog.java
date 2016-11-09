@@ -228,6 +228,7 @@ public class NoteDialog extends DialogFragment
     /**
      * Listener for interaction with this dialog fragment
      */
+    @SuppressWarnings("PublicInnerClass")
     public interface OnFragmentInteractionListener
     {
         /**

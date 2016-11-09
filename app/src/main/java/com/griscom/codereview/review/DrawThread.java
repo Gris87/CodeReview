@@ -9,7 +9,7 @@ import com.griscom.codereview.listeners.OnReviewSurfaceDrawListener;
  * Draw thread
  */
 @SuppressWarnings("WeakerAccess")
-public class DrawThread extends Thread
+public final class DrawThread extends Thread
 {
     @SuppressWarnings("unused")
     private static final String TAG = "DrawThread";

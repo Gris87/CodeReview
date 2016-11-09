@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * LUA syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class LuaSyntaxParser extends SyntaxParserBase
+public final class LuaSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "LuaSyntaxParser";

@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * YAML syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class YamlSyntaxParser extends SyntaxParserBase
+public final class YamlSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "YamlSyntaxParser";

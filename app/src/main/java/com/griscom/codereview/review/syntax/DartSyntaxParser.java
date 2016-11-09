@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Dart syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class DartSyntaxParser extends SyntaxParserBase
+public final class DartSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "DartSyntaxParser";

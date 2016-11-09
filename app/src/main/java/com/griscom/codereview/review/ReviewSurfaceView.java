@@ -708,7 +708,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
      * File loading task
      */
     @SuppressWarnings("WeakerAccess")
-    private static class LoadingTask extends AsyncTask<Void, Void, TextDocument>
+    private static final class LoadingTask extends AsyncTask<Void, Void, TextDocument>
     {
         @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
         private ReviewSurfaceView mReviewSurfaceView = null;

@@ -13,7 +13,7 @@ import java.util.Locale;
 /**
  * File entry in files list
  */
-public class FileEntry
+public final class FileEntry
 {
     @SuppressWarnings("unused")
     private static final String TAG = "FileEntry";

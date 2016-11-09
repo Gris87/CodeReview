@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * R syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class RSyntaxParser extends SyntaxParserBase
+public final class RSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "RSyntaxParser";

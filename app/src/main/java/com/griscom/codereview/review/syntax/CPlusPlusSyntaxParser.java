@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * C++ syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class CPlusPlusSyntaxParser extends SyntaxParserBase
+public final class CPlusPlusSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "CPlusPlusSyntaxParser";

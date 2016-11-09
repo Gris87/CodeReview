@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Wiki syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class WikiSyntaxParser extends SyntaxParserBase
+public final class WikiSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "WikiSyntaxParser";

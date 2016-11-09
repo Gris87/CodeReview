@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * TEX syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class TexSyntaxParser extends SyntaxParserBase
+public final class TexSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "TexSyntaxParser";

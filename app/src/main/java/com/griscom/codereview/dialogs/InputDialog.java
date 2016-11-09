@@ -193,6 +193,7 @@ public class InputDialog extends DialogFragment
     /**
      * Listener for interaction with this dialog fragment
      */
+    @SuppressWarnings("PublicInnerClass")
     public interface OnFragmentInteractionListener
     {
         /**

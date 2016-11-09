@@ -107,8 +107,7 @@ public final class Utils
         FileInputStream in = null;
 
 
-
-        //noinspection TryWithIdenticalCatches
+        //noinspection TryWithIdenticalCatches,ErrorNotRethrown
         try
         {
             MessageDigest md = MessageDigest.getInstance("MD5");

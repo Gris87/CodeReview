@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Pascal syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class PascalSyntaxParser extends SyntaxParserBase
+public final class PascalSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "PascalSyntaxParser";

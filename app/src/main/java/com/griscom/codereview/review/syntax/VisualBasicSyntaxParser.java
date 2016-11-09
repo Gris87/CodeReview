@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Visual Basic syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class VisualBasicSyntaxParser extends SyntaxParserBase
+public final class VisualBasicSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "VisualBasicSyntaxParser";

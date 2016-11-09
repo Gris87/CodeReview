@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * LLVM syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class LlvmSyntaxParser extends SyntaxParserBase
+public final class LlvmSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "LlvmSyntaxParser";

@@ -42,7 +42,7 @@ import java.util.Comparator;
 /**
  * Adapter that used in FilesActivity
  */
-public class FilesAdapter extends BaseAdapter
+public final class FilesAdapter extends BaseAdapter
 {
     @SuppressWarnings("unused")
     private static final String TAG = "FilesAdapter";
@@ -449,7 +449,7 @@ public class FilesAdapter extends BaseAdapter
      * Rescans current folder
      * @return true, if successful
      */
-    public final boolean rescan()
+    public boolean rescan()
     {
         if (!new File(mCurrentPath).exists())
         {
@@ -928,7 +928,7 @@ public class FilesAdapter extends BaseAdapter
     /**
      * DB reader task
      */
-    private static class DbReaderTask extends AsyncTask<Void, Void, Boolean>
+    private static final class DbReaderTask extends AsyncTask<Void, Void, Boolean>
     {
         @SuppressWarnings("FieldNotUsedInToString")
         private FilesAdapter         mAdapter     = null;

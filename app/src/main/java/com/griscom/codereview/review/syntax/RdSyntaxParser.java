@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * RD syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class RdSyntaxParser extends SyntaxParserBase
+public final class RdSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "RdSyntaxParser";

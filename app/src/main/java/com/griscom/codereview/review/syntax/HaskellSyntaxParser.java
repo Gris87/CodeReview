@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Haskell syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class HaskellSyntaxParser extends SyntaxParserBase
+public final class HaskellSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "HaskellSyntaxParser";

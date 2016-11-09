@@ -42,7 +42,7 @@ import java.util.ArrayList;
  * Text document
  */
 @SuppressWarnings({"WeakerAccess", "FieldAccessedSynchronizedAndUnsynchronized"})
-public class TextDocument implements OnTouchListener
+public final class TextDocument implements OnTouchListener
 {
     @SuppressWarnings("unused")
     private static final String TAG = "TextDocument";
@@ -221,7 +221,7 @@ public class TextDocument implements OnTouchListener
 
     public void init()
     {
-        mHandler = new DocumentHandler();
+        mHandler = DocumentHandler.newInstance(this);
 
         mX = mContext.getResources().getDimensionPixelSize(R.dimen.review_horizontal_margin);
         mY = mContext.getResources().getDimensionPixelSize(R.dimen.review_vertical_margin);
@@ -1243,12 +1243,29 @@ public class TextDocument implements OnTouchListener
 
 
 
-    @SuppressWarnings("NonStaticInnerClassInSecureContext")
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
     @SuppressLint("HandlerLeak")
-    private class DocumentHandler extends Handler
+    private static final class DocumentHandler extends Handler
     {
-        private DocumentHandler()
+        @SuppressWarnings("FieldNotUsedInToString")
+        private TextDocument mTextDocument = null;
+
+
+
+        @Override
+        public String toString()
         {
+            return "DocumentHandler";
+        }
+
+        private DocumentHandler(TextDocument textDocument)
+        {
+            mTextDocument = textDocument;
+        }
+
+        public static DocumentHandler newInstance(TextDocument textDocument)
+        {
+            return new DocumentHandler(textDocument);
         }
 
         @Override
@@ -1290,7 +1307,7 @@ public class TextDocument implements OnTouchListener
 
         private void hideBars()
         {
-            int barsAlpha = mBarsAlpha - 20;
+            int barsAlpha = mTextDocument.mBarsAlpha - 20;
 
             if (barsAlpha > 0)
             {
@@ -1301,56 +1318,56 @@ public class TextDocument implements OnTouchListener
                 barsAlpha = 0;
             }
 
-            if (mBarsAlpha != barsAlpha)
+            if (mTextDocument.mBarsAlpha != barsAlpha)
             {
-                synchronized(mLock)
+                synchronized(mTextDocument.mLock)
                 {
-                    mBarsAlpha = barsAlpha;
+                    mTextDocument.mBarsAlpha = barsAlpha;
                 }
 
-                repaint();
+                mTextDocument.repaint();
             }
         }
 
         private void highlight()
         {
-            int highlightAlpha = mHighlightAlpha + 20;
+            int highlightAlpha = mTextDocument.mHighlightAlpha + 20;
 
             if (highlightAlpha < 255)
             {
-                synchronized(mLock)
+                synchronized(mTextDocument.mLock)
                 {
-                    mHighlightAlpha = highlightAlpha;
+                    mTextDocument.mHighlightAlpha = highlightAlpha;
                 }
 
                 sendEmptyMessageDelayed(HIGHLIGHT_MESSAGE, 40);
             }
             else
             {
-                mVibrator.vibrate(VIBRATOR_LONG_CLICK);
+                mTextDocument.mVibrator.vibrate(VIBRATOR_LONG_CLICK);
 
-                mTouchMode        = TouchMode.SELECT;
-                mScrollMultiplier = 1;
+                mTextDocument.mTouchMode        = TouchMode.SELECT;
+                mTextDocument.mScrollMultiplier = 1;
 
-                synchronized(mLock)
+                synchronized(mTextDocument.mLock)
                 {
-                    mHighlightAlpha      = 0;
-                    mSelectionBrightness = 1;
-                    mSelectionMakeLight  = false;
+                    mTextDocument.mHighlightAlpha      = 0;
+                    mTextDocument.mSelectionBrightness = 1;
+                    mTextDocument.mSelectionMakeLight  = false;
                 }
 
-                updateSelection();
+                mTextDocument.updateSelection();
 
                 sendEmptyMessageDelayed(SELECTION_MESSAGE, 40);
             }
 
-            repaint();
+            mTextDocument.repaint();
         }
 
         private void selection()
         {
-            boolean selectionMakeLight  = mSelectionMakeLight;
-            float   selectionBrightness = mSelectionBrightness;
+            boolean selectionMakeLight  = mTextDocument.mSelectionMakeLight;
+            float   selectionBrightness = mTextDocument.mSelectionBrightness;
 
             if (selectionMakeLight)
             {
@@ -1377,24 +1394,24 @@ public class TextDocument implements OnTouchListener
 
             //noinspection FloatingPointEquality
             if (
-                mSelectionMakeLight != selectionMakeLight
-                 ||
-                mSelectionBrightness != selectionBrightness
+                mTextDocument.mSelectionMakeLight != selectionMakeLight
+                ||
+                mTextDocument.mSelectionBrightness != selectionBrightness
                )
             {
-                synchronized(mLock)
+                synchronized(mTextDocument.mLock)
                 {
-                    mSelectionMakeLight  = selectionMakeLight;
-                    mSelectionBrightness = selectionBrightness;
+                    mTextDocument.mSelectionMakeLight  = selectionMakeLight;
+                    mTextDocument.mSelectionBrightness = selectionBrightness;
                 }
 
-                repaint();
+                mTextDocument.repaint();
             }
         }
 
         private void scroll()
         {
-            touchScroll();
+            mTextDocument.touchScroll();
         }
     }
 }

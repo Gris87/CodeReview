@@ -167,6 +167,7 @@
     <inspection_tool class="ClassWithMultipleLoggers" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="loggerNamesString" value="java.util.logging.Logger,org.slf4j.Logger,org.apache.commons.logging.Log,org.apache.log4j.Logger" />
     </inspection_tool>
+    <inspection_tool class="ClassWithOnlyPrivateConstructors" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ClassWithoutConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CloneCallsConstructors" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CloneInNonCloneableClass" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -207,6 +208,7 @@
       <option name="ignoreDeprecatedConstructors" value="false" />
       <option name="m_limit" value="5" />
     </inspection_tool>
+    <inspection_tool class="ContinueStatement" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ContinueStatementWithLabel" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ControlFlowStatementWithoutBraces" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConvertAnnotations" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -271,6 +273,7 @@
     <inspection_tool class="EqualsHashCodeCalledOnUrl" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="EqualsReplaceableByObjectsCall" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="EqualsUsesNonFinalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ErrorRethrown" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ExceptionFromCatchWhichDoesntWrap" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreGetMessage" value="false" />
       <option name="ignoreCantWrap" value="false" />
@@ -291,6 +294,7 @@
     <inspection_tool class="FieldHidesSuperclassField" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreInvisibleFields" value="true" />
     </inspection_tool>
+    <inspection_tool class="FieldMayBeFinal" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="FieldMayBeStatic" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="FieldNotUsedInToString" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="FinalMethodInFinalClass" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -457,6 +461,7 @@
     <inspection_tool class="IfStatementWithIdenticalBranches" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IgnoredJUnitTest" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="InconsistentLanguageLevel" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="InconsistentLineSeparators" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IncrementDecrementUsedAsExpression" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="InnerClassMayBeStatic" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="InnerClassOnInterface" enabled="true" level="WARNING" enabled_by_default="true">
@@ -682,6 +687,9 @@
     <inspection_tool class="OverloadedMethodsWithSameNumberOfParameters" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreInconvertibleTypes" value="true" />
     </inspection_tool>
+    <inspection_tool class="OverlyComplexArithmeticExpression" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_limit" value="6" />
+    </inspection_tool>
     <inspection_tool class="OverlyLargePrimitiveArrayInitializer" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="64" />
     </inspection_tool>
@@ -739,6 +747,10 @@
       </option>
     </inspection_tool>
     <inspection_tool class="PublicFieldAccessedInSynchronizedContext" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PublicInnerClass" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreEnums" value="false" />
+      <option name="ignoreInterfaces" value="false" />
+    </inspection_tool>
     <inspection_tool class="PublicStaticArrayField" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PublicStaticCollectionField" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="QuestionableName" enabled="true" level="WARNING" enabled_by_default="true">
@@ -865,6 +877,9 @@
     <inspection_tool class="SuspiciousLiteralUnderscore" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SuspiciousLocalesLanguages" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SwitchStatementWithConfusingDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="SwitchStatementWithTooFewBranches" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_limit" value="2" />
+    </inspection_tool>
     <inspection_tool class="SwitchStatementsWithoutDefault" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreFullyCoveredEnums" value="true" />
     </inspection_tool>
@@ -942,6 +957,7 @@
     <inspection_tool class="UnnecessarilyQualifiedStaticallyImportedElement" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryCallToStringValueOf" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryConstantArrayCreationExpression" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UnnecessaryConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryDefault" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryExplicitNumericCast" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryFinalOnLocalVariableOrParameter" enabled="true" level="WARNING" enabled_by_default="true" />

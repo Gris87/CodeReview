@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Clojure syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class ClojureSyntaxParser extends SyntaxParserBase
+public final class ClojureSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ClojureSyntaxParser";

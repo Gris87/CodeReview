@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * MATLAB Operators syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class MatlabOperatorsSyntaxParser extends SyntaxParserBase
+public final class MatlabOperatorsSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "MatlabOperatorsSyntaxParser";

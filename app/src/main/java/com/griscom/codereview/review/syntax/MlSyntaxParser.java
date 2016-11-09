@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * ML syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class MlSyntaxParser extends SyntaxParserBase
+public final class MlSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "MlSyntaxParser";

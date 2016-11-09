@@ -14,7 +14,7 @@ import com.griscom.codereview.util.AppLog;
  * Plain text syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class PlainTextSyntaxParser extends SyntaxParserBase
+public final class PlainTextSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "PlainTextSyntaxParser";

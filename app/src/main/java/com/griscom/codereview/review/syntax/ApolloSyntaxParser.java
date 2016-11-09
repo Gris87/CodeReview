@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Apollo syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class ApolloSyntaxParser extends SyntaxParserBase
+public final class ApolloSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ApolloSyntaxParser";

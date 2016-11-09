@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * SQL syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class SqlSyntaxParser extends SyntaxParserBase
+public final class SqlSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "SqlSyntaxParser";

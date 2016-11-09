@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Go syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class GoSyntaxParser extends SyntaxParserBase
+public final class GoSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "GoSyntaxParser";

@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Basic syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class BasicSyntaxParser extends SyntaxParserBase
+public final class BasicSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "BasicSyntaxParser";

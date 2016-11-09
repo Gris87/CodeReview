@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 @SuppressWarnings("WeakerAccess")
-public class TextRow
+public final class TextRow
 {
     private ArrayList<TextRegion> mRegions       = null;
     private int                   mSelectionType = 0;

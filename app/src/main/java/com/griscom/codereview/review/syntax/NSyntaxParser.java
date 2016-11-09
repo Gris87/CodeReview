@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * N syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class NSyntaxParser extends SyntaxParserBase
+public final class NSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "NSyntaxParser";

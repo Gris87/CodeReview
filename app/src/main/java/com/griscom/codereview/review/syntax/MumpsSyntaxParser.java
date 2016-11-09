@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * MUMPS syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class MumpsSyntaxParser extends SyntaxParserBase
+public final class MumpsSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "MumpsSyntaxParser";

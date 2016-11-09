@@ -23,7 +23,7 @@ import java.util.Collections;
 /**
  * Adapter that used in IgnoreFilesActivity
  */
-public class IgnoreFilesAdapter extends BaseAdapter
+public final class IgnoreFilesAdapter extends BaseAdapter
 {
     @SuppressWarnings("unused")
     private static final String TAG = "IgnoreFilesAdapter";

@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * C# syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class CSharpSyntaxParser extends SyntaxParserBase
+public final class CSharpSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "CSharpSyntaxParser";

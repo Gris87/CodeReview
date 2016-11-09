@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Scala syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class ScalaSyntaxParser extends SyntaxParserBase
+public final class ScalaSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ScalaSyntaxParser";

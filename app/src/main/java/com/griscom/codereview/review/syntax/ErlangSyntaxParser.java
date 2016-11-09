@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Erlang syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class ErlangSyntaxParser extends SyntaxParserBase
+public final class ErlangSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "ErlangSyntaxParser";

@@ -22,7 +22,7 @@ import syntaxhighlight.ParseResult;
  * Tcl syntax parser
  */
 @SuppressWarnings("WeakerAccess")
-public class TclSyntaxParser extends SyntaxParserBase
+public final class TclSyntaxParser extends SyntaxParserBase
 {
     @SuppressWarnings("unused")
     private static final String TAG = "TclSyntaxParser";

@@ -16,7 +16,7 @@ import java.io.File;
  * Main database helper
  */
 @SuppressWarnings("WeakerAccess")
-public class MainDatabase extends SQLiteOpenHelper
+public final class MainDatabase extends SQLiteOpenHelper
 {
     @SuppressWarnings("unused")
     private static final String TAG = "MainDatabase";
