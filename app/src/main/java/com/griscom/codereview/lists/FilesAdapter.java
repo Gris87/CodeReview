@@ -93,7 +93,6 @@ public final class FilesAdapter extends BaseAdapter
      * Creates instance of FilesAdapter
      * @param context    context
      */
-    @SuppressWarnings("ImplicitCallToSuper")
     private FilesAdapter(Context context)
     {
         mContext       = context;
@@ -953,7 +952,7 @@ public final class FilesAdapter extends BaseAdapter
          * Creates DbReaderTask instance for provided adapter
          * @param adapter    adapter
          */
-        @SuppressWarnings({"ImplicitCallToSuper", "AccessingNonPublicFieldOfAnotherObject"})
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         private DbReaderTask(FilesAdapter adapter)
         {
             mAdapter     = adapter;

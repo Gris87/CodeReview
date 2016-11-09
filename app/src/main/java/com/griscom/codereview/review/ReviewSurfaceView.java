@@ -1,6 +1,5 @@
 package com.griscom.codereview.review;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -57,6 +56,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
     private LoadingTask                      mLoadingTask                    = null;
     private DrawThread                       mDrawThread                     = null;
+    private RepaintHandler                   mHandler                        = null;
     private String                           mFilePath                       = null;
     private long                             mFileId                         = 0;
     private long                             mModifiedTime                   = 0;
@@ -72,33 +72,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     private OnCommentDialogRequestedListener mCommentDialogRequestedListener = null;
     private final Object                     mLock                           = new Object();
 
-
-
-    @SuppressLint("HandlerLeak")
-    private final Handler mHandler = new Handler()
-    {
-        /** {@inheritDoc} */
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch (msg.what)
-            {
-                case REPAINT_MESSAGE:
-                {
-                    if (mDrawThread != null)
-                    {
-                        mDrawThread.repaint();
-                    }
-                }
-                break;
-
-                default:
-                {
-                    AppLog.wtf(TAG, "Unknown message type: " + msg.what);
-                }
-            }
-        }
-    };
 
 
     /** {@inheritDoc} */
@@ -117,6 +90,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
         return "ReviewSurfaceView{" +
                 "mLoadingTask="                      + mLoadingTask                    +
                 ", mDrawThread="                     + mDrawThread                     +
+                ", mHandler="                        + mHandler                        +
                 ", mFilePath='"                      + mFilePath + '\''                +
                 ", mFileId="                         + mFileId                         +
                 ", mModifiedTime="                   + modifiedTime                    +
@@ -131,7 +105,6 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
                 ", mProgressChangedListener="        + mProgressChangedListener        +
                 ", mCommentDialogRequestedListener=" + mCommentDialogRequestedListener +
                 ", mLock="                           + mLock                           +
-                ", mHandler="                        + mHandler                        +
                 '}';
     }
 
@@ -178,6 +151,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
     {
         mLoadingTask                    = null;
         mDrawThread                     = null;
+        mHandler                        = RepaintHandler.newInstance(this);
         mFilePath                       = null;
         mFileId                         = 0;
         mSyntaxParserType               = SyntaxParserType.AUTOMATIC;
@@ -950,6 +924,56 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
                 mReviewSurfaceView.mLoadingTask = null;
                 mReviewSurfaceView = null;
+            }
+        }
+    }
+
+
+
+    private static final class RepaintHandler extends Handler
+    {
+        @SuppressWarnings("FieldNotUsedInToString")
+        private ReviewSurfaceView mReviewSurfaceView = null;
+
+
+
+        @SuppressWarnings("MethodReturnAlwaysConstant")
+        @Override
+        public String toString()
+        {
+            return "RepaintHandler";
+        }
+
+        private RepaintHandler(ReviewSurfaceView reviewSurfaceView)
+        {
+            mReviewSurfaceView = reviewSurfaceView;
+        }
+
+        public static RepaintHandler newInstance(ReviewSurfaceView reviewSurfaceView)
+        {
+            return new RepaintHandler(reviewSurfaceView);
+        }
+
+        /** {@inheritDoc} */
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case REPAINT_MESSAGE:
+                {
+                    if (mReviewSurfaceView.mDrawThread != null)
+                    {
+                        mReviewSurfaceView.mDrawThread.repaint();
+                    }
+                }
+                break;
+
+                default:
+                {
+                    AppLog.wtf(TAG, "Unknown message type: " + msg.what);
+                }
             }
         }
     }

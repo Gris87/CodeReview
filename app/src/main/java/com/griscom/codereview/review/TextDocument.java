@@ -1,6 +1,5 @@
 package com.griscom.codereview.review;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -349,7 +348,6 @@ public final class TextDocument implements OnTouchListener
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @SuppressWarnings("WeakerAccess")
     public void onConfigurationChanged()
     {
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -1229,13 +1227,11 @@ public final class TextDocument implements OnTouchListener
         return mHeight;
     }
 
-    @SuppressWarnings("WeakerAccess")
     public float getRight()
     {
         return mX + mWidth;
     }
 
-    @SuppressWarnings("WeakerAccess")
     public float getBottom()
     {
         return mY + mHeight;
@@ -1243,8 +1239,6 @@ public final class TextDocument implements OnTouchListener
 
 
 
-    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
-    @SuppressLint("HandlerLeak")
     private static final class DocumentHandler extends Handler
     {
         @SuppressWarnings("FieldNotUsedInToString")
@@ -1306,6 +1300,7 @@ public final class TextDocument implements OnTouchListener
             }
         }
 
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         private void hideBars()
         {
             int barsAlpha = mTextDocument.mBarsAlpha - 20;
@@ -1330,6 +1325,7 @@ public final class TextDocument implements OnTouchListener
             }
         }
 
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         private void highlight()
         {
             int highlightAlpha = mTextDocument.mHighlightAlpha + 20;
@@ -1365,6 +1361,7 @@ public final class TextDocument implements OnTouchListener
             mTextDocument.repaint();
         }
 
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         private void selection()
         {
             boolean selectionMakeLight  = mTextDocument.mSelectionMakeLight;

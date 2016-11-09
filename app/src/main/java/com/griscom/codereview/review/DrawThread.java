@@ -78,7 +78,6 @@ public final class DrawThread extends Thread
     /**
      * Sets flag for repainting
      */
-    @SuppressWarnings("WeakerAccess")
     public void repaint()
     {
         synchronized(mLock)

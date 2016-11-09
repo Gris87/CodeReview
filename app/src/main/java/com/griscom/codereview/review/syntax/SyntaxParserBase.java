@@ -57,7 +57,6 @@ public abstract class SyntaxParserBase
      * Creates SyntaxParserBase instance
      * @param context    context
      */
-    @SuppressWarnings("ImplicitCallToSuper")
     protected SyntaxParserBase(Context context)
     {
         mContext      = context;

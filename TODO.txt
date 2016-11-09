@@ -1,11 +1,3 @@
-Code analysis in all files
-
-suppressLint
-suppressWarning
-//noinspection
-tools:ignore
-<!--suppress
-
 UltraHD images
 Smooth movement
 Code folding

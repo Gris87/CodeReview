@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 /**
  * Class for useful functions
  */
+@SuppressWarnings("WeakerAccess")
 public final class Utils
 {
     @SuppressWarnings("unused")
@@ -80,7 +81,6 @@ public final class Utils
      * @param bytes    byte array
      * @return hex string
      */
-    @SuppressWarnings("WeakerAccess")
     public static String bytesToHex(byte[] bytes)
     {
         char[] hexChars = new char[bytes.length << 1]; // * 2

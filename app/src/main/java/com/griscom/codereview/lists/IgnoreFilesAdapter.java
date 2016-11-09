@@ -63,7 +63,6 @@ public final class IgnoreFilesAdapter extends BaseAdapter
      * Creates instance of IgnoreFilesAdapter
      * @param context    context
      */
-    @SuppressWarnings("ImplicitCallToSuper")
     private IgnoreFilesAdapter(Activity context)
     {
         mContext       = context;
