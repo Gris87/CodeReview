@@ -937,6 +937,7 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
 
 
 
+        /** {@inheritDoc} */
         @SuppressWarnings("MethodReturnAlwaysConstant")
         @Override
         public String toString()
@@ -944,14 +945,22 @@ public class ReviewSurfaceView extends SurfaceView implements OnTouchListener, O
             return "RepaintHandler";
         }
 
-        private RepaintHandler(ReviewSurfaceView reviewSurfaceView)
+        /**
+         * Creates RepaintHandler instance for provided ReviewSurfaceView
+         * @param view    ReviewSurfaceView
+         */
+        private RepaintHandler(ReviewSurfaceView view)
         {
-            mReviewSurfaceView = reviewSurfaceView;
+            mReviewSurfaceView = view;
         }
 
-        public static RepaintHandler newInstance(ReviewSurfaceView reviewSurfaceView)
+        /**
+         * Creates RepaintHandler instance for provided ReviewSurfaceView
+         * @param view    ReviewSurfaceView
+         */
+        public static RepaintHandler newInstance(ReviewSurfaceView view)
         {
-            return new RepaintHandler(reviewSurfaceView);
+            return new RepaintHandler(view);
         }
 
         /** {@inheritDoc} */
