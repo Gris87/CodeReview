@@ -12,7 +12,11 @@
         }
       },
       "oauth_client": [],
-      "api_key": [{ "current_key": "" }],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxiW5aLIl7_DOu0p3TJG4sN-9KTp8zRBw"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 2,
