@@ -36,6 +36,8 @@ public class CodeReviewApplication extends Application
     {
         super.onCreate();
 
+        mTracker = GoogleAnalytics.getInstance(this).newTracker(R.xml.tracker_config);
+
         ApplicationSettings.update(this);
     }
 
@@ -46,11 +48,6 @@ public class CodeReviewApplication extends Application
      */
     public Tracker getDefaultTracker()
     {
-        if (mTracker == null)
-        {
-            mTracker = GoogleAnalytics.getInstance(this).newTracker(R.xml.tracker_config);
-        }
-
         return mTracker;
     }
 }
