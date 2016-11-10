@@ -248,7 +248,7 @@ function generateSyntaxParser {
     echo " * ${parser_name} syntax parser"                                                                                     >> ${target_file}
     echo " */"                                                                                                                 >> ${target_file}
     echo "@SuppressWarnings(\"WeakerAccess\")"                                                                                 >> ${target_file}
-    echo "public class ${parser}SyntaxParser extends SyntaxParserBase"                                                         >> ${target_file}
+    echo "public final class ${parser}SyntaxParser extends SyntaxParserBase"                                                   >> ${target_file}
     echo "{"                                                                                                                   >> ${target_file}
     echo "    @SuppressWarnings(\"unused\")"                                                                                   >> ${target_file}
     echo "    private static final String TAG = \"${parser}SyntaxParser\";"                                                    >> ${target_file}
