@@ -1,13 +1,12 @@
 package com.griscom.codereview;
 
+import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
-@SuppressWarnings("PublicConstructor")
+@SuppressWarnings({"PublicConstructor", "JUnitTestNG", "ClassWithoutConstructor"})
 public class ExampleUnitTest
 {
     @SuppressWarnings("unused")
@@ -18,6 +17,6 @@ public class ExampleUnitTest
     @Test
     public void addition_isCorrect() throws Exception
     {
-        assertEquals(4, 2 + 2);
+        Assert.assertEquals("WTF", 4, 2 + 2);
     }
 }
