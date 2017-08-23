@@ -33,20 +33,17 @@
             android:name=".activities.ReviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:immersive="true"
-            android:theme="@style/AppTheme.FullscreenTheme">
-        </activity>
+            android:theme="@style/AppTheme.FullscreenTheme" />
 
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/activity_settings_title"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".activities.IgnoreFilesActivity"
             android:label="@string/activity_ignore_files_title"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 
